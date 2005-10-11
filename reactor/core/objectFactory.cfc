@@ -1,43 +1,130 @@
-<cfcomponent hint="I am not all that abstract.  I contain a base set of functionality shared across all objectFactories.  I do define methods which must be overridden.">
+<cfcomponent hint="I am the object factory.">
 	
-	<cfset variables.dsn = "" />
-	<cfset variables.creationPath = "" />
-	<cfset variables.mode = "" />
-	<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0,0,0,5)) /> 
+	<cfset variables.config = "" />
 	
-	<!---// must be overridden //--->
-	<cffunction name="getTableDefinition" access="private" hint="I return the definition for a table." output="false" returntype="struct">
-		<cfargument name="name" hint="I am the name of the table to get the definition for." required="yes" type="string" />
+	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="reactor.core.objectFactory">
+		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.bean.config" />
 		
-	</cffunction>
-	
-	<cffunction name="getTableStructure" access="private" hint="I return an XML document representing the table's structure." output="false" returntype="xml">
-		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
-		
-	</cffunction>
-	<!---// end must be overridden //--->
-	
-	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="reactor.core.abstractObjectFactory">
-		<cfargument name="dsn" hint="I am the DSN to use to inspect the DB." required="yes" type="string" />
-		<cfargument name="dbtype" hint="I am the type of database the dsn is for.  Options are: mssql" required="yes" type="string" />
-		<cfargument name="creationPath" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
-		<cfargument name="mode" hint="I indicate the mode the system is running in.  Options are development, production, always" required="yes" type="string" />
-		
-		<cfif NOT ListFindNoCase("development,production,always", arguments.mode)>
-			<cfthrow type="reactor.InvalidMode"
-				message="Invalid Mode Argument"
-				detail="The mode argument must be one of: development, production, always" />
-		</cfif>
-		
-		<cfset setDsn(arguments.dsn) />
-		<cfset setDbType(arguments.dbtype) />
-		<cfset setCreationPath(arguments.creationPath) />
-		<cfset setMode(arguments.mode) />
+		<cfset setConfig(config) />
 		
 		<cfreturn this />
 	</cffunction>
+
+	<cffunction name="create" access="public" hint="I create and return a To for a specific table." output="false" returntype="reactor.base.abstractObject">
+		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record" required="yes" type="string" />
+		<cfset var Object = 0 />
+		<cfset var generate = false />
+		<cfset var TableTranslator = 0 />
+		
+		<cfif NOT ListFindNoCase("record,dao,gateway,to", arguments.type)>
+			<cfthrow type="reactor.InvalidObjectType"
+				message="Invalid Object Type"
+				detail="The type argument must be one of: record, dao, gateway, to" />
+		</cfif>
 	
-	<cffunction name="createRecord" access="public" hint="I create and return a record for a specific table." output="false" returntype="reactor.core.abstractRecord">
+		<cfswitch expression="#getConfig().getMode()#">
+			<cfcase value="always">
+				<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+				<cfset generate = true />
+			</cfcase>
+			<cfcase value="development">
+				<cftry>
+					<!--- create an instance of the object and check it's signature --->
+					<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+					<cfcatch>
+						<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+						<cfset generate = true />
+					</cfcatch>
+				</cftry>
+				<cfif NOT generate>
+					<!--- check the object's signature --->
+					<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+					<cfif TableTranslator.getSignature() IS NOT Object.getSignature()>
+						<cfset generate = true />
+					</cfif>
+				</cfif>
+			</cfcase>
+			<cfcase value="production">
+				<cftry>
+					<!--- create an instance of the object and check it's signature --->
+					<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+					<cfcatch>
+						<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+						<cfset generate = true />
+					</cfcatch>
+				</cftry>
+			</cfcase>
+		</cfswitch>
+		
+		<!--- return either a generated object or the existing object --->
+		<cfif generate>
+			<cfset generateObject(TableTranslator, arguments.type) />			
+			<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(getConfig()) />
+		<cfelse>
+			<cfreturn Object.init(getConfig()) />
+		</cfif>
+	</cffunction>
+	
+ 	<cffunction name="generateObject" access="private" hint="I generate a To object" output="false" returntype="void">
+		<cfargument name="TableTranslator" hint="I am the TableTranslator to use to generate the To." required="yes" type="reactor.core.tableTranslator" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record" required="yes" type="string" />
+		<cfset var XML = arguments.TableTranslator.getXml() />
+		<cfset var superTable = XMLSearch(XML, "/table/superTable") />
+				
+		<cfif ArrayLen(superTable)>
+			<!--- we need to insure that the base object exists --->
+			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.name), arguments.type) />
+		</cfif>
+		
+		<!--- write the base object --->
+		<cfset generate(
+			XML,
+			expandPath("/reactor/xsl/#arguments.type#.base.xsl"),
+			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "base"),
+			true) />
+		<!--- generate the custom object --->
+		<cfset generate(
+			XML,
+			expandPath("/reactor/xsl/#arguments.type#.custom.xsl"),
+			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "custom"),
+			false) />
+	</cffunction>
+	
+	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
+		<cfargument name="xml" hint="I am the XML to transform." required="yes" type="xml" />
+		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="string" />
+		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="string" />
+		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
+		<cfset var xsl = 0 />
+		<cfset var code = 0 />
+		
+		<!--- check to see if the output file exists and if we can overwrite it --->
+		<cfif NOT (FileExists(arguments.outputPath) AND NOT arguments.overwrite)>
+			<!--- read the xsl --->
+			<cffile action="read" file="#arguments.xslPath#" variable="xsl" />
+			<!--- transform this structure into the base TO object --->
+			<cfset code = XMLTransform(arguments.xml, xsl) />
+			<!--- insure the outputPath director exists --->
+			<cfset insurePathExists(arguments.outputPath)>
+			<!--- write the file to disk --->
+			<cffile action="write" file="#arguments.outputPath#" output="#code#" />
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="getTable" access="private" hint="I create a table object which encapsulates table metadata." output="false" returntype="reactor.core.table">
+		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
+		<cfset var Table = CreateObject("Component", "reactor.core.Table").init(getConfig(), arguments.name) />
+		<cfset var TableDao = CreateObject("Component", "reactor.data.#getConfig().getDbType()#.TableDao").init(getConfig().getDsn()) />
+		
+		<!--- inspect the table --->
+		<cfset TableDao.read(Table) />
+		
+		<cfreturn Table />
+	</cffunction>
+	
+	<!----
+	<cffunction name="createRecord" access="public" hint="I create and return a record for a specific table." output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="name" hint="I am the name of the table create a record for." required="yes" type="string" />
 		<cfset var Record = 0 />
 		<cfset var generate = false />
@@ -60,7 +147,7 @@
 			If we don't already need to generate the Record, check to insure that the Record's signature matches the tables's signature.
 			If not, then we need to regenerate.
 		--->
-		<cfif getMode() IS "always" OR (NOT generate AND getMode() IS "development" AND Record.getSignature() IS NOT getTableSignature(arguments.name))>
+		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Record.getSignature() IS NOT getTableSignature(arguments.name))>
 			<cfset generate = true />
 		</cfif>
 		
@@ -110,77 +197,9 @@
 		<cfreturn Record />
 	</cffunction>
 
-	<cffunction name="createTo" access="public" hint="I create and return a To for a specific table." output="false" returntype="reactor.core.abstractTo">
-		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
-		<cfset var To = 0 />
-		<cfset var generate = false />
-		<cfset var structure = 0 />
-		<cfset var xslBase = 0 />
-		<cfset var xslCustom = 0 />
-		<cfset var toCode = 0 />
-		<cfset var toPath = 0 />
-		
-		<!--- try to create the object --->
-		<cftry>
-			<cfset To = CreateObject("Component", getObjectName("TO", arguments.name)) />
-			<cfcatch>
-				<!--- if there are errors then we need to generate the To --->
-				<cfset generate = true />
-			</cfcatch>
-		</cftry>
-		
-		<!---
-			If we don't already need to generate the TO, check to insure that the TO's signature matches the tables's signature.
-			If not, then we need to regenerate.
-		--->
-		<cfif getMode() IS "always" OR (NOT generate AND getMode() IS "development" AND To.getSignature() IS NOT getTableSignature(arguments.name))>
-			<cfset generate = true />
-		</cfif>
-		
-		<!--- if we need to generate it, generate it --->
-		<cfif generate>
-			<!--- get the structure --->
-			<cfset structure = getTableStructure(arguments.name) />
-			
-			<!--- insure that the base object exists --->
-			<cfif structure.table.XmlAttributes.baseTable IS NOT arguments.name>
-				<!--- we need to insure that an object exists --->
-				<!--- TODO: right now, this creates and instantiates the object.  in the future I'd like it to only generate the object and only if it doesn't exist --->
-				<cfset createTo(structure.table.XmlAttributes.baseTable) />
-			</cfif>
-		
-			<!--- read the to xsl --->
-			<cffile action="read" file="#expandPath("/reactor/xsl/to.base.xsl")#" variable="xslBase" />
-			<cffile action="read" file="#expandPath("/reactor/xsl/to.custom.xsl")#" variable="xslCustom" />
-			
-			<!--- transform this structure into the base TO object --->
-			<cfset toCode = XMLTransform(structure, xslBase) />
-			<!--- get the path to the base TO --->
-			<cfset toPath = getObjectPath("TO", arguments.name, "base") />
-			<!--- insure that the output directory exists --->
-			<cfset insurePathExists(toPath) />
-			<!--- write the base TO --->
-			<cffile action="write" file="#toPath#" output="#toCode#" nameconflict="overwrite" />
-			
-			<!--- get the path to the custom TO --->
-			<cfset toPath = getObjectPath("TO", arguments.name, "custom") />
-			<cfif NOT FileExists(toPath)>
-				<!--- transform this structure into the custom TO object --->
-				<cfset toCode = XMLTransform(structure, xslCustom) />
-				<!--- insure that the output directory exists --->
-				<cfset insurePathExists(toPath) />
-				<!--- write the custom TO --->
-				<cffile action="write" file="#toPath#" output="#toCode#" />
-			</cfif>
-			
-			<!--- create the newly generated T0 --->
-			<cfset To = CreateObject("Component", getObjectName("TO", arguments.name)) />
-		</cfif>
-		
-		<cfreturn To />
-	</cffunction>
 	
-	<cffunction name="createDao" access="public" hint="I create and return a DAO for a specific table." output="false" returntype="reactor.core.abstractDao">
+	
+	<cffunction name="createDao" access="public" hint="I create and return a DAO for a specific table." output="false" returntype="reactor.base.abstractDao">
 		<cfargument name="name" hint="I am the name of the table create a Dao for." required="yes" type="string" />
 		<cfset var Dao = 0 />
 		<cfset var generate = false />
@@ -203,7 +222,7 @@
 			If we don't already need to generate the Dao, check to insure that the Dao's signature matches the object's signature.
 			If not, then we need to regenerate.
 		--->
-		<cfif getMode() IS "always" OR (NOT generate AND getMode() IS "development" AND Dao.getSignature() IS NOT getTableSignature(arguments.name))>
+		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Dao.getSignature() IS NOT getTableSignature(arguments.name))>
 			<cfset generate = true />
 		</cfif>
 		
@@ -252,7 +271,7 @@
 		<cfreturn Dao />
 	</cffunction>
 	
-	<cffunction name="createGateway" access="public" hint="I create a Gateway based upon a name." output="false" returntype="reactor.core.abstractGateway">
+	<cffunction name="createGateway" access="public" hint="I create a Gateway based upon a name." output="false" returntype="reactor.base.abstractGateway">
 		<cfargument name="name" hint="I am the name of the table create a Gateway for." required="yes" type="string" />
 		<cfset var Gateway = 0 />
 		<cfset var generate = false />
@@ -276,7 +295,7 @@
 			If we don't already need to generate the Gateway, check to insure that the Gateway's signature matches the object's signature.
 			If not, then we need to regenerate.
 		--->
-		<cfif getMode() IS "always" OR (NOT generate AND getMode() IS "development" AND Gateway.getSignature() IS NOT getTableSignature(arguments.name))>
+		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Gateway.getSignature() IS NOT getTableSignature(arguments.name))>
 			<cfset generate = true />
 		</cfif>
 		
@@ -317,28 +336,13 @@
 		
 		<cfreturn Gateway />
 	</cffunction>
-	
-	<cffunction name="getTableSignature" access="private" hint="I return the signature for a specific table." output="false" returntype="string">
-		<cfargument name="name" hint="I am the name of the table to get the signature for." required="yes" type="string" />
-		<cfset var definition = getTableStructure(arguments.name) />
-		
-		<cfreturn definition.table.XmlAttributes.signature />
-	</cffunction>
-	
-	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
-		<cfargument name="path" hint="I am the path to the file." required="yes" type="string" />
-		<cfset var directory = getDirectoryFromPath(arguments.path) />
-		
-		<cfif NOT DirectoryExists(directory)>
-			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" />
-		</cfif>
-	</cffunction>
+	--->
 	
 	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="string">
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
-		<cfset var creationPath = replaceNoCase(right(getCreationPath(), Len(getCreationPath()) - 1), "/", ".") />
+		<cfset var creationPath = replaceNoCase(right(getConfig().getCreationPath(), Len(getConfig().getCreationPath()) - 1), "/", ".") />
 		
 		<cfif NOT ListFindNoCase("record,dao,gateway,to", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
@@ -365,8 +369,29 @@
 				detail="The class argument must be one of: base, custom" />
 		</cfif>
 		
-		<cfreturn expandPath(getCreationPath() & "/" & arguments.type & "/mssql/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & TitleCase(arguments.name, true) & TitleCase(arguments.type) & ".cfc") />
+		<cfreturn expandPath(getConfig().getCreationPath() & "/" & arguments.type & "/mssql/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & arguments.name & arguments.type & ".cfc") />
 	</cffunction>
+	
+	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
+		<cfargument name="path" hint="I am the path to the file." required="yes" type="string" />
+		<cfset var directory = getDirectoryFromPath(arguments.path) />
+		
+		<cfif NOT DirectoryExists(directory)>
+			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" />
+		</cfif>
+	</cffunction>
+	
+	<!---
+	<cffunction name="getTableSignature" access="private" hint="I return the signature for a specific table." output="false" returntype="string">
+		<cfargument name="name" hint="I am the name of the table to get the signature for." required="yes" type="string" />
+		<cfset var definition = getTableStructure(arguments.name) />
+		
+		<cfreturn definition.table.XmlAttributes.signature />
+	</cffunction>
+	
+	
+	
+	
 	
 	<cffunction name="TitleCase" access="private" hint="I return the string in title case." output="false" returntype="string">
 		<cfargument name="string" hint="I am the string to return in title case." required="yes" type="string" />
@@ -378,46 +403,15 @@
 			<cfreturn Ucase(left(arguments.string, 1)) & Lcase(right(arguments.string, Len(arguments.string) - 1)) />
 		</cfif>		
 	</cffunction>
+	---->
 	
-	<!--- dsn --->
-    <cffunction name="setDsn" access="private" output="false" returntype="void">
-       <cfargument name="dsn" hint="I am the DSN to connect to." required="yes" type="string" />
-       <cfset variables.dsn = arguments.dsn />
+	<!--- config --->
+    <cffunction name="setConfig" access="public" output="false" returntype="void">
+       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.bean.config" />
+       <cfset variables.config = arguments.config />
     </cffunction>
-    <cffunction name="getDsn" access="private" output="false" returntype="string">
-       <cfreturn variables.dsn />
-    </cffunction>
-	
-	<!--- dbType --->
-	<cffunction name="setDbType" access="private" output="false" returntype="void">
-       <cfargument name="dbType" hint="I am the type of database the dsn is for" required="yes" type="string" />
-       <cfset variables.dbType = arguments.dbType />
-    </cffunction>
-    <cffunction name="getDbType" access="private" output="false" returntype="string">
-       <cfreturn variables.dbType />
-    </cffunction>
-	
-	<!--- creationPath --->
-    <cffunction name="setCreationPath" access="private" output="false" returntype="void">
-       <cfargument name="creationPath" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
-       <cfset variables.creationPath = arguments.creationPath />
-    </cffunction>
-    <cffunction name="getCreationPath" access="private" output="false" returntype="string">
-       <cfreturn variables.creationPath />
-    </cffunction>
-	
-	<!--- mode --->
-    <cffunction name="setMode" access="private" output="false" returntype="void">
-       <cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="yes" type="string" />
-       <cfset variables.mode = arguments.mode />
-    </cffunction>
-    <cffunction name="getMode" access="private" output="false" returntype="string">
-       <cfreturn variables.mode />
-    </cffunction>
-	
-	<!--- timedCache --->
-    <cffunction name="getTimedCache" access="private" output="false" returntype="reactor.util.TimedCache">
-       <cfreturn variables.timedCache />
+    <cffunction name="getConfig" access="public" output="false" returntype="reactor.bean.config">
+       <cfreturn variables.config />
     </cffunction>
 	
 </cfcomponent>
