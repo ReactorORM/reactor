@@ -1,5 +1,6 @@
-<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init("vacationAuctions", "mssql", "/reactorData", "always") />
+<cfset config = CreateObject("Component", "reactor.bean.config").init("scratch", "mssql", "/reactorData", "always") />
+<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(config) />
 
-<cfset VacationAuctionGateway = reactor.createGateway("VacationAuction") />
+<cfset LionDao = reactor.createDao("Lion") />
 
-<cfdump var="#VacationAuctionGateway#" />
+<cfdump var="#LionDao#" />
