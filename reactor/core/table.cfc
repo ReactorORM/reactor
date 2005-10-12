@@ -8,7 +8,7 @@
 	<cfset variables.primaryKey = 0 />
 	<cfset variables.foreignKeys = ArrayNew(1) />
 	<cfset variables.referencingKeys = ArrayNew(1) />
-	<cfset variables.SuperTable = 0 />
+	<cfset variables.SuperTables = ArrayNew(1) />
 	
 	<cffunction name="init" access="public" hint="I configure the table." returntype="reactor.core.table">
 		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.bean.config" />
@@ -133,67 +133,14 @@
 		<cfreturn replaceNoCase(right(getConfig().getCreationPath(), Len(getConfig().getCreationPath()) - 1), "/", ".") />
 	</cffunction>
 	
-	<!--- 
-	<cffunction name="getSuperTableName" hint="I return the name, if any of this table's super table." output="false" returntype="string">
-		<cfif Len(getSuperRelationshipName())>
-			<cfreturn getForeignKey(getSuperRelationshipName()).getToTableName() />
-		<cfelse>
-			<cfreturn "" />
-		</cfif>
-	</cffunction>
-	--->
-	
 	<cffunction name="hasSuperTable" hint="I indicate if this Table has a superTable" output="false" returntype="boolean">
-		<cfif IsObject(variables.superTable)>
+		<cfif ArrayLen(variables.superTables)>
 			<cfreturn true />
 		<cfelse>
 			<cfreturn false />
 		</cfif>
 	</cffunction>
 	
-	<!----
-	<cffunction name="getSuperRelationshipName" hint="I return the name, if any of this table's super relationship." output="false" returntype="string">
-		<cfset var superRelationshipName = variables.superRelationshipName />
-		<cfset var pkColumns = 0 />
-		<cfset var foreignKeys = 0 />
-		<cfset var column = 0 />
-		<cfset var listPos = 0 />
-		
-		<!--- check to see if the entire primary key is represented in a single foreign key --->
-		<cfif hasPrimaryKey() AND NOT Len(superRelationshipName)>
-			<!--- get the array of foreign keys --->
-			<cfset foreignKeys = getForeignKeys() />
-			
-			<!--- loop over the array offoreign keys --->
-			<cfloop from="1" to="#ArrayLen(foreignKeys)#" index="x">
-				<!--- for each foreign key, get the primary key and foreign key colum names to compare --->
-				<cfset pkColumns = getPrimaryKey().getColumnNames() />
-				<cfset fkColumns = foreignKeys[x].getFromColumnNames() />
-				
-				<!--- loop over the fkColumns and delete matching columns from the primary key.  if the pk is 0 len then we have a match --->
-				<cfloop list="#fkColumns#" index="column">
-					<!--- find the position of this colum in the fk column list --->
-					<cfset listPos = ListFindNoCase(pkColumns, column) />
-					<!--- if the position exists, delete the item from the list --->
-					<cfif listPos>
-						<cfset pkColumns = ListDeleteAt(pkColumns, listPos) />
-					</cfif>
-					<!--- if the list has a zero length then we have a match --->
-					<cfif NOT Len(pkColumns)>
-						<cfset superRelationshipName = foreignKeys[x].getName() />
-						<cfbreak />
-					</cfif>					
-				</cfloop>
-				
-				<cfif Len(superRelationshipName)>
-					<cfbreak />
-				</cfif>
-			</cfloop>
-		</cfif>
-	
-		<cfreturn superRelationshipName />
-	</cffunction> --->
-
 	<cffunction name="hasPrimaryKey" access="public" hint="I indicate if this table has a primary key" output="false" returntype="boolean">
 		<cfif IsNumeric(variables.primaryKey)>
 			<cfreturn false />
@@ -202,13 +149,25 @@
 		</cfif>
 	</cffunction>
 	
-	<!--- superTable --->
-    <cffunction name="setSuperTable" access="public" output="false" returntype="void">
-       <cfargument name="superTable" hint="I am this table's super table." required="yes" type="reactor.core.superTable" />
-       <cfset variables.superTable = arguments.superTable />
+	<cffunction name="getSuperTable" access="public" hint="I return this table's immediate superTable." output="false" returntype="reactor.core.superTable">
+		<cfset var superTables = getSuperTables() />
+		<cfreturn superTables[ArrayLen(superTables)] />
+	</cffunction>
+	
+	<cffunction name="prependSuperTable" access="public" hint="I prepend a supertable to the array of supertables for this table" output="false" returntype="void">
+		<cfargument name="SuperTable" hint="I am the supertable to prepend" required="yes" type="reactor.core.SuperTable" />
+		<cfset var superTables = getSuperTables() />
+		<cfset ArrayPrepend(superTables, arguments.SuperTable) />
+		<cfset setSuperTables(superTables) />
+	</cffunction>
+	
+	<!--- superTables --->
+    <cffunction name="setSuperTables" access="public" output="false" returntype="void">
+       <cfargument name="superTables" hint="I am this table's array of super table." required="yes" type="array" />
+       <cfset variables.superTables = arguments.superTables />
     </cffunction>
-    <cffunction name="getSuperTable" access="public" output="false" returntype="reactor.core.superTable">
-       <cfreturn variables.superTable />
+    <cffunction name="getSuperTables" access="public" output="false" returntype="array">
+       <cfreturn variables.superTables />
     </cffunction>
 	
 	<!--- referencingKeys --->

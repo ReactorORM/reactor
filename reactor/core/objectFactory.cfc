@@ -70,11 +70,11 @@
 		<cfargument name="TableTranslator" hint="I am the TableTranslator to use to generate the To." required="yes" type="reactor.core.tableTranslator" />
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record" required="yes" type="string" />
 		<cfset var XML = arguments.TableTranslator.getXml() />
-		<cfset var superTable = XMLSearch(XML, "/table/superTable") />
-				
+		<cfset var superTable = XMLSearch(XML, "/table/superTables[@sort = 'backward']/superTable") />
+		
 		<cfif ArrayLen(superTable)>
 			<!--- we need to insure that the base object exists --->
-			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.name), arguments.type) />
+			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.toTable), arguments.type) />
 		</cfif>
 		
 		<!--- write the base object --->

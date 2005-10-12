@@ -79,12 +79,13 @@
 			<!--- add columns to the superTable --->
 			<cfset readSuperTableColumns(NewSuperTable) />
 			
-			<!--- add the supertable to the hierarchy --->
+			<!--- add this supertable to the hierarcy --->
+			<cfset arguments.Table.prependSuperTable(NewSuperTable) />
+			<!--- add the supertable to the hierarchy 
 			<cfif StructKeyExists(arguments, "SuperTable") AND IsObject(arguments.SuperTable)>
 				<cfset arguments.SuperTable.setSuperTable(NewSuperTable) />
 			<cfelse>
-				<cfset arguments.Table.setSuperTable(NewSuperTable) />
-			</cfif>
+			</cfif>--->
 			
 			<!--- recurse and find this table's super table --->
 			<cfset readSuperTable(arguments.Table, NewSuperTable) />

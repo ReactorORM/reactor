@@ -1,6 +1,5 @@
 <cfcomponent hint="I am a table's super table." extends="reactor.core.key">
 
-	<cfset variables.SuperTable = 0 />
 	<cfset variables.columns = ArrayNew(1) />
 	
 	<cffunction name="addColumn" access="public" hint="I add a column to this table." output="false" returntype="void">
@@ -22,14 +21,6 @@
 		</cfloop>
 	</cffunction>
 	
-	<cffunction name="hasSuperTable" hint="I indicate if this superTable has a superTable" output="false" returntype="boolean">
-		<cfif IsObject(variables.superTable)>
-			<cfreturn true />
-		<cfelse>
-			<cfreturn false />
-		</cfif>
-	</cffunction>
-	
 	<!--- columns --->
     <cffunction name="setColumns" access="public" output="false" returntype="void">
        <cfargument name="columns" hint="I am this table's columns" required="yes" type="array" />
@@ -37,15 +28,6 @@
     </cffunction>
     <cffunction name="getColumns" access="public" output="false" returntype="array">
        <cfreturn variables.columns />
-    </cffunction>
-	
-	<!--- superTable --->
-    <cffunction name="setSuperTable" access="public" output="false" returntype="void">
-       <cfargument name="superTable" hint="I am this table's super table." required="yes" type="reactor.core.superTable" />
-       <cfset variables.superTable = arguments.superTable />
-    </cffunction>
-    <cffunction name="getSuperTable" access="public" output="false" returntype="reactor.core.superTable">
-       <cfreturn variables.superTable />
     </cffunction>
 
 </cfcomponent>
