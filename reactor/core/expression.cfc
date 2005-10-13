@@ -35,9 +35,9 @@
 		<cfargument name="value2" hint="I am the second value" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value1) AND IsNumeric(arguments.value2)>
-			<cfset appendExpression("[#arguments.field#] BETWEEN #arguments.value1# AND #arguments.value2#") />
+			<cfset appendExpression("#arguments.field# BETWEEN #arguments.value1# AND #arguments.value2#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] BETWEEN '#arguments.value1#' AND '#arguments.value2#'") />
+			<cfset appendExpression("#arguments.field# BETWEEN '#arguments.value1#' AND '#arguments.value2#'") />
 		</cfif>
 		
 		<cfreturn this />
@@ -48,7 +48,7 @@
 		<cfargument name="field1" hint="I am the first field to compare" required="yes" type="string" />
 		<cfargument name="field2" hint="I am the second field to compare" required="yes" type="string" />
 		
-		<cfset appendExpression("[#arguments.field#] BETWEEN [#arguments.field1#] AND [#arguments.field2#]") />
+		<cfset appendExpression("#arguments.field# BETWEEN [#arguments.field1#] AND [#arguments.field2#]") />
 		
 		<cfreturn this />
 	</cffunction>
@@ -58,9 +58,9 @@
 		<cfargument name="value" hint="I am the value to compare" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] = #arguments.value#") />
+			<cfset appendExpression("#arguments.field# = #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] = '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# = '#arguments.value#'") />		
 		</cfif>
 		
 		<cfreturn this />
@@ -80,9 +80,9 @@
 		<cfargument name="value" hint="I am the value to compare" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] != #arguments.value#") />
+			<cfset appendExpression("#arguments.field# != #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] != '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# != '#arguments.value#'") />		
 		</cfif>
 		
 		<cfreturn this />
@@ -102,9 +102,9 @@
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] >= #arguments.value#") />
+			<cfset appendExpression("#arguments.field# >= #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] >= '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# >= '#arguments.value#'") />		
 		</cfif>	
 		
 		<cfreturn this />	
@@ -124,9 +124,9 @@
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] > #arguments.value#") />
+			<cfset appendExpression("#arguments.field# > #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] > '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# > '#arguments.value#'") />		
 		</cfif>
 		
 		<cfreturn this />
@@ -152,16 +152,16 @@
 		
 		<cfswitch expression="#arguments.mode#">
 			<cfcase value="Anywhere">
-				<cfset appendExpression("[#arguments.field#] LIKE '%#arguments.value#%'") />
+				<cfset appendExpression("#arguments.field# LIKE '%#arguments.value#%'") />
 			</cfcase>
 			<cfcase value="Left">
-				<cfset appendExpression("[#arguments.field#] LIKE '%#arguments.value#'") />
+				<cfset appendExpression("#arguments.field# LIKE '%#arguments.value#'") />
 			</cfcase>
 			<cfcase value="Right">
-				<cfset appendExpression("[#arguments.field#] LIKE '#arguments.value#%'") />
+				<cfset appendExpression("#arguments.field# LIKE '#arguments.value#%'") />
 			</cfcase>
 			<cfcase value="All">
-				<cfset appendExpression("[#arguments.field#] LIKE '#arguments.value#'") />
+				<cfset appendExpression("#arguments.field# LIKE '#arguments.value#'") />
 			</cfcase>
 		</cfswitch>
 		
@@ -179,16 +179,16 @@
 		
 		<cfswitch expression="#arguments.mode#">
 			<cfcase value="Anywhere">
-				<cfset appendExpression("[#arguments.field#] NOT LIKE '%#arguments.value#%'") />
+				<cfset appendExpression("#arguments.field# NOT LIKE '%#arguments.value#%'") />
 			</cfcase>
 			<cfcase value="Left">
-				<cfset appendExpression("[#arguments.field#] NOT LIKE '%#arguments.value#'") />
+				<cfset appendExpression("#arguments.field# NOT LIKE '%#arguments.value#'") />
 			</cfcase>
 			<cfcase value="Right">
-				<cfset appendExpression("[#arguments.field#] NOT LIKE '#arguments.value#%'") />
+				<cfset appendExpression("#arguments.field# NOT LIKE '#arguments.value#%'") />
 			</cfcase>
 			<cfcase value="All">
-				<cfset appendExpression("[#arguments.field#] NOT LIKE '#arguments.value#'") />
+				<cfset appendExpression("#arguments.field# NOT LIKE '#arguments.value#'") />
 			</cfcase>
 		</cfswitch>
 		
@@ -216,7 +216,7 @@
 	<cffunction name="isNotNull" access="public" hint="I return an expression which checks if a field's is not null." output="false" returntype="reactor.core.expression">
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		
-		<cfset appendExpression("[#arguments.field#] IS NOT NULL") />
+		<cfset appendExpression("#arguments.field# IS NOT NULL") />
 		
 		<cfreturn this />
 	</cffunction>
@@ -224,7 +224,7 @@
 	<cffunction name="isNull" access="public" hint="I return an expression which checks if a field's is null." output="false" returntype="reactor.core.expression">
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		
-		<cfset appendExpression("[#arguments.field#] IS NULL") />
+		<cfset appendExpression("#arguments.field# IS NULL") />
 		
 		<cfreturn this />
 	</cffunction>
@@ -234,9 +234,9 @@
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] <= #arguments.value#") />
+			<cfset appendExpression("#arguments.field# <= #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] <= '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# <= '#arguments.value#'") />		
 		</cfif>		
 		
 		<cfreturn this />
@@ -256,9 +256,9 @@
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
 		<cfif IsNumeric(arguments.value)>
-			<cfset appendExpression("[#arguments.field#] < #arguments.value#") />
+			<cfset appendExpression("#arguments.field# < #arguments.value#") />
 		<cfelse>
-			<cfset appendExpression("[#arguments.field#] < '#arguments.value#'") />		
+			<cfset appendExpression("#arguments.field# < '#arguments.value#'") />		
 		</cfif>
 		
 		<cfreturn this />

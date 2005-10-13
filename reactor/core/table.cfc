@@ -77,6 +77,11 @@
 		</cfloop>
 	</cffunction>
 	
+	<cffunction name="getRelationshipRecordSuper" access="public" hint="I return the type of which a record object would be for the named remote table.." output="false" returntype="string">
+		<cfargument name="tableName" hint="I am the name of the table to return the base record type for." required="yes" type="string" />
+		<cfreturn getCreationRoot() & ".Record." & getConfig().getDbType() & ".base." & arguments.tableName & "Record"  />
+	</cffunction>
+	
 	<cffunction name="getBaseDaoSuper" access="public" hint="I return the name of the super object for this Dao." output="false" returntype="string">
 		<cfif hasSuperTable()>
 			<!--- determine the super To object's name --->

@@ -35,7 +35,7 @@
 		
 		<cfreturn names />
 	</cffunction>
-	
+		
 	<!--- relationships --->
     <cffunction name="setRelationships" access="public" output="false" returntype="void">
        <cfargument name="relationships" hint="I am the relationships in the key" required="yes" type="array" />

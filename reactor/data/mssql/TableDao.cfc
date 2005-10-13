@@ -4,11 +4,32 @@
 		<cfargument name="Table" hint="I am the table to populate." required="yes" type="reactor.core.table" />
 		
 		<!--- get all column data --->
+		<cfset tableExists(arguments.Table) />
 		<cfset readColumns(arguments.Table) />
 		<cfset readPrimaryKey(arguments.Table) />
 		<cfset readForeignKeys(arguments.Table) />
 		<cfset readReferencingKeys(arguments.Table) />
+		<cfset readBridgedTables(arguments.Table) />
 		<cfset readSuperTable(arguments.Table) />
+	</cffunction>
+	
+	<cffunction name="tableExists" access="private" hint="I confirm that this table exists at all.  If not, I throw an error." output="false" returntype="void">
+		<cfargument name="Table" hint="I am the table to check on." required="yes" type="reactor.core.table" />
+		<cfset qTable = 0 />
+		
+		<cfstoredproc datasource="#getDsn()#" procedure="sp_tables">
+			<cfprocparam cfsqltype="cf_sql_varchar" scale="384" value="#arguments.Table.getName()#" />
+			<cfprocresult name="qTable" />
+		</cfstoredproc>
+		
+		<cfif NOT qTable.recordCount>
+			<cfthrow type="Reactor.NoSuchTable" />
+		</cfif>		
+	</cffunction>
+	
+	<cffunction name="readBridgedTables" access="private" hint="I read information about tables related to this table through 'bridging' tables." output="false" returntype="void">
+		<cfargument name="Table" hint="I am the table to populate." required="yes" type="reactor.core.table" />
+		<!--- logic goes here :) --->
 	</cffunction>
 	
 	<cffunction name="readSuperTable" access="private" hint="I read information about the table's super table(s)." output="false" returntype="void">

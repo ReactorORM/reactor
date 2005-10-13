@@ -50,12 +50,11 @@
 		&lt;/cfif&gt;
 		</xsl:if>
 	&lt;/cffunction&gt;
-		
+	<xsl:if test="count(table/columns/column[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a record from the <xsl:value-of select="table/@name" /> table." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="table/@name" /> which will be populated." required="yes" type="<xsl:value-of select="table/@customToSuper" />" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		<xsl:if test="count(table/superTables/superTable) &gt; 0">
-		&lt;cfset super.read(arguments.to) /&gt;
 		<xsl:if test="table/superTables[@sort = 'backward']/superTable/relationship/column/@name != table/superTables[@sort = 'backward']/superTable/relationship/column/@referencedColumn">&lt;cfset arguments.to.<xsl:value-of select="table/superTables[@sort = 'backward']/superTable/relationship/column/@name" /> = arguments.to.<xsl:value-of select="table/superTables[@sort = 'backward']/superTable/relationship/column/@referencedColumn" /> /&gt;
 		</xsl:if>
 		</xsl:if>
@@ -63,15 +62,14 @@
 		<xsl:when test="table[@dbType = 'mssql']">
 		&lt;cfquery name="qRead" datasource="#getConfig().getDsn()#"&gt;
 			SELECT 
-				<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@exists = 'false']">
-					[<xsl:value-of select="../../@toTable" />].[<xsl:value-of select="@name" />],
+				<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">[<xsl:value-of select="../../@toTable" />].[<xsl:value-of select="@name" />],
 				</xsl:for-each>
-				<xsl:for-each select="table/columns/column[@primaryKey = 'false']">
-					[<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]<xsl:if test="position() != last()">, 
+				<xsl:for-each select="table/columns/column[@primaryKey = 'false']">[<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]<xsl:if test="position() != last()">, 
 				</xsl:if>
 				</xsl:for-each>
-			FROM [<xsl:value-of select="table/@name" />]<xsl:if test="table/columns/column[@primaryKey = 'true']">
-			WHERE
+			FROM [<xsl:value-of select="table/@name" />] <xsl:if test="table/columns/column[@primaryKey = 'true']"> <xsl:for-each select="table/superTables[@sort = 'backward']/superTable/relationship/column">JOIN [<xsl:value-of select="../../@toTable" />]
+				ON [<xsl:value-of select="../../@fromTable" />].[<xsl:value-of select="@name" />] = [<xsl:value-of select="../../@toTable" />].[<xsl:value-of select="@referencedColumn" />]
+			</xsl:for-each>WHERE
 				<xsl:for-each select="table/columns/column[@primaryKey = 'true']">[<xsl:value-of select="@name" />] = &lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"<xsl:if test="@length > 0"> scale="<xsl:value-of select="@length" />"</xsl:if> value="#arguments.to.<xsl:value-of select="@name" />#"<xsl:if test="@nullable = 'true'"> null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@name" />), DE(true), DE(false))#"</xsl:if> /&gt;<xsl:if test="position() != last()"> AND 
 				</xsl:if>
 				</xsl:for-each>
@@ -82,7 +80,9 @@
 			.... MYSQL CODE WILL GO HERE ...
 		</xsl:when>
 		</xsl:choose>
-		&lt;cfif qRead.recordCount&gt;<xsl:for-each select="table/columns/column[@primaryKey = 'false']">
+		&lt;cfif qRead.recordCount&gt;<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">
+			&lt;cfset arguments.to.<xsl:value-of select="@name" /> = qRead.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
+			<xsl:for-each select="table/columns/column[@primaryKey = 'false']">
 			&lt;cfset arguments.to.<xsl:value-of select="@name" /> = qRead.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
@@ -113,7 +113,7 @@
 		</xsl:when>
 		</xsl:choose>
 	&lt;/cffunction&gt;
-	
+	</xsl:if>
 	&lt;cffunction name="delete" access="public" hint="I delete a record in the <xsl:value-of select="table/@name" /> table." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="table/@name" /> which will be used to delete from the table." required="yes" type="<xsl:value-of select="table/@customToSuper" />" /&gt;
 		&lt;cfset var qDelete = 0 /&gt;
@@ -128,9 +128,18 @@
 		<xsl:when test="table[@dbType = 'mssql']">
 		&lt;cfquery name="qDelete" datasource="#getConfig().getDsn()#"&gt;
 			DELETE FROM [<xsl:value-of select="table/@name" />]
-			WHERE <xsl:for-each select="table/columns/column[@primaryKey = 'true']">[<xsl:value-of select="@name" />] = &lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"<xsl:if test="@length > 0"> scale="<xsl:value-of select="@length" />"</xsl:if> value="#arguments.to.<xsl:value-of select="@name" />#"<xsl:if test="@nullable = 'true'"> null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@name" />), DE(true), DE(false))#"</xsl:if> /&gt;<xsl:if test="position() != last()"> AND 
+			WHERE <xsl:choose>
+			<xsl:when test="count(table/columns/column[@primaryKey = 'true']) &gt; 0">
+				<xsl:for-each select="table/columns/column[@primaryKey = 'true']">[<xsl:value-of select="@name" />] = &lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"<xsl:if test="@length > 0"> scale="<xsl:value-of select="@length" />"</xsl:if> value="#arguments.to.<xsl:value-of select="@name" />#"<xsl:if test="@nullable = 'true'"> null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@name" />), DE(true), DE(false))#"</xsl:if> /&gt;<xsl:if test="position() != last()"> AND 
 				</xsl:if>
 				</xsl:for-each>
+			</xsl:when>
+			<xsl:when test="count(table/columns/column[@primaryKey = 'true']) = 0">
+				<xsl:for-each select="table/columns/column">[<xsl:value-of select="@name" />] = &lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"<xsl:if test="@length > 0"> scale="<xsl:value-of select="@length" />"</xsl:if> value="#arguments.to.<xsl:value-of select="@name" />#"<xsl:if test="@nullable = 'true'"> null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@name" />), DE(true), DE(false))#"</xsl:if> /&gt;<xsl:if test="position() != last()"> AND 
+				</xsl:if>
+				</xsl:for-each>
+			</xsl:when>
+		</xsl:choose>
 		&lt;/cfquery&gt;
 		</xsl:when>
 		<xsl:when test="table[@dbType = 'mysql']">

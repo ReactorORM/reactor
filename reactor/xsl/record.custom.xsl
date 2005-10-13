@@ -5,7 +5,7 @@
 
 	<xsl:template match="/">
 &lt;cfcomponent hint="I am the custom Record object for the <xsl:value-of select="table/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="<xsl:value-of select="table/@recordBase" />" &gt;
+	extends="<xsl:value-of select="table/@customRecordSuper" />" &gt;
 	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 &lt;/cfcomponent&gt;
 	</xsl:template>

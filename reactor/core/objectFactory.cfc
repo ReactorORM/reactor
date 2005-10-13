@@ -23,46 +23,60 @@
 				detail="The type argument must be one of: record, dao, gateway, to" />
 		</cfif>
 	
-		<cfswitch expression="#getConfig().getMode()#">
-			<cfcase value="always">
-				<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
-				<cfset generate = true />
-			</cfcase>
-			<cfcase value="development">
-				<cftry>
-					<!--- create an instance of the object and check it's signature --->
-					<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
-					<cfcatch>
-						<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
-						<cfset generate = true />
-					</cfcatch>
-				</cftry>
-				<cfif NOT generate>
-					<!--- check the object's signature --->
+		<cftry>
+			<cfswitch expression="#getConfig().getMode()#">
+				<cfcase value="always">
 					<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
-					<cfif TableTranslator.getSignature() IS NOT Object.getSignature()>
-						<cfset generate = true />
-					</cfif>
-				</cfif>
-			</cfcase>
-			<cfcase value="production">
-				<cftry>
-					<!--- create an instance of the object and check it's signature --->
-					<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
-					<cfcatch>
+					<cfset generate = true />
+				</cfcase>
+				<cfcase value="development">
+					<cftry>
+						<!--- create an instance of the object and check it's signature --->
+						<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+						<cfcatch>
+							<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+							<cfset generate = true />
+						</cfcatch>
+					</cftry>
+					<cfif NOT generate>
+						<!--- check the object's signature --->
 						<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
-						<cfset generate = true />
-					</cfcatch>
-				</cftry>
-			</cfcase>
-		</cfswitch>
+						<cfif TableTranslator.getSignature() IS NOT Object.getSignature()>
+							<cfset generate = true />
+						</cfif>
+					</cfif>
+				</cfcase>
+				<cfcase value="production">
+					<cftry>
+						<!--- create an instance of the object and check it's signature --->
+						<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+						<cfcatch>
+							<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+							<cfset generate = true />
+						</cfcatch>
+					</cftry>
+				</cfcase>
+			</cfswitch>
+			
+			<cfcatch type="Reactor.NoSuchTable">
+				<cfthrow type="Reactor.NoSuchTable" message="Table '#arguments.name#' does not exist." detail="Reactor was unable to find a table in the database with the name '#arguments.name#.'" />
+			</cfcatch>
+		</cftry>
 		
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
 			<cfset generateObject(TableTranslator, arguments.type) />			
-			<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(getConfig()) />
+			<cfif arguments.type IS NOT "Record">
+				<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(getConfig()) />
+			<cfelse>
+				<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(arguments.name, this) />
+			</cfif>
 		<cfelse>
-			<cfreturn Object.init(getConfig()) />
+			<cfif arguments.type IS NOT "Record">
+				<cfreturn Object.init(getConfig()) />
+			<cfelse>
+				<cfreturn Object.init(arguments.name, this) />
+			</cfif>
 		</cfif>
 	</cffunction>
 	

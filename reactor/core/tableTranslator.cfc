@@ -107,14 +107,15 @@
 							</cfloop>
 						</superTables>
 						
-						<superTables sort="forward" />
+						<superTables />
 					</cfif>
 					
 					<foreignKeys>
 						<cfloop from="1" to="#ArrayLen(ForeignKeys)#" index="x">
 							<cfset ForeignKey = ForeignKeys[x] />
 							<foreignKey name="#ForeignKey.getName()#"
-								table="#ForeignKey.getToTableName()#">
+								table="#ForeignKey.getToTableName()#"
+								remoteRecordSuper="#Table.getRelationshipRecordSuper(ForeignKey.getToTableName())#">
 								<!--- recordType="#getObjectName("Record", ForeignKey.getToTableName())#" --->
 								<cfset RelationShips = ForeignKey.getRelationships() />
 								<cfloop from="1" to="#ArrayLen(Relationships)#" index="y">
@@ -147,16 +148,18 @@
 		<cfset signature = Hash(structure) />
 		<cfset structure.XmlRoot.XmlAttributes["signature"] = signature />
 		
-		<!--- reverse the 'backwards' supertable --->
+		<!--- create the 'forward' supertable --->
 		<!---
 			You, who are reading this comment, may wonder what the heck I'm doing.  The answer is this:  
 			1) CF's XSL parser is a 1.0 version, not 2.0.  Thus, there are a LOT of missing xpath functions such 
 			as reverse().  
 			2) There are some cases where I need to go through the hierarchy of "super" tables forwards and some
 			times where I need to go through them backwards. (hence the sort attribute).  I tried all sorts of other
+			options, but this seemed to be the best option.
 		--->
 		<cfif Table.hasSuperTable()>
 			<cfset structure.table.superTables[2] = Duplicate(structure.table.superTables[1]) />
+			<cfset structure.table.superTables[2].XmlAttributes.sort = 'forward' />
 			<cfset y = 1 />
 			<cfloop from="#ArrayLen(structure.table.superTables[1].superTable)#" to="1" step="-1" index="x">
 				<cfset structure.table.superTables[2].XmlChildren[x] = Duplicate(structure.table.superTables[1].XmlChildren[y]) />
