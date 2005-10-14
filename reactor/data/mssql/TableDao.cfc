@@ -6,7 +6,6 @@
 		<!--- get all column data --->
 		<cfset tableExists(arguments.Table) />
 		<cfset readColumns(arguments.Table) />
-		<cfset readPrimaryKey(arguments.Table) />
 		<cfset readForeignKeys(arguments.Table) />
 		<cfset readReferencingKeys(arguments.Table) />
 		<cfset readBridgedTables(arguments.Table) />
@@ -232,52 +231,58 @@
 		</cfif>		
 	</cffunction>
 	
-	<cffunction name="readPrimaryKey" access="private" hint="I populate the table with primary key information." output="false" returntype="void">
-		<cfargument name="Table" hint="I am the table to populate." required="yes" type="reactor.core.table" />
-		<cfset var qPrimaryKey = 0 />
-		<cfset var PrimaryKey = 0 />
-		<cfset var Column = 0 />
-		<cfstoredproc datasource="#getDsn()#" procedure="sp_pkeys">
-			<cfprocparam cfsqltype="cf_sql_varchar" scale="384" value="#arguments.Table.getName()#" />
-			<cfprocresult name="qPrimaryKey" resultset="1" />
-		</cfstoredproc>
-		
-		<cfif qPrimaryKey.recordCount>
-			<!--- set the primary key's name --->
-			<cfset PrimaryKey = CreateObject("Component", "reactor.core.primaryKey").init(qPrimaryKey.pk_name) />
-			
-			<!--- add columns to the primary key --->
-			<cfloop query="qPrimaryKey">
-				<cfset Column = arguments.Table.getColumn(qPrimaryKey.column_name) />
-				<cfset Column.setPrimaryKey(true) />
-				<cfset PrimaryKey.addColumn(Column) />
-			</cfloop>
-			
-			<!--- add the primary key to the table --->
-			<cfset arguments.Table.setPrimaryKey(PrimaryKey) />
-		</cfif>
-	</cffunction>
-
 	<cffunction name="readColumns" access="private" hint="I populate the table with columns." output="false" returntype="void">
 		<cfargument name="Table" hint="I am the table to populate." required="yes" type="reactor.core.table" />
 		<cfset var qColumns = 0 />
 		<cfset var Column = 0 />
 		
+		<!---
 		<cfstoredproc datasource="#getDsn()#" procedure="sp_columns">
 			<cfprocparam cfsqltype="cf_sql_varchar" scale="384" value="#arguments.Table.getName()#" />
 			<cfprocresult name="qColumns" resultset="1" />
 		</cfstoredproc>
+		--->
+		
+		<cfquery name="qColumns" datasource="#getDsn()#">
+			SELECT 
+				col.COLUMN_NAME,
+				col.DATA_TYPE,
+				columnProperty(object_id(col.TABLE_NAME), col.COLUMN_NAME, 'IsIdentity') AS IS_IDENTITY,
+				CASE
+					WHEN col.IS_NULLABLE = 'No' THEN 'false'
+					ELSE 'true'
+				END as IS_NULLABLE,
+				CASE
+					WHEN ISNUMERIC(col.CHARACTER_MAXIMUM_LENGTH) = 1 THEN col.CHARACTER_MAXIMUM_LENGTH
+					ELSE 0
+				END as CHARACTER_MAXIMUM_LENGTH,
+				col.COLUMN_DEFAULT,
+				tabCon.CONSTRAINT_TYPE,
+				CASE
+					WHEN colCon.CONSTRAINT_NAME IS NOT NULL THEN 'true'
+					ELSE 'false'
+				END as IS_PRIMARYKEY
+			FROM INFORMATION_SCHEMA.COLUMNS as col JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS as tabCon
+				ON col.TABLE_NAME = tabCon.TABLE_NAME
+				AND tabCon.CONSTRAINT_TYPE = 'PRIMARY KEY'
+			LEFT JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE as colCon
+				ON col.COLUMN_NAME = colCon.COLUMN_NAME
+				AND col.TABLE_NAME = colCon.TABLE_NAME
+				AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
+			WHERE col.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Table.getName()#" />
+		</cfquery>
 		
 		<cfloop query="qColumns">
 			<!--- create the column --->
 			<cfset Column = CreateObject("Component", "reactor.core.column").init(
 				qColumns.column_name,
-				translateDataType(ListFirst(qColumns.Type_Name, " ")),
-				translateCfSqlType(ListFirst(qColumns.Type_Name, " ")),
-				Iif(ListLast(qColumns.Type_Name, " ") IS "identity", DE(true), DE(false)),
-				Iif(qColumns.NULLABLE, DE('true'), DE('false')),
-				qColumns.Length,
-				getCfDefaultValue(qColumns.column_def, translateDataType(ListFirst(qColumns.Type_Name, " ")))
+				translateDataType(qColumns.DATA_TYPE),
+				translateCfSqlType(qColumns.DATA_TYPE),
+				qColumns.IS_IDENTITY,
+				qColumns.IS_NULLABLE,
+				qColumns.CHARACTER_MAXIMUM_LENGTH,
+				getCfDefaultValue(qColumns.COLUMN_DEFAULT, translateDataType(qColumns.DATA_TYPE)),
+				qColumns.IS_PRIMARYKEY
 			) />
 			
 			<!--- add the column to the table --->
@@ -498,209 +503,3 @@
 	</cffunction>
 
 </cfcomponent>
-
-<!---- 
-<cffunction name="getReferencingKeys" access="public" hint="I return a query of external table's keys referencing this table." output="false" returntype="query">
-	<cfargument name="name" hint="I am the name of the table inspect." required="yes" type="string" />
-	<cfset var TimedCache = getTimedCache() />
-	<cfset var qReferencingKey = 0 />
-	
-	<cfif TimedCache.exists("referencingKey_" & arguments.name)>
-		<cfset qReferencingKey = TimedCache.getValue("referencingKey_" & arguments.name) />
-	<cfelse>
-		<cfquery name="qReferencingKey" datasource="#getDsn()#">
-			SELECT so.name as fkName, 
-				forTab.name as foreignTableName, 
-				thsTab.name as thisTableName,
-				forCol.name as foreignColumnName,
-				thsCol.name as thisColumnName,	
-				thsTab.name + '.' + thsCol.name + '->' + forTab.name + '.' + forCol.name as asString
-			FROM SysForeignKeys as sfk JOIN SysObjects as so
-				ON sfk.constid = so.id
-			JOIN SysObjects as forTab
-				ON sfk.rkeyid = forTab.id
-			JOIN SysObjects as thsTab 
-				ON sfk.fkeyid = thsTab.id
-			JOIN SysColumns as forCol
-				ON sfk.rkeyid = forCol.id AND sfk.rkey = forCol.colid
-			JOIN SysColumns as thsCol
-				ON sfk.fkeyid = thsCol.id AND sfk.fkey = thsCol.colid
-			WHERE forTab.name = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.name#" />
-			ORDER BY sfk.constid
-		</cfquery>
-		
-		<!--- cache the results --->
-		<cfset TimedCache.setValue("referencingKey_" & arguments.name, qReferencingKey) />
-	</cfif>		
-	
-	<!--- return the data --->
-	<cfreturn qReferencingKey />
-</cffunction>
-
-
-
-<cffunction name="getTableDefinition" access="private" hint="I return the definition for a table." output="false" returntype="struct">
-	<cfargument name="name" hint="I am the name of the table to get the definition for." required="yes" type="string" />
-	<cfset var definition = StructNew() />
-	
-	<cfset definition.table = getTable(arguments.name) />
-	<cfset definition.columns = getColumns(arguments.name) />
-	<cfset definition.columnList = ValueList(definition.columns.column_name) />
-	<cfset definition.primaryKeyColumnList = getPrimaryKeyColumnList(arguments.name) />
-	<cfset definition.foreignKeys = getForeignKeys(arguments.name) />
-	<cfset definition.foreignKeysColumnList = ValueList(definition.foreignKeys.foreignColumnName) />
-	<cfset definition.referencingKeys = getReferencingKeys(arguments.name) />
-	<cfset definition.baseTable = getBaseTable(arguments.name, definition.primaryKeyColumnList, definition.foreignKeys) />
-	<cfset definition.baseTableColumns = getColumns(definition.baseTable) />
-	<cfset definition.baseTablePrimaryKeyColumnList = getPrimaryKeyColumnList(definition.baseTable) />
-			
-	<!--- return the data --->
-	<cfreturn definition />
-</cffunction>
-
-<cffunction name="getTableStructure" access="private" hint="I return an XML document representing the table's structure." output="false" returntype="xml">
-	<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
-	<cfset var definition = getTableDefinition(arguments.name) /> 
-	<cfset var structure = 0 />
-	<cfset var signature = "" />
-	
-	<cfset var customToBase = "reactor.core.abstractTo" />
-	<cfset var customDaoBase = "reactor.core.abstractDao" />
-	<cfset var customGatewayBase = "reactor.core.abstractGatewy" />
-	<cfset var customRecordBase = "reactor.core.abstractRecord" />
-	
-	<cfif TimedCache.exists("str_" & arguments.name)>
-		<cfset structure = TimedCache.getValue("str_" & arguments.name) />
-	<cfelse>
-		<!--- find out what the generated tables extend --->
-		<cfif definition.baseTable IS NOT arguments.name>
-			<cfset customToBase = getObjectName("To", definition.baseTable, false) />
-			<cfset customDaoBase = getObjectName("Dao", definition.baseTable, false) />
-			<cfset customGatewayBase = getObjectName("Gateway", definition.baseTable, false) />
-			<cfset customRecordBase = getObjectName("Record", definition.baseTable, false) />
-		</cfif>
-		
-		<cfsavecontent variable="structure">
-			<table
-				name="<cfoutput>#TitleCase(arguments.name, true)#</cfoutput>"
-				baseTable="<cfoutput>#definition.baseTable#</cfoutput>"
-				
-				customToBase="<cfoutput>#customToBase#</cfoutput>"
-				customDaoBase="<cfoutput>#customDaoBase#</cfoutput>"
-				customGatewayBase="<cfoutput>#customGatewayBase#</cfoutput>"
-				customRecordBase="<cfoutput>#customRecordBase#</cfoutput>"
-				
-				toBase="<cfoutput>#getObjectName("To", arguments.name, true)#</cfoutput>"
-				daoBase="<cfoutput>#getObjectName("Dao", arguments.name, true)#</cfoutput>"
-				gatewayBase="<cfoutput>#getObjectName("Gateway", arguments.name, true)#</cfoutput>"
-				recordBase="<cfoutput>#getObjectName("Record", arguments.name, true)#</cfoutput>">
-				<columns>
-					<cfoutput query="definition.columns">
-						<column name="#TitleCase(definition.columns.Column_Name, true)#"
-							type="#ListFirst(definition.columns.Type_Name, " ")#"
-							identity="#Iif(ListLast(definition.columns.Type_Name, " ") IS "identity", DE('true'), DE('false'))#"
-							nullable="#Iif(definition.columns.NULLABLE, DE('true'), DE('false'))#"
-							length="#definition.columns.Length#"
-							default="#definition.columns.Column_Def#"
-							primaryKey="#Iif(ListFindNoCase(definition.primaryKeyColumnList, definition.columns.Column_Name), DE('true'), DE('false'))#"
-							foreignKey="#Iif(ListFindNoCase(definition.foreignKeysColumnList, definition.columns.Column_Name), DE('true'), DE('false'))#"
-							/>
-					</cfoutput>
-				</columns>
-				<foreignKeys>
-					<cfoutput query="definition.foreignKeys" group="fkName">
-						<foreignKey name="#fkName#"
-							table="#TitleCase(foreignTableName, true)#"
-							recordType="#getObjectName("Record", foreignTableName)#">
-							<cfoutput>
-								<column name="#TitleCase(thisColumnName, true)#"
-									referencedColumn="#TitleCase(foreignColumnName, true)#" />
-							</cfoutput>
-						</foreignKey>
-					</cfoutput>
-				</foreignKeys>
-				<referencingKeys>
-					<cfoutput query="definition.referencingKeys" group="fkName">
-						<referencingKey name="#fkName#"
-							table="#TitleCase(thisTableName, true)#">
-							<cfoutput>
-								<column name="#TitleCase(thisColumnName, true)#"
-									referencedColumn="#TitleCase(foreignColumnName, true)#" />
-							</cfoutput>
-						</referencingKey>
-					</cfoutput>
-				</referencingKeys>
-				<baseTableColumns>
-					<cfif definition.baseTable IS NOT arguments.name>
-						<cfoutput query="definition.baseTableColumns">
-							<baseTableColumn name="#TitleCase(definition.baseTableColumns.Column_Name, true)#"
-								type="#ListFirst(definition.baseTableColumns.Type_Name, " ")#"
-								length="#definition.columns.Length#"
-								overridden="#Iif(ListFindNoCase(definition.columnList, definition.baseTableColumns.Column_Name), DE('true'), DE('false'))#"
-								primaryKey="#Iif(ListFindNoCase(definition.baseTablePrimaryKeyColumnList, definition.baseTableColumns.Column_Name), DE('true'), DE('false'))#" />
-						</cfoutput>
-					</cfif>
-				</baseTableColumns>
-			</table>
-		</cfsavecontent>
-					
-		<cfset structure = XmlParse(structure) />
-		<cfset signature = Hash(structure) />
-		<cfset structure.XmlRoot.XmlAttributes["signature"] = signature />
-		
-	<cfdump var="#structure#" />
-	
-	<cfabort>
-		<!--- cache the results --->
-		<cfset TimedCache.setValue("str_" & arguments.name, structure) />
-	</cfif>
-	
-	<cfreturn structure />
-</cffunction>
-
-<cffunction name="getBaseTable" access="private" hint="I check to see if this table's primary keys are foreign keys to another table.  If so, I return the name of that table." output="false" returntype="string">
-	<cfargument name="name" hint="I am the name of the table." required="yes" type="string" />
-	<cfargument name="primaryKeyColumnList" hint="I am the query of the primary key" required="yes" type="string" />
-	<cfargument name="foreignKeys" hint="I am the query of foreign keys" required="yes" type="query" />
-	<cfset var TimedCache = getTimedCache() />
-	<cfset var pkColumnList = arguments.primaryKeyColumnList />
-	<cfset var currentFkName = "" />
-	<cfset var listLoc = 0 />
-	
-	<cfif TimedCache.exists("base_" & arguments.name)>
-		<cfset arguments.name = TimedCache.getValue("base_" & arguments.name) />
-	<cfelse>
-		<!--- loop over the foreign keys --->
-		<cfloop query="arguments.foreignKeys">
-			<!--- check to see if we're starting a new fk set --->
-			<cfif currentFkName IS NOT arguments.foreignKeys.fkName>
-				<!--- reset some variables --->
-				<!--- set the foreign key name.  we'll use this to check to see if we're still on the same foreign key as we loop over the fk query --->
-				<cfset currentFkName = arguments.foreignKeys.fkName />
-				<!--- get a list of all columns in the primary key --->
-				<cfset pkColumnList = arguments.primaryKeyColumnList />
-			</cfif>
-			
-			<!--- Check to see if the columns in the foreign key named #currentFkName# represent all of the columns in the primary key columns. --->
-			
-			<!--- if the FK column name exists in the primary key then delete it from the list. --->
-			<cfset listLoc = ListFindNoCase(pkColumnList, arguments.foreignKeys.thisColumnName) />
-			<cfif listLoc>
-				<cfset pkColumnList = ListDeleteAt(pkColumnList, listLoc) />
-			</cfif>
-			
-			<!--- if we don't have any items left in the primary key column list then all of the columns in the primary key are part of the foreign key to another table. --->
-			<cfif NOT Len(pkColumnList)>
-				<!--- the foreign table is a "super" table for this table --->
-				<cfset arguments.name = arguments.foreignKeys.foreignTableName />
-				<cfbreak />
-			</cfif>
-		</cfloop>
-
-		<!--- cache the results --->
-		<cfset TimedCache.setValue("base_" & arguments.name, arguments.name) />
-	</cfif>		
-	
-	<cfreturn arguments.name />
-</cffunction>
----->

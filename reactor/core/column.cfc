@@ -17,6 +17,7 @@
 		<cfargument name="nullable" hint="I indicate if the column is nullable" required="yes" type="boolean" />
 		<cfargument name="length" hint="I am the length of the column" required="yes" type="numeric" />
 		<cfargument name="default" hint="I am the default value of the column" required="yes" type="string" />
+		<cfargument name="primaryKey" hint="I indicate if the column is a primary key" required="yes" type="boolean" />
 		
 		<cfset setName(arguments.name) />
 		<cfset setDataType(arguments.dataType) />
@@ -25,6 +26,7 @@
 		<cfset setNullable(arguments.nullable) />
 		<cfset setLength(arguments.length) />
 		<cfset setDefault(arguments.default) />
+		<cfset setPrimaryKey(arguments.primaryKey) />
 		
 		<cfreturn this />		
 	</cffunction>
