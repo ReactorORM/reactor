@@ -7,6 +7,7 @@
 	<cfset variables.nullable = false />
 	<cfset variables.length = 0 />
 	<cfset variables.default = "" />
+	<cfset variables.defaultExpression = "" />
 	<cfset variables.primaryKey = false />
 	
 	<cffunction name="init" access="public" hint="I configure and return a column object." output="false" returntype="reactor.core.column">
@@ -17,7 +18,8 @@
 		<cfargument name="nullable" hint="I indicate if the column is nullable" required="yes" type="boolean" />
 		<cfargument name="length" hint="I am the length of the column" required="yes" type="numeric" />
 		<cfargument name="default" hint="I am the default value of the column" required="yes" type="string" />
-		<cfargument name="primaryKey" hint="I indicate if the column is a primary key" required="yes" type="boolean" />
+		<cfargument name="defaultExpression" hint="I am the default expression of the column" required="yes" type="string" />
+		<cfargument name="primaryKey" hint="I indicate if the column is a primary key" required="no" type="boolean" default="false" />
 		
 		<cfset setName(arguments.name) />
 		<cfset setDataType(arguments.dataType) />
@@ -26,6 +28,7 @@
 		<cfset setNullable(arguments.nullable) />
 		<cfset setLength(arguments.length) />
 		<cfset setDefault(arguments.default) />
+		<cfset setDefaultExpression(arguments.defaultExpression) />
 		<cfset setPrimaryKey(arguments.primaryKey) />
 		
 		<cfreturn this />		
@@ -92,6 +95,15 @@
     </cffunction>
     <cffunction name="getDefault" access="public" output="false" returntype="string">
        <cfreturn variables.default />
+    </cffunction>
+	
+	<!--- defaultExpression --->
+    <cffunction name="setDefaultExpression" access="public" output="false" returntype="void">
+       <cfargument name="defaultExpression" hint="I am the default expression of the column" required="yes" type="string" />
+       <cfset variables.defaultExpression = arguments.defaultExpression />
+    </cffunction>
+    <cffunction name="getDefaultExpression" access="public" output="false" returntype="string">
+       <cfreturn variables.defaultExpression />
     </cffunction>
 	
 	<!--- primaryKey --->

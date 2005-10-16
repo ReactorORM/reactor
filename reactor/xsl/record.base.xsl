@@ -12,16 +12,24 @@
 	&lt;cfset variables.Dao = 0 /&gt;
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
 	
-	&lt;cffunction name="init" access="public" hint="I configure and return the <xsl:value-of select="table/@name"/> record." output="false" returntype="<xsl:value-of select="table/@customRecordSuper" />"&gt;
+	&lt;cffunction name="config" access="public" hint="I configure and return the <xsl:value-of select="table/@name"/> record." output="false" returntype="<xsl:value-of select="table/@customRecordSuper" />"&gt;
+		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.bean.config" /&gt;
 		&lt;cfargument name="name" hint="I am the name of the database object this record abstracts." required="yes" type="string" /&gt;
 		&lt;cfargument name="ObjectFactory" hint="I am the object use to create other data objects." required="yes" type="reactor.core.objectFactory" /&gt;
 		&lt;cfset setObjectFactory(arguments.ObjectFactory) /&gt;
 		
+		&lt;cfset setConfig(arguments.config) /&gt;
 		&lt;cfset setTo(getObjectFactory().create(arguments.name, "To")) /&gt;
 		&lt;cfset setDao(getObjectFactory().create(arguments.name, "Dao")) /&gt;
 
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
+	
+	&lt;cffunction name="populate" access="public" hint="I populate this record from a <xsl:value-of select="table/@name"/>Bean object." output="false" returntype="void"&gt;
+		&lt;cfargument name="<xsl:value-of select="table/@name"/>Bean" hint="I am the bean object to use to populate this Record." required="yes" type="<xsl:value-of select="table/@customBeanSuper" />" /&gt;
+			
+		&lt;cfset setTo(arguments.<xsl:value-of select="table/@name"/>Bean.getTo()) />
+	&lt;/cffunction&gt;	
 	<xsl:for-each select="table/columns/column">
 	&lt;!--- <xsl:value-of select="@name"/> ---&gt;
 	&lt;cffunction name="set<xsl:value-of select="@name"/>" access="public" output="false" returntype="void"&gt;

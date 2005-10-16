@@ -1,6 +1,10 @@
 <cfcomponent hint="I am the base object used for all reactor stuff.  I may be one step of overkill, but I'm sure you can deal with it.">
 	
-	<cffunction name="init" access="public" hint="I configure and return the Gateway object." output="false" returntype="reactor.base.abstractObject">
+	<!---
+		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
+		while not dis-allowing the use of the init method for specific purposes on objects like Beans.
+	---->
+	<cffunction name="config" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.bean.config" />
 		
 		<cfset setConfig(arguments.config) />

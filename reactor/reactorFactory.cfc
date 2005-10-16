@@ -29,6 +29,11 @@
 		<cfreturn getObjectFactory().create(arguments.name, "Gateway") />
 	</cffunction>
 	
+	<cffunction name="createBean" access="public" hint="I return a bean object." output="false" returntype="reactor.base.abstractBean">
+		<cfargument name="name" hint="I am the name of the bean to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.name, "Bean") />
+	</cffunction>
+	
 	<!--- ObjectFactory --->
     <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
        <cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />

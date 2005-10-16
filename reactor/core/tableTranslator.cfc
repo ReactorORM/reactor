@@ -47,11 +47,13 @@
 					baseDaoSuper="#Table.getBaseDaoSuper()#"
 					baseGatewaySuper="#Table.getBaseGatewaySuper()#"
 					baseRecordSuper="#Table.getBaseRecordSuper()#"
+					baseBeanSuper="#Table.getBaseBeanSuper()#"
 					
 					customToSuper="#Table.getCustomToSuper()#"
 					customDaoSuper="#Table.getCustomDaoSuper()#"
 					customGatewaySuper="#Table.getCustomGatewaySuper()#"
-					customRecordSuper="#Table.getCustomRecordSuper()#">
+					customRecordSuper="#Table.getCustomRecordSuper()#"
+					customBeanSuper="#Table.getCustomBeanSuper()#">
 					
 					<columns>
 						<cfloop from="1" to="#ArrayLen(Columns)#" index="x">
@@ -64,6 +66,7 @@
 								nullable="#Column.getNullable()#"
 								length="#Column.getLength()#"
 								default="#XMLFormat(Column.getDefault())#"
+								defaultExpression="#XMLFormat(Column.getDefaultExpression())#"
 								primaryKey="#Column.getPrimaryKey()#" />
 							<cfif NOT exists>
 								<cfset columnList = ListAppend(columnList, Column.getName()) />
@@ -97,6 +100,7 @@
 												nullable="#Column.getNullable()#"
 												length="#Column.getLength()#"
 												default="#XMLFormat(Column.getDefault())#"
+												defaultExpression="#XMLFormat(Column.getDefaultExpression())#"
 												overridden="#Iif(exists, DE('true'), DE('false'))#" />
 											<cfif NOT exists>
 												<cfset columnList = ListAppend(columnList, Column.getName()) />
@@ -198,7 +202,8 @@
 								cfSqlType="#Column.getCfSqlType()#"
 								nullable="#Column.getNullable()#"
 								length="#Column.getLength()#"
-								default="#XMLFormat(Column.getDefault())#"/>
+								default="#XMLFormat(Column.getDefault())#"
+								defaultExpression="#XMLFormat(Column.getDefaultExpression())#" />
 						</cfloop>
 					</columns>
 					<cfif SuperTable.hasSuperTable()>

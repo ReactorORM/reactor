@@ -10,9 +10,6 @@
 	&lt;cfset variables.signature = "<xsl:value-of select="table/@signature" />" /&gt;
 	<xsl:for-each select="table/columns/column">&lt;cfset this.<xsl:value-of select="@name" /> = <xsl:value-of select="@default" /> /&gt;
 	</xsl:for-each>
-	&lt;cffunction name="getSignature"&gt;
-		&lt;cfreturn variables.signature /&gt;
-	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;
 	</xsl:template>

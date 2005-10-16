@@ -3,18 +3,10 @@
 
 
 
-<cfset CustomerRecord = reactor.createRecord("Customer") />
-<cfset CustomerRecord.setUserId(1) />
-<cfset CustomerRecord.load() />
+<cfset CustomerBean = reactor.createBean("Customer") />
+<cfset ValidationErrorCollection = CreateObject("component", "reactor.util.ValidationErrorCollection").init() />
 
-<cfdump var="#CustomerRecord.getFirstName()#" /><cfabort>
+<cfset ValidationErrorCollection = CustomerBean.validate(ValidationErrorCollection) />
 
-<cfset invoices = CustomerRecord.getInvoiceQuery() />
-
-<cfdump var="#invoices#" /><cfabort>
-
-
-<cfset InvoiceProducts = invoices[1].getInvoiceProductArray() />
-<cfset Product = InvoiceProducts[1].getRecordForProductId() />
-
-<cfdump var="#Product.getProductId()#" />
+<cfdump var="#ValidationErrorCollection.getErrors()#" />
+<cfabort>

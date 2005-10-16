@@ -131,7 +131,8 @@
 				Iif(ListLast(qColumns.Type_Name, " ") IS "identity", DE(true), DE(false)),
 				Iif(qColumns.NULLABLE, DE('true'), DE('false')),
 				qColumns.Length,
-				getCfDefaultValue(qColumns.column_def, translateDataType(ListFirst(qColumns.Type_Name, " ")))
+				getCfDefaultValue(qColumns.column_def, translateDataType(ListFirst(qColumns.Type_Name, " "))),
+				getCfDefaultExpression(qColumns.column_def, translateDataType(ListFirst(qColumns.Type_Name, " ")))
 			) />
 			
 			<!--- add the column to the superTable --->
@@ -282,6 +283,7 @@
 				qColumns.IS_NULLABLE,
 				qColumns.CHARACTER_MAXIMUM_LENGTH,
 				getCfDefaultValue(qColumns.COLUMN_DEFAULT, translateDataType(qColumns.DATA_TYPE)),
+				getCfDefaultExpression(qColumns.COLUMN_DEFAULT, translateDataType(qColumns.DATA_TYPE, " ")),
 				qColumns.IS_PRIMARYKEY
 			) />
 			
@@ -336,6 +338,60 @@
 					<cfreturn "Now()" />
 				<cfelse>
 					<cfreturn """""" />
+				</cfif>
+			</cfcase>
+			<cfdefaultcase>
+				<cfreturn "" />
+			</cfdefaultcase>
+		</cfswitch>
+	</cffunction>
+	
+	<cffunction name="getCfDefaultExpression" access="public" hint="I get a default value for a cf datatype." output="false" returntype="string">
+		<cfargument name="sqlDefaultValue" hint="I am the default value defined by SQL." required="yes" type="string" />
+		<cfargument name="typeName" hint="I am the cf type name to get a default value for." required="yes" type="string" />
+		
+		<!--- strip out parens --->
+		<cfif Len(arguments.sqlDefaultValue)>
+			<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2 )/>
+		</cfif>
+		
+		<cfswitch expression="#arguments.typeName#">
+			<cfcase value="numeric">
+				<cfif IsNumeric(arguments.sqlDefaultValue)>
+					<cfreturn arguments.sqlDefaultValue />
+				<cfelse>
+					<cfreturn 0 />
+				</cfif>
+			</cfcase>
+			<cfcase value="binary">
+				<cfreturn "" />
+			</cfcase>
+			<cfcase value="boolean">
+				<cfif IsBoolean(arguments.sqlDefaultValue)>
+					<cfreturn Iif(arguments.sqlDefaultValue, DE(true), DE(false)) />
+				<cfelse>
+					<cfreturn false />
+				</cfif>
+			</cfcase>
+			<cfcase value="string">
+				<!--- insure that the first and last characters are "'" --->
+				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
+					<!--- mssql functions must be constants.  for this reason I can convert anything quoted in single quotes safely to a string --->
+					<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
+					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, "''", "'", "All") />
+					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, """", """""", "All") />
+					<cfreturn arguments.sqlDefaultValue />
+				<cfelse>
+					<cfreturn "" />
+				</cfif>
+			</cfcase>
+			<cfcase value="date">
+				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
+					<cfreturn Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
+				<cfelseif arguments.sqlDefaultValue IS "getDate()">
+					<cfreturn "##Now()##" />
+				<cfelse>
+					<cfreturn "" />
 				</cfif>
 			</cfcase>
 			<cfdefaultcase>

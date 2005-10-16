@@ -92,12 +92,8 @@
 	</cffunction>
 
 	<cffunction name="getBaseGatewaySuper" access="public" hint="I return the name of the super object for this Gateway." output="false" returntype="string">
-		<cfif hasSuperTable()>
-			<!--- determine the super To object's name --->
-			<cfreturn getCreationRoot() & ".Gateway." & getConfig().getDbType() & "." & getSuperTable().getToTableName() & "Gateway"  />
-		<cfelse>
-			<cfreturn "reactor.base.abstractGateway" />
-		</cfif>
+		<!--- I never extend anything other than the abstract gateway object --->
+		<cfreturn "reactor.base.abstractGateway" />
 	</cffunction>
 
 	<cffunction name="getBaseRecordSuper" access="public" hint="I return the name of the super object for this Record." output="false" returntype="string">
@@ -117,6 +113,15 @@
 			<cfreturn "reactor.base.abstractTo" />
 		</cfif>
 	</cffunction>
+
+	<cffunction name="getBaseBeanSuper" access="public" hint="I return the name of the super object for this Bean." output="false" returntype="string">
+		<cfif hasSuperTable()>
+			<!--- determine the super To object's name --->
+			<cfreturn getCreationRoot() & ".Bean." & getConfig().getDbType() & "." & getSuperTable().getToTableName() & "Bean"  />
+		<cfelse>
+			<cfreturn "reactor.base.abstractBean" />
+		</cfif>
+	</cffunction>
 	
 	<cffunction name="getCustomDaoSuper" access="public" hint="I return the name of the super object for this custom Dao" output="false" returntype="string">
 		<cfreturn getCreationRoot() & ".Dao." & getConfig().getDbType() & ".base." & getName() & "Dao"  />
@@ -132,6 +137,10 @@
 	
 	<cffunction name="getCustomToSuper" access="public" hint="I return the name of the super object for this custom To" output="false" returntype="string">
 		<cfreturn getCreationRoot() & ".TO." & getConfig().getDbType() & ".base." & getName() & "TO"  />
+	</cffunction>
+	
+	<cffunction name="getCustomBeanSuper" access="public" hint="I return the name of the super object for this custom Bean" output="false" returntype="string">
+		<cfreturn getCreationRoot() & ".Bean." & getConfig().getDbType() & ".base." & getName() & "Bean"  />
 	</cffunction>
 	
 	<cffunction name="getCreationRoot" access="private" hint="I return the creation path as the root portion of an object's package." output="false" returntype="string">

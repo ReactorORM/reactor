@@ -12,15 +12,15 @@
 
 	<cffunction name="create" access="public" hint="I create and return a To for a specific table." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean" required="yes" type="string" />
 		<cfset var Object = 0 />
 		<cfset var generate = false />
 		<cfset var TableTranslator = 0 />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: record, dao, gateway, to" />
+				detail="The type argument must be one of: record, dao, gateway, to, bean" />
 		</cfif>
 	
 		<cftry>
@@ -66,41 +66,47 @@
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
 			<cfset generateObject(TableTranslator, arguments.type) />			
-			<cfif arguments.type IS NOT "Record">
-				<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(getConfig()) />
-			<cfelse>
-				<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).init(arguments.name, this) />
-			</cfif>
+			<cfswitch expression="#arguments.type#">
+				<cfcase value="Record,Bean">
+					<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).config(getConfig(), arguments.name, this) />
+				</cfcase>	
+				<cfdefaultcase>
+					<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).config(getConfig()) />
+				</cfdefaultcase>
+			</cfswitch>
 		<cfelse>
-			<cfif arguments.type IS NOT "Record">
-				<cfreturn Object.init(getConfig()) />
-			<cfelse>
-				<cfreturn Object.init(arguments.name, this) />
-			</cfif>
+			<cfswitch expression="#arguments.type#">
+				<cfcase value="Record,Bean">
+					<cfreturn Object.config(arguments.name, this) />
+				</cfcase>	
+				<cfdefaultcase>
+					<cfreturn Object.config(getConfig()) />
+				</cfdefaultcase>
+			</cfswitch>
 		</cfif>
 	</cffunction>
 	
  	<cffunction name="generateObject" access="private" hint="I generate a To object" output="false" returntype="void">
 		<cfargument name="TableTranslator" hint="I am the TableTranslator to use to generate the To." required="yes" type="reactor.core.tableTranslator" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean" required="yes" type="string" />
 		<cfset var XML = arguments.TableTranslator.getXml() />
 		<cfset var superTable = XMLSearch(XML, "/table/superTables[@sort = 'backward']/superTable") />
 		
-		<cfif ArrayLen(superTable)>
-			<!--- we need to insure that the base object exists --->
+		<cfif ArrayLen(superTable) and arguments.type IS NOT "gateway">
+			<!--- we need to insure that the base object exists for Dao, Record --->
 			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.toTable), arguments.type) />
 		</cfif>
 		
 		<!--- write the base object --->
 		<cfset generate(
 			XML,
-			expandPath("/reactor/xsl/#arguments.type#.base.xsl"),
+			expandPath("/reactor/xsl/#lcase(arguments.type)#.base.xsl"),
 			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "base"),
 			true) />
 		<!--- generate the custom object --->
 		<cfset generate(
 			XML,
-			expandPath("/reactor/xsl/#arguments.type#.custom.xsl"),
+			expandPath("/reactor/xsl/#lcase(arguments.type)#.custom.xsl"),
 			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "custom"),
 			false) />
 	</cffunction>
@@ -137,231 +143,16 @@
 		<cfreturn Table />
 	</cffunction>
 	
-	<!----
-	<cffunction name="createRecord" access="public" hint="I create and return a record for a specific table." output="false" returntype="reactor.base.abstractRecord">
-		<cfargument name="name" hint="I am the name of the table create a record for." required="yes" type="string" />
-		<cfset var Record = 0 />
-		<cfset var generate = false />
-		<cfset var structure = 0 />
-		<cfset var xslBase = 0 />
-		<cfset var xslCustom = 0 />
-		<cfset var recordCode = 0 />
-		<cfset var recordPath = 0 />
-		
-		<!--- try to create the object --->
-		<cftry>
-			<cfset Record = CreateObject("Component", getObjectName("Record", arguments.name)) />
-			<cfcatch>
-				<!--- if there are errors then we need to generate the record --->
-				<cfset generate = true />
-			</cfcatch>
-		</cftry>
-		
-		<!---
-			If we don't already need to generate the Record, check to insure that the Record's signature matches the tables's signature.
-			If not, then we need to regenerate.
-		--->
-		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Record.getSignature() IS NOT getTableSignature(arguments.name))>
-			<cfset generate = true />
-		</cfif>
-		
-		<!--- if we need to generate it, generate it --->
-		<cfif generate>
-			<!--- get the structure --->
-			<cfset structure = getTableStructure(arguments.name) />
-			
-			<!--- insure that the base object exists --->
-			<cfif structure.table.XmlAttributes.baseTable IS NOT arguments.name>
-				<!--- we need to insure that an object exists --->
-				<!--- TODO: right now, this creates and instantiates the object.  in the future I'd like it to only generate the object and only if it doesn't exist --->
-				<cfset createRecord(structure.table.XmlAttributes.baseTable) />
-			</cfif>
-			
-			<!--- read the Record xsl --->
-			<cffile action="read" file="#expandPath("/reactor/xsl/record.base.xsl")#" variable="xslBase" />
-			<cffile action="read" file="#expandPath("/reactor/xsl/record.custom.xsl")#" variable="xslCustom" />
-			
-			<!--- transform this structure into the base Record object --->
-			<cfset recordCode = XMLTransform(structure, xslBase) />
-			<!--- get the path to the base Record --->
-			<cfset recordPath = getObjectPath("Record", arguments.name, "base") />
-			<!--- insure that the output directory exists --->
-			<cfset insurePathExists(recordPath) />
-			<!--- write the base Record --->
-			<cffile action="write" file="#recordPath#" output="#recordCode#" nameconflict="overwrite" />
-			
-			<!--- get the path to the custom Record --->
-			<cfset recordPath = getObjectPath("Record", arguments.name, "custom") />
-			<cfif NOT FileExists(recordPath)>
-				<!--- transform this structure into the custom Record object --->
-				<cfset recordCode = XMLTransform(structure, xslCustom) />
-				<!--- insure that the output directory exists --->
-				<cfset insurePathExists(recordPath) />
-				<!--- write the custom Record --->
-				<cffile action="write" file="#recordPath#" output="#recordCode#" />
-			</cfif>
-			
-			<!--- create the newly generated Record --->
-			<cfset Record = CreateObject("Component", getObjectName("Record", arguments.name)).init(arguments.name, this) />
-		<cfelse>
-			<!--- init the already-existing Record --->
-			<cfset Record = Record.init(arguments.name, this) />
-		</cfif>
-		
-		<cfreturn Record />
-	</cffunction>
-
-	
-	
-	<cffunction name="createDao" access="public" hint="I create and return a DAO for a specific table." output="false" returntype="reactor.base.abstractDao">
-		<cfargument name="name" hint="I am the name of the table create a Dao for." required="yes" type="string" />
-		<cfset var Dao = 0 />
-		<cfset var generate = false />
-		<cfset var structure = 0 />
-		<cfset var xslBase = 0 />
-		<cfset var xslCustom = 0 />
-		<cfset var daoCode = 0 />
-		<cfset var daoPath = 0 />
-		
-		<!--- try to create the object --->
-		<cftry>
-			<cfset Dao = CreateObject("Component", getObjectName("Dao", arguments.name)) />
-			<cfcatch>
-				<!--- if there are errors then we need to generate the record --->
-				<cfset generate = true />
-			</cfcatch>
-		</cftry>
-		
-		<!---
-			If we don't already need to generate the Dao, check to insure that the Dao's signature matches the object's signature.
-			If not, then we need to regenerate.
-		--->
-		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Dao.getSignature() IS NOT getTableSignature(arguments.name))>
-			<cfset generate = true />
-		</cfif>
-		
-		<!--- if we need to generate it, generate it --->
-		<cfif generate>
-			<!--- get the structure --->
-			<cfset structure = getTableStructure(arguments.name) />
-			
-			<!--- insure that the base object exists --->
-			<cfif structure.table.XmlAttributes.baseTable IS NOT arguments.name>
-				<!--- we need to insure that an object exists --->
-				<!--- TODO: right now, this creates and instantiates the object.  in the future I'd like it to only generate the object and only if it doesn't exist --->
-				<cfset createDao(structure.table.XmlAttributes.baseTable) />
-			</cfif>
-		
-			<!--- read the Dao xsl --->
-			<cffile action="read" file="#expandPath("/reactor/xsl/#getDbType()#/dao.base.xsl")#" variable="xslBase" />
-			<cffile action="read" file="#expandPath("/reactor/xsl/#getDbType()#/dao.custom.xsl")#" variable="xslCustom" />
-			
-			<!--- transform this structure into the base DAO object --->
-			<cfset daoCode = XMLTransform(structure, xslBase) />
-			<!--- get the path to the base DAO --->
-			<cfset daoPath = getObjectPath("DAO", arguments.name, "base") />
-			<!--- insure that the output directory exists --->
-			<cfset insurePathExists(daoPath) />
-			<!--- write the base DAO --->
-			<cffile action="write" file="#daoPath#" output="#daoCode#" nameconflict="overwrite" />
-			
-			<!--- get the path to the custom DAO --->
-			<cfset daoPath = getObjectPath("DAO", arguments.name, "custom") />
-			<cfif NOT FileExists(daoPath)>
-				<!--- transform this structure into the custom DAO object --->
-				<cfset daoCode = XMLTransform(structure, xslCustom) />
-				<!--- insure that the output directory exists --->
-				<cfset insurePathExists(daoPath) />
-				<!--- write the custom DAO --->
-				<cffile action="write" file="#daoPath#" output="#daoCode#" />
-			</cfif>
-			
-			<cfset Dao = CreateObject("Component", getObjectName("DAO", arguments.name)).init(getDsn()) />
-		<cfelse>
-			<!--- init the Dao --->
-			<cfset Dao = Dao.init(getDsn()) />
-		</cfif>
-		
-		<cfreturn Dao />
-	</cffunction>
-	
-	<cffunction name="createGateway" access="public" hint="I create a Gateway based upon a name." output="false" returntype="reactor.base.abstractGateway">
-		<cfargument name="name" hint="I am the name of the table create a Gateway for." required="yes" type="string" />
-		<cfset var Gateway = 0 />
-		<cfset var generate = false />
-		<cfset var structure = 0 />
-		<cfset var baseStructure = 0 />
-		<cfset var xslBase = 0 />
-		<cfset var xslCustom = 0 />
-		<cfset var gatewayCode = 0 />
-		<cfset var gatewayPath = 0 />
-		
-		<!--- try to create the object --->
-		<cftry>
-			<cfset Gateway = CreateObject("Component", getObjectName("Gateway", arguments.name)) />
-			<cfcatch>
-				<!--- if there are errors then we need to generate the record --->
-				<cfset generate = true />
-			</cfcatch>
-		</cftry>
-		
-		<!---
-			If we don't already need to generate the Gateway, check to insure that the Gateway's signature matches the object's signature.
-			If not, then we need to regenerate.
-		--->
-		<cfif getConfig().getMode() IS "always" OR (NOT generate AND getConfig().getMode() IS "development" AND Gateway.getSignature() IS NOT getTableSignature(arguments.name))>
-			<cfset generate = true />
-		</cfif>
-		
-		<!--- if we need to generate it, generate it --->
-		<cfif generate>
-			<!--- get the structure --->
-			<cfset structure = getTableStructure(arguments.name) />
-			
-			<!--- read the Gateway xsl --->
-			<cffile action="read" file="#expandPath("/reactor/xsl/#getDbType()#/gateway.base.xsl")#" variable="xslBase" />
-			<cffile action="read" file="#expandPath("/reactor/xsl/#getDbType()#/gateway.custom.xsl")#" variable="xslCustom" />
-			
-			<!--- transform this structure into the base Gateway object --->
-			<cfset gatewayCode = XMLTransform(structure, xslBase) />
-			<!--- get the path to the base Gateway --->
-			<cfset gatewayPath = getObjectPath("Gateway", arguments.name, "base") />
-			<!--- insure that the output directory exists --->
-			<cfset insurePathExists(gatewayPath) />
-			<!--- write the base Gateway --->
-			<cffile action="write" file="#gatewayPath#" output="#gatewayCode#" nameconflict="overwrite" />
-			
-			<!--- get the path to the custom Gateway --->
-			<cfset gatewayPath = getObjectPath("Gateway", arguments.name, "custom") />
-			<cfif NOT FileExists(gatewayPath)>
-				<!--- transform this structure into the custom Gateway object --->
-				<cfset gatewayCode = XMLTransform(structure, xslCustom) />
-				<!--- insure that the output directory exists --->
-				<cfset insurePathExists(gatewayPath) />
-				<!--- write the custom Gateway--->
-				<cffile action="write" file="#gatewayPath#" output="#gatewayCode#" />
-			</cfif>
-			
-			<cfset Gateway = CreateObject("Component", getObjectName("Gateway", arguments.name)).init(getDsn()) />
-		<cfelse>
-			<!--- init the Gateway --->
-			<cfset Gateway = Gateway.init(getDsn()) />
-		</cfif>
-		
-		<cfreturn Gateway />
-	</cffunction>
-	--->
-	
 	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to, bean" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
 		<cfset var creationPath = replaceNoCase(right(getConfig().getCreationPath(), Len(getConfig().getCreationPath()) - 1), "/", ".") />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: record, gateway" />
+				detail="The type argument must be one of: record, dao, gateway, to, bean" />
 		</cfif>
 		
 		<cfreturn creationPath & "." & arguments.type & ".mssql." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
@@ -372,10 +163,10 @@
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
-				detail="The type argument must be one of: record, dao, gateway, to" />
+				detail="The type argument must be one of: record, dao, gateway, to, bean" />
 		</cfif>
 		<cfif NOT ListFindNoCase("base,custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"
