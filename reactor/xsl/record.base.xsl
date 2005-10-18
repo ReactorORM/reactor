@@ -118,18 +118,6 @@
 		&lt;cfreturn <xsl:value-of select="@table"/>Array /&gt;
 	&lt;/cffunction&gt;
 	</xsl:for-each>
-	
-	&lt;!--- 
-	&lt;cffunction name="populate" access="public" hint="I populate the <xsl:value-of select="table/@name"/> record from a bean." output="false" returntype="void"&gt;
-		&lt;cfargument name="Bean" hint="I am the form record to use to populate this record." required="yes" type="reactor.base.abstractBean" /&gt;
-		&lt;cfset var fields = arguments.Bean.getFields() /&gt;
-		<xsl:for-each select="table/columns/column">
-		&lt;cfif ListFindNoCase(fields, "<xsl:value-of select="@name"/>")&gt;
-			&lt;cfset set<xsl:value-of select="@name"/>(arguments.FormRecord.get<xsl:value-of select="@name"/>()) /&gt;
-		&lt;/cfif&gt;
-		</xsl:for-each>
-	&lt;/cffunction&gt;
-	---&gt;
 			
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="setTo" access="public" output="false" returntype="void"&gt;
