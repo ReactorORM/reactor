@@ -14,10 +14,20 @@
 	
 	<cffunction name="getError" access="public" hint="I retrieve and return a specific named error message." output="false" returntype="string">
 		<cfargument name="table" hint="I am the name of the table the error is for." required="yes" type="string" />
-		<cfargument name="field" hint="I am the name of the field the error is for." required="yes" type="string" />
-		<cfargument name="errorId" hint="I am the id of the error." required="yes" type="string" />
+		<cfargument name="column" hint="I am the name of the column the error is for." required="yes" type="string" />
+		<cfargument name="errorMessage" hint="I am the name of the error." required="yes" type="string" />
+		<cfset var errorData = getErrorData() />
+		<cfset var error = 0 />
+				
+		<!--- try to find this error message --->
+		<cfset error = XMLSearch(errorData, "/tables/table[@name = '#arguments.table#']/column[@name = '#arguments.column#']/errorMessage[@name = '#arguments.errorMessage#']/@message") />
+		<cfif ArrayLen(error)>
+			<cfset error = error[1].XmlValue />
+		<cfelse>
+			<cfset error = "An unexpcted error occured: #arguments.errorMessage#" />
+		</cfif>
 		
-		<cfreturn "You need to parse and read the xml file... not to mention generate it." />
+		<cfreturn error/>
 	</cffunction>
 	
 	<!--- errorData --->

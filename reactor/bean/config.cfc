@@ -41,7 +41,7 @@
 		<cfset variables.dbType = arguments.dbType />
     </cffunction>
     <cffunction name="getDbType" access="public" output="false" returntype="string">
-       <cfreturn variables.dbType />
+       <cfreturn lcase(variables.dbType) />
     </cffunction>
 	
 	<!--- creationPath --->

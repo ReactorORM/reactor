@@ -91,10 +91,21 @@
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean" required="yes" type="string" />
 		<cfset var XML = arguments.TableTranslator.getXml() />
 		<cfset var superTable = XMLSearch(XML, "/table/superTables[@sort = 'backward']/superTable") />
+		<cfset var pathToErrorFile = "" />
 		
 		<cfif ArrayLen(superTable) and arguments.type IS NOT "gateway">
 			<!--- we need to insure that the base object exists for Dao, Record --->
 			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.toTable), arguments.type) />
+		</cfif>
+		
+		<!--- if this is a bean object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
+		<cfif arguments.type IS "Bean">
+			<!--- I am the path to the error file --->
+			<cfset pathToErrorFile = expandPath(getConfig().getCreationPath() & "/ErrorMessages.xml" ) />
+			<!--- if the file doesn't exist insure the path to the file exists --->
+			<cfset insurePathExists(pathToErrorFile) />
+			<!--- generate the error messages --->
+			<cfset arguments.TableTranslator.generateErrorMessages(pathToErrorFile) />
 		</cfif>
 		
 		<!--- write the base object --->
@@ -149,13 +160,7 @@
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
 		<cfset var creationPath = replaceNoCase(right(getConfig().getCreationPath(), Len(getConfig().getCreationPath()) - 1), "/", ".") />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
-			<cfthrow type="reactor.InvalidObjectType"
-				message="Invalid Object Type"
-				detail="The type argument must be one of: record, dao, gateway, to, bean" />
-		</cfif>
-		
-		<cfreturn creationPath & "." & arguments.type & ".mssql." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
+		<cfreturn creationPath & "." & arguments.type & "." & getConfig().getDbType() & "." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
 	</cffunction>
 	
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
@@ -174,7 +179,7 @@
 				detail="The class argument must be one of: base, custom" />
 		</cfif>
 		
-		<cfreturn expandPath(getConfig().getCreationPath() & "/" & arguments.type & "/mssql/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & arguments.name & arguments.type & ".cfc") />
+		<cfreturn expandPath(getConfig().getCreationPath() & "/" & arguments.type & "/" & getConfig().getDbType() & "/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc") />
 	</cffunction>
 	
 	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
