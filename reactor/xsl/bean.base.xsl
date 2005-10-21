@@ -23,6 +23,23 @@
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 	
+	&lt;cffunction name="init" access="public" hint="I configure and return this bean object." output="false" returntype="<xsl:value-of select="table/@baseBeanSuper" />"&gt;
+		<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
+		</xsl:for-each>
+		<xsl:for-each select="table/columns/column">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
+		</xsl:for-each>
+		<xsl:if test="count(table/superTables[@sort = 'backward']) &gt; 0">
+		&lt;cfset super.init(<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">
+			<xsl:value-of select="@name" />=arguments.<xsl:value-of select="@name" />
+			<xsl:if test="position() != last()">, </xsl:if>
+		</xsl:for-each>) &gt;
+		</xsl:if>
+		
+		<xsl:for-each select="table/columns/column">&lt;cfset set<xsl:value-of select="@name" />(arguments.<xsl:value-of select="@name" />) /&gt;
+		</xsl:for-each>
+		&lt;cfreturn this /&gt;
+	&lt;/cffunction&gt;
+	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="yes" type="reactor.util.ValidationErrorCollection" /&gt;
 		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#getConfig().getCreationPath()#/ErrorMessages.xml")) /&gt;
@@ -101,21 +118,6 @@
 		</xsl:choose>
 		</xsl:for-each>
 		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
-	&lt;/cffunction&gt;
-	
-	&lt;cffunction name="init" access="public" hint="I configure and return this bean object." output="false" returntype="<xsl:value-of select="table/@baseBeanSuper" />"&gt;
-		<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
-		</xsl:for-each>
-		<xsl:for-each select="table/columns/column">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
-		</xsl:for-each>
-		&lt;cfset super.init(<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">
-			<xsl:value-of select="@name" />=arguments.<xsl:value-of select="@name" />
-			<xsl:if test="position() != last()">, </xsl:if>
-		</xsl:for-each>) &gt;
-			
-		<xsl:for-each select="table/columns/column">&lt;cfset set<xsl:value-of select="@name" />(arguments.<xsl:value-of select="@name" />) /&gt;
-		</xsl:for-each>
-		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="populate" access="public" hint="I populate this bean from a <xsl:value-of select="table/@name"/>Record object." output="false" returntype="void"&gt;

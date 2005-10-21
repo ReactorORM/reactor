@@ -1,10 +1,7 @@
-<cfset config = CreateObject("Component", "reactor.bean.config").init("scratch", "mssql", "/reactorData", "always") />
+<cfset config = CreateObject("Component", "reactor.bean.config").init("scratch", "mssql", "/reactorData", "development") />
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(config) />
 
 <cfset InvoiceBean = reactor.createBean("Invoice") />
-<cfset InvoiceRecord = reactor.createRecord("Invoice") />
+<cfset InvoiceBean.init(1, 1, now()) />
 
-<!--- code before this would create and populate the invoice record --->
-
-<cfset InvoiceBean.populate(InvoiceRecord) />
-<cfset InvoiceBean.save() />
+<cfdump var="#InvoiceBean.getCustomerId()#" />

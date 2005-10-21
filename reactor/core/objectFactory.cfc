@@ -77,7 +77,7 @@
 		<cfelse>
 			<cfswitch expression="#arguments.type#">
 				<cfcase value="Record,Bean">
-					<cfreturn Object.config(arguments.name, this) />
+					<cfreturn Object.config(getConfig(), arguments.name, this) />
 				</cfcase>	
 				<cfdefaultcase>
 					<cfreturn Object.config(getConfig()) />
