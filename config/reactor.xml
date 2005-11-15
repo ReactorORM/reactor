@@ -1,0 +1,130 @@
+<reactor>
+	<config>
+		<dsn value="scratch" />
+		<type value="mssql" />
+		<mapping value="/reactorData" />
+		<mode value="production" />
+	</config>
+
+	<objects>
+		<object name="User">
+			<super name="DeleteMe">
+				<relate from="userId" to="userID" />
+			</super>
+			<hasOne name="UserType">
+				<relate from="userTypeId" to="userTypeId" />
+			</hasOne>
+		</object>
+		
+		<object name="UserType">
+			<hasMany name="User">
+				<relate from="userTypeId" to="userTypeId" />
+			</hasMany>
+		</object>
+		
+		<object name="Administrator">
+			<super name="User">
+				<relate from="administratorId" to="userID" />
+			</super>
+		</object>
+		
+		<object name="Merchant">
+			<super name="User">
+				<relate from="merchant" to="userID" />
+			</super>
+			<hasOne name="Company">
+				<relate from="companyId" to="companyId" />
+			</hasOne>
+			<hasMany name="Product">
+				<relate from="merchantId" to="createdByMerchantId" />
+			</hasMany>
+		</object>
+		
+		<object name="Company">
+			<hasMany name="Merchant">
+				<relate from="companyId" to="companyId" />
+			</hasMany>
+			<hasMany name="Product">
+				<relate from="companyId" to="companyId" />
+			</hasMany>
+			<hasOne name="Address">
+				<relate from="mailingAddress" to="addressId" />
+			</hasOne>
+			<hasOne name="Address">
+				<relate from="billingAddress" to="addressId" />
+			</hasOne>
+		</object>
+		
+		<object name="Customer">
+			<super name="User">
+				<relate from="customerId" to="userID" />
+			</super>
+			<hasMany name="Invoice">
+				<relate from="customerId" to="customerId" />
+			</hasMany>
+			<hasOne name="Address">
+				<relate from="mailingAddress" to="addressId" />
+			</hasOne>
+			<hasOne name="Address">
+				<relate from="billingAddress" to="addressId" />
+			</hasOne>
+		</object>
+		
+		<object name="Product">
+			<hasOne name="Merchant">
+				<relate from="createdByMerchantId" to="merchantId" />
+			</hasOne>
+			<hasOne name="Company">
+				<relate from="companyId" to="companyId" />
+			</hasOne>
+			<hasMany name="Invoice">
+				<link name="InvoiceProduct" />
+			</hasMany>
+		</object>
+		
+		<object name="InvoiceProduct">
+			<hasOne name="Product">
+				<relate from="productId" to="productId" />
+			</hasOne>
+			<hasOne name="Invoice">
+				<relate from="invoiceId" to="invoiceId" />
+			</hasOne>
+		</object>
+		
+		<object name="Invoice">
+			<hasOne name="Customer">
+				<relate from="customerId" to="customerId" />
+			</hasOne>
+			<hasMany name="Product">
+				<link name="InvoiceProduct" />
+			</hasMany>
+		</object>
+		
+		<object name="Address">
+			<hasOne name="StateProf">
+				<relate from="stateProvId" to="stateProvId" />
+			</hasOne>
+			<hasOne name="Country">
+				<relate from="countryId" to="countryId" />
+			</hasOne>
+		</object>
+		
+		<object name="Country">
+			<hasMany name="StateProv">
+				<relate from="countryId" to="countryId" />
+			</hasMany>
+			<hasMany name="Address">
+				<relate from="countryId" to="countryId" />
+			</hasMany>
+		</object>
+		
+		<object name="Country">
+			<hasOne name="Country">
+				<relate from="countryId" to="countryId" />
+			</hasOne>
+			<hasMany name="Address">
+				<relate from="stateProvId" to="stateProvId" />
+			</hasMany>
+		</object>
+	</objects>
+</reactor>
