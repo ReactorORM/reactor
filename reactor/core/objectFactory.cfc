@@ -3,30 +3,30 @@
 	<cfset variables.config = "" />
 	
 	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="reactor.core.objectFactory">
-		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.bean.config" />
+		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
 		
 		<cfset setConfig(config) />
 		
 		<cfreturn this />
 	</cffunction>
 
-	<cffunction name="create" access="public" hint="I create and return a To for a specific table." output="false" returntype="reactor.base.abstractObject">
-		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean" required="yes" type="string" />
+	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
+		<cfargument name="name" hint="I am the name of the table create an object for." required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean, Metadata" required="yes" type="string" />
 		<cfset var Object = 0 />
 		<cfset var generate = false />
-		<cfset var TableTranslator = 0 />
+		<cfset var objectTranslator = 0 />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: record, dao, gateway, to, bean" />
+				detail="The type argument must be one of: record, dao, gateway, to, bean, metadata" />
 		</cfif>
-	
+
 		<cftry>
 			<cfswitch expression="#getConfig().getMode()#">
 				<cfcase value="always">
-					<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+					<cfset objectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig()) />
 					<cfset generate = true />
 				</cfcase>
 				<cfcase value="development">
@@ -34,96 +34,85 @@
 						<!--- create an instance of the object and check it's signature --->
 						<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
 						<cfcatch>
-							<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+							<cfset objectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig()) />
 							<cfset generate = true />
 						</cfcatch>
 					</cftry>
 					<cfif NOT generate>
 						<!--- check the object's signature --->
-						<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
-						<cfif TableTranslator.getSignature() IS NOT Object.getSignature()>
+						<cfset objectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig()) />
+						<cfif objectTranslator.getSignature(arguments.name) IS NOT Object.getSignature()>
 							<cfset generate = true />
 						</cfif>
 					</cfif>
 				</cfcase>
 				<cfcase value="production">
-					<cftry>
+					<!--- <cftry> --->
 						<!--- create an instance of the object and check it's signature --->
 						<cfset Object = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
-						<cfcatch>
-							<cfset TableTranslator = CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), arguments.name) />
+						<!--- <cfcatch>
+							<cfset objectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), arguments.name) />
 							<cfset generate = true />
 						</cfcatch>
-					</cftry>
+					</cftry> --->
 				</cfcase>
 			</cfswitch>
 			
-			<cfcatch type="Reactor.NoSuchTable">
-				<cfthrow type="Reactor.NoSuchTable" message="Table '#arguments.name#' does not exist." detail="Reactor was unable to find a table in the database with the name '#arguments.name#.'" />
+			<cfcatch type="Reactor.NoSuchObject">
+				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.name#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.name#.'" />
 			</cfcatch>
 		</cftry>
 		
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
-			<cfset generateObject(TableTranslator, arguments.type) />			
-			<cfswitch expression="#arguments.type#">
-				<cfcase value="Record,Bean">
-					<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).config(getConfig(), arguments.name, this) />
-				</cfcase>	
-				<cfdefaultcase>
-					<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).config(getConfig()) />
-				</cfdefaultcase>
-			</cfswitch>
+			<cfset generateObject(objectTranslator, arguments.name, arguments.type) />	
+			<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).configure(getConfig(), arguments.name, this) />
+
 		<cfelse>
-			<cfswitch expression="#arguments.type#">
-				<cfcase value="Record,Bean">
-					<cfreturn Object.config(getConfig(), arguments.name, this) />
-				</cfcase>	
-				<cfdefaultcase>
-					<cfreturn Object.config(getConfig()) />
-				</cfdefaultcase>
-			</cfswitch>
+			<cfreturn Object.configure(getConfig(), arguments.name, this) />
+
 		</cfif>
 	</cffunction>
 	
  	<cffunction name="generateObject" access="private" hint="I generate a To object" output="false" returntype="void">
-		<cfargument name="TableTranslator" hint="I am the TableTranslator to use to generate the To." required="yes" type="reactor.core.tableTranslator" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean" required="yes" type="string" />
-		<cfset var XML = arguments.TableTranslator.getXml() />
-		<cfset var superTable = XMLSearch(XML, "/table/superTables[@sort = 'backward']/superTable") />
+		<cfargument name="objectTranslator" hint="I am the objectTranslator to use to generate the To." required="yes" type="reactor.core.objectTranslator" />
+		<cfargument name="name" hint="I am the name of the object to create." required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean, Metadata" required="yes" type="string" />
+		<cfset var objectXML = arguments.objectTranslator.getXml(arguments.name) />
+		<cfset var super = XmlSearch(objectXML, "/object/super") />
 		<cfset var pathToErrorFile = "" />
 		
-		<cfif ArrayLen(superTable) and arguments.type IS NOT "gateway">
+		<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
 			<!--- we need to insure that the base object exists for Dao, Record --->
-			<cfset generateObject(CreateObject("Component", "reactor.core.tableTranslator").init(getConfig(), superTable[1].XmlAttributes.toTable), arguments.type) />
+			<cfset generateObject(arguments.objectTranslator, super[1].XmlAttributes.name, arguments.type) />
 		</cfif>
 		
 		<!--- if this is a bean object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
 		<cfif arguments.type IS "Bean">
 			<!--- I am the path to the error file --->
-			<cfset pathToErrorFile = expandPath(getConfig().getCreationPath() & "/ErrorMessages.xml" ) />
+			<cfset pathToErrorFile = expandPath(getConfig().getMapping() & "/ErrorMessages.xml" ) />
 			<!--- if the file doesn't exist insure the path to the file exists --->
 			<cfset insurePathExists(pathToErrorFile) />
 			<!--- generate the error messages --->
-			<cfset arguments.TableTranslator.generateErrorMessages(pathToErrorFile) />
+			<cfset arguments.objectTranslator.generateErrorMessages(pathToErrorFile, arguments.name) />
 		</cfif>
 		
 		<!--- write the base object --->
 		<cfset generate(
-			XML,
+			objectXML,
 			expandPath("/reactor/xsl/#lcase(arguments.type)#.base.xsl"),
-			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "base"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "base"),
 			true) />
 		<!--- generate the custom object --->
 		<cfset generate(
-			XML,
+			objectXML,
 			expandPath("/reactor/xsl/#lcase(arguments.type)#.custom.xsl"),
-			getObjectPath(arguments.type, XML.table.XmlAttributes.name, "custom"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "custom"),
 			false) />
 	</cffunction>
 	
 	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
-		<cfargument name="xml" hint="I am the XML to transform." required="yes" type="xml" />
+		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="xml" />
 		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="string" />
 		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="string" />
 		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
@@ -135,7 +124,7 @@
 			<!--- read the xsl --->
 			<cffile action="read" file="#arguments.xslPath#" variable="xsl" />
 			<!--- transform this structure into the base TO object --->
-			<cfset code = XMLTransform(arguments.xml, xsl) />
+			<cfset code = XMLTransform(arguments.objectXML, xsl) />
 			<!--- insure the outputPath director exists --->
 			<cfset insurePathExists(arguments.outputPath)>
 			<!--- write the file to disk --->
@@ -146,7 +135,7 @@
 	<cffunction name="getTable" access="private" hint="I create a table object which encapsulates table metadata." output="false" returntype="reactor.core.table">
 		<cfargument name="name" hint="I am the name of the table create a To for." required="yes" type="string" />
 		<cfset var Table = CreateObject("Component", "reactor.core.Table").init(getConfig(), arguments.name) />
-		<cfset var TableDao = CreateObject("Component", "reactor.data.#getConfig().getDbType()#.TableDao").init(getConfig().getDsn()) />
+		<cfset var TableDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.TableDao").init(getConfig().getDsn()) />
 		
 		<!--- inspect the table --->
 		<cfset TableDao.read(Table) />
@@ -158,9 +147,9 @@
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to, bean" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
-		<cfset var creationPath = replaceNoCase(right(getConfig().getCreationPath(), Len(getConfig().getCreationPath()) - 1), "/", ".") />
+		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".") />
 		
-		<cfreturn creationPath & "." & arguments.type & "." & getConfig().getDbType() & "." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
+		<cfreturn creationPath & "." & arguments.type & "." & getConfig().getType() & "." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
 	</cffunction>
 	
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
@@ -168,10 +157,10 @@
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
-				detail="The type argument must be one of: record, dao, gateway, to, bean" />
+				detail="The type argument must be one of: record, dao, gateway, to, bean, metadata" />
 		</cfif>
 		<cfif NOT ListFindNoCase("base,custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"
@@ -179,7 +168,7 @@
 				detail="The class argument must be one of: base, custom" />
 		</cfif>
 		
-		<cfreturn expandPath(getConfig().getCreationPath() & "/" & arguments.type & "/" & getConfig().getDbType() & "/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc") />
+		<cfreturn expandPath(getConfig().getMapping() & "/" & arguments.type & "/" & getConfig().getType() & "/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc") />
 	</cffunction>
 	
 	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
@@ -217,10 +206,10 @@
 	
 	<!--- config --->
     <cffunction name="setConfig" access="public" output="false" returntype="void">
-       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.bean.config" />
+       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.config.config" />
        <cfset variables.config = arguments.config />
     </cffunction>
-    <cffunction name="getConfig" access="public" output="false" returntype="reactor.bean.config">
+    <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
        <cfreturn variables.config />
     </cffunction>
 	

@@ -1,18 +1,22 @@
 <cfcomponent hint="I represent a column in the database">
 	
 	<cfset variables.name = "" />
-	<cfset variables.dataType = "" />
-	<cfset variables.cfSqlType = "" />
+	<cfset variables.primaryKey = false />
 	<cfset variables.identity = false />
 	<cfset variables.nullable = false />
-	<cfset variables.length = 0 />
-	<cfset variables.default = "" />
-	<cfset variables.defaultExpression = "" />
-	<cfset variables.primaryKey = false />
 	
+	<cfset variables.dbDataType = "" />
+	<cfset variables.cfCfDataType = "" />
+	<cfset variables.cfSqlType = "" />
+	<cfset variables.length = 0 />
+	
+	<cfset variables.default = "" />
+	
+	<!---- 
 	<cffunction name="init" access="public" hint="I configure and return a column object." output="false" returntype="reactor.core.column">
 		<cfargument name="name" hint="I am the name of the column" required="yes" type="string" />
-		<cfargument name="dataType" hint="I am the data type of the column" required="yes" type="string" />
+		<cfargument name="dbDataType" hint="I am the data type of the column in the database" required="yes" type="string" />
+		<cfargument name="cfCfDataType" hint="I am the data type of the coldfusion property" required="yes" type="string" />
 		<cfargument name="cfSqlType" hint="I am the cf_sql_xzy data type used in cfqueryparam tags" required="yes" type="string" />
 		<cfargument name="identity" hint="I indicate if the column is an identity column" required="yes" type="boolean" />
 		<cfargument name="nullable" hint="I indicate if the column is nullable" required="yes" type="boolean" />
@@ -22,7 +26,8 @@
 		<cfargument name="primaryKey" hint="I indicate if the column is a primary key" required="no" type="boolean" default="false" />
 		
 		<cfset setName(arguments.name) />
-		<cfset setDataType(arguments.dataType) />
+		<cfset setDbDataType(arguments.dbDataType) />
+		<cfset setCfDataType(arguments.cfCfDataType) />
 		<cfset setCfSqlType(arguments.cfSqlType) />
 		<cfset setIdentity(arguments.identity) />
 		<cfset setNullable(arguments.nullable) />
@@ -33,6 +38,7 @@
 		
 		<cfreturn this />		
 	</cffunction>
+	---->
 	
 	<!--- name --->
     <cffunction name="setName" access="public" output="false" returntype="void">
@@ -40,16 +46,25 @@
        <cfset variables.name = arguments.name />
     </cffunction>
     <cffunction name="getName" access="public" output="false" returntype="string">
-       <cfreturn variables.name />
+       <cfreturn Ucase(Left(variables.name, 1)) & Right(variables.name, Len(variables.name) - 1) />
     </cffunction>
 	
-	<!--- dataType --->
-    <cffunction name="setDataType" access="public" output="false" returntype="void">
-       <cfargument name="dataType" hint="I am the data type of the column" required="yes" type="string" />
-       <cfset variables.dataType = arguments.dataType />
+	<!--- dbDataType --->
+    <cffunction name="setDbDataType" access="public" output="false" returntype="void">
+       <cfargument name="dbDataType" hint="I am the type of the data in the database." required="yes" type="string" />
+       <cfset variables.dbDataType = arguments.dbDataType />
     </cffunction>
-    <cffunction name="getDataType" access="public" output="false" returntype="string">
-       <cfreturn variables.dataType />
+    <cffunction name="getDbDataType" access="public" output="false" returntype="string">
+       <cfreturn variables.dbDataType />
+    </cffunction>
+	
+	<!--- cfCfDataType --->
+    <cffunction name="setCfDataType" access="public" output="false" returntype="void">
+       <cfargument name="cfCfDataType" hint="I am the data type of the column" required="yes" type="string" />
+       <cfset variables.cfCfDataType = arguments.cfCfDataType />
+    </cffunction>
+    <cffunction name="getCfDataType" access="public" output="false" returntype="string">
+       <cfreturn variables.cfCfDataType />
     </cffunction>
 	
 	<!--- cfSqlType --->
@@ -67,7 +82,7 @@
        <cfset variables.identity = arguments.identity />
     </cffunction>
     <cffunction name="getIdentity" access="public" output="false" returntype="boolean">
-       <cfreturn variables.identity />
+       <cfreturn Iif(variables.identity, DE('true'), DE('false')) />
     </cffunction>
 	
 	<!--- nullable --->
@@ -76,7 +91,7 @@
        <cfset variables.nullable = arguments.nullable />
     </cffunction>
     <cffunction name="getNullable" access="public" output="false" returntype="boolean">
-       <cfreturn variables.nullable />
+       <cfreturn Iif(variables.nullable, DE('true'), DE('false')) />
     </cffunction>
 	
 	<!--- length --->
@@ -97,21 +112,12 @@
        <cfreturn variables.default />
     </cffunction>
 	
-	<!--- defaultExpression --->
-    <cffunction name="setDefaultExpression" access="public" output="false" returntype="void">
-       <cfargument name="defaultExpression" hint="I am the default expression of the column" required="yes" type="string" />
-       <cfset variables.defaultExpression = arguments.defaultExpression />
-    </cffunction>
-    <cffunction name="getDefaultExpression" access="public" output="false" returntype="string">
-       <cfreturn variables.defaultExpression />
-    </cffunction>
-	
 	<!--- primaryKey --->
     <cffunction name="setPrimaryKey" access="public" output="false" returntype="void">
        <cfargument name="primaryKey" hint="I indicate if the colum is part of the primary key" required="yes" type="boolean" />
        <cfset variables.primaryKey = arguments.primaryKey />
     </cffunction>
     <cffunction name="getPrimaryKey" access="public" output="false" returntype="boolean">
-       <cfreturn variables.primaryKey />
+       <cfreturn Iif(variables.primaryKey, DE('true'), DE('false')) />
     </cffunction>
 </cfcomponent>
