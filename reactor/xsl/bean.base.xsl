@@ -12,7 +12,7 @@
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
 	
 	&lt;cffunction name="config" access="public" hint="I configure and return the <xsl:value-of select="table/@name"/> record." output="false" returntype="<xsl:value-of select="table/@customBeanSuper" />"&gt;
-		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.bean.config" /&gt;
+		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" /&gt;
 		&lt;cfargument name="name" hint="I am the name of the database object this record abstracts." required="yes" type="string" /&gt;
 		&lt;cfargument name="ObjectFactory" hint="I am the object use to create other data objects." required="yes" type="reactor.core.objectFactory" /&gt;
 		

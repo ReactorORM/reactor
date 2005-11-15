@@ -13,7 +13,7 @@
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
 	
 	&lt;cffunction name="config" access="public" hint="I configure and return the <xsl:value-of select="table/@name"/> record." output="false" returntype="<xsl:value-of select="table/@customRecordSuper" />"&gt;
-		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.bean.config" /&gt;
+		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" /&gt;
 		&lt;cfargument name="name" hint="I am the name of the database object this record abstracts." required="yes" type="string" /&gt;
 		&lt;cfargument name="ObjectFactory" hint="I am the object use to create other data objects." required="yes" type="reactor.core.objectFactory" /&gt;
 		&lt;cfset setObjectFactory(arguments.ObjectFactory) /&gt;
@@ -47,18 +47,7 @@
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="table/@name"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
 		<xsl:if test="table/superTables[@sort = 'backward']/superTable/relationship/column/@name != table/superTables[@sort = 'backward']/superTable/relationship/column/@referencedColumn">&lt;cfset set<xsl:value-of select="table/superTables[@sort = 'backward']/superTable/relationship/column/@name" />(get<xsl:value-of select="table/superTables[@sort = 'backward']/superTable/relationship/column/@referencedColumn" />()) /&gt;
 		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="count(table/columns/column[@primaryKey = 'true']) &gt; 0">
-		&lt;cfif <xsl:for-each select="table/columns/column[@primaryKey = 'true']">(IsNumeric(get<xsl:value-of select="@name" />()) AND Val(get<xsl:value-of select="@name" />()) OR NOT IsNumeric(get<xsl:value-of select="@name" />()) AND Len(get<xsl:value-of select="@name" />()))<xsl:if test="position() != last()"> AND </xsl:if>
-		</xsl:for-each>&gt;
-			&lt;cfset getDao().update(getTo()) /&gt;
-		&lt;cfelse&gt;
-			&lt;cfset getDao().create(getTo()) /&gt;
-		&lt;/cfif&gt;</xsl:when>
-			<xsl:when test="count(table/columns/column[@primaryKey = 'true']) = 0">
-		&lt;cfset getDao().create(getTo()) /&gt;
-			</xsl:when>
-		</xsl:choose>
+		&lt;cfset getDao().save(getTo()) /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="table/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
@@ -85,7 +74,7 @@
 	</xsl:for-each>
 		
 	<xsl:for-each select="table/referencingKeys/referencingKey">
-	&lt;cffunction name="get<xsl:value-of select="@table"/>Query" access="public" output="false" returntype="query"&gt;
+	&lt;cffunction name="get<xsl:value-of select="@table"/>QueryFor<xsl:value-of select="column/@name" />" access="public" output="false" returntype="query"&gt;
 		&lt;cfargument name="Criteria" hint="I am the criteria object to use to filter the results of this method" required="no" default="#CreateObject("Component", "reactor.core.criteria")#" type="reactor.core.criteria" /&gt;
 		&lt;cfset var <xsl:value-of select="@table"/>Gateway = getObjectFactory().create("<xsl:value-of select="@table"/>", "Gateway") /&gt;
 		<xsl:for-each select="column">&lt;cfset arguments.Criteria.getExpression().isEqual("<xsl:value-of select="@name"/>", get<xsl:value-of select="@referencedColumn"/>()) /&gt;
@@ -93,7 +82,7 @@
 		&lt;cfreturn <xsl:value-of select="@table"/>Gateway.getByCriteria(arguments.Criteria)&gt;
 	&lt;/cffunction&gt;
 	
-	&lt;cffunction name="get<xsl:value-of select="@table"/>Array" access="public" output="false" returntype="array"&gt;
+	&lt;cffunction name="get<xsl:value-of select="@table"/>ArrayFor<xsl:value-of select="column/@name" />" access="public" output="false" returntype="array"&gt;
 		&lt;cfargument name="Criteria" hint="I am the criteria object to use to filter the results of this method" required="no" default="#CreateObject("Component", "reactor.core.criteria")#" type="reactor.core.criteria" /&gt;
 		&lt;cfset var <xsl:value-of select="@table"/>Query = get<xsl:value-of select="@table"/>Query(arguments.Criteria) /&gt;
 		&lt;cfset var <xsl:value-of select="@table"/>Array = ArrayNew(1) /&gt;

@@ -2,9 +2,10 @@
 	<cfset variables.ObjectFactory = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure this object factory" returntype="reactorFactory">
-		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.bean.config" />
+		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
+		<cfset var config = CreateObject("Component", "reactor.config.config").init(arguments.pathToConfigXml) />
 		
-		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(arguments.config)) />
+		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(config)) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -32,6 +33,11 @@
 	<cffunction name="createBean" access="public" hint="I return a bean object." output="false" returntype="reactor.base.abstractBean">
 		<cfargument name="name" hint="I am the name of the bean to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().create(arguments.name, "Bean") />
+	</cffunction>
+	
+	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="reactor.base.abstractMetadata">
+		<cfargument name="name" hint="I am the name of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.name, "Metadata") />
 	</cffunction>
 	
 	<!--- ObjectFactory --->
