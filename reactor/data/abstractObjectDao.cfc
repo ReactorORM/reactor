@@ -2,7 +2,7 @@
 	
 	<cfset variables.dsn = "" />
 	
-	<cffunction name="init" access="public" hint="I configure and return a DAO" output="false" returntype="reactor.data.abstractTableDao">
+	<cffunction name="init" access="public" hint="I configure and return a DAO" output="false" returntype="reactor.data.abstractObjectDao">
 		<cfargument name="dsn" hint="I am the DSN to use." required="yes" type="string" />
 		
 		<cfset setDsn(arguments.dsn) />
@@ -12,7 +12,7 @@
 	
 	<!--- read --->
 	<cffunction name="read" access="public" hint="I define the read method." output="false" returntype="void">
-		<cfargument name="Table" hint="I am the table to read." required="yes" type="reactor.core.table" />
+		<cfargument name="Object" hint="I am the object to read." required="yes" type="reactor.core.object" />
 		<cfthrow type="reactor.UnimplementedMethod"
 			message="The read method is abstract and must be overridden." />
 	</cffunction>
