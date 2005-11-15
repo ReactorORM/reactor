@@ -20,7 +20,7 @@
 		</cftry>
 		
 		<!--- create and configure reactor --->
-		<cfset setConfig(CreateObject("Component", "reactor.bean.config").init("scratch", arguments.type, "/reactorUnitTests/data", "always")) />
+		<cfset setConfig(CreateObject("Component", "reactor.config.config").init("scratch", arguments.type, "/reactorUnitTests/data", "always")) />
 		<cfset setReactor(CreateObject("Component", "reactor.reactorFactory").init(getConfig())) />
 		
 		<!--- create the test tables --->
@@ -75,10 +75,10 @@
 	
 	<!--- config --->
     <cffunction name="setConfig" access="public" output="false" returntype="void">
-       <cfargument name="config" hint="" required="yes" type="reactor.bean.config" />
+       <cfargument name="config" hint="" required="yes" type="reactor.config.config" />
        <cfset variables.instance.config = arguments.config />
     </cffunction>
-    <cffunction name="getConfig" access="public" output="false" returntype="reactor.bean.config">
+    <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
        <cfreturn variables.instance.config />
     </cffunction>
 
