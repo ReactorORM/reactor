@@ -12,7 +12,7 @@
 
 <cfset ip = reactor.createGateway("InvoiceProduct") />
 <cfset criteria = ip.createCriteria() />
-<cfset criteria.join("Invoice") />
+<cfset criteria.join("Invoice").join("Product") />
 
 <cfdump var="#ip.getByCriteria(criteria)#" />
 

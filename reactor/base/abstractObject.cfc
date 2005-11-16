@@ -18,7 +18,6 @@
 		<cfset _setName(arguments.name) />
 		<cfset _setObjectFactory(arguments.objectFactory) />
 		
-		
 		<cfreturn this />
 	</cffunction>
 	

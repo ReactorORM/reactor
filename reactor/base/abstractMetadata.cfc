@@ -226,6 +226,15 @@
 		</cfif>
 	</cffunction>
 	
+	<cffunction name="getRelatedMetadata" access="public" hint="I return the metadata object for the specified related." output="false" returntype="reactor.base.abstractMetadata">
+		<cfargument name="name" hint="I am the name of the object related to" required="yes" type="string" />
+		<cfif getRelationshipType(arguments.name) IS NOT "none">
+			<cfreturn _getObjectFactory().create(arguments.name, "Metadata") />
+		<cfelse>
+			<cfthrow message="Object Does Not Have Related Object" detail="The '#getName()#' object does not have a related '#arguments.name#' object." type="reactor.getRelatedMetadata.ObjectDoesNotHaveRelatedObject" />
+		</cfif>
+	</cffunction>
+		
 	<cffunction name="getSuperObjectMetadata" access="public" hint="I return the metadata object for this object's super object." output="false" returntype="reactor.base.abstractMetadata">
 		<cfif hasSuper()>
 			<cfreturn _getObjectFactory().create(getSuperObjectName(), "Metadata") />

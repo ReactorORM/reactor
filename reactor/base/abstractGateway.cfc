@@ -68,6 +68,8 @@
 		<cfset var result = 0 />
 		<cfset var x = 0 />
 		<cfset var args = 0 />
+		<cfset var joins = Criteria.getJoins() />
+		<cfset var join = 0 />
 		<!--- expression related --->
 		<cfset var expression = arguments.Criteria.getExpression().getExpression().expression />
 		<cfset var expressionNodes = expression.XmlChildren />
@@ -83,7 +85,22 @@
 			</cfif>
 
 			<cfloop list="#columnList#" index="column">
-				#objectMetadata.getQuerySafeColumn(column)# <cfif column IS NOT ListLast(columnList)>,</cfif>
+				#objectMetadata.getQuerySafeColumn(column)#
+				<cfif column IS NOT ListLast(columnList) OR ArrayLen(joins)>
+					,
+				</cfif>
+			</cfloop>
+			
+			<cfloop from="1" to="#ArrayLen(joins)#" index="x">
+				<cfset join = joins[x] />
+				<cfset columnList = join.ObjectMetadata.getColumnList() />
+				
+				<cfloop list="#columnList#" index="column">
+					#join.ObjectMetadata.getQuerySafeColumn(column)#
+					<cfif column IS NOT ListLast(columnList) OR ArrayLen(joins) IS NOT x>
+						,
+					</cfif>
+				</cfloop>
 			</cfloop>
 
 			FROM #objectMetadata.getQuerySafeTableName()# AS #objectMetadata.getQuerySafeTableAlias()#
@@ -96,6 +113,22 @@
 					<cfset relationships = childObjectMetadata.getSuperRelation() />
 					<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 						#childObjectMetadata.getQuerySafeColumn(relationships[x].from)# = #superObjectMetadata.getQuerySafeColumn(relationships[x].to)#
+						<cfif X IS NOT ArrayLen(relationships)>
+							AND
+						</cfif>
+					</cfloop>
+			</cfloop>
+			
+			<cfloop from="1" to="#ArrayLen(joins)#" index="x">
+				<cfset join = joins[x] />
+				
+				#join.type# #join.ObjectMetadata.getQuerySafeTableName()# AS #join.ObjectMetadata.getQuerySafeTableAlias()# ON
+					<cfset relationships = join.relation />
+					<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+						#objectMetadata.getQuerySafeColumn(relationships[x].from)# = #join.ObjectMetadata.getQuerySafeColumn(relationships[x].to)#
+						<cfif X IS NOT ArrayLen(relationships)>
+							AND
+						</cfif>
 					</cfloop>
 			</cfloop>
 			
@@ -334,6 +367,8 @@
 				</cfloop>
 			</cfif>
 		</cfquery>
+		
+		<cfdump var="#result#" /><cfabort>
 		
 		
 		<cfreturn qGet />

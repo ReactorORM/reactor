@@ -5,7 +5,7 @@
 	<cfset variables.Metadata = 0 />
 	<cfset variables.distinct = false />
 	<cfset variables.maxRows = -1 />
-	<cfset variables.join = XmlParse("<join></join>") />
+	<cfset variables.joins = ArrayNew(1) />
 	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.criteria">
@@ -19,13 +19,25 @@
 	</cffunction>
 	
 	<!--- join --->
-	<cffunction name="join" hint="I add a join to another object." access="public" output="false" returntype="void">
+	<cffunction name="join" hint="I add a join to another object." access="public" output="false" returntype="reactor.query.criteria">
 		<cfargument name="name" hint="The object to join" required="yes" type="string" />
+		<cfset var joins = getJoins() />
+		<cfset var join = structNew() />
+		<cfset var relation = 0 />
+		<cfset var x = 0 />
 		
+		<!--- set the join name --->
+		<cfset join.type = "JOIN"  />
+
 		<!--- get the relationship to the specified object --->
 		<cfswitch expression="#getObjectMetadata().getRelationshipType(arguments.name)#">
 			<cfcase value="hasOne">
-				<cfdump var="#getObjectMetadata().getHasOneRelation(arguments.name)#" />
+				<!--- get the relationship --->
+				<cfset join.ObjectMetadata = getObjectMetadata().getRelatedMetadata(arguments.name) />
+				<cfset join.relation = getObjectMetadata().getHasOneRelation(arguments.name) />
+				
+				<!--- append this join --->
+				<cfset ArrayAppend(joins, join) />
 			</cfcase>
 			<cfcase value="hasMany">
 				has many
@@ -35,7 +47,9 @@
 			</cfcase>
 		</cfswitch>
 		
-		got here....<cfabort>
+		<cfset setJoins(joins) />
+		
+		<cfreturn this />
 	</cffunction>
 	
 	<!--- metadata --->
@@ -90,5 +104,14 @@
     </cffunction>
     <cffunction name="getMaxrows" access="public" output="false" returntype="numeric">
        <cfreturn variables.maxrows />
+    </cffunction>
+	
+	<!--- joins --->
+    <cffunction name="setJoins" access="public" output="false" returntype="void">
+       <cfargument name="joins" hint="I am XML representing joins to other tables." required="yes" type="array" />
+       <cfset variables.joins = arguments.joins />
+    </cffunction>
+    <cffunction name="getJoins" access="public" output="false" returntype="array">
+       <cfreturn variables.joins />
     </cffunction>
 </cfcomponent>
