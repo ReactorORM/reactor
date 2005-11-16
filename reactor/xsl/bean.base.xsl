@@ -10,19 +10,7 @@
 	&lt;cfset variables.signature = "<xsl:value-of select="table/@signature" />" /&gt;
 	&lt;cfset variables.To = 0 /&gt;
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
-	
-	&lt;cffunction name="config" access="public" hint="I configure and return the <xsl:value-of select="table/@name"/> record." output="false" returntype="<xsl:value-of select="table/@customBeanSuper" />"&gt;
-		&lt;cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" /&gt;
-		&lt;cfargument name="name" hint="I am the name of the database object this record abstracts." required="yes" type="string" /&gt;
-		&lt;cfargument name="ObjectFactory" hint="I am the object use to create other data objects." required="yes" type="reactor.core.objectFactory" /&gt;
-		
-		&lt;cfset setConfig(arguments.config) /&gt;
-		&lt;cfset setObjectFactory(arguments.ObjectFactory) /&gt;
-		&lt;cfset setTo(getObjectFactory().create(arguments.name, "To")) /&gt;
-		
-		&lt;cfreturn this /&gt;
-	&lt;/cffunction&gt;
-	
+
 	&lt;cffunction name="init" access="public" hint="I configure and return this bean object." output="false" returntype="<xsl:value-of select="table/@baseBeanSuper" />"&gt;
 		<xsl:for-each select="table/superTables[@sort = 'backward']//columns/column[@overridden = 'false']">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
 		</xsl:for-each>
@@ -42,7 +30,7 @@
 	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="yes" type="reactor.util.ValidationErrorCollection" /&gt;
-		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#getConfig().getCreationPath()#/ErrorMessages.xml")) /&gt;
+		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getCreationPath()#/ErrorMessages.xml")) /&gt;
 		<xsl:for-each select="table/columns/column">
 		<xsl:choose>
 		<xsl:when test="@type = 'binary'">
@@ -144,16 +132,8 @@
 	&lt;/cffunction&gt;
 	&lt;cffunction name="getTo" access="public" output="false" returntype="<xsl:value-of select="table/@customToSuper" />"&gt;
 	    &lt;cfreturn variables.to /&gt;
-	&lt;/cffunction&gt;	 
+	&lt;/cffunction&gt;
 	
-	&lt;!--- ObjectFactory ---&gt;
-    &lt;cffunction name="setObjectFactory" access="private" output="false" returntype="void"&gt;
-	    &lt;cfargument name="ObjectFactory" hint="I am the table factory to use to create objects." required="yes" type="reactor.core.objectFactory" /&gt;
-	    &lt;cfset variables.ObjectFactory = arguments.ObjectFactory /&gt;
-    &lt;/cffunction&gt;
-    &lt;cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory"&gt;
-	    &lt;cfreturn variables.ObjectFactory /&gt;
-    &lt;/cffunction&gt;
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

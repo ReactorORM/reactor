@@ -9,12 +9,12 @@
 	
 	<!--- metadata --->
     <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
-       <cfreturn getObjectFactory().create(getName(), "Metadata") />
+       <cfreturn _getObjectFactory().create(_getName(), "Metadata") />
     </cffunction>
 	
 	<!--- getObjectName --->
 	<cffunction name="getObjectName" access="public" output="false" returntype="string">
-		<cfreturn getObjectMetadata().getName() />
+		<cfreturn getObjectMetadata()._getName() />
 	</cffunction>
 	
 	<!--- getColumnCfSqlType --->
@@ -55,8 +55,9 @@
 		</cfif>
 	</cffunction>
 
+	<!--- getByCriteria --->
 	<cffunction name="getByCriteria" access="public" hint="I return all matching rows from the Test3 table." output="false" returntype="query">
-		<cfargument name="Criteria" hint="I am optional criteria to apply to this query." required="yes" default="#CreateObject("Component", "reactor.core.criteria")#" />
+		<cfargument name="Criteria" hint="I am optional criteria to apply to this query." required="yes" default="#CreateObject("Component", "reactor.query.criteria")#" />
 		<cfset var objectMetadata = getObjectMetadata() />
 		<cfset var childObjectMetadata = 0 />
 		<cfset var superObjectMetadata = objectMetadata />
@@ -70,18 +71,21 @@
 		<!--- expression related --->
 		<cfset var expression = arguments.Criteria.getExpression().getExpression().expression />
 		<cfset var expressionNodes = expression.XmlChildren />
+		<!--- order related --->
+		<cfset var order = arguments.Criteria.getOrder().getOrder().order />
+		<cfset var orderNodes = order.XmlChildren />
 		
-		<cfquery name="qGet" result="result" datasource="#getConfig().getDsn()#">
-			<cftimer label="build query">
+		<cfquery name="qGet" result="result" datasource="#_getConfig().getDsn()#">
 			SELECT 
+
 			<cfif arguments.Criteria.getDistinct()>
 				DISTINCT
 			</cfif>
-			<cftimer label="get columns">
+
 			<cfloop list="#columnList#" index="column">
 				#objectMetadata.getQuerySafeColumn(column)# <cfif column IS NOT ListLast(columnList)>,</cfif>
 			</cfloop>
-			</cftimer>
+
 			FROM #objectMetadata.getQuerySafeTableName()# AS #objectMetadata.getQuerySafeTableAlias()#
 		
 			<cfloop condition="#superObjectMetadata.hasSuper()#">
@@ -312,248 +316,6 @@
 					</cfswitch>
 				</cfloop>
 			</cfif>
-			</cftimer>
-		</cfquery>
-		
-		<cfreturn qGet />
-	</cffunction>
-
-	<!--- 
-	<cffunction name="getByCriteria" access="public" hint="I return all matching rows from the Test3 table." output="false" returntype="query">
-		<cfargument name="Criteria" hint="I am optional criteria to apply to this query." required="yes" default="#CreateObject("Component", "reactor.core.criteria")#" />
-		<cfargument name="sqlStart" hint="I am the starting portion of the SQL query" required="yes" type="string" />
-		<cfargument name="sqlEnd" hint="I am the ending portion of the SQL query" required="yes" type="string" />
-		<cfset var qGet = 0 />
-		<cfset var args = 0 />
-		<cfset var x = 0 />
-	
-		<!--- expression related --->
-		<cfset var expression = arguments.Criteria.getExpression().getExpression().expression />
-		<cfset var expressionNodes = expression.XmlChildren />
-		
-		<!--- order related --->
-		<cfset var order = arguments.Criteria.getOrder().getOrder().order />
-		<cfset var orderNodes = order.XmlChildren />
-
-		<cfquery name="qGet" datasource="#getConfig().getDsn()#" maxrows="#arguments.Criteria.getMaxRows()#">
-			#arguments.sqlStart#
-			<cfif ArrayLen(expressionNodes)>
-				WHERE
-				
-				<!--- loop over all of the expressions and render them out --->
-				<cfloop from="1" to="#ArrayLen(expressionNodes)#" index="x">
-				
-					<!--- get the arguments for this expression --->
-					<cfset args = expressionNodes[x].XmlAttributes />
-					
-					<!--- render the expression --->
-					<cfswitch expression="#expressionNodes[x].XmlName#">
-						<!--- openParenthesis --->
-						<cfcase value="openParenthesis">
-							(
-						</cfcase>		
-							
-						<!--- closeParenthesis --->
-						<cfcase value="closeParenthesis">
-							)
-						</cfcase>
-						
-						<!--- and --->
-						<cfcase value="and">
-							AND
-						</cfcase>
-						
-						<!--- or --->
-						<cfcase value="or">
-							OR
-						</cfcase>
-						
-						<!--- not --->
-						<cfcase value="not">
-							NOT
-						</cfcase>
-						
-						<!--- isBetween --->
-						<cfcase value="isBetween">
-							#objectMetadata.getQuerySafeColumn(args.field)#
-								<cfif NOT getColumnLength(args.field)>
-									BETWEEN <cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value1#" />
-									AND <cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value2#" />
-								<cfelse>
-									BETWEEN <cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value1#" />
-									AND <cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value2#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isBetweenFields --->
-						<cfcase value="isBetweenFields">
-							#objectMetadata.getQuerySafeColumn(args.field)#
-								BETWEEN [#getObjectName()#].[#args.field1#]
-								AND [#getObjectName()#].[#args.field2#]
-						</cfcase>
-						
-						<!--- isEqual --->
-						<cfcase value="isEqual">
-							#objectMetadata.getQuerySafeColumn(args.field)# = 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#getValue(args.value, getColumnDbDataType(args.field))#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isEqualField --->
-						<cfcase value="isEqualField">
-							#objectMetadata.getQuerySafeColumn(args.field)# = [#getObjectName()#].[#args.field1#]
-						</cfcase>
-						
-						<!--- isNotEqual --->
-						<cfcase value="isNotEqual">
-							#objectMetadata.getQuerySafeColumn(args.field)# != 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isNotEqualField --->
-						<cfcase value="isNotEqualField">
-							#objectMetadata.getQuerySafeColumn(args.field)# != [#getObjectName()#].[#args.field1#]
-						</cfcase>
-						
-						<!--- isGte --->
-						<cfcase value="isGte">
-							#objectMetadata.getQuerySafeColumn(args.field)# >= 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isGteField --->
-						<cfcase value="isGteField">
-							#objectMetadata.getQuerySafeColumn(args.field)# >= [#getObjectName()#].[#args.field1#]
-						</cfcase>
-						
-						<!--- isGt --->
-						<cfcase value="isGt">
-							#objectMetadata.getQuerySafeColumn(args.field)# > 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isGtField --->
-						<cfcase value="isGtField">
-							#objectMetadata.getQuerySafeColumn(args.field)# > [#getObjectName()#].[#args.field1#]
-						</cfcase>
-						
-						<!--- isLike --->
-						<cfcase value="isLike">
-							#objectMetadata.getQuerySafeColumn(args.field)# LIKE
-								<cfswitch expression="#args.mode#">
-									<cfcase value="Anywhere">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="%#args.value#%" />
-									</cfcase>
-									<cfcase value="Left">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="%#args.value#" />
-									</cfcase>
-									<cfcase value="Right">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#%" />
-									</cfcase>
-									<cfcase value="All">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-									</cfcase>
-								</cfswitch>
-						</cfcase>
-						
-						<!--- isNotLike --->
-						<cfcase value="isNotLike">
-							#objectMetadata.getQuerySafeColumn(args.field)# NOT LIKE
-								<cfswitch expression="#args.mode#">
-									<cfcase value="Anywhere">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="%#args.value#%" />
-									</cfcase>
-									<cfcase value="Left">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="%#args.value#" />
-									</cfcase>
-									<cfcase value="Right">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#%" />
-									</cfcase>
-									<cfcase value="All">
-										<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-									</cfcase>
-								</cfswitch>
-						</cfcase>
-						
-						<!--- isIn --->
-						<cfcase value="isIn">
-							#objectMetadata.getQuerySafeColumn(args.field)# IN ( 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.values#" list="yes" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.values#" list="yes" />
-								</cfif>
-							)
-						</cfcase>
-						
-						<!--- isNotIn --->
-						<cfcase value="isNotIn">
-							#objectMetadata.getQuerySafeColumn(args.field)# NOT IN ( 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.values#" list="yes" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.values#" list="yes" />
-								</cfif>
-							)
-						</cfcase>
-						
-						<!--- isNull --->
-						<cfcase value="isNull">
-							#objectMetadata.getQuerySafeColumn(args.field)# IS NULL
-						</cfcase>
-						
-						<!--- isNotNull --->
-						<cfcase value="isNotNull">
-							#objectMetadata.getQuerySafeColumn(args.field)# IS NOT NULL
-						</cfcase>
-						
-						<!--- isLte --->
-						<cfcase value="isLte">
-							#objectMetadata.getQuerySafeColumn(args.field)# <= 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isLteField --->
-						<cfcase value="isLteField">
-							#objectMetadata.getQuerySafeColumn(args.field)# <= [#getObjectName()#].[#args.field1#]
-						</cfcase>
-						
-						<!--- isLt --->
-						<cfcase value="isLt">
-							#objectMetadata.getQuerySafeColumn(args.field)# < 
-								<cfif NOT getColumnLength(args.field)>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" value="#args.value#" />
-								<cfelse>
-									<cfqueryparam cfsqltype="#getColumnCfSqlType(args.field)#" maxlength="#getColumnLength(args.field)#" value="#args.value#" />
-								</cfif>
-						</cfcase>
-						
-						<!--- isLtField --->
-						<cfcase value="isLtField">
-							#objectMetadata.getQuerySafeColumn(args.field)# < [#getObjectName()#].[#args.field1#]
-						</cfcase>
-					</cfswitch>
-				</cfloop>
-			</cfif>
 			
 			<cfif ArrayLen(orderNodes)>
 				ORDER BY 
@@ -573,8 +335,8 @@
 			</cfif>
 		</cfquery>
 		
+		
 		<cfreturn qGet />
 	</cffunction>
-	--->
 
 </cfcomponent>

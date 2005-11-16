@@ -5,6 +5,7 @@
 	<cfset variables.Metadata = 0 />
 	<cfset variables.distinct = false />
 	<cfset variables.maxRows = -1 />
+	<cfset variables.join = XmlParse("<join></join>") />
 	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.criteria">
@@ -15,6 +16,26 @@
 		<cfset setOrder(CreateObject("Component", "reactor.query.order").init(getObjectMetadata())) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- join --->
+	<cffunction name="join" hint="I add a join to another object." access="public" output="false" returntype="void">
+		<cfargument name="name" hint="The object to join" required="yes" type="string" />
+		
+		<!--- get the relationship to the specified object --->
+		<cfswitch expression="#getObjectMetadata().getRelationshipType(arguments.name)#">
+			<cfcase value="hasOne">
+				<cfdump var="#getObjectMetadata().getHasOneRelation(arguments.name)#" />
+			</cfcase>
+			<cfcase value="hasMany">
+				has many
+			</cfcase>
+			<cfcase value="none">
+				<cfthrow message="No Relationship To Object" detail="The '#getObjectMetadata().getName()#' object does not have any relationships to the '#arguments.name#' object." type="reactor.join.No Relationship To Object" />
+			</cfcase>
+		</cfswitch>
+		
+		got here....<cfabort>
 	</cffunction>
 	
 	<!--- metadata --->

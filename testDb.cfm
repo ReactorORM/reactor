@@ -2,8 +2,19 @@
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
-<cfset myGw = reactor.createGateway("Administrator") />
+<!---
+<cfset pr = reactor.createRecord("Product") />
+<cfset pr.setProductId(1) />
+<cfset pr.load() />
 
-<cfdump var="#myGw.getByFields(password='test123')#" />
+<cfdump var="#pr#" />
+--->
 
-<cfabort> 
+<cfset ip = reactor.createGateway("InvoiceProduct") />
+<cfset criteria = ip.createCriteria() />
+<cfset criteria.join("Invoice") />
+
+<cfdump var="#ip.getByCriteria(criteria)#" />
+
+
+

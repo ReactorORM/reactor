@@ -33,7 +33,6 @@
 		
 	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfargument name="temp" required="no" default="0" />
 		<cfset var Config = getConfig().getObjectConfig(arguments.name) />
 		<cfset var Object = getObject(arguments.name) />
 		<cfset var columns = Object.getColumns() />
@@ -46,7 +45,7 @@
 		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
 			<!--- create a new object node --->
 			<cfset ArrayAppend(Config.object.super.XmlChildren, XMLElemNew(Config, "object")) />
-			<cfset copyNode(Config, Config.object.super.object, getXml(Config.object.super.XmlAttributes.name, temp + 1).object) />
+			<cfset copyNode(Config, Config.object.super.object, getXml(Config.object.super.XmlAttributes.name).object) />
 		</cfif>
 		
 		<!--- add the columns to the config settings --->

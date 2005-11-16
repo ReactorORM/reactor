@@ -18,7 +18,7 @@
 		<cfset var UserTypeDao = reactor.createDao("UserType") />
 		<cfset var UserTypeGateway = reactor.createGateway("UserType") />
 		<cfset var results = 0 />
-		<cfset var Criteria = CreateObject("Component", "reactor.core.criteria") />
+		<cfset var Criteria = CreateObject("Component", "reactor.query.criteria") />
 		
 		<!--- create some objects --->
 		<cfset UserTypeTo = reactor.createTo("UserType") />
@@ -73,7 +73,7 @@
 		
 		<cfset var CustomerGateway = reactor.createGateway("Customer") />
 		<cfset var results = 0 />
-		<cfset var Criteria = CreateObject("Component", "reactor.core.criteria") />
+		<cfset var Criteria = CreateObject("Component", "reactor.query.criteria") />
 		
 		<!--- create the needed user type --->
 		<cfset UserTypeTo.type = "Customer" />

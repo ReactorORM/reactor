@@ -14,9 +14,10 @@
 		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
 		<cfargument name="objectFactory" hint="I am the reactor factory." required="yes" type="reactor.core.objectFactory" />
 		
-		<cfset setConfig(arguments.config) />
-		<cfset setName(arguments.name) />
-		<cfset setObjectFactory(arguments.objectFactory) />
+		<cfset _setConfig(arguments.config) />
+		<cfset _setName(arguments.name) />
+		<cfset _setObjectFactory(arguments.objectFactory) />
+		
 		
 		<cfreturn this />
 	</cffunction>
@@ -26,29 +27,29 @@
 	</cffunction>
 	
 	<!--- config --->
-    <cffunction name="setConfig" access="private" output="false" returntype="void">
+    <cffunction name="_setConfig" access="private" output="false" returntype="void">
        <cfargument name="config" hint="I am the configuraion object to use." required="yes" type="reactor.config.config" />
        <cfset variables.config = arguments.config />
     </cffunction>
-    <cffunction name="getConfig" access="private" output="false" returntype="reactor.config.config">
+    <cffunction name="_getConfig" access="private" output="false" returntype="reactor.config.config">
        <cfreturn variables.config />
     </cffunction>
 	
 	<!--- name --->
-    <cffunction name="setName" access="private" output="false" returntype="void">
+    <cffunction name="_setName" access="private" output="false" returntype="void">
        <cfargument name="name" hint="I am the object's name" required="yes" type="string" />
        <cfset variables.name = arguments.name />
     </cffunction>
-    <cffunction name="getName" access="private" output="false" returntype="string">
+    <cffunction name="_getName" access="private" output="false" returntype="string">
        <cfreturn variables.name />
     </cffunction>
 	
 	<!--- objectFactory --->
-    <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
+    <cffunction name="_setObjectFactory" access="private" output="false" returntype="void">
        <cfargument name="objectFactory" hint="I am the reactor objectFactory" required="yes" type="reactor.core.objectFactory" />
        <cfset variables.objectFactory = arguments.objectFactory />
     </cffunction>
-    <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
+    <cffunction name="_getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
        <cfreturn variables.objectFactory />
     </cffunction>
 </cfcomponent>

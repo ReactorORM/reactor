@@ -11,7 +11,7 @@
 	&lt;cfset variables.dbUniqueIdentifierType = "uniqueidentifier" &gt;
 	
 	&lt;cffunction name="createCriteria" access="public" hint="I return a critera object which can be used to compose and execute complex queries on this gateway." output="false" return="reactor.query.criteria"&gt;
-		&lt;cfset var criteria = CreateObject("Component", "reactor.query.criteria").init(getObjectFactory().create("<xsl:value-of select="object/@name" />", "Metadata")) /&gt;
+		&lt;cfset var criteria = CreateObject("Component", "reactor.query.criteria").init(_getObjectFactory().create("<xsl:value-of select="object/@name" />", "Metadata")) /&gt;
 		&lt;cfreturn criteria /&gt;
 	&lt;/cffunction&gt;
 	
@@ -33,60 +33,7 @@
 		</xsl:for-each>
 		
 		&lt;cfreturn getByCriteria(Criteria) /&gt;
-		
-		
-		&lt;!--- cfquery name="qGet" datasource="#getConfig().getDsn()#"&gt;
-			SELECT 
-				<xsl:for-each select="object/columns/column">
-					<xsl:choose>
-						<xsl:when test="@dbDataType = 'uniqueidentifier'">
-							Stuff(Convert(varchar(36), [<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]), 24, 1, '') as [<xsl:value-of select="@name" />]
-						</xsl:when>
-						<xsl:otherwise>
-							[<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="position() != last()">,</xsl:if>				
-				</xsl:for-each>
-			FROM [<xsl:value-of select="object/@database" />].[<xsl:value-of select="object/@owner" />].[<xsl:value-of select="object/@name" />] 
-			WHERE 1=1
-				<xsl:for-each select="object/columns/column">
-					&lt;cfif IsDefined('arguments.<xsl:value-of select="@name" />')&gt;
-						AND [<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />] = &lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"<xsl:if test="@length > 0"> scale="<xsl:value-of select="@length" />"</xsl:if> value="<xsl:choose>
-							<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.<xsl:value-of select="@name" />, 23)#-#Right(arguments.<xsl:value-of select="@name" />, 12)#</xsl:when>
-							<xsl:otherwise>#arguments.<xsl:value-of select="@name" />#</xsl:otherwise>
-						</xsl:choose>"<xsl:if test="@nullable = 'true'"> null="#Iif(NOT Len(arguments.<xsl:value-of select="@name" />), DE(true), DE(false))#"</xsl:if> /&gt;
-					&lt;/cfif&gt;
-				</xsl:for-each>
-		&lt;/cfquery&gt;
-		
-		&lt;cfreturn qGet / ---&gt;
 	&lt;/cffunction&gt;
-	
-	&lt;!--- cffunction name="getByCriteria" access="public" hint="I return all matching rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="query"&gt;
-		&lt;cfargument name="Criteria" hint="I am optional criteria to apply to this query." required="no" default="#CreateObject("Component", "reactor.core.criteria")#" /&gt;
-		&lt;cfset var sqlStart = "" /&gt;
-		&lt;cfset var sqlEnd = "" /&gt;
-		
-		&lt;cfsavecontent variable="sqlStart"&gt;
-			SELECT 
-				&lt;cfif arguments.Criteria.getDistinct()&gt;DISTINCT&lt;/cfif&gt;	
-				<xsl:for-each select="object/columns/column">
-					<xsl:choose>
-						<xsl:when test="@dbDataType = 'uniqueidentifier'">
-							Stuff(Convert(varchar(36), [<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]), 24, 1, '') as [<xsl:value-of select="@name" />]
-						</xsl:when>
-						<xsl:otherwise>
-							[<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="position() != last()">,</xsl:if>				
-				</xsl:for-each>
-			FROM [<xsl:value-of select="object/@database" />].[<xsl:value-of select="object/@owner" />].[<xsl:value-of select="object/@name" />] 
-		&lt;/cfsavecontent&gt;
-		
-		&lt;cfreturn super.getByCriteria(arguments.Criteria, sqlStart, sqlEnd) /&gt;
-	&lt;/cffunction ---&gt;
 	
 &lt;/cfcomponent&gt;
 	</xsl:template>

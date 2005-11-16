@@ -25,9 +25,11 @@
 	<cffunction name="validateField" access="private" output="false" returntype="void">
 		<cfargument name="field" hint="I am the name of the field to validate" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase(getObjectMetadata().getColumnList(), arguments.field)>
+		<cfset getObjectMetadata().getColumn(arguments.field) />
+		
+		<!--- <cfif NOT ListFindNoCase(getObjectMetadata().getColumnList(), arguments.field)>
 			<cfthrow message="Field Does Not Exist" detail="The field '#arguments.field#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.validateField.Field Does Not Exist" />
-		</cfif>
+		</cfif> --->
 	</cffunction>
 	
 	<cffunction name="setAsc" access="public" hint="I add an assending order." output="false" returntype="reactor.query.order">
