@@ -185,52 +185,19 @@
 			<cfset copyNode(xmlDoc,newNode.xmlChildren[i],oldNode.xmlChildren[i]) />
 		</cfloop>
 	</cffunction>
-	
-	<!--- 
-	<cffunction name="copyNodes" access="private" hint="I copy an XML object's nodes into another XML object." output="false" returntype="void">
-		<cfargument name="document" hint="I am the destination document." required="yes" type="xml" />
-		<cfargument name="destNode" hint="I am the destination node to copy into." required="yes" type="any" />
-		<cfargument name="sourceNode" hint="I am the source node to copy from" required="yes" type="any" />
-		<cfargument name="temp" required="no" default="1" />
-		<cfset var attribute = 0 />
-		<cfset var sourceChild = 0 />
-		<cfset var x = 0 />
-		
-		<!--- copy attributes --->
-		<cfloop collection="#arguments.sourceNode.XmlAttributes#" item="attribute">
-			<cfset arguments.destNode.XmlAttributes[attribute] = arguments.sourceNode.XmlAttributes[attribute] />
-		</cfloop>
-		
-		<!--- copy children --->
-		<cfloop from="1" to="#ArrayLen(arguments.sourceNode.XmlChildren)#" index="x">
-			<cfset sourceChild = arguments.sourceNode.XmlChildren[x] />
-			<cfset destChild = XMLElemNew(document, sourceChild.XmlName) />
-			<!--- add the destNode to the dest xml children --->
-			<cfset ArrayAppend(arguments.destNode.XmlChildren, destChild) />
-			
-			
-			<!--- copy the nodes --->
-			<cfset copyNodes(arguments.document, Duplicate(destChild), sourceChild, temp + 1) />
-			
-			<cfif temp IS 1>
-				<cfdump var="#arguments.destNode#" />
-				<cfdump var="#arguments.sourceNode#" />
-				<cfabort>
-			</cfif>
-		</cfloop>
-		
-	</cffunction>
-	--->
-	
-	<!--- <cffunction name="generateErrorMessages" access="public" hint="I genereate / populate the ErrorMessages.xml file" output="false" returntype="void">
+
+	<!--- generateErrorMessages --->
+	<cffunction name="generateErrorMessages" access="public" hint="I genereate / populate the ErrorMessages.xml file" output="false" returntype="void">
 		<cfargument name="pathToErrorFile" hint="I am the path to the ErrorMessages.xml file." required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfset var XmlErrors = "" />
+		<!--- <cfset var XmlErrors = "" />
 		<cfset var XmlSearchResult = "" />
 		<cfset var fields = getObject().getFields() />
 		<cfset var tableNode = 0 />
 		<cfset var fieldNode = 0 />
-		<cfset var errorMessageNode = 0 />
+		<cfset var errorMessageNode = 0 /> --->
+		
+		<cfreturn />
 		
 		<!--- check to see if the error file exists --->
 		<cfif NOT FileExists(pathToErrorFile) > 
@@ -416,7 +383,44 @@
 		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*</tables>", chr(13) & chr(10) & "</tables>", "all") />
 		
 		<cfreturn arguments.XmlErrors />
-	</cffunction> --->
+	</cffunction>
+	
+		
+	<!--- 
+	<cffunction name="copyNodes" access="private" hint="I copy an XML object's nodes into another XML object." output="false" returntype="void">
+		<cfargument name="document" hint="I am the destination document." required="yes" type="xml" />
+		<cfargument name="destNode" hint="I am the destination node to copy into." required="yes" type="any" />
+		<cfargument name="sourceNode" hint="I am the source node to copy from" required="yes" type="any" />
+		<cfargument name="temp" required="no" default="1" />
+		<cfset var attribute = 0 />
+		<cfset var sourceChild = 0 />
+		<cfset var x = 0 />
+		
+		<!--- copy attributes --->
+		<cfloop collection="#arguments.sourceNode.XmlAttributes#" item="attribute">
+			<cfset arguments.destNode.XmlAttributes[attribute] = arguments.sourceNode.XmlAttributes[attribute] />
+		</cfloop>
+		
+		<!--- copy children --->
+		<cfloop from="1" to="#ArrayLen(arguments.sourceNode.XmlChildren)#" index="x">
+			<cfset sourceChild = arguments.sourceNode.XmlChildren[x] />
+			<cfset destChild = XMLElemNew(document, sourceChild.XmlName) />
+			<!--- add the destNode to the dest xml children --->
+			<cfset ArrayAppend(arguments.destNode.XmlChildren, destChild) />
+			
+			
+			<!--- copy the nodes --->
+			<cfset copyNodes(arguments.document, Duplicate(destChild), sourceChild, temp + 1) />
+			
+			<cfif temp IS 1>
+				<cfdump var="#arguments.destNode#" />
+				<cfdump var="#arguments.sourceNode#" />
+				<cfabort>
+			</cfif>
+		</cfloop>
+		
+	</cffunction>
+	--->
 	
 	<!--- table
     <cffunction name="setObject" access="private" output="false" returntype="void">

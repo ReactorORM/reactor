@@ -3,11 +3,19 @@
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
 
-<cfset myrec = reactor.createRecord("Product") />
-<cfset myrec.setProductId(2) />
-<cfset myrec.load() />
+<cfset admin = reactor.createRecord("Administrator") />
+<cfset admin.setAdministratorId(1) />
+<cfset admin.load() />
 
-<cfdump var="#myrec.getInvoiceArray()#" />
+<cfset bean = reactor.createBean("Administrator") />
+<cfset bean.populate(admin) />
+
+<cfset bean.setFirstName("AlmostDone") />
+
+<cfset admin.populate(bean) />
+
+
+<cfdump var="#admin._getTo()#" />
 
 
 <!--- 

@@ -5,33 +5,41 @@
 
 	<xsl:template match="/">
 &lt;cfcomponent hint="I am the base Bean object for the <xsl:value-of select="table/@name"/> table.  I am generated.  DO NOT EDIT ME."
-	extends="<xsl:value-of select="table/@baseBeanSuper" />" &gt;
+	extends="<xsl:choose>
+		<xsl:when test="count(object/super)"><xsl:value-of select="object/@mapping"/>.Bean.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/super/@name"/>Bean</xsl:when>
+		<xsl:otherwise>reactor.base.abstractBean</xsl:otherwise>
+	</xsl:choose>" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="table/@signature" />" /&gt;
 	&lt;cfset variables.To = 0 /&gt;
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
 
-	&lt;cffunction name="init" access="public" hint="I configure and return this bean object." output="false" returntype="<xsl:value-of select="table/@baseBeanSuper" />"&gt;
-		<xsl:for-each select="table/superTables[@sort = 'backward']//fields/field[@overridden = 'false']">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
+	&lt;cffunction name="init" access="public" hint="I configure and return this bean object." output="false" returntype="<xsl:value-of select="object/@mapping"/>.Bean.<xsl:value-of select="object/@dbms"/>.base.<xsl:value-of select="object/@name"/>Bean"&gt;
+		<xsl:for-each select="//field[@overridden = 'false']">
+			&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the  <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@default" />" /&gt;
 		</xsl:for-each>
-		<xsl:for-each select="table/fields/field">&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@defaultExpression" />" /&gt;
-		</xsl:for-each>
-		<xsl:if test="count(table/superTables[@sort = 'backward']) &gt; 0">
-		&lt;cfset super.init(<xsl:for-each select="table/superTables[@sort = 'backward']//fields/field[@overridden = 'false']">
-			<xsl:value-of select="@name" />=arguments.<xsl:value-of select="@name" />
-			<xsl:if test="position() != last()">, </xsl:if>
-		</xsl:for-each>) &gt;
+		
+		<xsl:if test="count(object/super) &gt; 0">
+		
+				&lt;cfset super.init(
+					<xsl:for-each select="object/super//fields/field[@overridden = 'false']">
+						<xsl:value-of select="@name" />=arguments.<xsl:value-of select="@name" />
+						<xsl:if test="position() != last()">, </xsl:if>
+					</xsl:for-each>)
+				/&gt;
+			
 		</xsl:if>
 		
-		<xsl:for-each select="table/fields/field">&lt;cfset set<xsl:value-of select="@name" />(arguments.<xsl:value-of select="@name" />) /&gt;
+		<xsl:for-each select="object/fields/field">
+			&lt;cfset set<xsl:value-of select="@name" />(arguments.<xsl:value-of select="@name" />) /&gt;
 		</xsl:for-each>
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 	
-	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
+	&lt;!--- cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="yes" type="reactor.util.ValidationErrorCollection" /&gt;
 		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getCreationPath()#/ErrorMessages.xml")) /&gt;
-		<xsl:for-each select="table/fields/field">
+		<xsl:for-each select="object/fields/field">
 		<xsl:choose>
 		<xsl:when test="@type = 'binary'">
 		<xsl:if test="@nullable = 'false'">
@@ -107,32 +115,33 @@
 		</xsl:for-each>
 		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
 	&lt;/cffunction&gt;
+	---&gt;
 	
 	&lt;cffunction name="populate" access="public" hint="I populate this bean from a <xsl:value-of select="table/@name"/>Record object." output="false" returntype="void"&gt;
-		&lt;cfargument name="<xsl:value-of select="table/@name"/>Record" hint="I am the record object to use to populate this Bean." required="yes" type="<xsl:value-of select="table/@customRecordSuper" />" /&gt;
+		&lt;cfargument name="<xsl:value-of select="table/@name"/>Record" hint="I am the record object to use to populate this Bean." required="yes" type="<xsl:value-of select="object/@mapping"/>.Record.<xsl:value-of select="object/@dbms"/>.base.<xsl:value-of select="object/@name"/>Record" /&gt;
 			
-		&lt;cfset setTo(arguments.<xsl:value-of select="table/@name"/>Record.getTo()) />
+		&lt;cfset _setTo(arguments.<xsl:value-of select="table/@name"/>Record._getTo()) />
 	&lt;/cffunction&gt;		
-	
-	<xsl:for-each select="table/fields/field">
+	 
+	<xsl:for-each select="object/fields/field">
 	&lt;!--- <xsl:value-of select="@name" /> ---&gt;
 	&lt;cffunction name="set<xsl:value-of select="@name" />" access="public" output="false" returntype="void"&gt;
 	    &lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the <xsl:value-of select="@name" /> value." required="yes" type="string" /&gt;
-	    &lt;cfset getTo().<xsl:value-of select="@name" /> = arguments.<xsl:value-of select="@name" /> /&gt;
+	    &lt;cfset _getTo().<xsl:value-of select="@name" /> = arguments.<xsl:value-of select="@name" /> /&gt;
 	&lt;/cffunction&gt;
 	&lt;cffunction name="get<xsl:value-of select="@name" />" access="public" output="false" returntype="string"&gt;
-	    &lt;cfreturn getTo().<xsl:value-of select="@name" /> /&gt;
+	    &lt;cfreturn _getTo().<xsl:value-of select="@name" /> /&gt;
 	&lt;/cffunction&gt;
 	</xsl:for-each>
 		
 	&lt;!--- to ---&gt;
-	&lt;cffunction name="setTo" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="<xsl:value-of select="table/@customToSuper" />" /&gt;
+	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
+	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
 	    &lt;cfset variables.to = arguments.to /&gt;
 	&lt;/cffunction&gt;
-	&lt;cffunction name="getTo" access="public" output="false" returntype="<xsl:value-of select="table/@customToSuper" />"&gt;
-	    &lt;cfreturn variables.to /&gt;
-	&lt;/cffunction&gt;
+	&lt;cffunction name="_getTo" access="public" output="false" returntype="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To"&gt;
+		&lt;cfreturn variables.to /&gt;
+	&lt;/cffunction&gt;	
 	
 &lt;/cfcomponent&gt;
 	</xsl:template>
