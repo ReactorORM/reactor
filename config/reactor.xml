@@ -26,14 +26,14 @@
 		</object>
 		
 		<object name="Administrator">
-			<super name="User">
+			<super name="User" alias="SuperUser">
 				<relate from="administratorId" to="userID" />
 			</super>
 		</object>
 		
 		<object name="Merchant">
 			<super name="User">
-				<relate from="merchant" to="userID" />
+				<relate from="merchantId" to="userID" />
 			</super>
 			<hasOne name="Company">
 				<relate from="companyId" to="companyId" />
@@ -90,7 +90,8 @@
 				<relate from="productId" to="productId" />
 			</hasOne>
 			<hasOne name="Invoice">
-				<relate from="invoiceId" to="invoiceId" />
+				<relate from="invoiceId" to="invoiceId1" />
+				<relate from="part2" to="part21" />
 			</hasOne>
 		</object>
 		

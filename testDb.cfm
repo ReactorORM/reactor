@@ -1,24 +1,30 @@
 
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
-<!---
-<cfset userGateway = reactor.createGateway("User") />
-<cfset query = userGateway.createQuery() />
 
-<cfset query.join("User", "Merchant") /> 
-<cfset query.join("Merchant", "Company") />
-<cfset query.join("Company", "Product") />
-<cfset query.join("Merchant", "Product") />
+
+<cfset myrec = reactor.createRecord("Product") />
+<cfset myrec.setProductId(2) />
+<cfset myrec.load() />
+
+<cfdump var="#myrec.getInvoiceArray()#" />
+
+
+<!--- 
+
+
+<cfset myRec = reactor.createRecord("Product") />
+<cfset myRec.setProductId(1) />
+
+<cfset query = myRec.getInvoiceProductQuery() />
+<cfset invoiceIdList = ValueList(query.invoiceId) />
+
+<cfset ivGw = reactor.createGateway("Invoice") />
+<cfset query = ivGw.createQuery() />
+<cfset query.getWhere().isIn("Invoice", "InvoiceId", invoiceIdList) />
+
+<cfdump var="#ivGw.getByQuery(query)#" />
 
 --->
 
 
-
-
-<cfset myGateway = reactor.createGateway("Company") />
-<cfset query = myGateway.createQuery() />
-
-<cfset query.join("Company", "BillingAddress").join("BillingAddress", "StateProv").join("Company", "MailingAddress") />
-<cfset query.getOrder().setDesc("BillingAddress", "AddressId") />
-
-<cfdump var="#myGateway.getByQuery(query)#" />

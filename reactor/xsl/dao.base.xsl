@@ -14,36 +14,37 @@
 
 	&lt;cffunction name="save" access="public" hint="I create or update a <xsl:value-of select="object/@name" /> record." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+
 		<xsl:choose>
-			<xsl:when test="count(object/fields/fields[@primaryKey = 'true']) &gt; 0 and count(object/fields/fields[@identity = 'true']) &gt; 0">
-		&lt;cfif <xsl:for-each select="object/fields/fields[@primaryKey = 'true']">IsNumeric(arguments.to.<xsl:value-of select="@name" />) AND Val(arguments.to.<xsl:value-of select="@name" />)<xsl:if test="position() != last()"> AND </xsl:if>
+			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) &gt; 0">
+		&lt;cfif <xsl:for-each select="object/fields/field[@primaryKey = 'true']">IsNumeric(arguments.to.<xsl:value-of select="@name" />) AND Val(arguments.to.<xsl:value-of select="@name" />)<xsl:if test="position() != last()"> AND </xsl:if>
 			</xsl:for-each>&gt;
 			&lt;cfset update(arguments.to) /&gt;
 		&lt;cfelse&gt;
 			&lt;cfset create(arguments.to) /&gt;
 		&lt;/cfif&gt;
 			</xsl:when>
-			<xsl:when test="count(object/fields/fields[@primaryKey = 'true']) &gt; 0 and count(object/fields/fields[@identity = 'true']) = 0">
+			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
 		&lt;cfif exists(arguments.to)&gt;
 			&lt;cfset update(arguments.to) /&gt;
 		&lt;cfelse&gt;
 			&lt;cfset create(arguments.to) /&gt;
 		&lt;/cfif&gt;
 			</xsl:when>
-			<xsl:when test="count(object/fields/fields[@primaryKey = 'true']) = 0">
+			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) = 0">
 		&lt;cfset create(arguments.to) /&gt;
 			</xsl:when>
 		</xsl:choose>
 	&lt;/cffunction&gt;
 	
-	<xsl:if test="count(object/fields/fields[@primaryKey = 'true']) &gt; 0 and count(object/fields/fields[@identity = 'true']) = 0">
+	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
 	&lt;cffunction name="exists" access="public" hint="I check to see if the <xsl:value-of select="object/@name" /> object exists." output="false" returntype="boolean"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qExists = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getObjectFactory().create("<xsl:value-of select="object/@name" />", "Gateway") /&gt;
 				
 		&lt;cfset qExists = <xsl:value-of select="object/@name" />Gateway.getByFields(
-			<xsl:for-each select="object/fields/fields[@primaryKey = 'true']">
+			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 				<xsl:value-of select="@name" /> = arguments.to.<xsl:value-of select="@name" />
 			</xsl:for-each>
 		) /&gt;
@@ -68,18 +69,18 @@
 			
 		<xsl:choose>
 			<xsl:when test="object[@dbms = 'mssql']">
-				&lt;cftransaction&gt;	
+				&lt;cftransaction&gt;
 					&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;
 						INSERT INTO [<xsl:value-of select="object/@database" />].[<xsl:value-of select="object/@owner" />].[<xsl:value-of select="object/@name" />]
 						(
-							<xsl:for-each select="object/fields/fields">
+							<xsl:for-each select="object/fields/field">
 								<xsl:if test="@identity != 'true'">
 									[<xsl:value-of select="../../@name" />].[<xsl:value-of select="@name" />]
 									<xsl:if test="position() != last()">,</xsl:if>
 								</xsl:if>
 							</xsl:for-each>
 						) VALUES (
-							<xsl:for-each select="object/fields/fields">
+							<xsl:for-each select="object/fields/field">
 								<xsl:if test="@identity != 'true'">
 									&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"
 									<xsl:if test="@length > 0">
@@ -99,7 +100,7 @@
 							</xsl:for-each>
 						)
 						
-						<xsl:if test="object/fields/fields[@identity = 'true']">
+						<xsl:if test="object/fields/field[@identity = 'true']">
 							SELECT SCOPE_IDENTITY() as Id
 						</xsl:if>
 					&lt;/cfquery&gt;
@@ -110,29 +111,39 @@
 			</xsl:when>
 		</xsl:choose>
 			
-		<xsl:if test="object/fields/fields[@identity = 'true']">
+		<xsl:if test="object/fields/field[@identity = 'true']">
 		&lt;cfif qCreate.recordCount&gt;
-			&lt;cfset arguments.to.<xsl:value-of select="object/fields/fields[@identity = 'true']/@name" /> = qCreate.id /&gt;
+			&lt;cfset arguments.to.<xsl:value-of select="object/fields/field[@identity = 'true']/@name" /> = qCreate.id /&gt;
 		&lt;/cfif&gt;
 		</xsl:if>
 	&lt;/cffunction&gt;
 	
-	<xsl:if test="count(object/fields/fields[@primaryKey = 'true'])">
+	<xsl:if test="count(object/fields/field[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getObjectFactory().create("<xsl:value-of select="object/@name" />", "Gateway") /&gt;
 		
 		&lt;cfset qRead = <xsl:value-of select="object/@name" />Gateway.getByFields(
-			<xsl:for-each select="object/fields/fields[@primaryKey = 'true']">
+			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 				<xsl:value-of select="@name" /> = arguments.to.<xsl:value-of select="@name" />
+				<xsl:if test="position() != last()">, </xsl:if>
 			</xsl:for-each>
 		) /&gt;
 		
 		&lt;cfif qRead.recordCount&gt;<xsl:for-each select="object/superTables[@sort = 'backward']//fields/fields[@overridden = 'false']">
 			&lt;cfset arguments.to.<xsl:value-of select="@name" /> = qRead.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
 			<xsl:for-each select="//field[@overridden = 'false']">
-				&lt;cfset arguments.to.<xsl:value-of select="@name" /> = qRead.<xsl:value-of select="@name" /> /&gt;
+				&lt;cfset arguments.to.<xsl:value-of select="@name" /> = 
+				<xsl:choose>
+					<xsl:when test="string-length(../../../@alias) and ../../../@alias != ../../../@name">
+						qRead.<xsl:value-of select="../../../@alias" /><xsl:value-of select="@name" />
+					</xsl:when>
+					<xsl:otherwise>
+						qRead.<xsl:value-of select="@name" />
+					</xsl:otherwise>
+				</xsl:choose>
+				/&gt;
 			</xsl:for-each>
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
@@ -152,7 +163,7 @@
 				&lt;cfquery name="qUpdate" datasource="#_getConfig().getDsn()#"&gt;
 					UPDATE [<xsl:value-of select="object/@database" />].[<xsl:value-of select="object/@owner" />].[<xsl:value-of select="object/@name" />]
 					SET 
-					<xsl:for-each select="object/fields/fields[@primaryKey = 'false']">
+					<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
 						[<xsl:value-of select="@name" />] = &lt;cfqueryparam
 							cfsqltype="<xsl:value-of select="@cfSqlType" />"
 							<xsl:if test="@length > 0">
@@ -170,7 +181,7 @@
 						</xsl:if>
 					</xsl:for-each>
 					WHERE
-					<xsl:for-each select="object/fields/fields[@primaryKey = 'true']">
+					<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 						[<xsl:value-of select="@name" />] = &lt;cfqueryparam
 							cfsqltype="<xsl:value-of select="@cfSqlType" />"
 							<xsl:if test="@length > 0">
@@ -209,7 +220,7 @@
 				&lt;cfquery name="qDelete" datasource="#_getConfig().getDsn()#"&gt;
 					DELETE FROM [<xsl:value-of select="object/@database" />].[<xsl:value-of select="object/@owner" />].[<xsl:value-of select="object/@name" />]
 					WHERE
-					<xsl:for-each select="object/fields/fields[@primaryKey = 'true']">
+					<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 						[<xsl:value-of select="@name" />] = &lt;cfqueryparam
 							cfsqltype="<xsl:value-of select="@cfSqlType" />"
 							<xsl:if test="@length > 0">

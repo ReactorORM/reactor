@@ -38,16 +38,56 @@
 		<cfset var fields = Object.getFields() />
 		<cfset var field = 0 />
 		<cfset var overriddenFields = 0 />
+		<cfset var linkerRelationships = 0 />
+		<cfset var linkerRelationship = 0 />
+		<cfset var newHasMany = 0 />
+		<cfset var newRelationship = 0 />
 		<cfset var x = 0 />
 		<cfset var y = 0 />
+		<cfset var z = 0 />
 		
 		<!--- add/validate relationship aliases --->
 		<cfset var relationships = Config.object.XmlChildren />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
 		
+		<!--- expand relationships --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
+			
+			<!--- if this is a has-many relationship with a link expand it --->
+			<cfif IsDefined("relationship.link")>
+				<!--- get the relationships that the linking object has --->
+				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
+				
+				<!--- find links back to this object --->
+				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
+					<cfset linkerRelationship = linkerRelationships[y] />
+					
+					<!--- if this is a link back to this object copy the node into this document --->
+					<cfif linkerRelationship.XmlAttributes.name IS arguments.name>
+						<!--- create a hasMany relationship int this document --->
+						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
+						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
+						<cfset newHasMany.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
+						
+						<!--- add all relationships --->
+						<cfloop from="1" to="#ArrayLen(linkerRelationship.XmlChildren)#" index="z">
+							<cfset newRelationship = XMLElemNew(Config, "relate") />
+							<cfset newRelationship.XmlAttributes["from"] = linkerRelationship.XmlChildren[z].XmlAttributes.to />
+							<cfset newRelationship.XmlAttributes["to"] = linkerRelationship.XmlChildren[z].XmlAttributes.from />
+							
+							<!--- add the relationship --->
+							<cfset ArrayAppend(newHasMany.XmlChildren, newRelationship) />
+						</cfloop>
+						
+						<!--- add the hasMany to the relationship --->
+						<cfset ArrayAppend(relationships, newHasMany) />
+						
+					</cfif>
+				</cfloop>
+			</cfif>
+						
 			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 				<!--- make sure this alias hasn't already been used --->
@@ -96,6 +136,7 @@
 			<cfset field.XmlAttributes["length"] = fields[x].getLength() />
 			<cfset field.XmlAttributes["default"] = fields[x].getDefault() />
 			<cfset field.XmlAttributes["overridden"] = 'false' />
+			<cfset field.XmlAttributes["object"] = Config.object.XmlAttributes.name />
 		</cfloop>
 		
 		<!--- set the base config settings --->
@@ -109,7 +150,11 @@
 		
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
-			
+		
+		<!---
+		<cfdump var="#Config#" /><cfabort>
+		--->
+		
 		<cfreturn Config />
 	</cffunction>
 	

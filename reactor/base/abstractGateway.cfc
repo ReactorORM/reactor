@@ -15,14 +15,13 @@
 	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="query">
 		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" default="reactor.query.query" />
 		<cfset var qGet = 0 />
-		<cfset var result = 0 />
 		<cfset var Convention = getObjectMetadata().getConventions() />
 		<cfset var where = arguments.Query.getWhere().getWhere() />
 		<cfset var order = arguments.Query.getOrder().getOrder() />
 		<cfset var whereNode = 0 />
 		<cfset var orderNodes = 0 />
 		
-		<cfquery name="qGet" result="result" datasource="#_getConfig().getDsn()#">
+		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#">
 			SELECT
 			
 			<!--- distinct --->
