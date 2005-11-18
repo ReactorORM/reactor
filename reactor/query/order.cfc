@@ -23,14 +23,10 @@
 	
 	<!--- validateField --->
 	<cffunction name="validateField" access="private" output="false" returntype="void">
-		<cfargument name="object" hint="I am the object of the field should be in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the name or alias of the object of the field should be in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field to validate" required="yes" type="string" />
 		
-		<cfset getQuery().getObjectMetadata(arguments.object).getField(arguments.field) />
-	</cffunction>
-
-	<cffunction name="dump" access="public" hint="I am a debugging method.  I dump the current order statement's data." output="false" returntype="void">
-		<cfdump var="#getOrder()#" /><cfabort>
+		<cfset getQuery().findObject(arguments.object).getObjectMetadata().getField(arguments.field) />
 	</cffunction>
 	
 	<cffunction name="appendNode" access="private" hint="I append a node to the where expression" output="false" returntype="reactor.query.order">
@@ -71,7 +67,7 @@
        <cfargument name="order" hint="I am the array of order by statements" required="yes" type="array" />
        <cfset variables.order = arguments.order />
     </cffunction>
-    <cffunction name="getOrder" access="private" output="false" returntype="array">
+    <cffunction name="getOrder" access="public" output="false" returntype="array">
        <cfreturn variables.order />
     </cffunction>
 	

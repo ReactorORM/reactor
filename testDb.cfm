@@ -19,6 +19,6 @@
 <cfset query = myGateway.createQuery() />
 
 <cfset query.join("Company", "BillingAddress").join("BillingAddress", "StateProv").join("Company", "MailingAddress") />
-<cfset query.getWhere().isEqual("Company", "CompanyId", 1) />
+<cfset query.getOrder().setDesc("BillingAddress", "AddressId") />
 
 <cfdump var="#myGateway.getByQuery(query)#" />

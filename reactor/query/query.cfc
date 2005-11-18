@@ -9,6 +9,9 @@
 	
 	<!--- where --->
 	<cfset variables.where = CreateObject("Component", "reactor.query.where").init(this) />
+
+	<!--- order --->
+	<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
 	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.query">
@@ -96,8 +99,7 @@
     <cffunction name="getDistinct" access="public" output="false" returntype="boolean">
        <cfreturn variables.distinct />
     </cffunction>
-	
-		
+			
 	<!--- where --->
     <cffunction name="setWhere" access="public" output="false" returntype="void">
        <cfargument name="where" hint="I am the query's where experssion" required="yes" type="reactor.query.where" />
@@ -113,6 +115,15 @@
 		<cfargument name="field" hint="I am the name of the field." required="yes" type="string" />
 		<cfreturn findObject(arguments.object).getObjectMetadata().getField(arguments.field) />
 	</cffunction>
+	
+	<!--- order --->
+    <cffunction name="setOrder" access="public" output="false" returntype="void">
+       <cfargument name="order" hint="I am the order expression" required="yes" type="reactor.query.order" />
+       <cfset variables.order = arguments.order />
+    </cffunction>
+    <cffunction name="getOrder" access="public" output="false" returntype="reactor.query.order">
+       <cfreturn variables.order />
+    </cffunction>
 	
 </cfcomponent>
 
@@ -335,14 +346,7 @@
     </cffunction>
 
 	
-	<!--- order --->
-    <cffunction name="setOrder" access="public" output="false" returntype="void">
-       <cfargument name="order" hint="I am the order expression" required="yes" type="reactor.query.order" />
-       <cfset variables.order = arguments.order />
-    </cffunction>
-    <cffunction name="getOrder" access="public" output="false" returntype="reactor.query.order">
-       <cfreturn variables.order />
-    </cffunction>
+	
 	
 	<!--- createWhere --->
 	<cffunction name="createWhere" access="public" hint="I create and return a new where." output="false" returntype="reactor.query.where">

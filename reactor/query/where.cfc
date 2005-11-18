@@ -233,7 +233,7 @@
 		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
-		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="yes" type="string" />
+		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="no" type="string" default="anywhere" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
 
@@ -248,7 +248,7 @@
 		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
-		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="yes" type="string" />
+		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="no" type="string" default="anywhere" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
 
