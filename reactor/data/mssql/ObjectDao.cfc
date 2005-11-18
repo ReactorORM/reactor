@@ -3,9 +3,9 @@
 	<cffunction name="read" access="public" hint="I populate an Object object based on it's name" output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to populate." required="yes" type="reactor.core.object" />
 		
-		<!--- get all column data --->
+		<!--- get all field data --->
 		<cfset readObject(arguments.Object) />
-		<cfset readColumns(arguments.Object) />
+		<cfset readFields(arguments.Object) />
 	</cffunction>
 	
 	<cffunction name="readObject" access="private" hint="I confirm that this object exists at all.  If not, I throw an error." output="false" returntype="void">
@@ -27,12 +27,12 @@
 		</cfif>		
 	</cffunction>
 	
-	<cffunction name="readColumns" access="private" hint="I populate the table with columns." output="false" returntype="void">
-		<cfargument name="Object" hint="I am the object to read columns into." required="yes" type="reactor.core.object" />
-		<cfset var qColumns = 0 />
-		<cfset var Column = 0 />
+	<cffunction name="readFields" access="private" hint="I populate the table with fields." output="false" returntype="void">
+		<cfargument name="Object" hint="I am the object to read fields into." required="yes" type="reactor.core.object" />
+		<cfset var qFields = 0 />
+		<cfset var Field = 0 />
 				
-		<cfquery name="qColumns" datasource="#getDsn()#">
+		<cfquery name="qFields" datasource="#getDsn()#">
 			SELECT 
 				col.COLUMN_NAME as name,
 				CASE
@@ -61,21 +61,21 @@
 			WHERE col.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
 		</cfquery>
 		
-		<cfloop query="qColumns">
-			<!--- create the column --->
-			<cfset Column = CreateObject("Component", "reactor.core.column") />
-			<cfset Column.setName(qColumns.name) />
-			<cfset Column.setPrimaryKey(qColumns.primaryKey) />
-			<cfset Column.setIdentity(qColumns.identity) />
-			<cfset Column.setNullable(qColumns.nullable) />
-			<cfset Column.setDbDataType(qColumns.dbDataType) />
-			<cfset Column.setCfDataType(getCfDataType(qColumns.dbDataType)) />
-			<cfset Column.setCfSqlType(getCfSqlType(qColumns.dbDataType)) />
-			<cfset Column.setLength(qColumns.length) />
-			<cfset Column.setDefault(getDefault(qColumns.default, Column.getCfDataType())) />
+		<cfloop query="qFields">
+			<!--- create the field --->
+			<cfset Field = CreateObject("Component", "reactor.core.field") />
+			<cfset Field.setName(qFields.name) />
+			<cfset Field.setPrimaryKey(qFields.primaryKey) />
+			<cfset Field.setIdentity(qFields.identity) />
+			<cfset Field.setNullable(qFields.nullable) />
+			<cfset Field.setDbDataType(qFields.dbDataType) />
+			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
+			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
+			<cfset Field.setLength(qFields.length) />
+			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType())) />
 			
-			<!--- add the column to the table --->
-			<cfset arguments.Object.addColumn(Column) />
+			<!--- add the field to the table --->
+			<cfset arguments.Object.addField(Field) />
 		</cfloop>
 	</cffunction>
 	

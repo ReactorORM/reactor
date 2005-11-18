@@ -6,7 +6,7 @@
 	<cfset variables.type = "" />
 	<cfset variables.database = 0 />
 	
-	<cfset variables.columns = ArrayNew(1) />
+	<cfset variables.fields = ArrayNew(1) />
 	
 	<cffunction name="init" access="public" hint="I configure the object." returntype="reactor.core.object">
 		<cfargument name="name" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
@@ -16,21 +16,21 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="addColumn" access="public" hint="I add a column to this object." output="false" returntype="void">
-		<cfargument name="column" hint="I am the column to add" required="yes" type="reactor.core.column" />
-		<cfset var columns = getColumns() />
-		<cfset columns[ArrayLen(columns) + 1] = arguments.column />
-		<cfset setColumns(columns) />
+	<cffunction name="addField" access="public" hint="I add a field to this object." output="false" returntype="void">
+		<cfargument name="field" hint="I am the field to add" required="yes" type="reactor.core.field" />
+		<cfset var fields = getFields() />
+		<cfset fields[ArrayLen(fields) + 1] = arguments.field />
+		<cfset setFields(fields) />
 	</cffunction>
 
-	<cffunction name="getColumn" access="public" hint="I return a specific column." output="false" returntype="reactor.core.column">
-		<cfargument name="name" hint="I am the name of the column to return" required="yes" type="string" />
-		<cfset var columns = getColumns() />
+	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="reactor.core.field">
+		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="string" />
+		<cfset var fields = getFields() />
 		<cfset var x = 1 />
 		
-		<cfloop from="1" to="#ArrayLen(columns)#" index="x">
-			<cfif columns[x].getName() IS arguments.name>
-				<cfreturn columns[x] />
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfif fields[x].getName() IS arguments.name>
+				<cfreturn fields[x] />
 			</cfif>
 		</cfloop>
 	</cffunction>
@@ -70,13 +70,13 @@
        <cfreturn variables.type />
     </cffunction>
 	
-	<!--- columns --->
-    <cffunction name="setColumns" access="public" output="false" returntype="void">
-       <cfargument name="columns" hint="I am this object's columns" required="yes" type="array" />
-       <cfset variables.columns = arguments.columns />
+	<!--- fields --->
+    <cffunction name="setFields" access="public" output="false" returntype="void">
+       <cfargument name="fields" hint="I am this object's fields" required="yes" type="array" />
+       <cfset variables.fields = arguments.fields />
     </cffunction>
-    <cffunction name="getColumns" access="public" output="false" returntype="array">
-       <cfreturn variables.columns />
+    <cffunction name="getFields" access="public" output="false" returntype="array">
+       <cfreturn variables.fields />
     </cffunction>
 	
 	<!--- database --->

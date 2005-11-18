@@ -11,7 +11,7 @@
 	</xsl:choose>" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
-	<xsl:for-each select="object/columns/column">
+	<xsl:for-each select="object/fields/field">
 		&lt;cfset this.<xsl:value-of select="@name" /> = "<xsl:value-of select="@default" />" /&gt;
 	</xsl:for-each>
 	

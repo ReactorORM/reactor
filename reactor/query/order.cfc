@@ -1,73 +1,77 @@
 <cfcomponent hint="I am am object which represents an order imposed on a query.">
 	
-	<cfset variables.order = XmlParse("<order></order>") />
-	<cfset variables.Metadata = 0 />
+	<cfset variables.order = ArrayNew(1) />
+	<cfset variables.query = 0 />
 	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.order">
-		<cfargument name="Metadata" hint="I am the Metadata for the object being querired" required="yes" type="reactor.base.abstractMetadata">
+		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query">
 		
-		<cfset setObjectMetadata(arguments.metadata) />
+		<cfset setQuery(arguments.query) />
 		
 		<cfreturn this />
 	</cffunction>
 	
-	<!--- metadata --->
-    <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
-       <cfargument name="metadata" hint="I am the xml metadata for the object being queried." required="yes" type="reactor.base.abstractMetadata" />
-       <cfset variables.metadata = arguments.metadata />
+	<!--- query --->
+    <cffunction name="setQuery" access="private" output="false" returntype="void">
+       <cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query" />
+       <cfset variables.query = arguments.query />
     </cffunction>
-    <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
-       <cfreturn variables.metadata />
+    <cffunction name="getQuery" access="private" output="false" returntype="reactor.query.query">
+       <cfreturn variables.query />
     </cffunction>
 	
 	<!--- validateField --->
 	<cffunction name="validateField" access="private" output="false" returntype="void">
+		<cfargument name="object" hint="I am the object of the field should be in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field to validate" required="yes" type="string" />
 		
-		<cfset getObjectMetadata().getColumn(arguments.field) />
+		<cfset getQuery().getObjectMetadata(arguments.object).getField(arguments.field) />
+	</cffunction>
+
+	<cffunction name="dump" access="public" hint="I am a debugging method.  I dump the current order statement's data." output="false" returntype="void">
+		<cfdump var="#getOrder()#" /><cfabort>
+	</cffunction>
+	
+	<cffunction name="appendNode" access="private" hint="I append a node to the where expression" output="false" returntype="reactor.query.order">
+		<cfargument name="node" hint="I am the node to append" required="yes" type="struct" />
+		<cfargument name="direction" hint="I am the direction" required="yes" type="string" />
+		<cfset var order = getOrder() />
+				
+		<cfset arguments.node.direction = arguments.direction />
 		
-		<!--- <cfif NOT ListFindNoCase(getObjectMetadata().getColumnList(), arguments.field)>
-			<cfthrow message="Field Does Not Exist" detail="The field '#arguments.field#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.validateField.Field Does Not Exist" />
-		</cfif> --->
+		<cfset ArrayAppend(order, node) />	
+		<cfset setOrder(order) />
+		
+		<cfreturn this />
 	</cffunction>
 	
 	<cffunction name="setAsc" access="public" hint="I add an assending order." output="false" returntype="reactor.query.order">
-		<cfargument name="field" hint="I am the name of the field to sort." required="yes" type="string" />
-		<cfset var order = getOrder() />
-		<cfset var node = XMLElemNew(order, "asc") />
+		<cfargument name="object" hint="I am the object the field is in" required="yes" type="string" />
+		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		
-		<cfset validateField(arguments.field) />
+		<cfset validateField(arguments.object, arguments.field) />
 		
-		<!--- add the expression's XML --->
-		<cfset node.XmlAttributes["field"] = arguments.field />
-		
-		<cfset ArrayAppend(order.order.XmlChildren, node) />	
-		
+		<cfset appendNode(arguments, "ASC") />
 		<cfreturn this />
 	</cffunction>
 	
 	<cffunction name="setDesc" access="public" hint="I add an descending order." output="false" returntype="reactor.query.order">
-		<cfargument name="field" hint="I am the name of the field to sort." required="yes" type="string" />
-		<cfset var order = getOrder() />
-		<cfset var node = XMLElemNew(order, "desc") />
+		<cfargument name="object" hint="I am the object the field is in" required="yes" type="string" />
+		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		
-		<cfset validateField(arguments.field) />
+		<cfset validateField(arguments.object, arguments.field) />
 		
-		<!--- add the expression's XML --->
-		<cfset node.XmlAttributes["field"] = arguments.field />
-		
-		<cfset ArrayAppend(order.order.XmlChildren, node) />	
-		
+		<cfset appendNode(arguments, "DESC") />
 		<cfreturn this />
 	</cffunction>
 
 	<!--- order --->
-    <cffunction name="setOrder" access="public" output="false" returntype="void">
-       <cfargument name="order" hint="I am the order string" required="yes" type="xml" />
+    <cffunction name="setOrder" access="private" output="false" returntype="void">
+       <cfargument name="order" hint="I am the array of order by statements" required="yes" type="array" />
        <cfset variables.order = arguments.order />
     </cffunction>
-    <cffunction name="getOrder" access="public" output="false" returntype="xml">
+    <cffunction name="getOrder" access="private" output="false" returntype="array">
        <cfreturn variables.order />
     </cffunction>
 	

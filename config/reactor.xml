@@ -14,6 +14,9 @@
 			<hasOne name="UserType">
 				<relate from="userTypeId" to="userTypeId" />
 			</hasOne>
+			<hasMany name="Merchant">
+				<relate from="userId" to="merchantId" />
+			</hasMany>
 		</object>
 		
 		<object name="UserType">
@@ -47,11 +50,11 @@
 			<hasMany name="Product">
 				<relate from="companyId" to="companyId" />
 			</hasMany>
-			<hasOne name="Address">
-				<relate from="mailingAddress" to="addressId" />
+			<hasOne name="Address" alias="MailingAddress">
+				<relate from="mailingAddressId" to="addressId" />
 			</hasOne>
-			<hasOne name="Address">
-				<relate from="billingAddress" to="addressId" />
+			<hasOne name="Address" alias="BillingAddress">
+				<relate from="billingAddressId" to="addressId" />
 			</hasOne>
 		</object>
 		
@@ -101,7 +104,7 @@
 		</object>
 		
 		<object name="Address">
-			<hasOne name="StateProf">
+			<hasOne name="StateProv">
 				<relate from="stateProvId" to="stateProvId" />
 			</hasOne>
 			<hasOne name="Country">
@@ -116,6 +119,12 @@
 			<hasMany name="Address">
 				<relate from="countryId" to="countryId" />
 			</hasMany>
+		</object>
+		
+		<object name="StateProv">
+			<hasOne name="Country">
+				<relate from="countryId" to="countryId" />
+			</hasOne>
 		</object>
 		
 		<object name="Country">

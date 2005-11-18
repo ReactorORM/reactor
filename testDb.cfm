@@ -1,20 +1,24 @@
 
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
-
 <!---
-<cfset pr = reactor.createRecord("Product") />
-<cfset pr.setProductId(1) />
-<cfset pr.load() />
+<cfset userGateway = reactor.createGateway("User") />
+<cfset query = userGateway.createQuery() />
 
-<cfdump var="#pr#" />
+<cfset query.join("User", "Merchant") /> 
+<cfset query.join("Merchant", "Company") />
+<cfset query.join("Company", "Product") />
+<cfset query.join("Merchant", "Product") />
+
 --->
 
-<cfset ip = reactor.createGateway("InvoiceProduct") />
-<cfset criteria = ip.createCriteria() />
-<cfset criteria.join("Invoice").join("Product") />
-
-<cfdump var="#ip.getByCriteria(criteria)#" />
 
 
 
+<cfset myGateway = reactor.createGateway("Company") />
+<cfset query = myGateway.createQuery() />
+
+<cfset query.join("Company", "BillingAddress").join("BillingAddress", "StateProv").join("Company", "MailingAddress") />
+<cfset query.getWhere().isEqual("Company", "CompanyId", 1) />
+
+<cfdump var="#myGateway.getByQuery(query)#" />

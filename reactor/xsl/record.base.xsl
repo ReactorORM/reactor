@@ -18,7 +18,7 @@
 		&lt;cfset _setTo(arguments.<xsl:value-of select="object/@name"/>Bean._getTo()) />
 	&lt;/cffunction&gt;
 	
-	<xsl:for-each select="object/columns/column">
+	<xsl:for-each select="object/fields/fields">
 		&lt;!--- <xsl:value-of select="@name"/> ---&gt;
 		&lt;cffunction name="set<xsl:value-of select="@name"/>" access="public" output="false" returntype="void"&gt;
 			&lt;cfargument name="<xsl:value-of select="@name"/>" hint="I am this record's <xsl:value-of select="@name"/> value." required="yes" type="<xsl:value-of select="@cfDataType" />" /&gt;
@@ -86,15 +86,15 @@
 					&lt;cfset var <xsl:value-of select="@name"/>Array = ArrayNew(1) /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>Record = 0 /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>To = 0 /&gt;
-					&lt;cfset var column = "" /&gt;
+					&lt;cfset var field = "" /&gt;
 					
 					&lt;cfloop query="<xsl:value-of select="@name"/>Query"&gt;
 						&lt;cfset <xsl:value-of select="@name"/>Record = _getObjectFactory().create("<xsl:value-of select="@name"/>", "Record") &gt;
 						&lt;cfset <xsl:value-of select="@name"/>To = <xsl:value-of select="@name"/>Record._getTo() /&gt;
 			
 						&lt;!--- populate the record's to ---&gt;
-						&lt;cfloop list="#<xsl:value-of select="@name"/>Query.columnList#" index="column"&gt;
-							&lt;cfset <xsl:value-of select="@name"/>To[column] = <xsl:value-of select="@name"/>Query[column] &gt;
+						&lt;cfloop list="#<xsl:value-of select="@name"/>Query.fieldList#" index="field"&gt;
+							&lt;cfset <xsl:value-of select="@name"/>To[field] = <xsl:value-of select="@name"/>Query[field] &gt;
 						&lt;/cfloop&gt;
 						
 						&lt;cfset <xsl:value-of select="@name"/>Record._setTo(<xsl:value-of select="@name"/>To) /&gt;
@@ -123,15 +123,15 @@
 					&lt;cfset var <xsl:value-of select="@name"/>Array = ArrayNew(1) /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>Record = 0 /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>To = 0 /&gt;
-					&lt;cfset var column = "" /&gt;
+					&lt;cfset var field = "" /&gt;
 					
 					&lt;cfloop query="<xsl:value-of select="@name"/>Query"&gt;
 						&lt;cfset <xsl:value-of select="@name"/>Record = _getObjectFactory().create("<xsl:value-of select="@name"/>", "Record") &gt;
 						&lt;cfset <xsl:value-of select="@name"/>To = <xsl:value-of select="@name"/>Record._getTo() /&gt;
 			
 						&lt;!--- populate the record's to ---&gt;
-						&lt;cfloop list="#<xsl:value-of select="@name"/>Query.columnList#" index="column"&gt;
-							&lt;cfset <xsl:value-of select="@name"/>To[column] = <xsl:value-of select="@name"/>Query[column] &gt;
+						&lt;cfloop list="#<xsl:value-of select="@name"/>Query.fieldList#" index="field"&gt;
+							&lt;cfset <xsl:value-of select="@name"/>To[field] = <xsl:value-of select="@name"/>Query[field] &gt;
 						&lt;/cfloop&gt;
 						
 						&lt;cfset <xsl:value-of select="@name"/>Record._setTo(<xsl:value-of select="@name"/>To) /&gt;
