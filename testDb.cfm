@@ -10,13 +10,15 @@
 <cfset bean = reactor.createBean("Administrator") />
 <cfset bean.populate(admin) />
 
-<cfset bean.setFirstName("AlmostDone") />
+<cfset bean.setFirstName("") />
 
-<cfset admin.populate(bean) />
+<cfset errors = bean.validate() />
 
+<cfdump var="#errors.hasErrors()#" />
 
-<cfdump var="#admin._getTo()#" />
+<cfdump var="#errors.getErrors()#" />
 
+<cfabort>
 
 <!--- 
 

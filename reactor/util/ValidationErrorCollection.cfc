@@ -1,5 +1,7 @@
 <cfcomponent displayname="ValidationErrorCollection" output="false" hint="I am a collection of property validation errors">
 
+<cfset variables.instance.errors = structNew() />
+
 <cffunction name="Init" returntype="ValidationErrorCollection" access="public" output="false" hint="I build a new ValidationErrorCollection.">
   <cfset variables.instance.errors = structNew() />
   <cfreturn this />

@@ -11,4 +11,8 @@
 		<cfreturn this />
 	</cffunction>
 
+	<cffunction name="createErrorCollection" access="public" hint="I return a new validationErrorCollection" output="false" returntype="reactor.util.ValidationErrorCollection">
+		<cfreturn CreateObject("Component", "reactor.util.ValidationErrorCollection").init() />
+	</cffunction>
+
 </cfcomponent>
