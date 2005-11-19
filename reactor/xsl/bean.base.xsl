@@ -10,7 +10,7 @@
 		<xsl:otherwise>reactor.base.abstractBean</xsl:otherwise>
 	</xsl:choose>" &gt;
 	
-	&lt;cfset variables.signature = "<xsl:value-of select="table/@signature" />" /&gt;
+	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 	&lt;cfset variables.To = 0 /&gt;
 	&lt;cfset variables.ObjectFactory = 0 /&gt;
 
@@ -102,7 +102,7 @@
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@name" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
-					&lt;cfif NOT IsNumeric(get<xsl:value-of select="@name" />())&gt;
+					&lt;cfif Len(Trim(get<xsl:value-of select="@name" />())) AND NOT IsNumeric(get<xsl:value-of select="@name" />())&gt;
 						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@name" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@name" />", "invalidType")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>

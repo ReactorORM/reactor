@@ -3,7 +3,7 @@
 	<cfset variables.signature = "" />
 	<cfset variables.config = 0 />
 	<cfset variables.name = "" />
-	<cfset variables.objectFactory = 0 />
+	<cfset variables.ReactorFactory = 0 />
 	
 	<!---
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
@@ -12,11 +12,11 @@
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
-		<cfargument name="objectFactory" hint="I am the reactor factory." required="yes" type="reactor.core.objectFactory" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
 		
 		<cfset _setConfig(arguments.config) />
 		<cfset _setName(arguments.name) />
-		<cfset _setObjectFactory(arguments.objectFactory) />
+		<cfset _setReactorFactory(arguments.objectFactory) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -43,12 +43,12 @@
        <cfreturn variables.name />
     </cffunction>
 	
-	<!--- objectFactory --->
-    <cffunction name="_setObjectFactory" access="private" output="false" returntype="void">
-       <cfargument name="objectFactory" hint="I am the reactor objectFactory" required="yes" type="reactor.core.objectFactory" />
-       <cfset variables.objectFactory = arguments.objectFactory />
+	<!--- reactorFactory --->
+    <cffunction name="_setReactorFactory" access="private" output="false" returntype="void">
+       <cfargument name="reactorFactory" hint="I am the reactorFactory object" required="yes" type="reactor.reactorFactory" />
+       <cfset variables.reactorFactory = arguments.reactorFactory />
     </cffunction>
-    <cffunction name="_getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
-       <cfreturn variables.objectFactory />
+    <cffunction name="_getReactorFactory" access="private" output="false" returntype="reactor.reactorFactory">
+       <cfreturn variables.reactorFactory />
     </cffunction>
 </cfcomponent>

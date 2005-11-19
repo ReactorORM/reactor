@@ -41,7 +41,7 @@
 	&lt;cffunction name="exists" access="public" hint="I check to see if the <xsl:value-of select="object/@name" /> object exists." output="false" returntype="boolean"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qExists = 0 /&gt;
-		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getObjectFactory().create("<xsl:value-of select="object/@name" />", "Gateway") /&gt;
+		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
 				
 		&lt;cfset qExists = <xsl:value-of select="object/@name" />Gateway.getByFields(
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
@@ -122,7 +122,7 @@
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
-		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getObjectFactory().create("<xsl:value-of select="object/@name" />", "Gateway") /&gt;
+		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
 		
 		&lt;cfset qRead = <xsl:value-of select="object/@name" />Gateway.getByFields(
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">

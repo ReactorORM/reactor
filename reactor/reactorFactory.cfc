@@ -5,7 +5,7 @@
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
 		<cfset var config = CreateObject("Component", "reactor.config.config").init(arguments.pathToConfigXml) />
 		
-		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(config)) />
+		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(config, this)) />
 		
 		<cfreturn this />
 	</cffunction>

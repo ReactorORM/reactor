@@ -139,7 +139,7 @@
 	<cffunction name="getRelationshipMetadata" access="public" hint="I return a related object's metadata based on the provided alias or name" output="false" returntype="reactor.base.abstractMetadata">
 		<cfargument name="name" hint="I am the name or alias of the related object." required="yes" type="string" />
 		<cfset var relationship = getRelationship(arguments.name) />
-		<cfset var RelationshipMetadata = _getObjectFactory().create(relationship.name, "Metadata") />
+		<cfset var RelationshipMetadata = _getReactorFactory().createMetadata(relationship.name) />
 		
 		<cfreturn RelationshipMetadata />
 	</cffunction>
