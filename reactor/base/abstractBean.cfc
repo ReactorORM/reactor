@@ -4,7 +4,7 @@
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactor factory." required="yes" type="reactor.reactorFactory" />
-		<cfset super.configure(arguments.config, arguments.name, arguments.objectFactory) />
+		<cfset super.configure(arguments.config, arguments.name, arguments.ReactorFactory) />
 		
 		<cfset _setTo(_getReactorFactory().createTo(arguments.name)) />
 		

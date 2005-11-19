@@ -72,7 +72,7 @@
 			<cfreturn CreateObject("Component", getObjectName(arguments.type, arguments.name)).configure(getConfig(), arguments.name, getReactorFactory()) />
 
 		<cfelse>
-			<cfreturn Object.configure(getConfig(), arguments.name, this) />
+			<cfreturn Object.configure(getConfig(), arguments.name, getReactorFactory()) />
 
 		</cfif>
 	</cffunction>

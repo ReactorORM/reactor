@@ -16,7 +16,7 @@
 		
 		<cfset _setConfig(arguments.config) />
 		<cfset _setName(arguments.name) />
-		<cfset _setReactorFactory(arguments.objectFactory) />
+		<cfset _setReactorFactory(arguments.ReactorFactory) />
 		
 		<cfreturn this />
 	</cffunction>
