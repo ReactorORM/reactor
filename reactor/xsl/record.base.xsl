@@ -192,19 +192,19 @@
 			<xsl:when test="count(link) &gt; 0">
 				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
 				&lt;cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
-					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="alias"/>Query()#" type="reactor.query.query" /&gt;
-					&lt;!--- cfset var <xsl:value-of select="link/@name"/>Query = get<xsl:value-of select="link/@alias"/>Query(arguments.Query) /---&gt;
+					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
 					&lt;cfset var relationships = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="@alias"/>").relate /&gt;
 					&lt;cfset var x = 0 /&gt;
 					&lt;cfset var relationship = 0 /&gt;
-					&lt;cfset var LinkedGateway = _getReactorFactory().createGateway("<xsl:value-of select="@alias"/>") /&gt;
+					&lt;cfset var LinkedGateway = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>") /&gt;
 					&lt;cfset var LinkedQuery = LinkedGateway.createQuery() /&gt;
-					
+					&lt;cfset var <xsl:value-of select="link/@name"/>Query = get<xsl:value-of select="link/@name"/>Query() /&gt;
+
 					&lt;cfif <xsl:value-of select="link/@name"/>Query.recordCount&gt;
 						&lt;cfloop from="1" to="#ArrayLen(relationships)#" index="x"&gt;
 							&lt;cfset relationship = relationships[x] /&gt;
 							
-							&lt;cfset LinkedQuery.getWhere().isIn("<xsl:value-of select="@alias"/>", relationship.to, evaluate("ValueList(<xsl:value-of select="link/@name"/>Query.#relationship.from#)")) /&gt;
+							&lt;cfset LinkedQuery.getWhere().isIn("<xsl:value-of select="@name"/>", relationship.to, evaluate("ValueList(<xsl:value-of select="link/@name"/>Query.#relationship.from#)")) /&gt;
 							
 						&lt;/cfloop&gt;
 					&lt;cfelse&gt;

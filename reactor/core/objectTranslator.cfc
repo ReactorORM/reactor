@@ -59,7 +59,7 @@
 			<cfif IsDefined("relationship.link")>
 				<!--- get the relationships that the linking object has --->
 				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-				
+								
 				<!--- find links back to this object --->
 				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
 					<cfset linkerRelationship = linkerRelationships[y] />
@@ -87,7 +87,7 @@
 					</cfif>
 				</cfloop>
 			</cfif>
-						
+			
 			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 				<!--- make sure this alias hasn't already been used --->
