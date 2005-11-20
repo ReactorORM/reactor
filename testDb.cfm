@@ -4,15 +4,9 @@
 
 
 <cfset admin = reactor.createRecord("Administrator") />
-<cfset admin.setAdministratorId(1) />
-<cfset admin.load() />
 
-<cfset bean = reactor.createBean("Administrator") />
-<cfset bean.populate(admin) />
 
-<cfset bean.setFirstName("") />
-
-<cfset errors = bean.validate() />
+<cfset errors = admin.validate() />
 
 <cfdump var="#errors.hasErrors()#" />
 

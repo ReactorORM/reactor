@@ -15,6 +15,10 @@
 		
 		<cfreturn this />
 	</cffunction>
+	
+	<cffunction name="createErrorCollection" access="public" hint="I return a new validationErrorCollection" output="false" returntype="reactor.util.ValidationErrorCollection">
+		<cfreturn CreateObject("Component", "reactor.util.ValidationErrorCollection").init() />
+	</cffunction>
 		
 	<cffunction name="load" access="public" hint="I load this record based on its primary key values." output="false" returntype="boolean">
 		

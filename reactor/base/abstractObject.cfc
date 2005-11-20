@@ -7,7 +7,7 @@
 	
 	<!---
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
-		while not dis-allowing the use of the init method for specific purposes on objects like Beans.
+		while not dis-allowing the use of the init method for specific purposes on objects like Records.
 	---->
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />

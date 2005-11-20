@@ -15,15 +15,15 @@
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="name" hint="I am the name of the table create an object for." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean, Metadata" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var Object = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean,metadata", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: record, dao, gateway, to, bean, metadata" />
+				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
 		</cfif>
 
 		<cftry>
@@ -80,7 +80,7 @@
  	<cffunction name="generateObject" access="private" hint="I generate a To object" output="false" returntype="void">
 		<cfargument name="objectTranslator" hint="I am the objectTranslator to use to generate the To." required="yes" type="reactor.core.objectTranslator" />
 		<cfargument name="name" hint="I am the name of the object to create." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Bean, Metadata" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var objectXML = arguments.objectTranslator.getXml(arguments.name) />
 		<cfset var super = XmlSearch(objectXML, "/object/super") />
 		<cfset var pathToErrorFile = "" />
@@ -90,8 +90,8 @@
 			<cfset generateObject(arguments.objectTranslator, super[1].XmlAttributes.name, arguments.type) />
 		</cfif>
 		
-		<!--- if this is a bean object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
-		<cfif arguments.type IS "Bean">
+		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
+		<cfif arguments.type IS "Record">
 			<!--- I am the path to the error file --->
 			<cfset pathToErrorFile = expandPath(getConfig().getMapping() & "/ErrorMessages.xml" ) />
 			<!--- if the file doesn't exist insure the path to the file exists --->
@@ -147,7 +147,7 @@
 	</cffunction>
 	
 	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to, bean" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
 		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".") />
@@ -160,10 +160,10 @@
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,bean,metadata", arguments.type)>
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
-				detail="The type argument must be one of: record, dao, gateway, to, bean, metadata" />
+				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
 		</cfif>
 		<cfif NOT ListFindNoCase("base,custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"

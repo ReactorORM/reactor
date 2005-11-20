@@ -29,12 +29,7 @@
 		<cfargument name="name" hint="I am the name of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().create(arguments.name, "Gateway") />
 	</cffunction>
-	
-	<cffunction name="createBean" access="public" hint="I return a bean object." output="false" returntype="reactor.base.abstractBean">
-		<cfargument name="name" hint="I am the name of the bean to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "Bean") />
-	</cffunction>
-	
+
 	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="reactor.base.abstractMetadata">
 		<cfargument name="name" hint="I am the name of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().create(arguments.name, "Metadata") />
