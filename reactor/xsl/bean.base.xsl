@@ -94,7 +94,7 @@
 				</xsl:when>
 				
 				<xsl:when test="@cfDataType = 'numeric'">
-					<xsl:if test="@nullable = 'false'">
+					<xsl:if test="@nullable = 'false' and @index = 'false'">
 						&lt;!--- validate <xsl:value-of select="@name" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@name" />()))&gt;
 							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@name" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@name" />", "notProvided")) /&gt;

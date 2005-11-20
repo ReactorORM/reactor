@@ -44,7 +44,7 @@
 					<cfif NOT generate>
 						<!--- check the object's signature --->
 						<cfset objectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig()) />
-						<cfif objectTranslator.getSignature(arguments.name) IS NOT Object.getSignature()>
+						<cfif objectTranslator.getSignature(arguments.name) IS NOT Object._getSignature()>
 							<cfset generate = true />
 						</cfif>
 					</cfif>

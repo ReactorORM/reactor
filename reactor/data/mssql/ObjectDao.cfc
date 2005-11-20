@@ -72,7 +72,7 @@
 			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
 			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
 			<cfset Field.setLength(qFields.length) />
-			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType())) />
+			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
@@ -93,7 +93,7 @@
 				<cfif IsNumeric(arguments.sqlDefaultValue)>
 					<cfreturn arguments.sqlDefaultValue />
 				<cfelse>
-					<cfreturn 0 />
+					<cfreturn ""/>
 				</cfif>
 			</cfcase>
 			<cfcase value="binary">

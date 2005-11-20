@@ -21,7 +21,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getSignature" access="public" hint="I return this object's corrisponding DB signature." output="false" returntype="string">
+	<cffunction name="_getSignature" access="public" hint="I return this object's corrisponding DB signature." output="false" returntype="string">
 		<cfreturn variables.signature />
 	</cffunction>
 	
