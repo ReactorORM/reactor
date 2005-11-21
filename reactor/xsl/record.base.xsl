@@ -252,7 +252,7 @@
 	
 				&lt;!--- populate the record's to ---&gt;
 				&lt;cfloop list="#<xsl:value-of select="@name"/>Query.columnList#" index="field"&gt;
-					&lt;cfset <xsl:value-of select="@name"/>To[field] = <xsl:value-of select="@name"/>Query[field] &gt;
+					&lt;cfset <xsl:value-of select="@name"/>To[field] = <xsl:value-of select="@name"/>Query[field][<xsl:value-of select="@name"/>Query.currentrow] &gt;
 				&lt;/cfloop&gt;
 				
 				&lt;cfset <xsl:value-of select="@name"/>Record._setTo(<xsl:value-of select="@name"/>To) /&gt;
