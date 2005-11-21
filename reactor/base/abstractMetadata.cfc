@@ -28,6 +28,22 @@
 		<cfreturn getObjectMetadata().fields />
 	</cffunction>
 	
+	<cffunction name="getFieldQuery" access="public" hint="I return an Query of describing this object's fields" output="false" returntype="query">
+		<cfset var fields = getObjectMetadata().fields />
+		<cfset var fieldQuery = QueryNew(StructKeyList(fields[1])) />
+		<cfset var x = 0 />
+		<cfset var field = "" />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfset QueryAddRow(fieldQuery) />
+			<cfloop collection="#fields[x]#" item="field">
+				<cfset QuerySetCell(fieldQuery, field, fields[x][field]) />					
+			</cfloop>
+		</cfloop>
+		
+		<cfreturn fieldQuery/>
+	</cffunction>
+	
 	<cffunction name="getField" access="public" hint="I return a structure of data about a specific field." output="false" returntype="struct">
 		<cfargument name="name" hint="I am the name of the field to get" required="yes" type="string" />
 		<cfset var fields = getFields() />
@@ -111,9 +127,17 @@
 		<!--- check the hasone relationships --->
 		<cfif ArrayLen(objectMetadata.hasOne)>
 			<cfset relationships = objectMetadata.hasOne />
-			<!--- loop over the relationships and find a match --->
+			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 				<cfif relationships[x].alias IS arguments.name>
+					<!--- this is a match --->
+					<cfreturn relationships[x]/>
+				</cfif> 
+			</cfloop>
+			
+			<!--- loop over the relationships and find a match by name --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif relationships[x].name IS arguments.name>
 					<!--- this is a match --->
 					<cfreturn relationships[x]/>
 				</cfif> 
@@ -123,9 +147,17 @@
 		<!--- check the hasMany relationships --->
 		<cfif ArrayLen(objectMetadata.hasMany)>
 			<cfset relationships = objectMetadata.hasMany />
-			<!--- loop over the relationships and find a match --->
+			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 				<cfif relationships[x].alias IS arguments.name>
+					<!--- this is a match --->
+					<cfreturn relationships[x]/>
+				</cfif> 
+			</cfloop>
+			
+			<!--- loop over the relationships and find a match by name --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif relationships[x].name IS arguments.name>
 					<!--- this is a match --->
 					<cfreturn relationships[x]/>
 				</cfif> 

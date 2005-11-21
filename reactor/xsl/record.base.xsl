@@ -174,7 +174,14 @@
 	<xsl:for-each select="object/hasMany">
 		&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
 		&lt;cffunction name="create<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="reactor.query.query"&gt;
-			&lt;cfreturn _getReactorFactory().createGateway("<xsl:value-of select="@name"/>").createQuery() /&gt;
+			&lt;cfset var Query = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>").createQuery() /&gt;
+			
+			<xsl:if test="count(link) &gt; 0">
+				&lt;!--- if this is a linked table add a join back to the linking table ---&gt;
+				&lt;cfset Query.join("<xsl:value-of select="@name"/>", "<xsl:value-of select="link/@name"/>") /&gt;
+			</xsl:if>
+			
+			&lt;cfreturn Query /&gt;
 		&lt;/cffunction&gt;
 		
 		<xsl:choose>
@@ -192,6 +199,19 @@
 			<xsl:when test="count(link) &gt; 0">
 				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
 				&lt;cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
+					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
+					&lt;cfset var <xsl:value-of select="@name"/>Gateway = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>") /&gt;
+					&lt;cfset var relationship = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="/object/@name"/>").relate /&gt;
+					
+					&lt;cfloop from="1" to="#ArrayLen(relationship)#" index="x"&gt;
+						&lt;cfset arguments.Query.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].from, evaluate("get#relationship[x].to#()")) /&gt;
+					&lt;/cfloop&gt;
+					
+					&lt;cfreturn <xsl:value-of select="@name"/>Gateway.getByQuery(arguments.Query)&gt;
+				&lt;/cffunction&gt;
+				
+				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
+				&lt;!--- cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
 					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
 					&lt;cfset var relationships = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="@alias"/>").relate /&gt;
 					&lt;cfset var x = 0 /&gt;
@@ -213,7 +233,7 @@
 					&lt;/cfif&gt;
 					
 					&lt;cfreturn LinkedGateway.getByQuery(LinkedQuery) /&gt;
-				&lt;/cffunction&gt;
+				&lt;/cffunction---&gt;
 			</xsl:when>
 		</xsl:choose>
 		

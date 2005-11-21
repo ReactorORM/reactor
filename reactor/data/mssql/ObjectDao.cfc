@@ -82,6 +82,7 @@
 	<cffunction name="getDefault" access="public" hint="I get a default value for a cf datatype." output="false" returntype="string">
 		<cfargument name="sqlDefaultValue" hint="I am the default value defined by SQL." required="yes" type="string" />
 		<cfargument name="typeName" hint="I am the cf type name to get a default value for." required="yes" type="string" />
+		<cfargument name="nullable" hint="I indicate if the column is nullable." required="yes" type="boolean" />
 		
 		<!--- strip out parens --->
 		<cfif Len(arguments.sqlDefaultValue)>
@@ -92,8 +93,10 @@
 			<cfcase value="numeric">
 				<cfif IsNumeric(arguments.sqlDefaultValue)>
 					<cfreturn arguments.sqlDefaultValue />
-				<cfelse>
+				<cfelseif arguments.nullable>
 					<cfreturn ""/>
+				<cfelse>
+					<cfreturn 0 />
 				</cfif>
 			</cfcase>
 			<cfcase value="binary">
