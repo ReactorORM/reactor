@@ -39,8 +39,10 @@
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset fromName = arguments.Convention.formatFieldName(relationships[x].getFromField(), fromAlias) />
 			<cfset toName = arguments.Convention.formatFieldName(relationships[x].getToField(), toAlias) />
-			<cfset output = output & fromName & " = " & toName />
+			<cfset output = ListAppend(output, fromName & " = " & toName, ",") />
 		</cfloop>
+		
+		<cfset output = Replace(output, ",", " and ", "all") />
 		
 		<cfreturn output & " " />
 	</cffunction>

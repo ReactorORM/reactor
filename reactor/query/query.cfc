@@ -7,6 +7,9 @@
 	<cfset variables.maxRows = -1 />
 	<cfset variables.distinct = false />	
 	
+	<!--- fields --->
+	<cfset variables.returnFields = ArrayNew(1) />
+	
 	<!--- where --->
 	<cfset variables.where = CreateObject("Component", "reactor.query.where").init(this) />
 
@@ -22,6 +25,34 @@
 
 		<cfset joinSuper(Object) />
 
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- returnObjectFields --->
+	<cffunction name="returnObjectFields" access="public" hint="I specify a particular object from which all fields should be returned. When this or returnField() is first called cause only the specified column to be returned.  Additional columns can be added with multiple calls." output="false" returntype="reactor.query.query">
+		<cfargument name="name" hint="I am the name or alias of the object." required="yes" type="string" />
+		<cfset var fields = findObject(arguments.name).getObjectMetadata().getFields() />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfset returnField(arguments.name, fields[x].name) />
+		</cfloop>
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- returnField --->
+	<cffunction name="returnField" access="public" hint="I specify a particular field a query should return.  When this or returnObjectFields() is first called I cause only the specified column to be returned.  Additional columns can be added with multiple calls." output="false" returntype="reactor.query.query">
+		<cfargument name="object" hint="I am the name or alias of the object." required="yes" type="string" />
+		<cfargument name="field" hint="I am the name of the field." required="yes" type="string" />
+		<cfset var fieldStruct = getField(arguments.object, arguments.field) />
+		<cfset var returnFields = getReturnFields() />
+		
+		<!--- add a field to return --->
+		<cfset ArrayAppend(returnFields, CreateObject("Component", "reactor.query.field").init(arguments.object, arguments.field)) />
+		
+		<cfset setReturnFields(returnFields) />
+		
 		<cfreturn this />
 	</cffunction>
 	
@@ -43,7 +74,7 @@
 	<!--- getSelectAsString --->
 	<cffunction name="getSelectAsString" access="public" hint="I convert the from objects to a sql select fragment" output="false" returntype="string">
 	<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
-		<cfreturn getFrom().getSelectAsString(arguments.Convention) />
+		<cfreturn getFrom().getSelectAsString(arguments.Convention, getReturnFields()) />
 	</cffunction>
 	
 	<!--- findObject --->
@@ -125,4 +156,12 @@
        <cfreturn variables.order />
     </cffunction>
 	
+	<!--- returnFields --->
+    <cffunction name="setReturnFields" access="private" output="false" returntype="void">
+       <cfargument name="returnFields" hint="I am an array of fields to return.  If empty all fields are returned." required="yes" type="array" />
+       <cfset variables.returnFields = arguments.returnFields />
+    </cffunction>
+    <cffunction name="getReturnFields" access="private" output="false" returntype="array">
+       <cfreturn variables.returnFields />
+    </cffunction>
 </cfcomponent>

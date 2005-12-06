@@ -207,6 +207,8 @@
 						&lt;cfset arguments.Query.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].from, evaluate("get#relationship[x].to#()")) /&gt;
 					&lt;/cfloop&gt;
 					
+					&lt;cfset arguments.Query.returnObjectFields("<xsl:value-of select="@alias"/>") /&gt;
+
 					&lt;cfreturn <xsl:value-of select="@name"/>Gateway.getByQuery(arguments.Query)&gt;
 				&lt;/cffunction&gt;
 				

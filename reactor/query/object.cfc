@@ -49,14 +49,18 @@
 	<!--- getSelectAsString --->
 	<cffunction name="getSelectAsString" access="package" hint="I get this object as fragment of a select statement" output="false" returntype="string">
 		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
+		<cfargument name="returnFields" hint="I am an array of fields to return. If empty, return all fields." required="yes" type="array" />
 		<cfset var select = "" />
+		<cfset var field = "" />
+		<cfset var joinedFields = "" />
 		<cfset var fields = getObjectMetadata().getFields() />
 		<cfset var joins = getJoins() />
 		<cfset var x = 0 />
 		<cfset var alias = "" />
+		<cfset var allowedFieldList = getAllowedFields(arguments.returnFields) />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset select = select & arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
+			<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
 			<cfset alias = "" />
 			
 			<!--- if this object has an alais get it --->
@@ -64,18 +68,46 @@
 				<cfset alias = getAlias() />
 			</cfif>
 			
-			<cfset select = select & arguments.Convention.formatFieldAlias(fields[x].name, alias) />
+			<!--- add the field alias --->
+			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].name, alias) />
 			
-			<cfif ArrayLen(fields) IS NOT x>
-				<cfset select = select & "," & chr(13) & chr(10) />
+			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].name) OR ListFindNoCase(allowedFieldList, alias) >
+				<cfset select = ListAppend(select, field & chr(13) & chr(10)) />
 			</cfif>
+			
 		</cfloop>
 		
 		<cfloop from="1" to="#ArrayLen(joins)#" index="x">
-			<cfset select = select & "," & chr(13) & chr(10) & joins[x].getToObject().getSelectAsString(arguments.Convention) />
+			<cfset joinedFields = joins[x].getToObject().getSelectAsString(arguments.Convention, arguments.returnFields) />
+			
+			<cfif Len(joinedFields)>
+				<cfset select = ListAppend(select, joinedFields) />
+			</cfif>
 		</cfloop>
 		
+		<!--- add spaces after commas --->
+		<cfset select = Replace(select, ",", ", ", "all") />
+		
 		<cfreturn select />		
+	</cffunction>
+	
+	<!--- getAllowedFields --->
+	<cffunction name="getAllowedFields" access="private" hint="I translate the array of fields into a list of fields relevant to this object which can be returned." output="false" returntype="string">
+		<cfargument name="returnFields" hint="I am an array of fields to return. If empty, return all fields." required="yes" type="array" />
+		<cfset var x = 0 />
+		<cfset var Field = 0 />
+		<cfset var fields = "" />
+		
+		<cfloop from="1" to="#ArrayLen(arguments.returnFields)#" index="x">
+			<cfset Field = arguments.returnFields[x] />
+						
+			<!--- if this field is in this object append it ot the list of fields --->
+			<cfif Field.getObject() IS this.getAlias()>
+				<cfset fields = ListAppend(fields, Field.getField()) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn fields />
 	</cffunction>
 	
 	<!--- findObject --->
