@@ -91,10 +91,10 @@
 	<cffunction name="setType" access="private" output="false" returntype="void">
 		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase("mssql", arguments.Type)>
+		<cfif NOT ListFindNoCase("mssql,mysql", arguments.Type)>
 			<cfthrow type="reactor.InvalidType"
 				message="Invalid Type Setting"
-				detail="The Type argument must be one of: mssql" />
+				detail="The Type argument must be one of: mssql,mysql" />
 		</cfif>
 		
 		<cfset variables.Type = arguments.Type />

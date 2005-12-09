@@ -1,7 +1,7 @@
 <reactor>
 	<config>
-		<dsn value="scratch" />
-		<type value="mssql" />
+		<dsn value="scratchMysql" />
+		<type value="mysql" />
 		<mapping value="/reactorData" />
 		<mode value="production" />
 	</config>

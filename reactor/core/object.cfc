@@ -4,7 +4,7 @@
 	<cfset variables.name = "" />
 	<cfset variables.owner = "" />
 	<cfset variables.type = "" />
-	<cfset variables.database = 0 />
+	<cfset variables.database = "" />
 	
 	<cfset variables.fields = ArrayNew(1) />
 	

@@ -2,8 +2,8 @@
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
-<cfset productRecord = reactor.createRecord("Product") />
-<cfset productRecord.setProductId(1) />
-<cfset productRecord.load() />
+<cfset addressRecord = reactor.createRecord("Address") />
+<cfset addressRecord.setAddressId(1) />
+<cfset addressRecord.load() />
 
-<cfdump var="#productRecord.getInvoiceQuery()#" /> 
+<cfdump var="#addressRecord.getStreet1()#" /> 
