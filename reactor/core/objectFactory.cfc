@@ -150,7 +150,7 @@
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" />
-		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".") />
+		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
 		
 		<cfreturn creationPath & "." & arguments.type & "." & getConfig().getType() & "." & Iif(arguments.base, DE('base.'), DE('')) & arguments.name & arguments.type  />
 	</cffunction>

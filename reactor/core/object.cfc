@@ -59,7 +59,7 @@
 		<cfset arguments.type = lcase(arguments.type) />
 		
 		<cfif NOT ListFind("table,view", arguments.type)>
-			<cfthrow type="reactor..object.InvalidObjectType"
+			<cfthrow type="reactor.object.InvalidObjectType"
 				message="Invalid Object Type"
 				detail="The Type argument must be one of: table, view" />
 		</cfif>

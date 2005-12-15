@@ -3,7 +3,7 @@
 		<dsn value="scratchMysql" />
 		<type value="mysql" />
 		<mapping value="/reactorData" />
-		<mode value="production" />
+		<mode value="always" />
 	</config>
 
 	<objects>

@@ -1,6 +1,5 @@
 <cfcomponent hint="I am the convention object for mssql.  I translate data into formats that the DBMS supports." extends="reactor.data.abstractConvention">
 	
-
 	<cffunction name="formatObjectName" access="public" hint="I format the object" output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />

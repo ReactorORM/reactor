@@ -1,5 +1,14 @@
 <cfcomponent hint="I am used primarly to allow type definitions for return values.  I also loosely define an interface for Dao objects and some core methods." extends="reactor.base.abstractObject">
 	
+	<!--- metadata --->
+    <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
+       <cfreturn _getReactorFactory().createMetadata(_getName()) />
+    </cffunction>
+	
+	<cffunction name="getConventions" access="private" output="false" returntype="reactor.data.abstractConvention">
+       <cfreturn getObjectMetadata().getConventions() />
+    </cffunction>
+	
 	<cffunction name="create" access="public" hint="I create a row in the database." output="false" returntype="void">
 	
 	</cffunction>

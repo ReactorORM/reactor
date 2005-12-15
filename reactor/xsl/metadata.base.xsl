@@ -89,44 +89,7 @@
 	&lt;cffunction name="dumpVariables"&gt;
 		&lt;cfdump var="#variables#" &gt; &lt;cfabort &gt;
 	&lt;/cffunction&gt;
-	
-	
-	&lt;!---cffunction name="getQuerySafeTableAlias" access="public" hint="I return a table alias formatted for the database." output="false" returntype="string"&gt;
-		<xsl:choose>
-			<xsl:when test="object[@dbms = 'mssql']">
-				&lt;cfreturn "[#getName()#]" /&gt;
-			</xsl:when>
-			<xsl:when test="object[@dbms = 'mysql']">
-				.... MYSQL CODE WILL GO HERE ...
-			</xsl:when>
-		</xsl:choose>
-	&lt;/cffunction&gt;
-	
-	&lt;cffunction name="getQuerySafeTableName" access="public" hint="I return a table expression formatted for the database." output="false" returntype="string"&gt;
-		<xsl:choose>
-			<xsl:when test="object[@dbms = 'mssql']">
-				&lt;cfreturn "[#getDatabase()#].[#getOwner()#].[#getName()#]" /&gt;
-			</xsl:when>
-			<xsl:when test="object[@dbms = 'mysql']">
-				.... MYSQL CODE WILL GO HERE ...
-			</xsl:when>
-		</xsl:choose>
-	&lt;/cffunction&gt;
-	
-	&lt;cffunction name="getQuerySafeFieldName" access="public" hint="I return a field expression formatted for the database." output="false" returntype="string"&gt;
-		&lt;cfargument name="name" hint="I am the name of the field to get" required="yes" type="string" /&gt;
-		&lt;cfset var field = getField(arguments.name) /&gt;
 		
-		<xsl:choose>
-			<xsl:when test="object[@dbms = 'mssql']">
-				&lt;cfreturn "[#field.table#].[#field.name#]" /&gt;
-			</xsl:when>
-			<xsl:when test="object[@dbms = 'mysql']">
-				.... MYSQL CODE WILL GO HERE ...
-			</xsl:when>
-		</xsl:choose>
-	&lt;/cffunction---&gt;
-	
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

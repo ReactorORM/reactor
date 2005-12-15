@@ -5,7 +5,7 @@
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
 		
-		<cfreturn "[#arguments.ObjectMetadata.getDatabase()#].[#arguments.ObjectMetadata.getOwner()#].[#arguments.ObjectMetadata.getName()#] AS [#arguments.alias#]" />
+		<cfreturn "`#arguments.ObjectMetadata.getDatabase()#`.`#arguments.ObjectMetadata.getName()#` AS `#arguments.alias#`" />
 		
 	</cffunction>
 	
@@ -13,7 +13,7 @@
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
 		
-		<cfreturn "[#arguments.alias#].[#arguments.fieldName#]" />
+		<cfreturn "`#arguments.alias#`.`#arguments.fieldName#`" />
 		
 	</cffunction>
 	
@@ -21,7 +21,7 @@
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
 		<cfargument name="alias" hint="I am this object's alias" required="no" type="string" default="" />
 		
-		<cfreturn "[#arguments.alias##arguments.fieldName#]" />
+		<cfreturn "`#arguments.alias##arguments.fieldName#`" />
 		
 	</cffunction>
 	
@@ -29,12 +29,7 @@
 		<cfargument name="value" hint="I am the value to format" required="yes" type="string" />
 		<cfargument name="dbDataType" hint="I am the type of data in the database" required="yes" type="string" />
 		
-		<cfif arguments.dbDataType IS "UniqueIdentifierType">
-			<cfreturn Left(arguments.value, 23) & "-" & Right(arguments.value, 12) />
-		<cfelse>
-			<cfreturn arguments.value />
-		</cfif>
-		
+		<cfreturn arguments.value />		
 	</cffunction>	
 	
 </cfcomponent>
