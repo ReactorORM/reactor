@@ -25,7 +25,7 @@
 		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
 		<cfargument name="Join" hint="I am the Join object linking this object and the object it is joined to." required="no" type="reactor.query.join" />
 		<cfargument name="previousAlias" hint="I am the alias of the previous object." required="no" type="string" />
-		<cfset var from = arguments.Convention.formatObjectName(this.getObjectMetadata(), getAlias()) & " " />
+		<cfset var from = arguments.Convention.formatObjectAlias(this.getObjectMetadata(), getAlias()) & " " />
 		<cfset var joins = getJoins() />
 		<cfset var relationships = 0 />
 		<cfset var x = 0 />

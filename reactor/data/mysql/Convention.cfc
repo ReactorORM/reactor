@@ -1,11 +1,24 @@
-<cfcomponent hint="I am the convention object for mssql.  I translate data into formats that the DBMS supports." extends="reactor.data.abstractConvention">
+<cfcomponent hint="I am the convention object for mysql.  I translate data into formats that the DBMS supports." extends="reactor.data.abstractConvention">
 	
-
+	<cffunction name="lastInseredIdSytax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
+		
+		<cfreturn "SELECT LAST_INSERT_ID() as Id" />
+		
+	</cffunction>
+	
+	<cffunction name="formatObjectAlias" access="public" hint="I format the object name" output="false" returntype="string">
+		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
+		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
+		
+		<cfreturn formatObjectName(arguments.ObjectMetadata, arguments.alias) & " AS  AS `#arguments.alias#`" />
+		
+	</cffunction>
+	
 	<cffunction name="formatObjectName" access="public" hint="I format the object" output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
 		
-		<cfreturn "`#arguments.ObjectMetadata.getDatabase()#`.`#arguments.ObjectMetadata.getName()#` AS `#arguments.alias#`" />
+		<cfreturn "`#arguments.ObjectMetadata.getDatabase()#`.`#arguments.ObjectMetadata.getName()#`" />
 		
 	</cffunction>
 	
