@@ -29,7 +29,7 @@
 	</cffunction>
 	
 	<cffunction name="getFieldQuery" access="public" hint="I return an Query of describing this object's fields" output="false" returntype="query">
-		<cfset var fields = getObjectMetadata().fields />
+		<cfset var fields = getFields() />
 		<cfset var fieldQuery = QueryNew(StructKeyList(fields[1])) />
 		<cfset var x = 0 />
 		<cfset var field = "" />
