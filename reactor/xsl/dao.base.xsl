@@ -99,17 +99,17 @@
 					</xsl:for-each>
 				)
 			&lt;/cfquery&gt;
-			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-				<xsl:if test="object/fields/field[@identity = 'true']">
-					#Convention.lastInseredIdSytax()#
-				</xsl:if>
-			&lt;/cfquery&gt;
+			<xsl:if test="object/fields/field[@identity = 'true']">
+				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+				&lt;/cfquery&gt;
+			</xsl:if>
 		&lt;/cftransaction&gt;
 			
 		<xsl:if test="object/fields/field[@identity = 'true']">
-		&lt;cfif qCreate.recordCount&gt;
-			&lt;cfset arguments.to.<xsl:value-of select="object/fields/field[@identity = 'true']/@name" /> = qCreate.id /&gt;
-		&lt;/cfif&gt;
+			&lt;cfif qCreate.recordCount&gt;
+				&lt;cfset arguments.to.<xsl:value-of select="object/fields/field[@identity = 'true']/@name" /> = qCreate.id /&gt;
+			&lt;/cfif&gt;
 		</xsl:if>
 	&lt;/cffunction&gt;
 	
@@ -158,7 +158,7 @@
 			UPDATE #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
 			SET 
 			<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
-				#Convention.formatFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
+				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0">
 						scale="<xsl:value-of select="@length" />"
@@ -176,7 +176,7 @@
 			</xsl:for-each>
 			WHERE
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
-				#Convention.formatFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
+				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0">
 						scale="<xsl:value-of select="@length" />"

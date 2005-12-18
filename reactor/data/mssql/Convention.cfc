@@ -31,6 +31,13 @@
 		
 	</cffunction>
 	
+	<cffunction name="formatUpdateFieldName" access="public" hint="I format the field name" output="false" returntype="string">
+		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
+		
+		<cfreturn "[#arguments.fieldName#]" />
+		
+	</cffunction>
+	
 	<cffunction name="formatFieldAlias" access="public" hint="I format the field name" output="false" returntype="string">
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
 		<cfargument name="alias" hint="I am this object's alias" required="no" type="string" default="" />

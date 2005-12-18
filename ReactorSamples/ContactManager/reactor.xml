@@ -1,0 +1,31 @@
+<reactor>
+	<config>
+		<dsn value="ContactManager" />
+		<type value="mssql" />
+		<mapping value="/ContactManagerData" />
+		<mode value="development" />
+	</config>
+
+	<objects>
+		<object name="Contact">
+			<hasMany name="Address">
+				<relate from="contactId" to="contactId" />
+			</hasMany>
+			<hasMany name="EmailAddress">
+				<relate from="contactId" to="contactId" />
+			</hasMany>
+			<hasMany name="PhoneNumber">
+				<relate from="contactId" to="contactId" />
+			</hasMany>			
+		</object>
+		
+		<object name="Address">
+			<hasOne name="State">
+				<relate from="stateId" to="stateId" />
+			</hasOne>
+			<hasOne name="Country">
+				<relate from="countryId" to="countryId" />
+			</hasOne>
+		</object>
+	</objects>
+</reactor>

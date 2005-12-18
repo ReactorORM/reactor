@@ -11,7 +11,7 @@
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
 		
-		<cfreturn formatObjectName(arguments.ObjectMetadata, arguments.alias) & " AS  AS `#arguments.alias#`" />
+		<cfreturn formatObjectName(arguments.ObjectMetadata, arguments.alias) & " AS `#arguments.alias#`" />
 		
 	</cffunction>
 	
@@ -28,6 +28,13 @@
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
 		
 		<cfreturn "`#arguments.alias#`.`#arguments.fieldName#`" />
+		
+	</cffunction>
+	
+	<cffunction name="formatUpdateFieldName" access="public" hint="I format the field name" output="false" returntype="string">
+		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
+		
+		<cfreturn "`#arguments.fieldName#`" />
 		
 	</cffunction>
 	

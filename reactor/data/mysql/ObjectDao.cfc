@@ -43,7 +43,7 @@
 				ELSE 'false'
 			END as identity,
 			CASE
-				WHEN IS_NULLABLE THEN 'true'
+				WHEN IS_NULLABLE = 'Yes' THEN 'true'
 				ELSE 'false'
 			END as nullable,
 			DATA_TYPE as dbDataType,
@@ -56,6 +56,7 @@
 			WHERE TABLE_SCHEMA = Database() AND TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
 		</cfquery>
 		
+		
 		<cfloop query="qFields">
 			<!--- create the field --->
 			<cfset Field = CreateObject("Component", "reactor.core.field") />
@@ -67,12 +68,63 @@
 			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
 			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
 			<cfset Field.setLength(qFields.length) />
-			<!--- in mysql defaults are constants so we don't need to translate --->
-			<cfset Field.setDefault(qFields.default) />
+			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
 		</cfloop>
+	</cffunction>
+	
+	<cffunction name="getDefault" access="public" hint="I get a default value for a cf datatype." output="false" returntype="string">
+		<cfargument name="sqlDefaultValue" hint="I am the default value defined by SQL." required="yes" type="string" />
+		<cfargument name="typeName" hint="I am the cf type name to get a default value for." required="yes" type="string" />
+		<cfargument name="nullable" hint="I indicate if the column is nullable." required="yes" type="boolean" />
+		
+		<cfswitch expression="#arguments.typeName#">
+			<cfcase value="numeric">
+				<cfif IsNumeric(arguments.sqlDefaultValue)>
+					<cfreturn arguments.sqlDefaultValue />
+				<cfelseif arguments.nullable>
+					<cfreturn ""/>
+				<cfelse>
+					<cfreturn 0 />
+				</cfif>
+			</cfcase>
+			<cfcase value="binary">
+				<cfreturn "" />
+			</cfcase>
+			<cfcase value="boolean">
+				<cfif IsBoolean(arguments.sqlDefaultValue)>
+					<cfreturn Iif(arguments.sqlDefaultValue, DE(true), DE(false)) />
+				<cfelse>
+					<cfreturn false />
+				</cfif>
+			</cfcase>
+			<cfcase value="string">
+				<!--- insure that the first and last characters are "'" --->
+				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
+					<!--- mssql functions must be constants.  for this reason I can convert anything quoted in single quotes safely to a string --->
+					<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
+					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, "''", "'", "All") />
+					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, """", """""", "All") />
+					<cfreturn arguments.sqlDefaultValue />
+				<cfelse>
+					<cfreturn "" />
+				</cfif>
+			</cfcase>
+			<cfcase value="date">
+				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
+					<cfreturn Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
+				<cfelseif arguments.sqlDefaultValue IS "getDate()">
+					<cfreturn "##Now()##" />
+				<cfelse>
+					<cfreturn "" />
+				</cfif>
+			</cfcase>
+			<cfdefaultcase>
+				<cfreturn "" />
+			</cfdefaultcase>
+		</cfswitch>
 	</cffunction>
 	
 	<cffunction name="getCfSqlType" access="private" hint="I translate the MSSQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">

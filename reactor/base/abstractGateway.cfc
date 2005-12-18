@@ -253,7 +253,9 @@
 					
 				</cfloop>
 			</cfif>
+
 		</cfquery>
+		
 		
 		<!--- return the query result --->
 		<cfreturn qGet />
