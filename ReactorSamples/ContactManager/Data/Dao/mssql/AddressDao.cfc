@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the custom DAO object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="ContactManagerData.Dao.mssql.base.AddressDao" >
+	extends="ReactorSamples.ContactManager.data.Dao.mssql.base.AddressDao" >
 	<!--- Place custom code here, it will not be overwritten --->
 </cfcomponent>
 	

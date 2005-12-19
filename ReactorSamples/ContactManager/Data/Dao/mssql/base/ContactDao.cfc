@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the Contact table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "EC0B43B586B2CBF66C6A81BEE88F2DD8" />
+	<cfset variables.signature = "10010BEA05240DFE8FCF4A559D362C72" />
 
 	<cffunction name="save" access="public" hint="I create or update a Contact record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Contact" required="yes" type="ContactManagerData.To.mssql.ContactTo" />
+		<cfargument name="to" hint="I am the transfer object for Contact" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.ContactTo" />
 
 		
 		<cfif IsNumeric(arguments.to.ContactId) AND Val(arguments.to.ContactId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a Contact object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Contact" required="yes" type="ContactManagerData.To.mssql.ContactTo" />
+		<cfargument name="to" hint="I am the transfer object for Contact" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.ContactTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -51,12 +51,10 @@
 							 />
 							
 				)
-			</cfquery>
-			
-				<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
-				</cfquery>
-			
+				
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							</cfquery>
+						
 		</cftransaction>
 			
 		
@@ -68,7 +66,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  Contact object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Contact which will be populated." required="yes" type="ContactManagerData.To.mssql.ContactTo" />
+		<cfargument name="to" hint="I am the transfer object for Contact which will be populated." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.ContactTo" />
 		<cfset var qRead = 0 />
 		<cfset var ContactGateway = _getReactorFactory().createGateway("Contact") />
 		
@@ -96,7 +94,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a Contact object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Contact which will be used to update a record in the table." required="yes" type="ContactManagerData.To.mssql.ContactTo" />
+		<cfargument name="to" hint="I am the transfer object for Contact which will be used to update a record in the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.ContactTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -133,7 +131,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the Contact table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Contact which will be used to delete from the table." required="yes" type="ContactManagerData.To.mssql.ContactTo" />
+		<cfargument name="to" hint="I am the transfer object for Contact which will be used to delete from the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.ContactTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

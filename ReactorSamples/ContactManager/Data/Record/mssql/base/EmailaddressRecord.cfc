@@ -2,9 +2,9 @@
 <cfcomponent hint="I am the base record representing the EmailAddress table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "BD647E3B0DC75798AEE3F8DC06EEC9D6" />
+	<cfset variables.signature = "4BB6551711F43BC31E23513D2CA9A89A" />
 	
-	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ContactManagerData.Record.mssql.base.EmailAddressRecord">
+	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ReactorSamples.ContactManager.data.Record.mssql.base.EmailAddressRecord">
 		
 			<cfargument name="EmailAddressId" hint="I am the default value for the  EmailAddressId field." required="no" type="string" default="0" />
 		
@@ -104,19 +104,19 @@
 			
 	<!--- to --->
 	<cffunction name="_setTo" access="public" output="false" returntype="void">
-	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
+	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
 	    <cfset variables.to = arguments.to />
 	</cffunction>
-	<cffunction name="_getTo" access="public" output="false" returntype="ContactManagerData.To.mssql.EmailAddressTo">
+	<cffunction name="_getTo" access="public" output="false" returntype="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo">
 		<cfreturn variables.to />
 	</cffunction>	
 	
 	<!--- dao --->
 	<cffunction name="_setDao" access="private" output="false" returntype="void">
-	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ContactManagerData.Dao.mssql.EmailAddressDao" />
+	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ReactorSamples.ContactManager.data.Dao.mssql.EmailAddressDao" />
 	    <cfset variables.dao = arguments.dao />
 	</cffunction>
-	<cffunction name="_getDao" access="private" output="false" returntype="ContactManagerData.Dao.mssql.EmailAddressDao">
+	<cffunction name="_getDao" access="private" output="false" returntype="ReactorSamples.ContactManager.data.Dao.mssql.EmailAddressDao">
 	    <cfreturn variables.dao />
 	</cffunction>
 	

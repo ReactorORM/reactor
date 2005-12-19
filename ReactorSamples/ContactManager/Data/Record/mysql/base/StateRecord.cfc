@@ -2,9 +2,9 @@
 <cfcomponent hint="I am the base record representing the State table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "AF094764175E758685A2CA687B7FD93D" />
+	<cfset variables.signature = "46267D49990E259DE956FFC346823ABD" />
 	
-	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ContactManagerData.Record.mysql.base.StateRecord">
+	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ReactorSamples.ContactManager.data.Record.mysql.base.StateRecord">
 		
 			<cfargument name="StateId" hint="I am the default value for the  StateId field." required="no" type="string" default="0" />
 		
@@ -114,19 +114,19 @@
 			
 	<!--- to --->
 	<cffunction name="_setTo" access="public" output="false" returntype="void">
-	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ContactManagerData.To.mysql.StateTo" />
+	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 	    <cfset variables.to = arguments.to />
 	</cffunction>
-	<cffunction name="_getTo" access="public" output="false" returntype="ContactManagerData.To.mysql.StateTo">
+	<cffunction name="_getTo" access="public" output="false" returntype="ReactorSamples.ContactManager.data.To.mysql.StateTo">
 		<cfreturn variables.to />
 	</cffunction>	
 	
 	<!--- dao --->
 	<cffunction name="_setDao" access="private" output="false" returntype="void">
-	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ContactManagerData.Dao.mysql.StateDao" />
+	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ReactorSamples.ContactManager.data.Dao.mysql.StateDao" />
 	    <cfset variables.dao = arguments.dao />
 	</cffunction>
-	<cffunction name="_getDao" access="private" output="false" returntype="ContactManagerData.Dao.mysql.StateDao">
+	<cffunction name="_getDao" access="private" output="false" returntype="ReactorSamples.ContactManager.data.Dao.mysql.StateDao">
 	    <cfreturn variables.dao />
 	</cffunction>
 	

@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Gateway object for the PhoneNumber table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractGateway" >
 	
-	<cfset variables.signature = "34CA0A3324768DA70159CB001D1989AF" />
+	<cfset variables.signature = "BA487D72BC124CEEA1AD1386F520C5B8" />
 
 	<cffunction name="getAll" access="public" hint="I return all rows from the PhoneNumber table." output="false" returntype="query">
 		<cfreturn getByFields() />

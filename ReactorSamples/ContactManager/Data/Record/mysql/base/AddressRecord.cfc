@@ -2,9 +2,9 @@
 <cfcomponent hint="I am the base record representing the Address table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "C8ADB2383CA28DB2D7F4372F24B56A08" />
+	<cfset variables.signature = "AE2B08DF9B3F7B1AB4E6B3F2A6A99913" />
 	
-	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ContactManagerData.Record.mysql.base.AddressRecord">
+	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ReactorSamples.ContactManager.data.Record.mysql.base.AddressRecord">
 		
 			<cfargument name="AddressId" hint="I am the default value for the  AddressId field." required="no" type="string" default="0" />
 		
@@ -223,12 +223,12 @@
 	
 	<!--- Record For State --->
 	<cffunction name="setStateRecord" access="public" output="false" returntype="void">
-	    <cfargument name="Record" hint="I am the Record to set the State value from." required="yes" type="ContactManagerData.Record.mysql.StateRecord" />
+	    <cfargument name="Record" hint="I am the Record to set the State value from." required="yes" type="ReactorSamples.ContactManager.data.Record.mysql.StateRecord" />
 		
 			<cfset setstateId(Record.getstateId()) />
 		
 	</cffunction>
-	<cffunction name="getStateRecord" access="public" output="false" returntype="ContactManagerData.Record.mysql.StateRecord">
+	<cffunction name="getStateRecord" access="public" output="false" returntype="ReactorSamples.ContactManager.data.Record.mysql.StateRecord">
 		<cfset var Record = _getReactorFactory().createRecord("State") />
 		
 			<cfset Record.setstateId(getstateId()) />
@@ -239,12 +239,12 @@
 	
 	<!--- Record For Country --->
 	<cffunction name="setCountryRecord" access="public" output="false" returntype="void">
-	    <cfargument name="Record" hint="I am the Record to set the Country value from." required="yes" type="ContactManagerData.Record.mysql.CountryRecord" />
+	    <cfargument name="Record" hint="I am the Record to set the Country value from." required="yes" type="ReactorSamples.ContactManager.data.Record.mysql.CountryRecord" />
 		
 			<cfset setcountryId(Record.getcountryId()) />
 		
 	</cffunction>
-	<cffunction name="getCountryRecord" access="public" output="false" returntype="ContactManagerData.Record.mysql.CountryRecord">
+	<cffunction name="getCountryRecord" access="public" output="false" returntype="ReactorSamples.ContactManager.data.Record.mysql.CountryRecord">
 		<cfset var Record = _getReactorFactory().createRecord("Country") />
 		
 			<cfset Record.setcountryId(getcountryId()) />
@@ -256,19 +256,19 @@
 			
 	<!--- to --->
 	<cffunction name="_setTo" access="public" output="false" returntype="void">
-	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ContactManagerData.To.mysql.AddressTo" />
+	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.AddressTo" />
 	    <cfset variables.to = arguments.to />
 	</cffunction>
-	<cffunction name="_getTo" access="public" output="false" returntype="ContactManagerData.To.mysql.AddressTo">
+	<cffunction name="_getTo" access="public" output="false" returntype="ReactorSamples.ContactManager.data.To.mysql.AddressTo">
 		<cfreturn variables.to />
 	</cffunction>	
 	
 	<!--- dao --->
 	<cffunction name="_setDao" access="private" output="false" returntype="void">
-	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ContactManagerData.Dao.mysql.AddressDao" />
+	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ReactorSamples.ContactManager.data.Dao.mysql.AddressDao" />
 	    <cfset variables.dao = arguments.dao />
 	</cffunction>
-	<cffunction name="_getDao" access="private" output="false" returntype="ContactManagerData.Dao.mysql.AddressDao">
+	<cffunction name="_getDao" access="private" output="false" returntype="ReactorSamples.ContactManager.data.Dao.mysql.AddressDao">
 	    <cfreturn variables.dao />
 	</cffunction>
 	

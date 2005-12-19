@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Metadata object for the EmailAddress table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractMetadata" >
 	
-	<cfset variables.signature = "1A9130F428562C287E99358B18E59149" >
+	<cfset variables.signature = "A05CB2B8600B580951645196D7A5132D" >
 	
 	<cfset variables.metadata.name = "EmailAddress" />
 	<cfset variables.metadata.owner = "" />

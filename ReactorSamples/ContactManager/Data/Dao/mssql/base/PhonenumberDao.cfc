@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the PhoneNumber table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "D26C7E5FB8D319B6167A41C898734D3A" />
+	<cfset variables.signature = "FDE7E6E220EAD9BFFFA5E0ACC0AF377E" />
 
 	<cffunction name="save" access="public" hint="I create or update a PhoneNumber record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for PhoneNumber" required="yes" type="ContactManagerData.To.mssql.PhoneNumberTo" />
+		<cfargument name="to" hint="I am the transfer object for PhoneNumber" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.PhoneNumberTo" />
 
 		
 		<cfif IsNumeric(arguments.to.PhoneNumberId) AND Val(arguments.to.PhoneNumberId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a PhoneNumber object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for PhoneNumber" required="yes" type="ContactManagerData.To.mssql.PhoneNumberTo" />
+		<cfargument name="to" hint="I am the transfer object for PhoneNumber" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.PhoneNumberTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -66,7 +66,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  PhoneNumber object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be populated." required="yes" type="ContactManagerData.To.mssql.PhoneNumberTo" />
+		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be populated." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.PhoneNumberTo" />
 		<cfset var qRead = 0 />
 		<cfset var PhoneNumberGateway = _getReactorFactory().createGateway("PhoneNumber") />
 		
@@ -94,7 +94,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a PhoneNumber object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be used to update a record in the table." required="yes" type="ContactManagerData.To.mssql.PhoneNumberTo" />
+		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be used to update a record in the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.PhoneNumberTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -129,7 +129,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the PhoneNumber table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be used to delete from the table." required="yes" type="ContactManagerData.To.mssql.PhoneNumberTo" />
+		<cfargument name="to" hint="I am the transfer object for PhoneNumber which will be used to delete from the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.PhoneNumberTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the Country table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "5B6FD93A586F5E3A1049A7D8AE1C0279" />
+	<cfset variables.signature = "3712E88210E5490B54E397FA053F21F8" />
 
 	<cffunction name="save" access="public" hint="I create or update a Country record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Country" required="yes" type="ContactManagerData.To.mysql.CountryTo" />
+		<cfargument name="to" hint="I am the transfer object for Country" required="yes" type="ReactorSamples.ContactManager.data.To.mysql.CountryTo" />
 
 		
 		<cfif IsNumeric(arguments.to.CountryId) AND Val(arguments.to.CountryId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a Country object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Country" required="yes" type="ContactManagerData.To.mysql.CountryTo" />
+		<cfargument name="to" hint="I am the transfer object for Country" required="yes" type="ReactorSamples.ContactManager.data.To.mysql.CountryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -58,12 +58,13 @@
 							 />
 							
 				)
-			</cfquery>
-			
-				<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
-				</cfquery>
-			
+				
+							</cfquery>
+							
+							<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							</cfquery>
+						
 		</cftransaction>
 			
 		
@@ -75,7 +76,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  Country object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Country which will be populated." required="yes" type="ContactManagerData.To.mysql.CountryTo" />
+		<cfargument name="to" hint="I am the transfer object for Country which will be populated." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.CountryTo" />
 		<cfset var qRead = 0 />
 		<cfset var CountryGateway = _getReactorFactory().createGateway("Country") />
 		
@@ -108,7 +109,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a Country object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Country which will be used to update a record in the table." required="yes" type="ContactManagerData.To.mysql.CountryTo" />
+		<cfargument name="to" hint="I am the transfer object for Country which will be used to update a record in the table." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.CountryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -151,7 +152,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the Country table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Country which will be used to delete from the table." required="yes" type="ContactManagerData.To.mysql.CountryTo" />
+		<cfargument name="to" hint="I am the transfer object for Country which will be used to delete from the table." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.CountryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

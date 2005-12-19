@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the custom Record object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="ContactManagerData.Record.mysql.base.EmailAddressRecord" >
+	extends="ReactorSamples.ContactManager.data.Record.mysql.base.EmailAddressRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">

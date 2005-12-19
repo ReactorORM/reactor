@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the State table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "AF094764175E758685A2CA687B7FD93D" />
+	<cfset variables.signature = "46267D49990E259DE956FFC346823ABD" />
 
 	<cffunction name="save" access="public" hint="I create or update a State record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for State" required="yes" type="ContactManagerData.To.mysql.StateTo" />
+		<cfargument name="to" hint="I am the transfer object for State" required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 
 		
 		<cfif IsNumeric(arguments.to.StateId) AND Val(arguments.to.StateId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a State object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for State" required="yes" type="ContactManagerData.To.mysql.StateTo" />
+		<cfargument name="to" hint="I am the transfer object for State" required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -51,12 +51,13 @@
 							 />
 							
 				)
-			</cfquery>
-			
-				<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
-				</cfquery>
-			
+				
+							</cfquery>
+							
+							<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							</cfquery>
+						
 		</cftransaction>
 			
 		
@@ -68,7 +69,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  State object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for State which will be populated." required="yes" type="ContactManagerData.To.mysql.StateTo" />
+		<cfargument name="to" hint="I am the transfer object for State which will be populated." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 		<cfset var qRead = 0 />
 		<cfset var StateGateway = _getReactorFactory().createGateway("State") />
 		
@@ -96,7 +97,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a State object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for State which will be used to update a record in the table." required="yes" type="ContactManagerData.To.mysql.StateTo" />
+		<cfargument name="to" hint="I am the transfer object for State which will be used to update a record in the table." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -133,7 +134,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the State table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for State which will be used to delete from the table." required="yes" type="ContactManagerData.To.mysql.StateTo" />
+		<cfargument name="to" hint="I am the transfer object for State which will be used to delete from the table." required="yes" type="ReactorSamples.ContactManager.data.To.mysql.StateTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Metadata object for the Contact table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractMetadata" >
 	
-	<cfset variables.signature = "EC0B43B586B2CBF66C6A81BEE88F2DD8" >
+	<cfset variables.signature = "10010BEA05240DFE8FCF4A559D362C72" >
 	
 	<cfset variables.metadata.name = "Contact" />
 	<cfset variables.metadata.owner = "dbo" />
