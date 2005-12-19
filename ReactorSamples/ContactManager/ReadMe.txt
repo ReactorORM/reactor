@@ -18,4 +18,6 @@ Also, you will need to update the type value to the correct type.  Options are (
 
 <type value="mssql" />
 
-Lastly, create a mapping in your CF administrator named "ContactManagerData" which maps to the Data directory under this folder.
+Lastly, don't forget to create the /ReactorSamples mapping to the ReactorSamples directory.
+
+

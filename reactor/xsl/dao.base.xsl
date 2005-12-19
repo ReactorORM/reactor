@@ -98,12 +98,21 @@
 						</xsl:if>
 					</xsl:for-each>
 				)
-			&lt;/cfquery&gt;
-			<xsl:if test="object/fields/field[@identity = 'true']">
-				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
-				&lt;/cfquery&gt;
-			</xsl:if>
+				<xsl:if test="object/fields/field[@identity = 'true']">
+					<xsl:choose>
+						<xsl:when test="object/@dbms = 'mysql'">
+							&lt;/cfquery&gt;
+							
+							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							&lt;/cfquery&gt;
+						</xsl:when>
+						<xsl:otherwise>
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							&lt;/cfquery&gt;
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
 		&lt;/cftransaction&gt;
 			
 		<xsl:if test="object/fields/field[@identity = 'true']">

@@ -8,9 +8,6 @@
 
 	<objects>
 		<object name="User">
-			<super name="DeleteMe">
-				<relate from="userId" to="userID" />
-			</super>
 			<hasOne name="UserType">
 				<relate from="userTypeId" to="userTypeId" />
 			</hasOne>
@@ -19,14 +16,8 @@
 			</hasMany>
 		</object>
 		
-		<object name="UserType">
-			<hasMany name="User">
-				<relate from="userTypeId" to="userTypeId" />
-			</hasMany>
-		</object>
-		
 		<object name="Administrator">
-			<super name="User" alias="SuperUser">
+			<super name="User">
 				<relate from="administratorId" to="userID" />
 			</super>
 		</object>

@@ -253,6 +253,11 @@
 					
 				</cfloop>
 			</cfif>
+			
+			<!---<cfif getObjectMetadata().getName() IS "Contact">
+				<cfdump var="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+				<cfabort>
+			</cfif>--->
 
 		</cfquery>
 		

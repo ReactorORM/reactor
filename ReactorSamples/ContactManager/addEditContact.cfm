@@ -4,10 +4,10 @@
 
 <!--- Create a contact record object.  Record objects represent one row in the database and have save, and delete methods --->
 <cfset ContactRecord = Application.Reactor.createRecord("Contact") />
+<!--- set the contactId for this contact --->
+<cfset ContactRecord.setContactId(url.contactId) />
 
 <cfif url.contactId>
-	<!--- set the contactId for this contact --->
-	<cfset ContactRecord.setContactId(url.contactId) />
 	<!--- load the contact from the database --->
 	<cfset ContactRecord.load() />
 </cfif>
