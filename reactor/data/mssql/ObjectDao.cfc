@@ -39,7 +39,10 @@
 					WHEN colCon.CONSTRAINT_NAME IS NOT NULL THEN 'true'
 					ELSE 'false'
 				END as primaryKey,
-				columnProperty(object_id(col.TABLE_NAME), col.COLUMN_NAME, 'IsIdentity') AS [identity],				
+				CASE
+					WHEN columnProperty(object_id(col.TABLE_NAME), col.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
+					ELSE 'false'
+				END AS [identity],	
 				CASE
 					WHEN col.IS_NULLABLE = 'No' THEN 'false'
 					ELSE 'true'

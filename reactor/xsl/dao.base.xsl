@@ -105,14 +105,14 @@
 							
 							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
 								#Convention.lastInseredIdSyntax(getObjectMetadata())#
-							&lt;/cfquery&gt;
 						</xsl:when>
 						<xsl:otherwise>
 								#Convention.lastInseredIdSyntax(getObjectMetadata())#
-							&lt;/cfquery&gt;
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
+				
+				&lt;/cfquery&gt;
 		&lt;/cftransaction&gt;
 			
 		<xsl:if test="object/fields/field[@identity = 'true']">
