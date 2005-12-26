@@ -2,7 +2,7 @@
 	<config>
 		<dsn value="ContactManager" />
 		<type value="mssql" />
-		<mapping value="/ReactorSamples/ContactManager/data" />
+		<mapping value="/ContactManagerData" />
 		<mode value="development" />
 	</config>
 

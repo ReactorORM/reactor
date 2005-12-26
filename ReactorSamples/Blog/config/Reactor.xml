@@ -1,0 +1,12 @@
+<reactor>
+	<config>
+		<dsn value="ReactorBlog" />
+		<type value="mssql" />
+		<mapping value="/ReactorBlogData" />
+		<mode value="development" />
+	</config>
+
+	<objects>
+		
+	</objects>
+</reactor>

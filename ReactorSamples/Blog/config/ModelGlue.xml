@@ -1,0 +1,95 @@
+<modelglue>
+	<config>
+		<setting name="beanMappings" value="/ReactorSamples/Blog/config/beans/" />
+		<setting name="viewMappings" value="/ReactorSamples/Blog/views" />
+		<setting name="defaultEvent" value="Home" />
+		<setting name="reload" value="true" />
+		<setting name="debug" value="false " />
+		<!-- These are all optional as of 1.0	
+		<setting name="statebuilder" value="ModelGlue.Util.GenericCollection" />
+		<setting name="defaultEvent" value="Home" />
+		<setting name="reloadKey" value="init" />
+		<setting name="reloadPassword" value="true" />
+		<setting name="statePrecedence" value="Form" />
+		<setting name="eventValue" value="event" />
+		<setting name="defaultTemplate" value="index.cfm" />
+		<setting name="defaultExceptionHandler" value="Exception" />
+		<setting name="defaultCacheTimeout" value="5" />
+		-->
+	</config>
+
+	<controllers>
+		<controller name="blogController" type="ReactorSamples.Blog.controller.BlogController">
+			<message-listener message="NeedCategories" function="GetCategories" />
+		</controller>
+		<controller name="myController" type="ReactorSamples.Blog.controller.Controller">
+			<message-listener message="OnRequestStart" function="OnRequestStart" />
+			<message-listener message="OnRequestEnd" function="OnRequestEnd" />
+			<!-- Message-Listener Template
+			<message-listener message="DoSomething" function="ControllerFunctionToFire" />
+			-->
+		</controller>
+	</controllers>
+  
+	<event-handlers>
+		<!-- Event-Handler Template
+		<event-handler>
+			<broadcasts>
+				<message name="DoSomething">
+					<argument name="SampleArg" value="iAmASampleArgument" />
+				</message>
+			</broadcasts>
+			<views>
+				<include name="body" template="page.cfm" append="false">
+					<value name="SomeValue" value="I am a value available in Viewstate" overwrite="false" />
+				</include>
+			</views>
+			<results>
+				<result name="resultValue" do="EventHandlerName" />
+				<result name="redirectingResultValue" do="EventHandlerName" redirect="true" />
+				<result do="resultThatWillAlwaysRun" />
+			</results>
+		</event-handler>
+		--> 
+	
+		<event-handler name="Home">
+			<broadcasts />
+			<views>
+				<include name="body" template="dspBody.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="LoginForm">
+			<broadcasts />
+			<views>
+				<include name="body" template="dspLoginForm.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+	
+		<event-handler name="Layout">
+			<broadcasts>
+				<message name="NeedCategories" />
+			</broadcasts>
+			<views>
+				<include name="leftNav" template="dspMainNav.cfm" />
+				<include name="leftNav" template="dspCategoryNav.cfm" append="true" />
+				<include name="body" template="dspLayout.cfm" />
+			</views>
+			<results />
+		</event-handler>
+		
+		<event-handler name="Exception">
+			<broadcasts />
+			<views>
+				<include name="body" template="dspException.cfm" />
+			</views>
+			<results />
+		</event-handler>
+	</event-handlers>
+</modelglue>

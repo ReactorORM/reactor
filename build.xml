@@ -1,0 +1,3 @@
+<project name="Reactor" default="distribute" basedir=".">
+	<delete dir="distribute" failonerror="No" />
+</project>

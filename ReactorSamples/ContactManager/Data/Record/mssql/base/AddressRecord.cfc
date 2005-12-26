@@ -2,9 +2,9 @@
 <cfcomponent hint="I am the base record representing the Address table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "21A2E5B68F903F232359A5EE1C80F954" />
+	<cfset variables.signature = "F4B3DE0341FA9417509E9A234A0711EF" />
 	
-	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ReactorSamples.ContactManager.data.Record.mssql.base.AddressRecord">
+	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ContactManagerData.Record.mssql.base.AddressRecord">
 		
 			<cfargument name="AddressId" hint="I am the default value for the  AddressId field." required="no" type="string" default="0" />
 		
@@ -223,12 +223,12 @@
 	
 	<!--- Record For State --->
 	<cffunction name="setStateRecord" access="public" output="false" returntype="void">
-	    <cfargument name="Record" hint="I am the Record to set the State value from." required="yes" type="ReactorSamples.ContactManager.data.Record.mssql.StateRecord" />
+	    <cfargument name="Record" hint="I am the Record to set the State value from." required="yes" type="ContactManagerData.Record.mssql.StateRecord" />
 		
 			<cfset setstateId(Record.getstateId()) />
 		
 	</cffunction>
-	<cffunction name="getStateRecord" access="public" output="false" returntype="ReactorSamples.ContactManager.data.Record.mssql.StateRecord">
+	<cffunction name="getStateRecord" access="public" output="false" returntype="ContactManagerData.Record.mssql.StateRecord">
 		<cfset var Record = _getReactorFactory().createRecord("State") />
 		
 			<cfset Record.setstateId(getstateId()) />
@@ -239,12 +239,12 @@
 	
 	<!--- Record For Country --->
 	<cffunction name="setCountryRecord" access="public" output="false" returntype="void">
-	    <cfargument name="Record" hint="I am the Record to set the Country value from." required="yes" type="ReactorSamples.ContactManager.data.Record.mssql.CountryRecord" />
+	    <cfargument name="Record" hint="I am the Record to set the Country value from." required="yes" type="ContactManagerData.Record.mssql.CountryRecord" />
 		
 			<cfset setcountryId(Record.getcountryId()) />
 		
 	</cffunction>
-	<cffunction name="getCountryRecord" access="public" output="false" returntype="ReactorSamples.ContactManager.data.Record.mssql.CountryRecord">
+	<cffunction name="getCountryRecord" access="public" output="false" returntype="ContactManagerData.Record.mssql.CountryRecord">
 		<cfset var Record = _getReactorFactory().createRecord("Country") />
 		
 			<cfset Record.setcountryId(getcountryId()) />
@@ -256,19 +256,19 @@
 			
 	<!--- to --->
 	<cffunction name="_setTo" access="public" output="false" returntype="void">
-	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.AddressTo" />
+	    <cfargument name="to" hint="I am this record's transfer object." required="yes" type="ContactManagerData.To.mssql.AddressTo" />
 	    <cfset variables.to = arguments.to />
 	</cffunction>
-	<cffunction name="_getTo" access="public" output="false" returntype="ReactorSamples.ContactManager.data.To.mssql.AddressTo">
+	<cffunction name="_getTo" access="public" output="false" returntype="ContactManagerData.To.mssql.AddressTo">
 		<cfreturn variables.to />
 	</cffunction>	
 	
 	<!--- dao --->
 	<cffunction name="_setDao" access="private" output="false" returntype="void">
-	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ReactorSamples.ContactManager.data.Dao.mssql.AddressDao" />
+	    <cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="ContactManagerData.Dao.mssql.AddressDao" />
 	    <cfset variables.dao = arguments.dao />
 	</cffunction>
-	<cffunction name="_getDao" access="private" output="false" returntype="ReactorSamples.ContactManager.data.Dao.mssql.AddressDao">
+	<cffunction name="_getDao" access="private" output="false" returntype="ContactManagerData.Dao.mssql.AddressDao">
 	    <cfreturn variables.dao />
 	</cffunction>
 	

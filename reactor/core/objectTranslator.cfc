@@ -1,198 +1,86 @@
 <cfcomponent hint="I am a component which translates a database objects into xml documents">
 
-	<!--- <cfset variables.Object = 0 /> --->
 	<cfset variables.Config = 0 />
+	<cfset variables.Object = 0 />
+	<cfset variables.ObjectFactory = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure and return the objectTranslator" output="false" returntype="reactor.core.objectTranslator">
-		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
-		<!--- <cfargument name="name" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
-		<cfset var Object = CreateObject("Component", "reactor.core.object").init(arguments.name) />
-		<cfset var ObjectDao = CreateObject("Component", "reactor.data.#arguments.config.getType()#.ObjectDao").init(arguments.config.getDsn()) />		
-		<cfset ObjectDao.read(Object) /> --->
+		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
+		<cfargument name="Object" hint="I am the object being transformed" required="yes" type="reactor.core.object" />
+		<cfargument name="ObjectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="reactor.core.objectFactory" />
 		
 		<cfset setConfig(arguments.config) />
-		<!--- <cfset setObject(Object) /> --->
+		<cfset setObject(arguments.Object) />
+		<cfset setObjectFactory(arguments.ObjectFactory) />
 		
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getObject" access="private" hint="I read and return the object" output="false" returntype="reactor.core.object">
-		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfset var Object = CreateObject("Component", "reactor.core.object").init(arguments.name) />
-		<cfset var ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn()) />		
+	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
+		<!---<cfargument name="objectTranslator" hint="I am the objectTranslator to use to generate the To." required="yes" type="reactor.core.objectTranslator" />
+		<cfargument name="name" hint="I am the name of the object to create." required="yes" type="string" />--->
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
+		<cfset var objectXML = getObject().getXml() />
+		<cfset var super = XmlSearch(objectXML, "/object/super") />
+		<cfset var pathToErrorFile = "" />
 		
-		<cfset ObjectDao.read(Object) />
+		<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
+			<!--- we need to insure that the base object exists for Dao, Record --->
+			<cfset getObjectFactory().create(super[1].XmlAttributes.name, arguments.type) />
+		</cfif>
 		
-		<cfreturn Object />
-	</cffunction>
-	
-	<cffunction name="getSignature" access="public" hint="I get this table's signature" output="false" returntype="string">
-		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfreturn getXml(arguments.name).object.XmlAttributes.signature />
-	</cffunction>
-		
-	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
-		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfset var Config = getConfig().getObjectConfig(arguments.name) />
-		<cfset var Object = getObject(arguments.name) />
-		<cfset var fields = Object.getFields() />
-		<cfset var field = 0 />
-		<cfset var overriddenFields = 0 />
-		<cfset var linkerRelationships = 0 />
-		<cfset var linkerRelationship = 0 />
-		<cfset var newHasMany = 0 />
-		<cfset var newRelationship = 0 />
-		<cfset var x = 0 />
-		<cfset var y = 0 />
-		<cfset var z = 0 />
-		
-		<!--- add/validate relationship aliases --->
-		<cfset var relationships = Config.object.XmlChildren />
-		<cfset var relationship = 0 />
-		<cfset var aliasList = "" />
-		
-		<!--- expand relationships --->
-		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-			<cfset relationship = relationships[x] />
-			
-			<!--- if this is a has-many relationship with a link expand it --->
-			<cfif IsDefined("relationship.link")>
-				<!--- get the relationships that the linking object has --->
-				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-								
-				<!--- find links back to this object --->
-				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
-					<cfset linkerRelationship = linkerRelationships[y] />
+		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
+		<cfif arguments.type IS "Record">
+			<!--- I am the path to the error file --->
+			<cfset pathToErrorFile = expandPath(getConfig().getMapping() & "/ErrorMessages.xml" ) />
+			<!--- if the file doesn't exist insure the path to the file exists --->
+			<cfset insurePathExists(pathToErrorFile) />
+			<!--- generate the error messages --->
+			<cfset generateErrorMessages(pathToErrorFile) />
+		</cfif>
 					
-					<!--- if this is a link back to this object copy the node into this document --->
-					<cfif linkerRelationship.XmlAttributes.name IS arguments.name>
-						<!--- create a hasMany relationship int this document --->
-						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
-						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
-						<cfset newHasMany.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
-						
-						<!--- add all relationships --->
-						<cfloop from="1" to="#ArrayLen(linkerRelationship.XmlChildren)#" index="z">
-							<cfset newRelationship = XMLElemNew(Config, "relate") />
-							<cfset newRelationship.XmlAttributes["from"] = linkerRelationship.XmlChildren[z].XmlAttributes.to />
-							<cfset newRelationship.XmlAttributes["to"] = linkerRelationship.XmlChildren[z].XmlAttributes.from />
-							
-							<!--- add the relationship --->
-							<cfset ArrayAppend(newHasMany.XmlChildren, newRelationship) />
-						</cfloop>
-						
-						<!--- add the hasMany to the relationship --->
-						<cfset ArrayAppend(relationships, newHasMany) />
-						
-					</cfif>
-				</cfloop>
-			</cfif>
-			
-			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
-				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
-				<!--- make sure this alias hasn't already been used --->
-				<cfif ListFindNoCase(aliasList, relationship.XmlAttributes["alias"])>
-					<!--- it's been used - throw an error --->
-					<cfthrow message="Duplicate Relationship Or Alias" detail="The relationship or alias '#relationship.XmlAttributes["alias"]#' has already been used for the '#arguments.name#' object." type="reactor.getXml.DuplicateRelationshipOrAlias" />
- 				<cfelse>
-					<!--- all this column to the list --->
-					<cfset aliasList = ListAppend(aliasList, relationship.XmlAttributes["alias"]) />
-				</cfif>
-			</cfif>
-		</cfloop>
+		<!--- write the base object --->
+		<cfset generate(
+			objectXML,
+			expandPath("/reactor/xsl/#lcase(arguments.type)#.base.xsl"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "base"),
+			true) />
+		<!--- generate the custom object --->
+		<cfset generate(
+			objectXML,
+			expandPath("/reactor/xsl/#lcase(arguments.type)#.custom.xsl"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "custom"),
+			false) />
 		
-		<!--- if this object has a super object read that and add it into this --->
-		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
-			<!--- create a new object node --->
-			<cfset ArrayAppend(Config.object.super.XmlChildren, XMLElemNew(Config, "object")) />
-			<cfset copyNode(Config, Config.object.super.object, getXml(Config.object.super.XmlAttributes.name).object) />
-		</cfif>
-		
-		<!--- add the fields to the config settings --->
-		<cfset Config.Object.fields = XMLElemNew(Config, "fields") />
-		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<!--- create the field node--->
-			<cfset ArrayAppend(Config.Object.fields.XmlChildren, XMLElemNew(Config, "field")) />
-			<cfset field = Config.Object.fields.XmlChildren[ArrayLen(Config.Object.fields.XmlChildren)] />
-			
-			<!--- get any super fields with the same name and override them --->
-			<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
-				<cfset overriddenFields = XmlSearch(Config, "/object/super/object/fields/field[@name = '#fields[x].getName()#']") />
-				<cfif ArrayLen(overriddenFields)>
-					<cfloop from="1" to="#ArrayLen(overriddenFields)#" index="y">
-						<cfset overriddenFields[y].XmlAttributes["overridden"] = 'true' />
-					</cfloop>
-				</cfif>
-			</cfif>
-			
-			<!--- set the field's properties --->
-			<cfset field.XmlAttributes["name"] = fields[x].getName() />
-			<cfset field.XmlAttributes["primaryKey"] = fields[x].getPrimaryKey() />
-			<cfset field.XmlAttributes["identity"] = fields[x].getIdentity() />
-			<cfset field.XmlAttributes["nullable"] = fields[x].getNullable() />
-			<cfset field.XmlAttributes["dbDataType"] = fields[x].getDbDataType() />
-			<cfset field.XmlAttributes["cfDataType"] = fields[x].getCfDataType() />
-			<cfset field.XmlAttributes["cfSqlType"] = fields[x].getCfSqlType() />
-			<cfset field.XmlAttributes["length"] = fields[x].getLength() />
-			<cfset field.XmlAttributes["default"] = fields[x].getDefault() />
-			<cfset field.XmlAttributes["overridden"] = 'false' />
-			<cfset field.XmlAttributes["object"] = Config.object.XmlAttributes.name />
-		</cfloop>
-		
-		<!--- set the base config settings --->
-		<cfset Config.Object.XmlAttributes["owner"] = Object.getOwner() />
-		<cfset Config.Object.XmlAttributes["type"] = Object.getType() />
-		<cfset Config.Object.XmlAttributes["database"] = Object.getDatabase() />
-		
-		<!--- config meta data required for generating objects --->
-		<cfset Config.Object.XmlAttributes["mapping"] = getConfig().getMappingObjectStem() />
-		<cfset Config.Object.XmlAttributes["dbms"] = getConfig().getType() />
-		
-		<!--- add the object's signature --->
-		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
-		
-		<!---
-		<cfdump var="#Config#" /><cfabort>
-		--->
-		
-		<cfreturn Config />
 	</cffunction>
 	
-	
-	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Skike's blog at http://www.spike.org.uk/blog/index.cfm?do=blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
-		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any">
-		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any">
-		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any">
-	
-		<cfset var key = "" />
-		<cfset var index = "" />
-		<cfset var i = "" />
+	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
+		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="xml" />
+		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="string" />
+		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="string" />
+		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
+		<cfset var xsl = 0 />
+		<cfset var code = 0 />
 		
-		<cfif len(trim(oldNode.xmlComment))>		
-			<cfset newNode.xmlComment = trim(oldNode.xmlComment) />
+		<!--- check to see if the output file exists and if we can overwrite it --->
+		<cfif NOT (FileExists(arguments.outputPath) AND NOT arguments.overwrite)>
+			<!--- read the xsl --->
+			<cffile action="read" file="#arguments.xslPath#" variable="xsl" />
+			<!--- transform this structure into the base TO object --->
+			<cfset code = XMLTransform(arguments.objectXML, xsl) />
+			<!--- insure the outputPath director exists --->
+			<cfset insurePathExists(arguments.outputPath)>
+			<!--- write the file to disk --->
+			<cffile action="write" file="#arguments.outputPath#" output="#code#" />
 		</cfif>
-	
-		<cfif len(trim(oldNode.xmlCData))>
-			<cfset newNode.xmlCData = trim(oldNode.xmlCData)>
-		</cfif>
-		
-		<cfset newNode.xmlAttributes = oldNode.xmlAttributes>
-		
-		<cfset newNode.xmlText = trim(oldNode.xmlText) />
-		
-		<cfloop from="1" to="#arrayLen(oldNode.xmlChildren)#" index="i">
-			<cfset newNode.xmlChildren[i] = xmlElemNew(xmlDoc,oldNode.xmlChildren[i].xmlName) />
-			<cfset copyNode(xmlDoc,newNode.xmlChildren[i],oldNode.xmlChildren[i]) />
-		</cfloop>
-	</cffunction>
+	</cffunction>	
 
 	<!--- generateErrorMessages --->
 	<cffunction name="generateErrorMessages" access="public" hint="I genereate / populate the ErrorMessages.xml file" output="false" returntype="void">
 		<cfargument name="pathToErrorFile" hint="I am the path to the ErrorMessages.xml file." required="yes" type="string" />
-		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
 		<cfset var XmlErrors = "" />
 		<cfset var XmlSearchResult = "" />
-		<cfset var Object = getObject(arguments.name) />
+		<cfset var Object = getObject() />
 		<cfset var fields = Object.getFields() />
 		<cfset var tableNode = 0 />
 		<cfset var fieldNode = 0 />
@@ -367,6 +255,25 @@
 		</cflock>
 	</cffunction>
 	
+	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
+		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
+		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
+		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
+		
+		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
+			<cfthrow type="reactor.InvalidArgument"
+				message="Invalid Type Argument"
+				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
+		</cfif>
+		<cfif NOT ListFindNoCase("base,custom", arguments.class)>
+			<cfthrow type="reactor.InvalidArgument"
+				message="Invalid Class Argument"
+				detail="The class argument must be one of: base, custom" />
+		</cfif>
+		
+		<cfreturn expandPath(getConfig().getMapping() & "/" & arguments.type & "/" & getConfig().getType() & "/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc") />
+	</cffunction>
+	
 	<cffunction name="FormatErrorXml" access="public" hint="I format the Xml Errors doc to make it more easily human readable." output="false" returntype="string">
 		<cfargument name="XmlErrors" hint="I am the xml error document to format." required="yes" type="xml" />
 		<cfset arguments.XmlErrors = ToString(arguments.XmlErrors) />
@@ -382,6 +289,15 @@
 		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*</tables>", chr(13) & chr(10) & "</tables>", "all") />
 		
 		<cfreturn arguments.XmlErrors />
+	</cffunction>
+	
+	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
+		<cfargument name="path" hint="I am the path to the file." required="yes" type="string" />
+		<cfset var directory = getDirectoryFromPath(arguments.path) />
+		
+		<cfif NOT DirectoryExists(directory)>
+			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" />
+		</cfif>
 	</cffunction>
 	
 		
@@ -437,5 +353,23 @@
     </cffunction>
     <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
        <cfreturn variables.config />
+    </cffunction>
+	
+	<!--- object --->
+    <cffunction name="setObject" access="private" output="false" returntype="void">
+       <cfargument name="object" hint="I am the object being transformed." required="yes" type="reactor.core.Object" />
+       <cfset variables.object = arguments.object />
+    </cffunction>
+    <cffunction name="getObject" access="private" output="false" returntype="reactor.core.Object">
+       <cfreturn variables.object />
+    </cffunction>
+	
+	<!--- objectFactory --->
+    <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
+       <cfargument name="objectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="reactor.core.objectFactory" />
+       <cfset variables.objectFactory = arguments.objectFactory />
+    </cffunction>
+    <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
+       <cfreturn variables.objectFactory />
     </cffunction>
 </cfcomponent>

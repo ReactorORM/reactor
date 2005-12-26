@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the EmailAddress table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "4BB6551711F43BC31E23513D2CA9A89A" />
+	<cfset variables.signature = "BD647E3B0DC75798AEE3F8DC06EEC9D6" />
 
 	<cffunction name="save" access="public" hint="I create or update a EmailAddress record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for EmailAddress" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
+		<cfargument name="to" hint="I am the transfer object for EmailAddress" required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
 
 		
 		<cfif IsNumeric(arguments.to.EmailAddressId) AND Val(arguments.to.EmailAddressId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a EmailAddress object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for EmailAddress" required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
+		<cfargument name="to" hint="I am the transfer object for EmailAddress" required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -49,12 +49,11 @@
 							 />
 							
 				)
-			</cfquery>
-			
-				<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+				
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+						
+				
 				</cfquery>
-			
 		</cftransaction>
 			
 		
@@ -66,7 +65,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  EmailAddress object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be populated." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
+		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be populated." required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
 		<cfset var qRead = 0 />
 		<cfset var EmailAddressGateway = _getReactorFactory().createGateway("EmailAddress") />
 		
@@ -94,7 +93,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a EmailAddress object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be used to update a record in the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
+		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be used to update a record in the table." required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -129,7 +128,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the EmailAddress table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be used to delete from the table." required="yes" type="ReactorSamples.ContactManager.data.To.mssql.EmailAddressTo" />
+		<cfargument name="to" hint="I am the transfer object for EmailAddress which will be used to delete from the table." required="yes" type="ContactManagerData.To.mssql.EmailAddressTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

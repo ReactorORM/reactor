@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Gateway object for the Country table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractGateway" >
 	
-	<cfset variables.signature = "208CB1E61781E239F5562C506D6BEEA6" />
+	<cfset variables.signature = "96A2CBCD27DBAB19DE1B22D007E5D26C" />
 
 	<cffunction name="getAll" access="public" hint="I return all rows from the Country table." output="false" returntype="query">
 		<cfreturn getByFields() />
