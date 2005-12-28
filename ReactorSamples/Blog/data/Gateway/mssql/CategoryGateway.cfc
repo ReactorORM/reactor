@@ -11,6 +11,7 @@
 			FROM Category as c LEFT JOIN EntryCategory as ec 
 				ON c.categoryId = ec.categoryId
 			GROUP BY c.categoryId, c.name
+			ORDER BY c.name
 		</cfquery>
 		
 		<cfreturn categories />

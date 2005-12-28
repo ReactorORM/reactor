@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Metadata object for the Category table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractMetadata" >
 	
-	<cfset variables.signature = "DC06AFF2A8C7F7547E16D90124E21CAF" >
+	<cfset variables.signature = "106C93A7D6005D46BE18AAAA81C55D30" >
 	
 	<cfset variables.metadata.name = "Category" />
 	<cfset variables.metadata.owner = "dbo" />
@@ -21,6 +21,25 @@
 	<!--- Has Many --->
 	<cfset variables.metadata.hasMany = ArrayNew(1) />
 	
+		<cfset variables.metadata.hasMany[1] = StructNew() />
+		<cfset variables.metadata.hasMany[1].name = "Entry" />
+		<cfset variables.metadata.hasMany[1].alias = "Entry" />
+		
+		
+				<cfset variables.metadata.hasMany[1].link = "EntryCategory" />
+			
+		<cfset variables.metadata.hasMany[2] = StructNew() />
+		<cfset variables.metadata.hasMany[2].name = "EntryCategory" />
+		<cfset variables.metadata.hasMany[2].alias = "EntryCategory" />
+		
+		
+				<cfset variables.metadata.hasMany[2].relate = ArrayNew(1) />
+			
+				
+					<cfset variables.metadata.hasMany[2].relate[1] = StructNew() />
+					<cfset variables.metadata.hasMany[2].relate[1].from = "categoryId" />
+					<cfset variables.metadata.hasMany[2].relate[1].to = "categoryId" />
+				
 	
 	<!--- Fields --->
 	<cfset variables.metadata.fields = ArrayNew(1) />
