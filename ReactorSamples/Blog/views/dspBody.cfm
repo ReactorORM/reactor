@@ -1,1 +1,0 @@
-Hello.  Model-Glue seems to be up and running.

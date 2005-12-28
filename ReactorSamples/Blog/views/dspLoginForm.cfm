@@ -1,10 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Untitled Document</title>
-</head>
+<cfset Errors = viewstate.getValue("Errors") />
+<cfset submitted = viewstate.getValue("submit") />
+<cfset username = viewstate.getValue("username") />
+<cfset password = viewstate.getValue("password") />
 
-<body>
-</body>
-</html>
+<h1>Login</h1>
+
+<cfform name="LoginForm" action="index.cfm?event=SubmitLoginForm" method="post">
+
+	<cfif Len(submitted)>
+		<p>Login failed.  Please try again.</p>
+	</cfif>
+	
+	<cf_input label="Login Name:" errors="#Errors#" required="yes" type="text" name="username" value="#username#" size="20" maxlength="20" />
+	<cf_input label="Password:" errors="#Errors#" required="yes" type="password" name="password" value="" size="20" maxlength="20" />
+	
+	<cf_input type="Submit" name="submit" value="Login" />
+		
+</cfform>

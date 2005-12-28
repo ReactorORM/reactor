@@ -1,9 +1,9 @@
-<cfcomponent displayname="facade" hint="I am a facade used to access a specific scope.">
+<cfcomponent displayname="ScopeFacade" hint="I am a facade used to access a specific scope.">
 	
 	<cfset variables.scope = StructNew() />
 	<cfset variables.scopeName = "" />
 
-	<cffunction name="init" access="public" returntype="facade" hint="I configure and return the facade." output="false">
+	<cffunction name="init" access="public" returntype="ScopeFacade" hint="I configure and return the facade." output="false">
 		<cfargument name="scopeName" hint="I am the name of the scope this is facading." required="yes" type="string" />
 		<cfset setScopeName(arguments.scopeName) />
 		<cfreturn this />
