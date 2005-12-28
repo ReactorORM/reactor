@@ -26,12 +26,12 @@
 		<!--- if we don't have a cached version of this object create one --->
 		<cfif NOT variables.TimedCache.exists(arguments.name)>
 			<!--- create and load a reactor.core.object object --->
-			<cfset variables.TimedCache.setValue(arguments.name, getObject(arguments.name)) />
+			<cfset variables.TimedCache.setValue(arguments.name, getObject(arguments.name), createTimeSpan(0, 0, 0, 5)) />
 		</cfif>
 		
 		<!--- get the cached object --->
 		<cfset DbObject = variables.TimedCache.getValue(arguments.name) />
-		
+				
 		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"

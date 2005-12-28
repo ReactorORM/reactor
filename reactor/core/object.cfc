@@ -54,13 +54,13 @@
 			<cfif IsDefined("relationship.link")>
 				<!--- get the relationships that the linking object has --->
 				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-								
+						
 				<!--- find links back to this object --->
 				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
 					<cfset linkerRelationship = linkerRelationships[y] />
 					
 					<!--- if this is a link back to this object copy the node into this document --->
-					<cfif linkerRelationship.XmlAttributes.name IS arguments.name>
+					<cfif linkerRelationship.XmlAttributes.name IS getName()>
 						<!--- create a hasMany relationship int this document --->
 						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
 						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
@@ -88,7 +88,7 @@
 				<!--- make sure this alias hasn't already been used --->
 				<cfif ListFindNoCase(aliasList, relationship.XmlAttributes["alias"])>
 					<!--- it's been used - throw an error --->
-					<cfthrow message="Duplicate Relationship Or Alias" detail="The relationship or alias '#relationship.XmlAttributes["alias"]#' has already been used for the '#arguments.name#' object." type="reactor.getXml.DuplicateRelationshipOrAlias" />
+					<cfthrow message="Duplicate Relationship Or Alias" detail="The relationship or alias '#relationship.XmlAttributes["alias"]#' has already been used for the '#getName()#' object." type="reactor.getXml.DuplicateRelationshipOrAlias" />
 				<cfelse>
 					<!--- all this column to the list --->
 					<cfset aliasList = ListAppend(aliasList, relationship.XmlAttributes["alias"]) />

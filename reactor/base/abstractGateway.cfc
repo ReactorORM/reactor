@@ -11,6 +11,40 @@
 		<cfreturn query />
 	</cffunction>
 	
+	<!--- getArrayByQuery --->
+	<cffunction name="getArrayByQuery" access="public" hint="I return an array of objects matching the query" output="false" returntype="array">
+		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" default="reactor.query.query" />
+		<cfset var ObjectQuery = 0 />
+		<cfset var ObjectRecord = 0 />
+		<cfset var ObjectTo = 0 />
+		<cfset var ObjectArray = ArrayNew(1) />	
+		<cfset var name = getObjectMetadata().getName() />
+		<cfset var field = 0 />
+		
+		<!--- make sure we get all the fields for this object --->
+		<cfset arguments.Query.returnObjectFields(name) />
+		
+		<!--- get the query --->
+		<cfset ObjectQuery = getByQuery(arguments.Query) /> 
+		
+		<cfloop query="ObjectQuery">
+			<cfset ObjectRecord = _getReactorFactory().createRecord(name) >
+			<cfset ObjectTo = ObjectRecord._getTo() />
+
+			<!--- populate the record's to --->
+			<cfloop list="#ObjectQuery.columnList#" index="field">
+				<cfset ObjectTo[field] = ObjectQuery[field][ObjectQuery.currentrow] >
+			</cfloop>
+			
+			<cfset ObjectRecord._setTo(ObjectTo) />
+			
+			<cfset ObjectArray[ArrayLen(ObjectArray) + 1] = ObjectRecord >
+		</cfloop>
+		
+		<cfreturn ObjectArray />
+	</cffunction>
+
+	
 	<!--- getByQuery --->
 	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="query">
 		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" default="reactor.query.query" />
@@ -20,8 +54,9 @@
 		<cfset var order = arguments.Query.getOrder().getOrder() />
 		<cfset var whereNode = 0 />
 		<cfset var orderNodes = 0 />
+		<cfset var result = 0 />
 		
-		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#">
+		<cfquery name="qGet" result="result" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#">
 			SELECT
 			
 			<!--- distinct --->
@@ -258,9 +293,10 @@
 				<cfdump var="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
 				<cfabort>
 			</cfif>--->
-
+			
 		</cfquery>
 		
+		<cfset qGet.result = result />
 		
 		<!--- return the query result --->
 		<cfreturn qGet />
