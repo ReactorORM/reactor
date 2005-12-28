@@ -20,14 +20,21 @@
 
 	<controllers>
 		<controller name="blogController" type="ReactorSamples.Blog.controller.BlogController">
-			<message-listener message="NeedCategories" function="GetCategories" />
-		</controller>
-		<controller name="myController" type="ReactorSamples.Blog.controller.Controller">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
-			<message-listener message="OnRequestEnd" function="OnRequestEnd" />
-			<!-- Message-Listener Template
-			<message-listener message="DoSomething" function="ControllerFunctionToFire" />
-			-->
+			<message-listener message="NeedCategories" function="GetCategories" />
+			<message-listener message="NeedEntries" function="GetEntries" />
+			<message-listener message="NeedEntry" function="GetEntry" />
+			<message-listener message="ValidateEntry" function="DoValidateEntry" />
+			<message-listener message="SaveEntry" function="DoSaveEntry" />
+			<message-listener message="DeleteEntry" function="DoDeleteEntry" />			
+		</controller>
+		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
+			<message-listener message="OnRequestStart" function="OnRequestStart" />
+			<message-listener message="ValidateLogin" function="DoValidateLogin" />
+			<message-listener message="Logout" function="DoLogout" />
+			<message-listener message="CheckIfLoggedIn" function="DoCheckIfLoggedIn" />
+			<message-listener message="SaveEventValues" function="DoSaveEventValues" />
+			<message-listener message="RestoreEventValues" function="DoRestoreEventValues" />
 		</controller>
 	</controllers>
   
@@ -53,12 +60,78 @@
 		--> 
 	
 		<event-handler name="Home">
-			<broadcasts />
+			<broadcasts>
+				<message name="NeedEntries" />
+			</broadcasts>
 			<views>
-				<include name="body" template="dspBody.cfm" />
+				<include name="body" template="dspEntries.cfm" />
 			</views>
 			<results>
 				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="EntryForm">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="EntryForm" />
+				</message>		
+				<message name="NeedEntry" />
+				<message name="NeedCategories" />
+			</broadcasts>
+			<views>
+				<include name="body" template="dspEntryForm.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="SubmitEntryForm">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="EntryForm" />
+				</message>
+				<message name="NeedEntry" />
+				<message name="ValidateEntry" />
+			</broadcasts>
+			<views />
+			<results>
+				<result name="valid" do="SaveEntry" />
+				<result name="invalid" do="EntryForm" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="SaveEntry" access="private">
+			<broadcasts>
+				<message name="SaveEntry" />
+			</broadcasts>
+			<views />
+			<results>
+				<result do="Home" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="DeleteEntry">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="Home" />
+				</message>
+				<message name="NeedEntry" />
+				<message name="DeleteEntry" />
+			</broadcasts>
+			<views />
+			<results>
+				<result do="Home" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="Logout">
+			<broadcasts>
+				<message name="Logout" />
+			</broadcasts>
+			<results>
+				<result do="Home" />
 			</results>
 		</event-handler>
 		
@@ -71,6 +144,16 @@
 				<result do="Layout" />
 			</results>
 		</event-handler>
+		
+		<event-handler name="SubmitLoginForm">
+			<broadcasts>
+				<message name="ValidateLogin" />
+			</broadcasts>
+			<views />
+			<results>
+				<result name="invalid" do="LoginForm" />
+			</results>
+		</event-handler>
 	
 		<event-handler name="Layout">
 			<broadcasts>
@@ -79,6 +162,7 @@
 			<views>
 				<include name="leftNav" template="dspMainNav.cfm" />
 				<include name="leftNav" template="dspCategoryNav.cfm" append="true" />
+				<include name="bottomNav" template="dspBottomNav.cfm" />
 				<include name="body" template="dspLayout.cfm" />
 			</views>
 			<results />

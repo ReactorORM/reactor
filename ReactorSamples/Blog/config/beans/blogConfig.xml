@@ -1,0 +1,11 @@
+<bean class="ReactorSamples.blog.model.config.blogConfig" singleton="true">
+	<!-- this is the title of the blog -->
+	<property name="blogTitle">
+		<value>DougHughes.net</value>
+	</property>
+	
+	<!-- this is the number of entries that will show per page -->
+	<property name="entriesPerPage">
+		<value>10</value>
+	</property>
+</bean>
