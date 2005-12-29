@@ -15,6 +15,11 @@
 
 <cfset classes = "field" />
 
+<!--- this is a little fix for safari --->
+<cfif attributes.type IS "editor" AND FindNoCase("safari", cgi.HTTP_USER_AGENT)>
+	<cfset attributes.type = "textarea" />
+</cfif>
+
 <!--- add an input field --->
 <cfif ThisTag.executionMode IS "Start">
 	
@@ -59,7 +64,7 @@
 						</cfif>
 						<cfset FckEditor = CreateObject("Component", "FckEditor.fckeditor") />
 						<cfset FckEditor.instanceName = attributes.name />
-						<cfset FckEditor.width = 460 />
+						<cfset FckEditor.width = 440 />
 						<cfset FckEditor.height = 400 />
 						<cfset FckEditor.value = attributes.value />
 						<cfset FckEditor.toolbarSet = "Blog" />
@@ -80,6 +85,17 @@
 						style="#attributes.style#"
 						class="inputCheckbox #attributes.class#" />
 					<span>#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</span>
+				</cfcase>
+				
+				<!--- a textarea --->
+				<cfcase value="textarea">
+					<cfparam name="attributes.width" default="460px" />
+					<cfparam name="attributes.height" default="400px" />
+					<label for="#attributes.name#">#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</label>
+					<textarea name="#attributes.name#"
+						style="width: #attributes.width#; height: #attributes.height#;"
+						wrap="virtual"
+						class="inputTextArea #attributes.class#">#attributes.value#</textarea>
 				</cfcase>
 				
 				<!--- other things --->		

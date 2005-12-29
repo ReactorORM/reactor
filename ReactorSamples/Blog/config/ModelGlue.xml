@@ -26,7 +26,8 @@
 			<message-listener message="NeedEntry" function="GetEntry" />
 			<message-listener message="ValidateEntry" function="DoValidateEntry" />
 			<message-listener message="SaveEntry" function="DoSaveEntry" />
-			<message-listener message="DeleteEntry" function="DoDeleteEntry" />			
+			<message-listener message="DeleteEntry" function="DoDeleteEntry" />
+			<message-listener message="RateEntry" function="DoRateEntry" />
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -68,6 +69,29 @@
 			</views>
 			<results>
 				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="ViewEntry">
+			<broadcasts>
+				<message name="NeedEntry" />
+			</broadcasts>
+			<views>
+				<include name="body" template="dspEntry.cfm" />
+				<include name="body" template="dspComments.cfm" append="true" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="RateEntry">
+			<broadcasts>
+				<message name="RateEntry" />
+			</broadcasts>
+			<views />
+			<results>
+				<result do="ViewEntry" />
 			</results>
 		</event-handler>
 		

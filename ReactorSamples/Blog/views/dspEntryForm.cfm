@@ -19,7 +19,7 @@
 		label="Body:"
 		errors="#Errors#"
 		required="yes"
-		type="editor"
+		type="textarea"
 		name="article"
 		value="#EntryRecord.getArticle()#" />
 	

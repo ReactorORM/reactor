@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Gateway object for the Comment table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractGateway" >
 	
-	<cfset variables.signature = "213DDCE078FE802CAA38D229ED2C3AF8" />
+	<cfset variables.signature = "C96EA3C4A5798149C10C1A1FDADF3C0D" />
 
 	<cffunction name="getAll" access="public" hint="I return all rows from the Comment table." output="false" returntype="query">
 		<cfreturn getByFields() />

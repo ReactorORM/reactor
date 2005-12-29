@@ -23,6 +23,12 @@
 					<a href="index.cfm?event=viewEntry&entryId=#entries.entryId#">View Full Entry</a> 
 					|
 					<a href="index.cfm?event=viewEntry&entryId=#entries.entryId###comments">#entries.commentCount# Comments</a>
+					<cfif UserRecord.isLoggedIn()>
+						|
+						<a href="index.cfm?event=EntryForm&entryId=#entries.entryId#">Edit</a>
+						|
+						<a href="index.cfm?event=DeleteEntry&entryId=#entries.entryId#" onclick="return confirm('Are your sure you want to delete this entry?');">Delete</a>
+					</cfif>
 				</p>
 					
 				<p>
@@ -40,12 +46,13 @@
 					<cfif Len(categories)>
 						Categories: #categories#<br />
 					</cfif>
-					<small>This article has been viewed #entries.views# times and has an average rating of #entries.averageRating# out of 5.</small>
-					<cfif UserRecord.isLoggedIn()>
-						|
-						<a href="index.cfm?event=EntryForm&entryId=#entries.entryId#">Edit</a>,
-						<a href="index.cfm?event=DeleteEntry&entryId=#entries.entryId#">Delete</a>
+					<small>This article has been viewed #entries.views# times and has
+					<cfif IsNumeric(entries.averageRating)>
+						 an average rating of #entries.averageRating# out of 5.
+					<cfelse>
+						not yet been rated.</small>
 					</cfif>
+					</small>
 				</p>
 			</div>
 		</cfoutput>

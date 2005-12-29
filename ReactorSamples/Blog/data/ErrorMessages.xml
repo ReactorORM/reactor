@@ -117,4 +117,18 @@
 			<errorMessage message="The CategoryId field must be a numeric value." name="invalidType"/>
 		</field>
 	</table>
+	<table name="Rating">
+		<field name="RatingId">
+			<errorMessage message="The RatingId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The RatingId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="EntryId">
+			<errorMessage message="The EntryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The EntryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Rating">
+			<errorMessage message="The Rating field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Rating field must be a numeric value." name="invalidType"/>
+		</field>
+	</table>
 </tables>

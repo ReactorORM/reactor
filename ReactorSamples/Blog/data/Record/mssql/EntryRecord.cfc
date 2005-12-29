@@ -8,7 +8,7 @@
 		<cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) />
 		<!--- strip all html and special characters to see if the user actually provided an article --->
 		<cfset var article = Trim(ReReplaceNoCase(getArticle(), '(<(.|\n)+?>)|&.+?;|\r|\n|\t', "", "all")) />
-		
+				
 		<!--- validate the Entry --->
 		<cfset super.validate(arguments.ValidationErrorCollection) />
 		
@@ -33,7 +33,7 @@
 		<!--- get the category ids for this entry --->
 		<cfset categories = getCategoryQuery() />
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />
-	</cffunction>	
+	</cffunction>
 	
 	<cffunction name="save" access="public" hint="I save the Entry record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void">
 		<cfset var CategoryGateway = _getReactorFactory().createGateway("Category") />
@@ -94,28 +94,87 @@
 		<cfset var preview = "" />
 		<cfset var location = 0 />
 		<cfset var newLocation = 0 />
-		
+		<cfset var delimiter = "" />
+		<cfset var maxLength = Iif(Len(arguments.article) LT 1000, DE(Len(arguments.article)), DE(1000)) />
+		<cfset var x = 0 />
 		<cfset arguments.article = Trim(arguments.article) />
 		
-		<cfset super.setArticle(arguments.article) />
-		<!--- create a preview --->
 		
+		<!--- make sure this is formatted with html --->
+		<cfif NOT ReFindNoCase("</p.*?>", arguments.article, location) OR NOT ReFindNoCase("<br.*?>", arguments.article, location)>
+			<!--- strip CRs --->
+			<cfset arguments.article = StripCR(arguments.article) />
+			
+			<!--- replace all multiple LFs with </p><p> --->
+			<cfset arguments.article = "<p>" & ReReplace(arguments.article, "(\n){2,}", "</p><p>", "all") & "</p>" />
+			<!--- replace all single LFs with <br> --->
+			<cfset arguments.article = ReReplace(arguments.article, "\n", "<br />", "all") />
+			
+			<!--- add 2 linebreaks after the </p>s (to make it easier to read) --->
+			<cfset arguments.article = Replace(arguments.article, "</p>", "</p>" & chr(13) & chr(10) & chr(13) & chr(10), "all") />
+			
+			<!--- add 1 linebreak after the <br />s too --->
+			<cfset arguments.article = Replace(arguments.article, "<br />", "<br />" & chr(13) & chr(10), "all") />
+		</cfif>
+		
+		<!--- save the article --->
+		<cfset super.setArticle(arguments.article) />
+		
+		<!--- what delimits a new line in this entry? --->
+		<cfif ReFindNoCase("</p.*?>", arguments.article, location) GT 0>
+			<cfset delimiter = "</p(.*)?>" />
+			
+		<cfelseif ReFindNoCase("<br.*?>", arguments.article, location) GT 0>
+			<cfset delimiter = "</p.*?>" />
+			
+		<cfelse>
+			<cfset delimiter = "\s." />
+		
+		</cfif>
+		
+		<!--- create a preview --->
 		<cfloop condition="true">
 			<cfset newLocation = ReFindNoCase("</p.*?>", arguments.article, location, true) />
-			<cfset newLocation = newLocation.pos[1] + newLocation.len[1] />
-			
-			<cfif newLocation LTE 1000>
+			<cfset newLocation = newLocation.pos[1] + newLocation.len[1] - 1 />
+
+			<!--- the 'x' var below is a safety net --->
+			<cfif newLocation LTE maxLength AND x LTE 50>
+				<cfset x = x + 1 />
 				<cfset location = newLocation />
 			<cfelse>
 				<cfbreak />
 			</cfif>
 		</cfloop>
-		
+				
 		<cfset preview = Left(arguments.article, location) />
 		
 		<cfset setPreview(preview) />
 	</cffunction>
+	
+	<cffunction name="getCommentCount" access="public" hint="I return the number of comments on this entry" output="false" returntype="numeric">
+		<cfreturn getCommentQuery().recordCount />
+	</cffunction>
+	
+	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
+		<cfset var qRating = 0 />		
 		
+		<!---
+		note: I'm not using a cfquery param for two reasons.  1: I want to cache this for a few seconds and you can't with a
+		cfqueryparam and 2: getEntryId()'s data type is already enforced as a numeric value
+		--->
+		<cfquery name="qRating" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,0,5)#">
+			SELECT
+				CASE
+					WHEN AVG(rating) IS NULL THEN 0
+					ELSE ROUND(AVG(CONVERT(float, rating)), 0)
+				END as avgRating
+			FROM Rating
+			WHERE entryId = #getEntryId()#
+		</cfquery>
+		
+		<cfreturn qRating.avgRating />
+	</cffunction>
+	
 	<cffunction name="setCategoryIdList" access="public" output="false" returntype="void">
 		<cfargument name="categoryIdList" hint="I am this record's categoryIdList value." required="yes" type="string" />
 		<cfset _getTo().categoryIdList = arguments.categoryIdList />

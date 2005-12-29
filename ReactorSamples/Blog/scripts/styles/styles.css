@@ -19,6 +19,7 @@ h1{
 
 h2{
 	text-decoration: underline;
+	font-size: 13pt;
 }
 
 h3 a{
@@ -32,6 +33,15 @@ div.entry h3{
 
 h3 a:hover{
 	text-decoration: underline;
+}
+
+img{
+	border: 0px;
+}
+
+img{
+	margin-top: 3px;
+	vertical-align: middle;
 }
 
 #logo{
