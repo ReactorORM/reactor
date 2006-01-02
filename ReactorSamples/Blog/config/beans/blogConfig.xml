@@ -4,8 +4,57 @@
 		<value>DougHughes.net</value>
 	</property>
 	
-	<!-- this is the number of entries that will show per page -->
-	<property name="entriesPerPage">
-		<value>10</value>
+	<!-- this is the description of the blog -->
+	<property name="blogDescription">
+		<value>Doug's blog on ColdFusion and other stuff.</value>
 	</property>
+	
+	<!-- author's email address -->
+	<property name="authorEmailAddress">
+		<value>dhughes@alagad.com</value>
+	</property>
+	
+	<!-- I am the number of days an entry is shown on the home page. -->
+	<property name="recentEntryDays">
+		<value>30</value>
+	</property>
+	
+	<!-- The number of blog entries that show in the recent pod -->
+	<property name="recentEntryCount">
+		<value>5</value>
+	</property>
+		
+	<!-- Show Captcha images in comment form? -->
+	<property name="useCaptcha">
+		<value>true</value>
+	</property>
+	
+	<!-- Alagad Captcha Component license key -->
+	<property name="captchaKey">
+		<value>HVXGT-09T8D-CUX3Y-TR1KE-PDN5P</value>
+	</property>
+	
+	<!-- These urls will be pinged when a new entry is added -->
+	<property name="pingUrlArray">
+		<array>
+			<value>http://www.fullasagoog.com/googimporter.cfm?id=326</value>
+			<value>http://weblogs.macromedia.com/mxna/PingProxyComplete.cfm?siteUrl=http://www.doughughes.net</value>
+		</array>
+	</property>
+	
+	<!-- This is the name of the verity collection that will be indexed / searched -->
+	<property name="blogSearchCollection">
+		<value>Scratch</value>
+	</property>
+	
+	<!-- This is a comma sepeated list of other collections to search when a search is executed -->
+	<property name="additionalCollectonsList">
+		<value></value>
+	</property>
+	
+	<!-- Should friendly errors be shown?  If false users will see all errors.  If true users will see a friendly message and the author will be emailed the error -->
+	<property name="showFriendlyErrors">
+		<value>false</value>
+	</property>
+	
 </bean>

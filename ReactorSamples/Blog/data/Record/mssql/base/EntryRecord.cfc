@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base record representing the Entry table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "0E8A0DCC028F2DF598EC814ED991B3AA" />
+	<cfset variables.signature = "8D18CB60509CCB025710FA43E1C939D1" />
 	
 	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ReactorBlogData.Record.mssql.base.EntryRecord">
 		
@@ -362,6 +362,53 @@
 			</cfloop>
 	
 			<cfreturn CommentArray />
+		</cffunction>		
+	
+		<!--- Query For Rating --->
+		<cffunction name="createRatingQuery" access="public" output="false" returntype="reactor.query.query">
+			<cfset var Query = _getReactorFactory().createGateway("Rating").createQuery() />
+			
+			
+			
+			<cfreturn Query />
+		</cffunction>
+		
+		
+				<!--- Query For Rating --->
+				<cffunction name="getRatingQuery" access="public" output="false" returntype="query">
+					<cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#createRatingQuery()#" type="reactor.query.query" />
+					<cfset var RatingGateway = _getReactorFactory().createGateway("Rating") />
+					
+						<cfset arguments.Query.getWhere().isEqual("Rating", "entryId", getentryId()) />
+					
+					<cfreturn RatingGateway.getByQuery(arguments.Query)>
+				</cffunction>
+			
+		
+		<!--- Array For Rating --->
+		<cffunction name="getRatingArray" access="public" output="false" returntype="array">
+			<cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#createRatingQuery()#" type="reactor.query.query" />
+			<cfset var RatingQuery = getRatingQuery(arguments.Query) />
+			<cfset var RatingArray = ArrayNew(1) />
+			<cfset var RatingRecord = 0 />
+			<cfset var RatingTo = 0 />
+			<cfset var field = "" />
+			
+			<cfloop query="RatingQuery">
+				<cfset RatingRecord = _getReactorFactory().createRecord("Rating") >
+				<cfset RatingTo = RatingRecord._getTo() />
+	
+				<!--- populate the record's to --->
+				<cfloop list="#RatingQuery.columnList#" index="field">
+					<cfset RatingTo[field] = RatingQuery[field][RatingQuery.currentrow] >
+				</cfloop>
+				
+				<cfset RatingRecord._setTo(RatingTo) />
+				
+				<cfset RatingArray[ArrayLen(RatingArray) + 1] = RatingRecord >
+			</cfloop>
+	
+			<cfreturn RatingArray />
 		</cffunction>		
 	
 		<!--- Query For EntryCategory --->

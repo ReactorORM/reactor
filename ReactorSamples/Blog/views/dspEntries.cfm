@@ -1,9 +1,22 @@
 <cfset UserRecord = viewstate.getvalue("UserRecord") />
 <cfset entries = viewstate.getValue("entries") />
+<cfset CategoryRecord = viewstate.getValue("CategoryRecord") />
+
+<h1>Blog Entries</h1>
+
+<cfif CategoryRecord.getCategoryId()>
+	<cfoutput>
+		<p><small>Category: #CategoryRecord.getName()#</small></p>
+	</cfoutput>
+</cfif>
+<cfif viewstate.getValue("month", 0) AND viewstate.getValue("year", 0)>
+	<cfoutput>
+		<p><small>Archive: #MonthAsString(viewstate.getValue("month"))# #viewstate.getValue("year")#</small></p>
+	</cfoutput>
+</cfif>
 
 <cfif entries.recordcount>
 	
-	<h1>Blog Entries</h1>
 	<cfoutput query="entries" group="publicationDate">
 		<h2>#DateFormat(entries.publicationDate, "mmmm d, yyyy")#</h2>			
 	
@@ -47,7 +60,7 @@
 						Categories: #categories#<br />
 					</cfif>
 					<small>This article has been viewed #entries.views# times and has
-					<cfif IsNumeric(entries.averageRating)>
+					<cfif entries.averageRating GT 0>
 						 an average rating of #entries.averageRating# out of 5.
 					<cfelse>
 						not yet been rated.</small>
@@ -62,6 +75,5 @@
 	
 <cfelse>
 
-	<h1>Sorry!</h1>
 	<p>Sorry, there are no blog entries which match your criteria.</p>
 </cfif>

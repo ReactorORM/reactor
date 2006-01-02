@@ -101,7 +101,7 @@
 		
 		
 		<!--- make sure this is formatted with html --->
-		<cfif NOT ReFindNoCase("</p.*?>", arguments.article, location) OR NOT ReFindNoCase("<br.*?>", arguments.article, location)>
+		<cfif NOT ReFindNoCase("</p.*?>", arguments.article, location) AND NOT ReFindNoCase("<br.*?>", arguments.article, location)>
 			<!--- strip CRs --->
 			<cfset arguments.article = StripCR(arguments.article) />
 			
@@ -133,43 +133,49 @@
 		</cfif>
 		
 		<!--- create a preview --->
-		<cfloop condition="true">
-			<cfset newLocation = ReFindNoCase("</p.*?>", arguments.article, location, true) />
-			<cfset newLocation = newLocation.pos[1] + newLocation.len[1] - 1 />
-
-			<!--- the 'x' var below is a safety net --->
-			<cfif newLocation LTE maxLength AND x LTE 50>
-				<cfset x = x + 1 />
-				<cfset location = newLocation />
-			<cfelse>
-				<cfbreak />
-			</cfif>
-		</cfloop>
+		<cfif Len(arguments.article) GT 1000>
+			<cfloop condition="true">
+				<cfset newLocation = ReFindNoCase("</p.*?>", arguments.article, location, true) />
+				<cfset newLocation = newLocation.pos[1] + newLocation.len[1] - 1 />
 				
-		<cfset preview = Left(arguments.article, location) />
+				<!--- the 'x' var below is a safety net --->
+				<cfif newLocation LTE maxLength AND x LTE 50>
+					<cfset x = x + 1 />
+					<cfset location = newLocation />
+				<cfelse>
+					<cfbreak />
+				</cfif>
+			</cfloop>
+			
+			<!--- get the preview --->
+			<cfif location GT 0>
+				<cfset preview = Left(arguments.article, location) />
+			</cfif>
 		
-		<cfset setPreview(preview) />
+			<cfset setPreview(preview) />
+		<cfelse>
+			<!--- too short to bother making a preview of --->
+			<cfset setPreview(arguments.article) />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="getCommentCount" access="public" hint="I return the number of comments on this entry" output="false" returntype="numeric">
 		<cfreturn getCommentQuery().recordCount />
 	</cffunction>
 	
+	<cffunction name="getRatingCount" access="public" hint="I return the number of ratings on this entry" output="false" returntype="numeric">
+		<cfreturn getRatingQuery().recordCount />
+	</cffunction>
+	
 	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
 		<cfset var qRating = 0 />		
 		
 		<!---
-		note: I'm not using a cfquery param for two reasons.  1: I want to cache this for a few seconds and you can't with a
+		note: I'm not using a cfquery param for two reasons.  1: I want to easily cache this for a few seconds and you can't with a
 		cfqueryparam and 2: getEntryId()'s data type is already enforced as a numeric value
 		--->
 		<cfquery name="qRating" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,0,5)#">
-			SELECT
-				CASE
-					WHEN AVG(rating) IS NULL THEN 0
-					ELSE ROUND(AVG(CONVERT(float, rating)), 0)
-				END as avgRating
-			FROM Rating
-			WHERE entryId = #getEntryId()#
+			SELECT dbo.getAverageRating(#getEntryId()#) avgRating
 		</cfquery>
 		
 		<cfreturn qRating.avgRating />

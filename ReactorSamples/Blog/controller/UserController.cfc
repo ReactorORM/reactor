@@ -89,7 +89,40 @@
 			<cfset ScopeFacade.SetValue("UserRecord", variables.Reactor.createRecord("User")) /> 
 		</cfif>
 		
-		<cfset arguments.event.setValue("UserRecord", ScopeFacade.getValue("UserRecord")) />		
+		<cfset arguments.event.setValue("UserRecord", ScopeFacade.getValue("UserRecord")) />
+			
+	</cffunction>
+	
+	<cffunction name="TrackUser" access="Public" returntype="void" output="false" hint="I am an event handler.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.Blog.model.util.ScopeFacade").init("session") />
+		<cfset var CgiFacade = CreateObject("Component", "ReactorSamples.Blog.model.util.ScopeFacade").init("cgi") />
+		<cfset var tracks = ArrayNew(1) />
+		<cfset var Track = CreateObject("Component", "ReactorSamples.Blog.model.error.Track").init(
+			"http://" & CgiFacade.getValue("SERVER_NAME") & CgiFacade.getValue("SCRIPT_NAME") & "?" & CgiFacade.getValue("QUERY_STRING"),
+			CgiFacade.getValue("REQUEST_METHOD"),
+			CgiFacade.getValue("HTTP_REFERER"),
+			arguments.event.getAllValues()
+		) />
+		
+		<!--- get the users tracks --->
+		<cfif ScopeFacade.exists("tracks")>
+			<cfset tracks = ScopeFacade.getValue("tracks") />
+		</cfif>
+		
+		<!--- add this track --->
+		<cfset ArrayAppend(tracks, Track) />
+		
+		<!--- delete extras --->
+		<cfif ArrayLen(tracks) GT 10>
+			<cfset ArrayDeleteAt(tracks, 1) />
+		</cfif>
+		
+		<!--- save the tracks --->
+		<cfset ScopeFacade.setValue("tracks", tracks) />
+		
+		<!--- pass the tracks to the view --->
+		<cfset arguments.event.setValue("tracks", tracks) />
 	</cffunction>
 	
 	<cffunction name="OnRequestEnd" access="Public" returntype="void" output="false" hint="I am an event handler.">

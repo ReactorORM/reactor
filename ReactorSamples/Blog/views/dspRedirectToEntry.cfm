@@ -1,0 +1,1 @@
+<cflocation url="index.cfm?event=ViewEntry&entryId=#viewstate.getValue('entryId')#" addtoken="no" />

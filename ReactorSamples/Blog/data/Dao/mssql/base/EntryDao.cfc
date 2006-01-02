@@ -3,7 +3,7 @@
 <cfcomponent hint="I am the base DAO object for the Entry table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "0E8A0DCC028F2DF598EC814ED991B3AA" />
+	<cfset variables.signature = "8D18CB60509CCB025710FA43E1C939D1" />
 
 	<cffunction name="save" access="public" hint="I create or update a Entry record." output="false" returntype="void">
 		<cfargument name="to" hint="I am the transfer object for Entry" required="yes" type="ReactorBlogData.To.mssql.EntryTo" />

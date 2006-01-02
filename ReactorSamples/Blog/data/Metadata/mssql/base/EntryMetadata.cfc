@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Metadata object for the Entry table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractMetadata" >
 	
-	<cfset variables.signature = "0E8A0DCC028F2DF598EC814ED991B3AA" >
+	<cfset variables.signature = "8D18CB60509CCB025710FA43E1C939D1" >
 	
 	<cfset variables.metadata.name = "Entry" />
 	<cfset variables.metadata.owner = "dbo" />
@@ -51,8 +51,8 @@
 					<cfset variables.metadata.hasMany[2].relate[1].to = "entryId" />
 				
 		<cfset variables.metadata.hasMany[3] = StructNew() />
-		<cfset variables.metadata.hasMany[3].name = "EntryCategory" />
-		<cfset variables.metadata.hasMany[3].alias = "EntryCategory" />
+		<cfset variables.metadata.hasMany[3].name = "Rating" />
+		<cfset variables.metadata.hasMany[3].alias = "Rating" />
 		
 		
 				<cfset variables.metadata.hasMany[3].relate = ArrayNew(1) />
@@ -61,6 +61,18 @@
 					<cfset variables.metadata.hasMany[3].relate[1] = StructNew() />
 					<cfset variables.metadata.hasMany[3].relate[1].from = "entryId" />
 					<cfset variables.metadata.hasMany[3].relate[1].to = "entryId" />
+				
+		<cfset variables.metadata.hasMany[4] = StructNew() />
+		<cfset variables.metadata.hasMany[4].name = "EntryCategory" />
+		<cfset variables.metadata.hasMany[4].alias = "EntryCategory" />
+		
+		
+				<cfset variables.metadata.hasMany[4].relate = ArrayNew(1) />
+			
+				
+					<cfset variables.metadata.hasMany[4].relate[1] = StructNew() />
+					<cfset variables.metadata.hasMany[4].relate[1].from = "entryId" />
+					<cfset variables.metadata.hasMany[4].relate[1].to = "entryId" />
 				
 	
 	<!--- Fields --->

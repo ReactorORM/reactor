@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base Metadata object for the Comment table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractMetadata" >
 	
-	<cfset variables.signature = "C96EA3C4A5798149C10C1A1FDADF3C0D" >
+	<cfset variables.signature = "70B044B9DE65C8A35BAB85BF49421FC7" >
 	
 	<cfset variables.metadata.name = "Comment" />
 	<cfset variables.metadata.owner = "dbo" />
@@ -68,7 +68,7 @@
 		<cfset variables.metadata.fields[4]["name"] = "EmailAddress" />
 		<cfset variables.metadata.fields[4]["primaryKey"] = "false" />
 		<cfset variables.metadata.fields[4]["identity"] = "false" />
-		<cfset variables.metadata.fields[4]["nullable"] = "false" />
+		<cfset variables.metadata.fields[4]["nullable"] = "true" />
 		<cfset variables.metadata.fields[4]["dbDataType"] = "varchar" />
 		<cfset variables.metadata.fields[4]["cfDataType"] = "string" />
 		<cfset variables.metadata.fields[4]["cfSqlType"] = "cf_sql_varchar" />

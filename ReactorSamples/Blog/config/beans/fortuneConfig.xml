@@ -1,0 +1,19 @@
+<bean class="ReactorSamples.blog.model.config.fortuneConfig" singleton="true">
+	<!--
+		A comma delimited list of topics to restrict the fortune to. Use an empty string to use all topics.
+		Options are: simpsonschalkboard,startrek,wisdom,politics,programingstyle,sports,platitudes,job,linuxcookie,songspoems,magic,dune,medicine,love,science,miscellaneous,people,kids,ethnic,humorists,law,drugs,education,definitions,cookie,fortunes,news,literature,computers,asciiart,zippy,hitchhiker,goedel,simpsonshomer,tao,art,pets,calvin,food,riddles
+	-->
+	<property name="topicList">
+		<value></value>
+	</property>
+	
+	<!-- The minimum length of the fortune to return. Use 0 to allow any length. -->
+	<property name="minLength">
+		<value>10</value>
+	</property>
+	
+	<!-- The maximum length of fortune to return. Use 0 to allow any length. MaxLength must be greater than or equal to minLength. -->
+	<property name="maxLength">
+		<value>100</value>
+	</property>
+</bean>

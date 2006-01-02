@@ -98,6 +98,20 @@
 						class="inputTextArea #attributes.class#">#attributes.value#</textarea>
 				</cfcase>
 				
+				<!--- a captcha --->
+				<cfcase value="captcha">
+					<label for="#attributes.name#">#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</label>
+					<cfinput name="#attributes.name#"
+						type="text" 
+						value=""
+						size="15"
+						maxLength="15"
+						style="#attributes.style#"
+						class="inputCaptcha #attributes.class#" />
+					<img src="index.cfm?event=viewCaptcha" class="captcha"/>
+					<cfset attributes.comment = attributes.comment & "<br /><a href=""http://alagad.com/index.cfm/name-captcha"" target=""_blank"">Made with the Alagad Captcha Component.</a>" />
+				</cfcase>
+				
 				<!--- other things --->		
 				<cfdefaultcase>
 					<cfparam name="attributes.size" />

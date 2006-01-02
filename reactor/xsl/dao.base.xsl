@@ -106,6 +106,12 @@
 							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
 								#Convention.lastInseredIdSyntax(getObjectMetadata())#
 						</xsl:when>
+						<xsl:when test="object/@dbms = 'mysql4'">
+							&lt;/cfquery&gt;
+							
+							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+								#Convention.lastInseredIdSyntax(getObjectMetadata())#
+						</xsl:when>
 						<xsl:otherwise>
 								#Convention.lastInseredIdSyntax(getObjectMetadata())#
 						</xsl:otherwise>
