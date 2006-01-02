@@ -1,8 +1,10 @@
 <cfcomponent displayname="blogConfig" hint="I am a config bean for the blog app.">
 	
 	<cfset variables.blogTitle = "" />
+	<cfset variables.baseUrl = "" />
 	<cfset variables.blogDescription = "" />
 	<cfset variables.authorEmailAddress = "" />
+	<cfset variables.authorName = "" />
 	<cfset variables.recentEntryDays = 0 />
 	<cfset variables.useCaptcha = false />
 	<cfset variables.captchaKey = "" />
@@ -14,8 +16,10 @@
 	
 	<cffunction name="init" access="public" hint="I configure and return the blogConfig" output="false" returntype="blogConfig">
 		<cfargument name="blogTitle" hint="I am the title of the blog." required="no" type="string" default="" />
+		<cfargument name="baseUrl" hint="I am the base url of the blog." required="no" type="string" default="" />
 		<cfargument name="blogDescription" hint="I am the description of the blog" required="no" type="string" default="" />
 		<cfargument name="authorEmailAddress" hint="I am the author's email address" required="no" type="string" default="" />
+		<cfargument name="authorName" hint="I am the author's name" required="no" type="string" default="" />
 		<cfargument name="recentEntryDays" hint="I am the number of days an entry is shown on the home page." required="no" type="numeric" default="0" />
 		<cfargument name="useCaptcha" hint="I indicate if captcha images should be displayed." required="no" type="boolean" default="false" />
 		<cfargument name="captchaKey" hint="I am the license key to use with the Alagad Captcah component wehn useCaptcha is true." required="no" type="string" default="" />
@@ -26,8 +30,10 @@
 		<cfargument name="showFriendlyErrors" hint="I indicate if friendly errors should be shown" required="no" type="boolean" default="false" />
 		
 		<cfset setBlogTitle(arguments.blogTitle) />
+		<cfset setBaseUrl(arguments.baseUrl) />
 		<cfset setBlogDescription(arguments.blogDescription) />
-		<cfset setAuthorEmailAddress(arguments.blogDescription) />
+		<cfset setAuthorEmailAddress(arguments.authorEmailAddress) />
+		<cfset setAuthorName(arguments.authorName) />
 		<cfset setRecentEntryDays(arguments.recentEntryDays) />
 		<cfset setUseCaptcha(arguments.useCaptcha) />
 		<cfset setCaptchaKey(arguments.captchaKey) />
@@ -54,6 +60,15 @@
        <cfreturn variables.blogTitle />
     </cffunction>
 	
+	<!--- baseUrl --->
+    <cffunction name="setBaseUrl" access="public" output="false" returntype="void">
+       <cfargument name="baseUrl" hint="I am the base url of the blog." required="yes" type="string" />
+       <cfset variables.baseUrl = arguments.baseUrl />
+    </cffunction>
+    <cffunction name="getBaseUrl" access="public" output="false" returntype="string">
+       <cfreturn variables.baseUrl />
+    </cffunction>
+	
 	<!--- blogDescription --->
     <cffunction name="setBlogDescription" access="public" output="false" returntype="void">
        <cfargument name="blogDescription" hint="I am the description of the blog" required="yes" type="string" />
@@ -70,6 +85,15 @@
     </cffunction>
     <cffunction name="getAuthorEmailAddress" access="public" output="false" returntype="string">
        <cfreturn variables.authorEmailAddress />
+    </cffunction>
+	
+	<!--- authorName --->
+    <cffunction name="setAuthorName" access="public" output="false" returntype="void">
+       <cfargument name="authorName" hint="I am the author's name" required="yes" type="string" />
+       <cfset variables.authorName = arguments.authorName />
+    </cffunction>
+    <cffunction name="getAuthorName" access="public" output="false" returntype="string">
+       <cfreturn variables.authorName />
     </cffunction>
 	
 	<!--- recentEntryDays --->

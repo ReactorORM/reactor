@@ -2,6 +2,7 @@
 
 	<cfset variables.Reactor = 0 />
 	<cfset variables.CategoryGateway = 0 />
+	<cfset variables.CommentGateway = 0 />
 	<cfset variables.EntryGateway = 0 />
 	<cfset variables.BlogConfig = 0 />
 	<cfset variables.Captcha = 0 />
@@ -16,12 +17,25 @@
 		<!--- Controllers are in the application scope:  Put any application startup code here. --->
 		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/ReactorSamples/Blog/config/Reactor.xml")) />
 		<cfset variables.CategoryGateway = Reactor.createGateway("Category") /> 
+		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
 		<cfset variables.UrlPinger = CreateObject("Component", "reactorSamples.Blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
 		<cfset variables.Search = CreateObject("Component", "reactorSamples.Blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- DoGetCommentParticipants --->
+	<cffunction name="DoGetCommentParticipants" access="Public" returntype="void" output="false" hint="I get the email addresses of people who have been participating in the comments.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("particpants", variables.CommentGateway.getParticipants(arguments.event.getValue("entryId"))) />
+	</cffunction>
+	
+	<!--- DoSetErrorResult --->
+	<cffunction name="DoSetErrorResult" access="Public" returntype="void" output="false" hint="I set the error result.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.addResult(Iif(variables.BlogConfig.getShowFriendlyErrors(), DE('friendly'), DE('unfriendly'))) />
 	</cffunction>
 	
 	<!--- DoSaveCategory --->

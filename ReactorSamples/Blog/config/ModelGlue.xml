@@ -45,7 +45,9 @@
 			<message-listener message="NeedCategory" function="DoGetCategory" />
 			<message-listener message="DeleteCategory" function="DoDeleteCategory" />
 			<message-listener message="ValidateCategory" function="DoValidateCategory" />
-			<message-listener message="SaveCategory" function="DoSaveCategory" />		
+			<message-listener message="SaveCategory" function="DoSaveCategory" />	
+			<message-listener message="NeedErrorResult"	function="DoSetErrorResult" />
+			<message-listener message="NeedCommentParticipants"	function="DoGetCommentParticipants" />
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -260,8 +262,11 @@
 		<event-handler name="SaveComment" access="private">
 			<broadcasts>
 				<message name="SaveComment" />
+				<message name="NeedEntry" />
+				<message name="NeedCommentParticipants" />
 			</broadcasts>
 			<views>
+				<include name="emails" template="dspSendCommentEmails.cfm" />
 				<include name="redirect" template="dspRedirectToEntry.cfm" />
 			</views>
 			<results />
@@ -412,13 +417,28 @@
 		</event-handler>
 		
 		<event-handler name="Exception">
-			<broadcasts />
+			<broadcasts>
+				<message name="NeedErrorResult" />
+			</broadcasts>
 			<views>
 				<include name="body" template="dspException.cfm" />
+			</views>
+			<results>
+				<result name="unfriendly" do="Layout" />
+				<result name="friendly" do="FriendlyException" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="FriendlyException">
+			<broadcasts />
+			<views>
+				<include name="body" template="dspSendExceptionMessage.cfm" />
+				<include name="body" template="dspFriendlyException.cfm" />
 			</views>
 			<results>
 				<result do="Layout" />
 			</results>
 		</event-handler>
+		
 	</event-handlers>
 </modelglue>

@@ -4,6 +4,11 @@
 		<value>DougHughes.net</value>
 	</property>
 	
+	<!-- this is the blog's baseUrl.  IE: this is the path to the blog's index file. -->
+	<property name="baseUrl">
+		<value>http://reactor.office.alagad.com/ReactorSamples/Blog/index.cfm</value>
+	</property>
+	
 	<!-- this is the description of the blog -->
 	<property name="blogDescription">
 		<value>Doug's blog on ColdFusion and other stuff.</value>
@@ -12,6 +17,11 @@
 	<!-- author's email address -->
 	<property name="authorEmailAddress">
 		<value>dhughes@alagad.com</value>
+	</property>
+	
+	<!-- author's name -->
+	<property name="authorName">
+		<value>Doug Hughes</value>
 	</property>
 	
 	<!-- I am the number of days an entry is shown on the home page. -->
@@ -26,12 +36,12 @@
 		
 	<!-- Show Captcha images in comment form? -->
 	<property name="useCaptcha">
-		<value>true</value>
+		<value>false</value>
 	</property>
 	
 	<!-- Alagad Captcha Component license key -->
 	<property name="captchaKey">
-		<value>HVXGT-09T8D-CUX3Y-TR1KE-PDN5P</value>
+		<value></value>
 	</property>
 	
 	<!-- These urls will be pinged when a new entry is added -->
