@@ -21,7 +21,6 @@
 	<controllers>
 		<controller name="blogController" type="ReactorSamples.Blog.controller.BlogController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
-			<message-listener message="NeedCategories" function="DoGetCategories" />
 			<message-listener message="NeedEntries" function="DoGetEntries" />
 			<message-listener message="NeedEntry" function="DoGetEntry" />
 			<message-listener message="ValidateEntry" function="DoValidateEntry" />
@@ -42,12 +41,18 @@
 			<message-listener message="NeedSearchResults" function="DoSearch" />
 			<message-listener message="UpdateSearch" function="DoUpdateSearch" />
 			<message-listener message="Reindex" function="DoReindex" />
+			<message-listener message="NeedCategories" function="DoGetCategories" />
 			<message-listener message="NeedCategory" function="DoGetCategory" />
 			<message-listener message="DeleteCategory" function="DoDeleteCategory" />
 			<message-listener message="ValidateCategory" function="DoValidateCategory" />
 			<message-listener message="SaveCategory" function="DoSaveCategory" />	
 			<message-listener message="NeedErrorResult"	function="DoSetErrorResult" />
 			<message-listener message="NeedCommentParticipants"	function="DoGetCommentParticipants" />
+			<message-listener message="NeedUsers" function="DoGetUsers" />
+			<message-listener message="NeedUser" function="DoGetUser" />
+			<message-listener message="DeleteUser" function="DoDeleteUser" />
+			<message-listener message="ValidateUser" function="DoValidateUser" />
+			<message-listener message="SaveUser" function="DoSaveUser" />	
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -209,6 +214,75 @@
 			</results>
 		</event-handler>
 				
+		<event-handler name="ListUsers">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="Home" />
+				</message>
+				<message name="NeedUsers" />
+			</broadcasts>
+			<views>
+				<include name="body" template="dspUsers.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="DeleteUser">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="Home" />
+				</message>
+				<message name="NeedUser" />
+				<message name="DeleteUser" />
+			</broadcasts>
+			<views />
+			<results>
+				<result do="ListUsers" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="UserForm">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="Home" />
+				</message>
+				<message name="NeedUser" />
+			</broadcasts>
+			<views>
+				<include name="body" template="dspUserForm.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="SubmitUserForm">
+			<broadcasts>
+				<message name="CheckIfLoggedIn">
+					<argument name="returnToEvent" value="Home" />
+				</message>
+				<message name="NeedUser" />
+				<message name="ValidateUser" />
+			</broadcasts>
+			<views />
+			<results>
+				<result name="valid" do="SaveUser" />
+				<result name="invalid" do="UserForm" />
+			</results>
+		</event-handler>
+		
+		<event-handler name="SaveUser" access="private">
+			<broadcasts>
+				<message name="SaveUser" />
+			</broadcasts>
+			<views />
+			<results>
+				<result do="ListUsers" />
+			</results>
+		</event-handler>
+		
 		<event-handler name="Reindex">
 			<broadcasts>
 				<message name="CheckIfLoggedIn">

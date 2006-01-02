@@ -3,6 +3,7 @@
 	<cfset variables.Reactor = 0 />
 	<cfset variables.CategoryGateway = 0 />
 	<cfset variables.CommentGateway = 0 />
+	<cfset variables.UserGateway = 0 />
 	<cfset variables.EntryGateway = 0 />
 	<cfset variables.BlogConfig = 0 />
 	<cfset variables.Captcha = 0 />
@@ -18,6 +19,7 @@
 		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/ReactorSamples/Blog/config/Reactor.xml")) />
 		<cfset variables.CategoryGateway = Reactor.createGateway("Category") /> 
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
+		<cfset variables.UserGateway = Reactor.createGateway("User") /> 
 		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
 		<cfset variables.UrlPinger = CreateObject("Component", "reactorSamples.Blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
@@ -36,6 +38,53 @@
 	<cffunction name="DoSetErrorResult" access="Public" returntype="void" output="false" hint="I set the error result.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.addResult(Iif(variables.BlogConfig.getShowFriendlyErrors(), DE('friendly'), DE('unfriendly'))) />
+	</cffunction>
+	
+	<!--- DoSaveUser --->
+	<cffunction name="DoSaveUser" access="Public" returntype="void" output="false" hint="I save a User.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var UserRecord = arguments.event.getValue("OtherUserRecord") />
+		<cfset UserRecord.save() />
+	</cffunction>
+	
+	<!--- DoValidateUser --->
+	<cffunction name="DoValidateUser" access="Public" returntype="void" output="false" hint="I validate a User.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var UserRecord = arguments.event.getValue("OtherUserRecord") />
+		<cfset var Errors = UserRecord.validate() />
+		
+		<cfset arguments.event.setValue("Errors", Errors) />
+		<cfif Errors.hasErrors()>
+			<cfset arguments.event.addResult("invalid") />
+		<cfelse>
+			<cfset arguments.event.addResult("valid") />
+		</cfif>
+	</cffunction>
+	
+	<!--- DoGetUser --->
+	<cffunction name="DoGetUser" access="Public" returntype="void" output="false" hint="I get or create a User.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var UserRecord = variables.Reactor.createRecord("User") />
+		
+		<cfset UserRecord.setUserId(arguments.event.getValue("UserId", 0)) />
+		<cfset UserRecord.load() />
+		
+		<!--- update the User --->
+		<cfset arguments.event.makeEventBean(UserRecord) />
+		<cfset arguments.event.setValue("OtherUserRecord", UserRecord) />		
+	</cffunction>
+	
+	<!--- DoDeleteUser --->
+	<cffunction name="DoDeleteUser" access="Public" returntype="void" output="false" hint="I delete a User.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var UserRecord = arguments.event.getValue("OtherUserRecord") />
+		<cfset UserRecord.delete() />
+	</cffunction>
+	
+	<!--- DoGetUsers --->
+	<cffunction name="DoGetUsers" access="Public" returntype="void" output="false" hint="I get a query of all the Users in the blog.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("Users", variables.UserGateway.getAllUsers()) />
 	</cffunction>
 	
 	<!--- DoSaveCategory --->
@@ -77,6 +126,12 @@
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var CategoryRecord = arguments.event.getValue("CategoryRecord") />
 		<cfset CategoryRecord.delete() />
+	</cffunction>
+	
+	<!--- DoGetCategories --->
+	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the blog.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("Categories", variables.CategoryGateway.getCountedCategories()) />
 	</cffunction>
 	
 	<!--- DoUpdateSearch --->
@@ -154,12 +209,6 @@
 	<cffunction name="DoGetArchives" access="Public" returntype="void" output="false" hint="I get a query of all archive months, years and number of entries.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.setValue("archives", variables.EntryGateway.getArchives()) />
-	</cffunction>
-	
-	<!--- DoGetCategories --->
-	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the blog.">
-		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset arguments.event.setValue("Categories", variables.CategoryGateway.getCountedCategories()) />
 	</cffunction>
 		
 	<!--- DoGetEntries --->

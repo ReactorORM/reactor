@@ -7,6 +7,7 @@
 	<cfif UserRecord.isLoggedIn()>
 		<li><a href="index.cfm?event=EntryForm">Add New Entry</a></li>
 		<li><a href="index.cfm?event=ListCategories">Manage Categories</a></li>
+		<li><a href="index.cfm?event=ListUsers">Manage Users</a></li>
 		<cfif BlogConfig.searchEnabled()>
 			<li><a href="index.cfm?event=Reindex" onclick="return confirm('Are you sure you want to reindex?  This may take a while.');">Reindex All Entries</a></li>
 		</cfif>
