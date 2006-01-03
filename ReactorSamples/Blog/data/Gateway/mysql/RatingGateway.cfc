@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the custom Gateway object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="ReactorBlogData.Gateway.mssql.base.RatingGateway" >
+	extends="ReactorBlogData.Gateway.mysql.base.RatingGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="deleteByEntryId" access="public" hint="I delete all associations for an entry" output="false" returntype="void">

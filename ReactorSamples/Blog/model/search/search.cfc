@@ -48,6 +48,11 @@
 		<cfreturn status />	
 	</cffunction>
 	
+	<!--- empty --->
+	<cffunction name="empty" access="public" hint="I empty the search catalog" output="false" returntype="void">
+		<cfindex action="purge" collection="#getPrimaryCollection()#" />
+	</cffunction>
+	
 	<!--- primaryCollection --->
     <cffunction name="setPrimaryCollection" access="private" output="false" returntype="void">
        <cfargument name="primaryCollection" hint="I am the collection to index and search" required="yes" type="string" />

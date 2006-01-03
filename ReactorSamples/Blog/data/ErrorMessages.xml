@@ -18,7 +18,7 @@
 			<errorMessage message="Please provide your login name." name="notProvided"/>
 			<errorMessage message="The User Name field must be a string value." name="invalidType"/>
 			<errorMessage message="The User Name field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
-			<errorMessage message="The User Name selected has already been used on another account." name="duplicateName"/>			
+			<errorMessage message="The User Name selected has already been used on another account." name="duplicateName"/>
 		</field>
 		<field name="Password">
 			<errorMessage message="Please provide your password." name="notProvided"/>

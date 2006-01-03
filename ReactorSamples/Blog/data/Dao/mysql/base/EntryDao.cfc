@@ -3,10 +3,10 @@
 <cfcomponent hint="I am the base DAO object for the Entry table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractDao" >
 	
-	<cfset variables.signature = "8D18CB60509CCB025710FA43E1C939D1" />
+	<cfset variables.signature = "E591D242E031943CC427403C11484359" />
 
 	<cffunction name="save" access="public" hint="I create or update a Entry record." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Entry" required="yes" type="ReactorBlogData.To.mssql.EntryTo" />
+		<cfargument name="to" hint="I am the transfer object for Entry" required="yes" type="ReactorBlogData.To.mysql.EntryTo" />
 
 		
 		<cfif IsNumeric(arguments.to.EntryId) AND Val(arguments.to.EntryId)>
@@ -20,7 +20,7 @@
 	
 	
 	<cffunction name="create" access="public" hint="I create a Entry object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Entry" required="yes" type="ReactorBlogData.To.mssql.EntryTo" />
+		<cfargument name="to" hint="I am the transfer object for Entry" required="yes" type="ReactorBlogData.To.mysql.EntryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qCreate = 0 />
 		
@@ -67,7 +67,7 @@
 							value="#arguments.to.Article#"
 							 />
 							,
-							<cfqueryparam cfsqltype="cf_sql_timestamp"
+							<cfqueryparam cfsqltype="cf_sql_date"
 							
 							value="#arguments.to.PublicationDate#"
 							 />
@@ -77,7 +77,7 @@
 							value="#arguments.to.PostedByUserId#"
 							 />
 							,
-							<cfqueryparam cfsqltype="cf_sql_bit"
+							<cfqueryparam cfsqltype="cf_sql_tinyint"
 							
 							value="#arguments.to.DisableComments#"
 							 />
@@ -89,6 +89,9 @@
 							
 				)
 				
+							</cfquery>
+							
+							<cfquery name="qCreate" datasource="#_getConfig().getDsn()#">	
 								#Convention.lastInseredIdSyntax(getObjectMetadata())#
 						
 				
@@ -104,7 +107,7 @@
 	
 	
 	<cffunction name="read" access="public" hint="I read a  Entry object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Entry which will be populated." required="yes" type="ReactorBlogData.To.mssql.EntryTo" />
+		<cfargument name="to" hint="I am the transfer object for Entry which will be populated." required="yes" type="ReactorBlogData.To.mysql.EntryTo" />
 		<cfset var qRead = 0 />
 		<cfset var EntryGateway = _getReactorFactory().createGateway("Entry") />
 		
@@ -157,7 +160,7 @@
 	</cffunction>
 	
 	<cffunction name="update" access="public" hint="I update a Entry object." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Entry which will be used to update a record in the table." required="yes" type="ReactorBlogData.To.mssql.EntryTo" />
+		<cfargument name="to" hint="I am the transfer object for Entry which will be used to update a record in the table." required="yes" type="ReactorBlogData.To.mysql.EntryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qUpdate = 0 />
 		
@@ -187,13 +190,11 @@
 				#Convention.formatUpdateFieldName('Article')# = <cfqueryparam
 					cfsqltype="cf_sql_longvarchar"
 					
-						scale="2147483647"
-					
 					value="#arguments.to.Article#"
 					 />
 				,
 				#Convention.formatUpdateFieldName('PublicationDate')# = <cfqueryparam
-					cfsqltype="cf_sql_timestamp"
+					cfsqltype="cf_sql_date"
 					
 					value="#arguments.to.PublicationDate#"
 					 />
@@ -205,7 +206,7 @@
 					 />
 				,
 				#Convention.formatUpdateFieldName('DisableComments')# = <cfqueryparam
-					cfsqltype="cf_sql_bit"
+					cfsqltype="cf_sql_tinyint"
 					
 					value="#arguments.to.DisableComments#"
 					 />
@@ -228,7 +229,7 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete a record in the Entry table." output="false" returntype="void">
-		<cfargument name="to" hint="I am the transfer object for Entry which will be used to delete from the table." required="yes" type="ReactorBlogData.To.mssql.EntryTo" />
+		<cfargument name="to" hint="I am the transfer object for Entry which will be used to delete from the table." required="yes" type="ReactorBlogData.To.mysql.EntryTo" />
 		<cfset var Convention = getConventions() />
 		<cfset var qDelete = 0 />
 		

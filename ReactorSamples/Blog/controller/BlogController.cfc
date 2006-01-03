@@ -147,6 +147,11 @@
 	<cffunction name="DoReindex" access="Public" returntype="void" output="false" hint="I reindex all entries.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var entries = variables.EntryGateway.getAll() />
+		
+		<!--- empty the collection --->
+		<cfset variables.Search.empty() />
+		
+		<!--- reindex everything (the slow way) --->
 		<cfloop query="entries">
 			<cfset variables.Search.index("index.cfm?event=viewEntry&entryId=#entries.entryId#", entries.title, entries.article) />	
 		</cfloop>

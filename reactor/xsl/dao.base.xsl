@@ -82,7 +82,7 @@
 					<xsl:for-each select="object/fields/field">
 						<xsl:if test="@identity != 'true'">
 							&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"
-							<xsl:if test="@length > 0">
+							<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 								scale="<xsl:value-of select="@length" />"
 							</xsl:if>
 							value="<xsl:choose>
@@ -175,7 +175,7 @@
 			<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
-					<xsl:if test="@length > 0">
+					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						scale="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
@@ -193,7 +193,7 @@
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
-					<xsl:if test="@length > 0">
+					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						scale="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
@@ -226,7 +226,7 @@
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 				#Convention.formatFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
-					<xsl:if test="@length > 0">
+					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						scale="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
