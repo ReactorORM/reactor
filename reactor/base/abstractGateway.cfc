@@ -296,7 +296,7 @@
 			
 		</cfquery>
 		
-		<cfset qGet.result = result />
+		<!---<cfset qGet.result = result />--->
 		
 		<!--- return the query result --->
 		<cfreturn qGet />

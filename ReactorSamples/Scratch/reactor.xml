@@ -1,0 +1,10 @@
+<reactor>
+	<config>
+		<dsn value="Scratch" />
+		<type value="mssql" />
+		<mapping value="/ScratchData" />
+		<mode value="development" />
+	</config>
+
+	<objects/>
+</reactor>
