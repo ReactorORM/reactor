@@ -94,4 +94,14 @@
 			<errorMessage message="The Zip field is too long.  This field must be no more than 10 characters long." name="invalidLength"/>
 		</field>
 	</table>
+	<table name="Invoice">
+		<field name="InvoiceId">
+			<errorMessage message="The InvoiceId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The InvoiceId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="CustomerId">
+			<errorMessage message="The CustomerId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The CustomerId field must be a numeric value." name="invalidType"/>
+		</field>
+	</table>
 </tables>

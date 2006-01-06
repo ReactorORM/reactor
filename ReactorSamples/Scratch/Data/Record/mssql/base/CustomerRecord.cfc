@@ -2,7 +2,7 @@
 <cfcomponent hint="I am the base record representing the Customer table.  I am generated.  DO NOT EDIT ME."
 	extends="reactor.base.abstractRecord" >
 	
-	<cfset variables.signature = "CCA4E499673B1A3F1C864B58F500D055" />
+	<cfset variables.signature = "4F6ED61E73B22F04318F7970FE70496C" />
 	
 	<cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="ScratchData.Record.mssql.base.CustomerRecord">
 		
@@ -227,6 +227,53 @@
 		<cfset Record.load() />
 		<cfreturn Record />
 	</cffunction>
+	
+		<!--- Query For Invoice --->
+		<cffunction name="createInvoiceQuery" access="public" output="false" returntype="reactor.query.query">
+			<cfset var Query = _getReactorFactory().createGateway("Invoice").createQuery() />
+			
+			
+			
+			<cfreturn Query />
+		</cffunction>
+		
+		
+				<!--- Query For Invoice --->
+				<cffunction name="getInvoiceQuery" access="public" output="false" returntype="query">
+					<cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#createInvoiceQuery()#" type="reactor.query.query" />
+					<cfset var InvoiceGateway = _getReactorFactory().createGateway("Invoice") />
+					
+						<cfset arguments.Query.getWhere().isEqual("Invoice", "customerId", getcustomerId()) />
+					
+					<cfreturn InvoiceGateway.getByQuery(arguments.Query)>
+				</cffunction>
+			
+		
+		<!--- Array For Invoice --->
+		<cffunction name="getInvoiceArray" access="public" output="false" returntype="array">
+			<cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#createInvoiceQuery()#" type="reactor.query.query" />
+			<cfset var InvoiceQuery = getInvoiceQuery(arguments.Query) />
+			<cfset var InvoiceArray = ArrayNew(1) />
+			<cfset var InvoiceRecord = 0 />
+			<cfset var InvoiceTo = 0 />
+			<cfset var field = "" />
+			
+			<cfloop query="InvoiceQuery">
+				<cfset InvoiceRecord = _getReactorFactory().createRecord("Invoice") >
+				<cfset InvoiceTo = InvoiceRecord._getTo() />
+	
+				<!--- populate the record's to --->
+				<cfloop list="#InvoiceQuery.columnList#" index="field">
+					<cfset InvoiceTo[field] = InvoiceQuery[field][InvoiceQuery.currentrow] >
+				</cfloop>
+				
+				<cfset InvoiceRecord._setTo(InvoiceTo) />
+				
+				<cfset InvoiceArray[ArrayLen(InvoiceArray) + 1] = InvoiceRecord >
+			</cfloop>
+	
+			<cfreturn InvoiceArray />
+		</cffunction>		
 	
 			
 	<!--- to --->
