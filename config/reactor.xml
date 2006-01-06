@@ -3,10 +3,16 @@
 		<dsn value="scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="development" />
+		<mode value="always" />
 	</config>
 
 	<objects>
+		<object name="Customer">
+			<hasOne name="Address">
+				<relate from="addressId" to="addressId"  />
+			</hasOne>
+		</object>
+		<!--
 		<object name="User">
 			<hasOne name="UserType">
 				<relate from="userTypeId" to="userTypeId" />
@@ -125,6 +131,6 @@
 			<hasMany name="Address">
 				<relate from="stateProvId" to="stateProvId" />
 			</hasMany>
-		</object>
+		</object>	-->
 	</objects>
 </reactor>

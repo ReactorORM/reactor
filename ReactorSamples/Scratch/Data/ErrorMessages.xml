@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tables>
+	<table name="User">
+		<field name="UserId">
+			<errorMessage message="The UserId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The UserId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Username">
+			<errorMessage message="The Username field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Username field must be a string value." name="invalidType"/>
+			<errorMessage message="The Username field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Password">
+			<errorMessage message="The Password field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Password field must be a string value." name="invalidType"/>
+			<errorMessage message="The Password field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="FirstName">
+			<errorMessage message="The FirstName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The FirstName field must be a string value." name="invalidType"/>
+			<errorMessage message="The FirstName field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="LastName">
+			<errorMessage message="The LastName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The LastName field must be a string value." name="invalidType"/>
+			<errorMessage message="The LastName field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="DateCreated">
+			<errorMessage message="The DateCreated field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The DateCreated field must be a date value." name="invalidType"/>
+		</field>
+	</table>
+	<table name="Customer">
+		<field name="CustomerId">
+			<errorMessage message="The CustomerId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The CustomerId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Username">
+			<errorMessage message="The Username field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Username field must be a string value." name="invalidType"/>
+			<errorMessage message="The Username field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Password">
+			<errorMessage message="The Password field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Password field must be a string value." name="invalidType"/>
+			<errorMessage message="The Password field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="FirstName">
+			<errorMessage message="The FirstName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The FirstName field must be a string value." name="invalidType"/>
+			<errorMessage message="The FirstName field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="LastName">
+			<errorMessage message="The LastName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The LastName field must be a string value." name="invalidType"/>
+			<errorMessage message="The LastName field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="DateCreated">
+			<errorMessage message="The DateCreated field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The DateCreated field must be a date value." name="invalidType"/>
+		</field>
+		<field name="AddressId">
+			<errorMessage message="The AddressId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The AddressId field must be a numeric value." name="invalidType"/>
+		</field>
+	</table>
+	<table name="Address">
+		<field name="AddressId">
+			<errorMessage message="The AddressId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The AddressId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Street1">
+			<errorMessage message="The Street1 field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Street1 field must be a string value." name="invalidType"/>
+			<errorMessage message="The Street1 field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Street2">
+			<errorMessage message="The Street2 field must be a string value." name="invalidType"/>
+			<errorMessage message="The Street2 field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="City">
+			<errorMessage message="The City field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The City field must be a string value." name="invalidType"/>
+			<errorMessage message="The City field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="State">
+			<errorMessage message="The State field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The State field must be a string value." name="invalidType"/>
+			<errorMessage message="The State field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Zip">
+			<errorMessage message="The Zip field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Zip field must be a string value." name="invalidType"/>
+			<errorMessage message="The Zip field is too long.  This field must be no more than 10 characters long." name="invalidLength"/>
+		</field>
+	</table>
+</tables>

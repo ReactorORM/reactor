@@ -24,6 +24,8 @@
 		<cfset var super = XmlSearch(objectXML, "/object/super") />
 		<cfset var pathToErrorFile = "" />
 		
+		<!---<cfdump var="#objectXML#" /><cfabort>--->
+		
 		<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
 			<!--- we need to insure that the base object exists for Dao, Record --->
 			<cfset getObjectFactory().create(super[1].XmlAttributes.name, arguments.type) />
