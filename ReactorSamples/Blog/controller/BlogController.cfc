@@ -16,11 +16,11 @@
 		<cfset super.Init(arguments.ModelGlue) />
 		
 		<!--- Controllers are in the application scope:  Put any application startup code here. --->
-		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/ReactorSamples/Blog/config/Reactor.xml")) />
+		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
+		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath(variables.BlogConfig.getReactorConfigFile())) />
 		<cfset variables.CategoryGateway = Reactor.createGateway("Category") /> 
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.UserGateway = Reactor.createGateway("User") /> 
-		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
 		<cfset variables.UrlPinger = CreateObject("Component", "reactorSamples.Blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
 		<cfset variables.Search = CreateObject("Component", "reactorSamples.Blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />

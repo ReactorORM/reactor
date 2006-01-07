@@ -7,9 +7,11 @@
 	<cffunction name="Init" access="Public" returnType="UserController" output="false" hint="I build a new UserController">
 		<cfargument name="ModelGlue" required="true" type="ModelGlue.ModelGlue" />
 		<cfargument name="InstanceName" required="true" type="string" />
+		<cfset var BlogConfig = 0 />
 		<cfset super.Init(arguments.ModelGlue) />
 		
-		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/ReactorSamples/Blog/config/Reactor.xml")) />
+		<cfset BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
+		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath(BlogConfig.getReactorConfigFile())) />
 		
 		<cfreturn this />
 	</cffunction>

@@ -8,11 +8,13 @@
 	<cfset variables.recentEntryDays = 0 />
 	<cfset variables.useCaptcha = false />
 	<cfset variables.captchaKey = "" />
+	<cfset variables.captchaDirectory = "" />
 	<cfset variables.pingUrlArray = ArrayNew(1) />
 	<cfset variables.blogSearchCollection = "" />
 	<cfset variables.additionalCollectonsList = "" />
 	<cfset variables.recentEntryCount = 0 />
 	<cfset variables.showFriendlyErrors = false />
+	<cfset variables.reactorConfigFile = "" />
 	
 	<cffunction name="init" access="public" hint="I configure and return the blogConfig" output="false" returntype="blogConfig">
 		<cfargument name="blogTitle" hint="I am the title of the blog." required="no" type="string" default="" />
@@ -23,11 +25,13 @@
 		<cfargument name="recentEntryDays" hint="I am the number of days an entry is shown on the home page." required="no" type="numeric" default="0" />
 		<cfargument name="useCaptcha" hint="I indicate if captcha images should be displayed." required="no" type="boolean" default="false" />
 		<cfargument name="captchaKey" hint="I am the license key to use with the Alagad Captcah component wehn useCaptcha is true." required="no" type="string" default="" />
+		<cfargument name="captchaDirectory" hint="I am directory where the captcha images will be written." required="no" type="string" default="" />
 		<cfargument name="pingUrlArray" hint="I am an array of URLs which should be pinged when new entries are added." required="no" type="array" default="#ArrayNew(1)#" />
 		<cfargument name="blogSearchCollection" hint="I the name of the verity collection that will be indexed / searched" required="no" type="string" default="" />
 		<cfargument name="additionalCollectonsList" hint="I am a comma sepeated list of other collections to search when a search is executed." required="no" type="string" default="" />
 		<cfargument name="recentEntryCount" hint="I am the number of recent entries to show." required="no" type="numeric" default="0" />
 		<cfargument name="showFriendlyErrors" hint="I indicate if friendly errors should be shown" required="no" type="boolean" default="false" />
+		<cfargument name="reactorConfigFile" hint="I am the path to the reactor config file" required="no" type="string" default="" />
 		
 		<cfset setBlogTitle(arguments.blogTitle) />
 		<cfset setBaseUrl(arguments.baseUrl) />
@@ -37,11 +41,13 @@
 		<cfset setRecentEntryDays(arguments.recentEntryDays) />
 		<cfset setUseCaptcha(arguments.useCaptcha) />
 		<cfset setCaptchaKey(arguments.captchaKey) />
+		<cfset setCaptchaDirectory(arguments.captchaDirectory) />
 		<cfset setPingUrlArray(arguments.pingUrlArray) />
 		<cfset setBlogSearchCollection(arguments.blogSearchCollection) />
 		<cfset setAdditionalCollectonsList(arguments.additionalCollectonsList) />
 		<cfset setRecentEntryCount(arguments.recentEntryCount) />
 		<cfset setShowFriendlyErrors(arguments.showFriendlyErrors) />
+		<cfset setReactorConfigFile(arguments.reactorConfigFile) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -123,6 +129,15 @@
        <cfreturn variables.captchaKey />
     </cffunction>
 	
+	<!--- captchaDirectory --->
+    <cffunction name="setCaptchaDirectory" access="public" output="false" returntype="void">
+       <cfargument name="captchaDirectory" hint="I am directory where the captcha images will be written." required="yes" type="string" />
+       <cfset variables.captchaDirectory = arguments.captchaDirectory />
+    </cffunction>
+    <cffunction name="getCaptchaDirectory" access="public" output="false" returntype="string">
+       <cfreturn variables.captchaDirectory />
+    </cffunction>
+	
 	<!--- pingUrlArray --->
     <cffunction name="setPingUrlArray" access="public" output="false" returntype="void">
        <cfargument name="pingUrlArray" hint="I am an array of URLs which should be pinged when new entries are added." required="yes" type="array" />
@@ -166,5 +181,14 @@
     </cffunction>
     <cffunction name="getShowFriendlyErrors" access="public" output="false" returntype="string">
        <cfreturn variables.showFriendlyErrors />
+    </cffunction>
+	
+	<!--- reactorConfigFile --->
+    <cffunction name="setReactorConfigFile" access="public" output="false" returntype="void">
+       <cfargument name="reactorConfigFile" hint="I am the path to the reactor config file." required="yes" type="string" />
+       <cfset variables.reactorConfigFile = arguments.reactorConfigFile />
+    </cffunction>
+    <cffunction name="getReactorConfigFile" access="public" output="false" returntype="string">
+       <cfreturn variables.reactorConfigFile />
     </cffunction>
 </cfcomponent>

@@ -1,4 +1,9 @@
 <bean class="ReactorSamples.blog.model.config.blogConfig" singleton="true">
+	<!-- this is the relative to the reactor config file -->
+	<property name="reactorConfigFile">
+		<value>/ReactorSamples/Blog/config/Reactor.xml</value>
+	</property>
+	
 	<!-- this is the title of the blog -->
 	<property name="blogTitle">
 		<value>DougHughes.net</value>
@@ -42,6 +47,11 @@
 	<!-- Alagad Captcha Component license key -->
 	<property name="captchaKey">
 		<value></value>
+	</property>
+	
+	<!-- where to write the captcha images -->
+	<property name="captchaDirectory">
+		<value>/ReactorSamples/Blog/images/captcha</value>
 	</property>
 	
 	<!-- These urls will be pinged when a new entry is added -->

@@ -119,7 +119,7 @@ VALUES
 
 DELIMITER $$
 
-DROP FUNCTION IF EXISTS `reactorblog`.`getAverageRating` $$
+DROP FUNCTION IF EXISTS `ReactorBlog`.`getAverageRating` $$
 CREATE FUNCTION `getAverageRating`(entryIdToRate int) RETURNS int(11)
 BEGIN
   DECLARE myRating int;

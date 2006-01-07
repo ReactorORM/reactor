@@ -120,12 +120,21 @@
 		<!--- save the article --->
 		<cfset super.setArticle(arguments.article) />
 		
+		<!--- if this has a table, delete everyting from that point forward --->
+		<cfif ReFindNoCase("<table.*?>", arguments.article)>
+			<cfset arguments.article = Left(arguments.article, ReFindNoCase("<table.*?>", arguments.article) - 1) />
+		</cfif>
+		<!--- if this has a table, delete everyting from that point forward --->
+		<cfif ReFindNoCase("<div.*?>", arguments.article)>
+			<cfset arguments.article = Left(arguments.article, ReFindNoCase("<div.*?>", arguments.article) - 1) />
+		</cfif>
+		
 		<!--- what delimits a new line in this entry? --->
 		<cfif ReFindNoCase("</p.*?>", arguments.article, location) GT 0>
-			<cfset delimiter = "</p(.*)?>" />
+			<cfset delimiter = "</p.*?>" />
 			
 		<cfelseif ReFindNoCase("<br.*?>", arguments.article, location) GT 0>
-			<cfset delimiter = "</p.*?>" />
+			<cfset delimiter = "<br.*?>" />
 			
 		<cfelse>
 			<cfset delimiter = "\s." />
@@ -135,7 +144,7 @@
 		<!--- create a preview --->
 		<cfif Len(arguments.article) GT 1000>
 			<cfloop condition="true">
-				<cfset newLocation = ReFindNoCase("</p.*?>", arguments.article, location, true) />
+				<cfset newLocation = ReFindNoCase(delimiter, arguments.article, location, true) />
 				<cfset newLocation = newLocation.pos[1] + newLocation.len[1] - 1 />
 				
 				<!--- the 'x' var below is a safety net --->
