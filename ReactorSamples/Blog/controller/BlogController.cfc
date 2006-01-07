@@ -22,8 +22,8 @@
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.UserGateway = Reactor.createGateway("User") /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
-		<cfset variables.UrlPinger = CreateObject("Component", "reactorSamples.Blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
-		<cfset variables.Search = CreateObject("Component", "reactorSamples.Blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
+		<cfset variables.UrlPinger = CreateObject("Component", "model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
+		<cfset variables.Search = CreateObject("Component", "model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -31,7 +31,17 @@
 	<!--- DoGetCommentParticipants --->
 	<cffunction name="DoGetCommentParticipants" access="Public" returntype="void" output="false" hint="I get the email addresses of people who have been participating in the comments.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset arguments.event.setValue("particpants", variables.CommentGateway.getParticipants(arguments.event.getValue("entryId"))) />
+		<cfset var CommentRecord = arguments.event.getValue("CommentRecord") />
+		<cfset var EntryAuthor = variables.EntryGateway.getAuthor(CommentRecord.getEntryId()) />
+		
+		<cfset var participants = variables.CommentGateway.getParticipants(
+			arguments.event.getValue("entryId"),
+			CommentRecord.getEmailAddress(),
+			EntryAuthor.firstName & " " & EntryAuthor.lastName,
+			EntryAuthor.emailAddress
+		) />
+		
+		<cfset arguments.event.setValue("particpants", participants) />
 	</cffunction>
 	
 	<!--- DoSetErrorResult --->
@@ -147,14 +157,24 @@
 	<cffunction name="DoReindex" access="Public" returntype="void" output="false" hint="I reindex all entries.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var entries = variables.EntryGateway.getAll() />
+		<cfset var reIndexEntries = QueryNew("url,title,body") />
 		
+		<!---
+			This is a lot more code than I would normally put in a controller.  but, in the interest of time, I'm doing it!
+			Additionally, these next 6 lines of code are formatting a query in such a way that the indexQuery method on the 
+			search object will know how to work with it.  This is bad.  Sorry.  	
+		--->
+		<cfloop query="entries">
+			<cfset QueryAddRow(reIndexEntries) />
+			<cfset QuerySetCell(reIndexEntries, "url", "index.cfm?event=viewEntry&entryId=#entries.entryId#") />
+			<cfset QuerySetCell(reIndexEntries, "title", entries.title) />
+			<cfset QuerySetCell(reIndexEntries, "body", ReReplace(entries.article, "<[^<]+?>", "", "all")) />
+		</cfloop>
+				
 		<!--- empty the collection --->
 		<cfset variables.Search.empty() />
 		
-		<!--- reindex everything (the slow way) --->
-		<cfloop query="entries">
-			<cfset variables.Search.index("index.cfm?event=viewEntry&entryId=#entries.entryId#", entries.title, entries.article) />	
-		</cfloop>
+		<cfset variables.Search.indexQuery(reIndexEntries) />	
 	</cffunction>
 	
 	<!--- DoSearch --->
@@ -285,7 +305,7 @@
 	<cffunction name="DoRateEntry" access="Public" returntype="void" output="false" hint="I rate an entry.  Users can only rate an entry one time per session.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var RatingRecord = variables.Reactor.createRecord("Rating") />
-		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.Blog.model.util.ScopeFacade").init("session") />
+		<cfset var ScopeFacade = CreateObject("Component", "model.util.ScopeFacade").init("session") />
 		<cfset var EntriesRatedList = ScopeFacade.getValue("EntriesRatedList", "") />
 		
 		<cfif NOT ListFind(EntriesRatedList, arguments.event.getValue("entryId")) AND arguments.event.getValue("rating") GTE 1 AND arguments.event.getValue("rating") LTE 5>

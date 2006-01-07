@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the custom Gateway object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="ReactorBlogData.Gateway.mssql.base.EntryGateway" >
+	extends="DougHughesBlogData.Gateway.mssql.base.EntryGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cfset variables.recentEntryDays = 0 />
@@ -9,6 +9,16 @@
 		<cfargument name="recentEntryDays" hint="I am the number of days an entry is recent." required="yes" type="numeric" />
 		<cfset variables.recentEntryDays = arguments.recentEntryDays />
 		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="getAuthor" access="public" hint="I return the author who created a record" output="false" returntype="query">
+		<cfargument name="entryId" hint="I am the entryId to match" required="yes" type="numeric" default="0" />
+		<cfset var EntryQuery = createQuery() />
+		<cfset EntryQuery.join("Entry", "User") />
+		<cfset EntryQuery.returnObjectFields("User") />
+		<cfset EntryQuery.getWhere().isEqual("Entry", "entryId", arguments.entryId) />
+		
+		<cfreturn getByQuery(EntryQuery) />
 	</cffunction>
 	
 	<cffunction name="getMatching" access="public" hint="I return an array of matching blog entries records." output="false" returntype="query">

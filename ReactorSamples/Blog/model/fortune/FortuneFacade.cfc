@@ -5,7 +5,7 @@
 	<cfset variables.FortuneWebService = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure and return this cfc" output="false" returntype="FortuneFacade">
-		<cfargument name="FortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="reactorSamples.Blog.model.config.fortuneConfig" />
+		<cfargument name="FortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="model.config.fortuneConfig" />
 		<cfargument name="TimedCache" hint="I am the TimedCache to use.  I reinit this." required="yes" type="modelglue.util.timedCache" />
 		
 		<cfset setFortuneConfig(arguments.FortuneConfig) />
@@ -37,13 +37,44 @@
 		<cfreturn Cache.getValue("fortune") />
 
 	</cffunction>
+	
+	<!--- getAnyFortune --->
+	<cffunction name="getAnyFortune" access="public" hint="I get a fortune without regards to it's length or the configuration and without caching it." output="false" returntype="string">
+		<cfset var Fortune = getFortuneWebService() />
+		
+		<!--- return any fortune --->
+		<cfreturn Fortune.getFortune("", 0, 0) />
+	</cffunction>
+	
+	<!--- getFortuneTopics --->
+	<cffunction name="getFortuneTopics" access="public" hint="I get the fortune topics" output="false" returntype="string">
+		<cfset var Cache = getTimedCache() />
+		<cfset var Config = getFortuneConfig() />
+		<cfset var Fortune = getFortuneWebService() />
+		
+		<!--- check to see if we have a cached fortune --->
+		<cfif NOT Cache.exists("fortuneTopics")>	
+			<!--- is not, try to get one --->	
+			<cftry>
+				<cfset Cache.setValue("fortuneTopics", Fortune.getTopicsList()) />
+				<cfcatch>
+					<!--- if there were errors just set a default fortune --->
+					<cfset Cache.setValue("fortuneTopics", "D'oh! - There was an error!") />
+				</cfcatch>
+			</cftry>
+		</cfif>
+		
+		<!--- return the cached fortune --->
+		<cfreturn Cache.getValue("fortuneTopics") />
+
+	</cffunction>
 
 	<!--- fortuneConfig --->
     <cffunction name="setFortuneConfig" access="private" output="false" returntype="void">
-       <cfargument name="fortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="reactorSamples.Blog.model.config.fortuneConfig" />
+       <cfargument name="fortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="model.config.fortuneConfig" />
        <cfset variables.fortuneConfig = arguments.fortuneConfig />
     </cffunction>
-    <cffunction name="getFortuneConfig" access="private" output="false" returntype="reactorSamples.Blog.model.config.fortuneConfig">
+    <cffunction name="getFortuneConfig" access="private" output="false" returntype="model.config.fortuneConfig">
        <cfreturn variables.fortuneConfig />
     </cffunction>
 	

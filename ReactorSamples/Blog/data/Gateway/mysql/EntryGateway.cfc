@@ -11,6 +11,16 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="getAuthor" access="public" hint="I return the author who created a record" output="false" returntype="query">
+		<cfargument name="entryId" hint="I am the entryId to match" required="yes" type="numeric" default="0" />
+		<cfset var EntryQuery = createQuery() />
+		<cfset EntryQuery.join("Entry", "User") />
+		<cfset EntryQuery.returnObjectFields("User") />
+		<cfset EntryQuery.getWhere().isEqual("Entry", "entryId", arguments.entryId) />
+		
+		<cfreturn getByQuery(EntryQuery) />
+	</cffunction>
+	
 	<cffunction name="getMatching" access="public" hint="I return an array of matching blog entries records." output="false" returntype="query">
 		<cfargument name="categoryId" hint="I am a category to match" required="yes" type="numeric" default="0" />
 		<cfargument name="month" hint="I am a month to filter for" required="yes" type="numeric" default="0" />

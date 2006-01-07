@@ -11,8 +11,8 @@
 		type="text"
 		name="firstName"
 		value="#UserRecord.getFirstName()#"
-		size="40"
-		maxlength="50" />
+		size="20"
+		maxlength="20" />
 		
 	<cf_input label="Last Name:"
 		errors="#Errors#"
@@ -20,7 +20,16 @@
 		type="text"
 		name="lastName"
 		value="#UserRecord.getLastName()#"
-		size="40"
+		size="20"
+		maxlength="20" />
+		
+	<cf_input label="Email Address:"
+		errors="#Errors#"
+		required="yes"
+		type="text"
+		name="emailAddress"
+		value="#UserRecord.getEmailAddress()#"
+		size="20"
 		maxlength="50" />
 		
 	<cf_input label="User Name:"
@@ -29,8 +38,8 @@
 		type="text"
 		name="userName"
 		value="#UserRecord.getUserName()#"
-		size="40"
-		maxlength="50" />
+		size="20"
+		maxlength="20" />
 		
 	<cf_input label="Password:"
 		errors="#Errors#"
@@ -38,8 +47,8 @@
 		type="password"
 		name="password"
 		value="#UserRecord.getPassword()#"
-		size="40"
-		maxlength="50" />
+		size="20"
+		maxlength="20" />
 	
 	<cfinput	
 		type="hidden"

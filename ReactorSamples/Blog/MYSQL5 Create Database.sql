@@ -96,6 +96,7 @@ CREATE TABLE `ReactorBlog`.`User` (
   `password` VARCHAR(20) NOT NULL,
   `firstName` VARCHAR(20) NOT NULL,
   `lastName` VARCHAR(20) NOT NULL,
+  `emailAddress` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`userId`)
 )
 ENGINE = INNODB;
