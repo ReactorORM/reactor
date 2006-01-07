@@ -4,6 +4,7 @@
 <cfset CommentRecord = viewstate.getValue("CommentRecord") />
 
 <cfmail from="#BlogConfig.getAuthorEmailAddress()#" query="particpants" to="emailAddress" subject="Comment added to blog: #BlogConfig.getBlogTitle()# - #EntryRecord.getTitle()#" type="html">
+	
 	<p>
 		<strong>Comment added to Blog:</strong><br>
 		#BlogConfig.getBlogTitle()#

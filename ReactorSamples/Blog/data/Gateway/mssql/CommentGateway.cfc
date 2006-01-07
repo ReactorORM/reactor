@@ -24,7 +24,7 @@
 		<!--- why did I not return the author email, only to add it in?  I didn't want to have to check if it was in there and add it if not --->
 		<cfset QueryAddRow(participants)/>
 		<cfset QuerySetCell(participants, "emailAddress", arguments.authorEmail) />
-		<cfset QuerySetCell(participants, "name", arguments.authorEmail) />
+		<cfset QuerySetCell(participants, "name", arguments.authorName) />
 		
 		<cfreturn participants />
 	</cffunction>
