@@ -3,7 +3,8 @@
 <cfset EntryRecord = viewstate.getValue("EntryRecord") />
 <cfset CommentRecord = viewstate.getValue("CommentRecord") />
 
-<cfmail from="#BlogConfig.getAuthorEmailAddress()#" query="particpants" to="emailAddress" subject="Comment added to blog: #BlogConfig.getBlogTitle()# - #EntryRecord.getTitle()#" type="html">
+<cfmail from="#BlogConfig.getAuthorEmailAddress()#" query="particpants" to="#particpants.emailAddress#" subject="Comment added to blog: #BlogConfig.getBlogTitle()# - #EntryRecord.getTitle()#" type="html">
+	<p>Dear #particpants.name#,</p>
 	
 	<p>
 		<strong>Comment added to Blog:</strong><br>
@@ -24,6 +25,6 @@
 	<p>
 		<strong>Comment:</strong><br>
 		#CommentRecord.getComment()#
-	</p>	
-	
+	</p>
+		
 </cfmail>

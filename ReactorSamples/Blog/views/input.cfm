@@ -16,7 +16,7 @@
 <cfset classes = "field" />
 
 <!--- this is a little fix for safari --->
-<cfif attributes.type IS "editor" AND FindNoCase("safari", cgi.HTTP_USER_AGENT)>
+<cfif attributes.type IS "editor" AND NOT (FindNoCase("Gecko", cgi.HTTP_USER_AGENT) OR FindNoCase("MSIE", cgi.HTTP_USER_AGENT))>
 	<cfset attributes.type = "textarea" />
 </cfif>
 
@@ -55,10 +55,10 @@
 				<!--- an html editor --->
 				<cfcase value="editor">
 					<label for="#attributes.name#">#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</label>
-					<cfset pathToEditor = GetDirectoryFromPath(CGI.SCRIPT_NAME) & "views/FCKeditor" />
+					<cfset pathToEditor = GetDirectoryFromPath(getCurrentTemplatePath()) & "/FCKeditor" />
 					<cfset pathToCss = GetDirectoryFromPath(CGI.SCRIPT_NAME) & "scripts/styles/styles.css" />
 					
-					<cfif DirectoryExists(ExpandPath(pathToEditor))>
+					<cfif DirectoryExists(pathToEditor)>
 						<cfif NOT Len(attributes.value)>
 							<cfset attributes.value = "<p>&nbsp;</p>" />
 						</cfif>
@@ -69,10 +69,13 @@
 						<cfset FckEditor.value = attributes.value />
 						<cfset FckEditor.toolbarSet = "Blog" />
 						<cfset FckEditor.config.styleSheet = pathToCss />
-						<cfset FckEditor.basePath = GetDirectoryFromPath(CGI.SCRIPT_NAME) & "/views/FCKeditor" />
+						<cfset FckEditor.basePath = "views/FCKeditor" />
 						<cfset FckEditor.create() />
 					<cfelse>
-						Show textarea
+						<textarea name="#attributes.name#"
+							style="width: #attributes.width#; height: #attributes.height#;"
+							wrap="virtual"
+							class="inputTextArea #attributes.class#">#attributes.value#</textarea>
 					</cfif>
 				</cfcase>
 				

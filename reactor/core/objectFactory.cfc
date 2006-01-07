@@ -26,11 +26,17 @@
 		<!--- if we don't have a cached version of this object create one --->
 		<cfif NOT variables.TimedCache.exists(arguments.name)>
 			<!--- create and load a reactor.core.object object --->
-			<cfset variables.TimedCache.setValue(arguments.name, getObject(arguments.name), createTimeSpan(0, 0, 0, 5)) />
+			<cfset variables.TimedCache.setValue(arguments.name, getObject(arguments.name), createTimeSpan(0, 0, 0, 8)) />
 		</cfif>
 		
 		<!--- get the cached object --->
-		<cfset DbObject = variables.TimedCache.getValue(arguments.name) />
+		<cftry>
+			<cfset DbObject = variables.TimedCache.getValue(arguments.name) />
+			<cfcatch>
+				<!--- it's possible that the cache timed out between when we checked to see if it existed and now --->
+				<cfset DbObject = getObject(arguments.name) />
+			</cfcatch>
+		</cftry>
 				
 		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
