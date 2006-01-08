@@ -9,9 +9,9 @@
 		<value>DougHughes.net</value>
 	</property>
 	
-	<!-- this is the blog's baseUrl.  IE: this is the path to the blog's index file. -->
-	<property name="baseUrl">
-		<value>http://reactor.office.alagad.com/ReactorSamples/Blog/index.cfm</value>
+	<!-- this is the directory the blog is under.  IE: the part after the domain name and before index.cfm. http://www.foo.com[/path/to/blog/]index.cfm -->
+	<property name="blogPath">
+		<value>/ReactorSamples/Blog</value>
 	</property>
 	
 	<!-- this is the description of the blog -->

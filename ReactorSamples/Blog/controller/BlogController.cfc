@@ -22,8 +22,8 @@
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.UserGateway = Reactor.createGateway("User") /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
-		<cfset variables.UrlPinger = CreateObject("Component", "model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
-		<cfset variables.Search = CreateObject("Component", "model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
+		<cfset variables.UrlPinger = CreateObject("Component", "ReactorSamples.blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
+		<cfset variables.Search = CreateObject("Component", "ReactorSamples.blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -305,7 +305,7 @@
 	<cffunction name="DoRateEntry" access="Public" returntype="void" output="false" hint="I rate an entry.  Users can only rate an entry one time per session.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var RatingRecord = variables.Reactor.createRecord("Rating") />
-		<cfset var ScopeFacade = CreateObject("Component", "model.util.ScopeFacade").init("session") />
+		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.blog.model.util.ScopeFacade").init("session") />
 		<cfset var EntriesRatedList = ScopeFacade.getValue("EntriesRatedList", "") />
 		
 		<cfif NOT ListFind(EntriesRatedList, arguments.event.getValue("entryId")) AND arguments.event.getValue("rating") GTE 1 AND arguments.event.getValue("rating") LTE 5>

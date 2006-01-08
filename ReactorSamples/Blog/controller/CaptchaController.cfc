@@ -12,7 +12,7 @@
 		
 		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
 		<cfif variables.BlogConfig.getUseCaptcha()>
-			<cfset variables.Captcha = CreateObject("Component", "model.util.Captcha").configure(expandPath(variables.BlogConfig.getCaptchaDirectory()), variables.BlogConfig.getCaptchaKey()) />
+			<cfset variables.Captcha = CreateObject("Component", "ReactorSamples.blog.model.util.Captcha").configure(expandPath(variables.BlogConfig.getCaptchaDirectory()), variables.BlogConfig.getCaptchaKey()) />
 		</cfif>
 		<cfreturn this />
 	</cffunction>
@@ -20,7 +20,7 @@
 	<!--- DoCreateCaptcha --->
 	<cffunction name="DoCreateCaptcha" access="Public" returntype="void" output="false" hint="I create a captcha image.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var ScopeFacade = CreateObject("Component", "model.util.ScopeFacade").init("session") />
+		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.blog.model.util.ScopeFacade").init("session") />
 		
 		<cfif variables.BlogConfig.getUseCaptcha()>
 			<cfset ScopeFacade.setValue("Captcha", variables.Captcha.createCaptcha()) />
@@ -32,7 +32,7 @@
 	<cffunction name="DoValidateCaptcha" access="Public" returntype="void" output="false" hint="I am an event handler.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">		
 		<cfset var Errors = arguments.event.getValue("Errors") />
-		<cfset var ScopeFacade = CreateObject("Component", "model.util.ScopeFacade").init("session") />
+		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.blog.model.util.ScopeFacade").init("session") />
 		<cfset var captchaHash = 0 />
 		
 		<cfif variables.BlogConfig.getUseCaptcha()>
