@@ -21,7 +21,7 @@
 	
 	<!-- author's email address -->
 	<property name="authorEmailAddress">
-		<value>dhughes@alagad.com</value>
+		<value>example@sample.com</value>
 	</property>
 	
 	<!-- author's name -->
