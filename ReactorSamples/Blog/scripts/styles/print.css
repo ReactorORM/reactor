@@ -98,8 +98,6 @@ form .field{
 	margin-bottom: 5px;
 }
 
-
-
 table{
 	width: 100%;
 	border-collapse: collapse;
@@ -117,3 +115,47 @@ table .row td{
 	color: #CCCCCC;
 	text-decoration: underline;
 }
+
+table{
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table .header{
+	white-space: nowrap;
+	color: #FFFFFF;
+	font-weight: bold;
+	background-image: url(../../images/background.jpg);
+	font-size: 12px;
+	border-bottom: 1px solid #FFCB1E;
+	background-color: #1F5F9F;
+	background-image: url(../../images/background.jpg);
+}
+
+table .header td{
+	margin-bottom: 1px;
+	padding: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+table .row td{
+	padding: 3px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.disabled{
+	color: #CCCCCC;
+	text-decoration: underline;
+}
+
+code, .code{ 
+	border: 1px solid #3D8BD8 !important;
+	padding: 5px;
+	background-color: #EEEEEE;
+}
+
+.code pre{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+

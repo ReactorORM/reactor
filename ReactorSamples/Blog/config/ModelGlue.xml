@@ -65,6 +65,8 @@
 		</controller>
 		<controller name="fortuneController" type="ReactorSamples.Blog.controller.FortuneController">
 			<message-listener message="NeedFortune" function="GetFortune" />
+			<message-listener message="NeedAnyFortune" function="GetAnyFortune" />
+			<message-listener message="NeedFortuneTopics" function="GetFortuneTopics" />
 		</controller>
 		<controller name="captchaController" type="ReactorSamples.Blog.controller.CaptchaController">
 			<message-listener message="NeedCaptcha" function="DoCreateCaptcha" />

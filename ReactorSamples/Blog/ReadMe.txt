@@ -55,7 +55,7 @@ the name of the ReactorSamples.Blog.
 
 7) Use a tool like dreamweaver or cfeclipse and Find and Replace all instances of "ReactorSamples.Blog." with the correct location.  For
 example, if your placed the blog under "/foobar", you would replace "ReactorSamples.Blog." with "foobar." everywhere.  (I hate this step. 
-There's got to be a better way!)  Roughly 25 changes should be made.
+There's got to be a better way!)  Roughly 32 changes should be made.
 	(note: be sure to make sure the find and replace is not case sensitive)
 
 8) Use a tool like dreamweaver or cfeclipse and Find and Replace all instances of "/ReactorSamples/blog" with the correct location.  For
@@ -65,12 +65,13 @@ There's got to be a better way!)  Roughly 5 changes should be made.
 
 9) Use a tool like dreamweaver or cfeclipse and Find and Replace all instances of "ReactorBlogData." with the correct location based on the data
 mapping created in step 5.  For example, if your set the mapping to "/foobarData", you would replace "ReactorBlogData." with "foobarData." everywhere.
-(I *really* hate this step! There's got to be a better way!)  Roughly 5 changes should be made.
+(I *really* hate this step! There's got to be a better way!)  Roughly 27 changes should be made.
 	(note: be sure to make sure the find and replace is not case sensitive)
 
 10) Open the /config/beans/blogConfig.xml file.  Review the settings in here and make changes as needed.  In particular, change these: blogTitle,
 blogDescription, authorEmailAddress, authorName, pingUrlArray, blogSearchCollection (set this to empty for no search or the name of the collection
 created in step 6).
+	(note: if you placed your blog in your web root the /config path will be //config.  fix this so that it's /config) 
 
 11) Open the /config/reactor.xml file.  Change the dsn to the one created in step 4.  Change the type to either mssql or mysql (as needed).
 Change the mapping to the mapping created in step 5.  Set the mode to production.

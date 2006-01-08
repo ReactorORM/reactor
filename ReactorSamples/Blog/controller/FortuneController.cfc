@@ -26,6 +26,22 @@
 		<cfset arguments.event.setValue("fortune", variables.FortuneFacade.getFortune()) />
 	</cffunction>
 	
+	<!--- GetAnyFortune --->
+	<cffunction name="GetAnyFortune" access="Public" returntype="void" output="false" hint="I get any fortune.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		
+		<!--- set the fortune into the event --->
+		<cfset arguments.event.setValue("anyFortune", variables.FortuneFacade.getAnyFortune()) />
+	</cffunction>
+	
+	<!--- GetFortuneTopics --->
+	<cffunction name="GetFortuneTopics" access="Public" returntype="void" output="false" hint="I get any fortune.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		
+		<!--- set the fortune topics into the event --->
+		<cfset arguments.event.setValue("fortuneTopics", variables.FortuneFacade.getFortuneTopics()) />
+	</cffunction>
+	
 	<!--- Functions specified by <message-listener> tags --->
 	<cffunction name="OnRequestStart" access="Public" returntype="void" output="false" hint="I am an event handler.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
