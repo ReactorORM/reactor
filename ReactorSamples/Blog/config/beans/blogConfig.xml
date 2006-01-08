@@ -1,4 +1,4 @@
-<bean class="ReactorSamples.blog.model.config.blogConfig" singleton="true">
+<bean class="ReactorSamples.Blog.model.config.blogConfig" singleton="true">
 	<!-- this is the relative to the reactor config file -->
 	<property name="reactorConfigFile">
 		<value>/ReactorSamples/Blog/config/Reactor.xml</value>

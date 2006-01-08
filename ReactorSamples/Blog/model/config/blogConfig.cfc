@@ -19,8 +19,8 @@
 	<cfset variables.componentRoot = "" />
 	
 	<cffunction name="init" access="public" hint="I configure and return the blogConfig" output="false" returntype="blogConfig">
-		<cfargument name="blogTitle" hint="I am the title of the blog." required="no" type="string" default="" />
-		<cfargument name="blogPath" hint="I am the base url of the blog." required="no" type="string" default="" />
+		<cfargument name="blogTitle" hint="I am the title of the ReactorSamples.Blog." required="no" type="string" default="" />
+		<cfargument name="blogPath" hint="I am the base url of the ReactorSamples.Blog." required="no" type="string" default="" />
 		<cfargument name="blogDescription" hint="I am the description of the blog" required="no" type="string" default="" />
 		<cfargument name="authorEmailAddress" hint="I am the author's email address" required="no" type="string" default="" />
 		<cfargument name="authorName" hint="I am the author's name" required="no" type="string" default="" />
@@ -61,7 +61,7 @@
 	
 	<!--- blogTitle --->
     <cffunction name="setBlogTitle" access="public" output="false" returntype="void">
-       <cfargument name="blogTitle" hint="I am the title of the blog." required="yes" type="string" />
+       <cfargument name="blogTitle" hint="I am the title of the ReactorSamples.Blog." required="yes" type="string" />
        <cfset variables.blogTitle = arguments.blogTitle />
     </cffunction>
     <cffunction name="getBlogTitle" access="public" output="false" returntype="string">
@@ -70,7 +70,7 @@
 	
 	<!--- blogPath --->
     <cffunction name="setBlogPath" access="public" output="false" returntype="void">
-		<cfargument name="blogPath" hint="I am the base url of the blog." required="yes" type="string" />
+		<cfargument name="blogPath" hint="I am the base url of the ReactorSamples.Blog." required="yes" type="string" />
 		<cfset var dotPath = arguments.blogPath />
 		<cfset variables.blogPath = arguments.blogPath />
 		

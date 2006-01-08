@@ -34,8 +34,10 @@
 				<!--- output various links --->
 				<p>
 					<a href="index.cfm?event=viewEntry&entryId=#entries.entryId#">View Full Entry</a> 
-					|
-					<a href="index.cfm?event=viewEntry&entryId=#entries.entryId###comments">#entries.commentCount# Comments</a>
+					<cfif NOT entries.disableComments>
+						|
+						<a href="index.cfm?event=viewEntry&entryId=#entries.entryId###comments">#entries.commentCount# Comments</a>
+					</cfif>
 					<cfif UserRecord.isLoggedIn()>
 						|
 						<a href="index.cfm?event=EntryForm&entryId=#entries.entryId#">Edit</a>

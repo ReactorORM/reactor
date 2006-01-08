@@ -10,7 +10,7 @@
 		<cfargument name="InstanceName" required="true" type="string" />
 		<cfset super.Init(arguments.ModelGlue) />
 		
-		<cfset variables.FortuneFacade = CreateObject("Component", "reactorSamples.Blog.model.fortune.FortuneFacade").init(
+		<cfset variables.FortuneFacade = CreateObject("Component", "ReactorSamples.Blog.model.fortune.FortuneFacade").init(
 			getModelGlue().getConfigBean("fortuneConfig.xml", true),
 			CreateObject("Component", "modelglue.util.timedCache")
 		) />

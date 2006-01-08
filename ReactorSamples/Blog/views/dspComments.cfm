@@ -1,10 +1,10 @@
 <cfset EntryRecord = viewstate.getvalue("EntryRecord") />
 <cfset CommentArray = viewstate.getvalue("CommentArray") />
 
-<a name="comments"></a>
-<h2>Comments</h2>
-
 <cfif NOT EntryRecord.getDisableComments()>
+	<a name="comments"></a>
+	<h2>Comments</h2>
+
 	<cfloop from="1" to="#ArrayLen(CommentArray)#" index="x">
 		<cfoutput>
 			<div class="comment #Iif(x MOD 2 IS 1, DE('odd'), DE('even'))#">

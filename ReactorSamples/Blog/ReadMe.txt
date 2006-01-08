@@ -5,7 +5,7 @@ was written the options were:
 MSSQL Create Database.sql	- For Microsoft SQL
 MySQL Create Database.sql	- For MySQL
 
-After you've created the database create a DSN named ReactorBlog.  If you need to change the name of the
+After you've created the database create a DSN named ReactorReactorSamples.Blog.  If you need to change the name of the
 DSN update the reactor.xml in the config folder file and set the dsn value to your new DSN.  For example, change
 
 <dsn value="ReactorBlog" />
@@ -48,13 +48,13 @@ in the "base" directory is empty.  (This should be true already.)
 4) Create a coldfusion datasource for the database.
 
 5) Create a mapping to the blog's data directory.  You can call this whatever you want.  I tend to call mine something like /BlogNameData
-where blogname is the name of the blog.
+where blogname is the name of the ReactorSamples.Blog.
 
 6) (Optional) Create a Verity collection to index your entries.  I tend to call mine something like BlogNameCollection where blogname is
-the name of the blog. 
+the name of the ReactorSamples.Blog. 
 
-7) Use a tool like dreamweaver or cfeclipse and Find and Replace all instances of "ReactorSamples.blog." with the correct location.  For
-example, if your placed the blog under "/foobar", you would replace "ReactorSamples.blog." with "foobar." everywhere.  (I hate this step. 
+7) Use a tool like dreamweaver or cfeclipse and Find and Replace all instances of "ReactorSamples.Blog." with the correct location.  For
+example, if your placed the blog under "/foobar", you would replace "ReactorSamples.Blog." with "foobar." everywhere.  (I hate this step. 
 There's got to be a better way!)  Roughly 25 changes should be made.
 	(note: be sure to make sure the find and replace is not case sensitive)
 

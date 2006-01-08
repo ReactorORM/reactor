@@ -84,7 +84,8 @@
 					<label for="#attributes.name#"></label>
 					<cfinput name="#attributes.name#"
 						type="#attributes.type#" 
-						value="#attributes.value#"
+						checked="#Iif(attributes.value, DE('true'), DE('false'))#"
+						value="true"
 						style="#attributes.style#"
 						class="inputCheckbox #attributes.class#" />
 					<span>#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</span>

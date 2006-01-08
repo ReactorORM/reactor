@@ -1,4 +1,4 @@
-<bean class="ReactorSamples.blog.model.config.fortuneConfig" singleton="true">
+<bean class="ReactorSamples.Blog.model.config.fortuneConfig" singleton="true">
 	<!--
 		A comma delimited list of topics to restrict the fortune to. Use an empty string to use all topics.
 		Options are: simpsonschalkboard,startrek,wisdom,politics,programingstyle,sports,platitudes,job,linuxcookie,songspoems,magic,dune,medicine,love,science,miscellaneous,people,kids,ethnic,humorists,law,drugs,education,definitions,cookie,fortunes,news,literature,computers,asciiart,zippy,hitchhiker,goedel,simpsonshomer,tao,art,pets,calvin,food,riddles

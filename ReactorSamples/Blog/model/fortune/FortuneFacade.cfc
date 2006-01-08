@@ -5,7 +5,7 @@
 	<cfset variables.FortuneWebService = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure and return this cfc" output="false" returntype="FortuneFacade">
-		<cfargument name="FortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="ReactorSamples.blog.model.config.fortuneConfig" />
+		<cfargument name="FortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="ReactorSamples.Blog.model.config.fortuneConfig" />
 		<cfargument name="TimedCache" hint="I am the TimedCache to use.  I reinit this." required="yes" type="modelglue.util.timedCache" />
 		
 		<cfset setFortuneConfig(arguments.FortuneConfig) />
@@ -71,10 +71,10 @@
 
 	<!--- fortuneConfig --->
     <cffunction name="setFortuneConfig" access="private" output="false" returntype="void">
-       <cfargument name="fortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="ReactorSamples.blog.model.config.fortuneConfig" />
+       <cfargument name="fortuneConfig" hint="I am the FortuneConfig Bean" required="yes" type="ReactorSamples.Blog.model.config.fortuneConfig" />
        <cfset variables.fortuneConfig = arguments.fortuneConfig />
     </cffunction>
-    <cffunction name="getFortuneConfig" access="private" output="false" returntype="ReactorSamples.blog.model.config.fortuneConfig">
+    <cffunction name="getFortuneConfig" access="private" output="false" returntype="ReactorSamples.Blog.model.config.fortuneConfig">
        <cfreturn variables.fortuneConfig />
     </cffunction>
 	

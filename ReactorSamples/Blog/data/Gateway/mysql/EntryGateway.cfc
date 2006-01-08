@@ -32,7 +32,7 @@
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y') as publicationDate,
 				e.publicationDate as publicationDateTime,
 				e.views, c.categoryId, c.name as categoryName, 
-				u.firstName, u.lastName,
+				u.firstName, u.lastName, e.disableComments,
 				
 				count(DISTINCT m.commentId) as commentCount,
 				getAverageRating(e.entryId) as averageRating
@@ -67,7 +67,7 @@
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y'),
 				e.publicationDate,
 				e.views, c.categoryId, c.name, 
-				u.firstName, u.lastName 
+				u.firstName, u.lastName, e.disableComments
 			ORDER BY e.publicationDate DESC
 		</cfquery>
 		

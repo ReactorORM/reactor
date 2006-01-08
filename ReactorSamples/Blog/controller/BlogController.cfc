@@ -1,4 +1,4 @@
-<cfcomponent displayname="BlogController" output="false" hint="I am the controller for a blog." extends="ModelGlue.Core.Controller">
+<cfcomponent displayname="BlogController" output="false" hint="I am the controller for a ReactorSamples.Blog." extends="ModelGlue.Core.Controller">
 
 	<cfset variables.Reactor = 0 />
 	<cfset variables.CategoryGateway = 0 />
@@ -22,8 +22,8 @@
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.UserGateway = Reactor.createGateway("User") /> 
 		<cfset variables.EntryGateway = Reactor.createGateway("Entry").init(variables.BlogConfig.getRecentEntryDays()) /> 
-		<cfset variables.UrlPinger = CreateObject("Component", "ReactorSamples.blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
-		<cfset variables.Search = CreateObject("Component", "ReactorSamples.blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
+		<cfset variables.UrlPinger = CreateObject("Component", "ReactorSamples.Blog.model.blog.UrlPinger").init(variables.BlogConfig.getPingUrlArray()) />
+		<cfset variables.Search = CreateObject("Component", "ReactorSamples.Blog.model.search.Search").init(variables.BlogConfig.getBlogSearchCollection(), variables.BlogConfig.getAdditionalCollectonsList()) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -92,7 +92,7 @@
 	</cffunction>
 	
 	<!--- DoGetUsers --->
-	<cffunction name="DoGetUsers" access="Public" returntype="void" output="false" hint="I get a query of all the Users in the blog.">
+	<cffunction name="DoGetUsers" access="Public" returntype="void" output="false" hint="I get a query of all the Users in the ReactorSamples.Blog.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.setValue("Users", variables.UserGateway.getAllUsers()) />
 	</cffunction>
@@ -139,7 +139,7 @@
 	</cffunction>
 	
 	<!--- DoGetCategories --->
-	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the blog.">
+	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the ReactorSamples.Blog.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.setValue("Categories", variables.CategoryGateway.getCountedCategories()) />
 	</cffunction>
@@ -256,6 +256,7 @@
 		
 		<!--- update the entry --->
 		<cfset arguments.event.makeEventBean(EntryRecord) />
+		<cfset EntryRecord.setDisableComments(arguments.event.getValue("disableComments", false)) />
 		<cfset arguments.event.setValue("EntryRecord", EntryRecord) />		
 	</cffunction>
 	
@@ -305,7 +306,7 @@
 	<cffunction name="DoRateEntry" access="Public" returntype="void" output="false" hint="I rate an entry.  Users can only rate an entry one time per session.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var RatingRecord = variables.Reactor.createRecord("Rating") />
-		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.blog.model.util.ScopeFacade").init("session") />
+		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.Blog.model.util.ScopeFacade").init("session") />
 		<cfset var EntriesRatedList = ScopeFacade.getValue("EntriesRatedList", "") />
 		
 		<cfif NOT ListFind(EntriesRatedList, arguments.event.getValue("entryId")) AND arguments.event.getValue("rating") GTE 1 AND arguments.event.getValue("rating") LTE 5>

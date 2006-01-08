@@ -8,15 +8,19 @@
 	#EntryRecord.getArticle()#
 	
 	<!--- output various links --->
-	<p>
-		<a href="##comments">#EntryRecord.getCommentCount()# Comments</a>
-		<cfif UserRecord.isLoggedIn()>
-			|
+	<cfif NOT EntryRecord.getDisableComments()>
+		<p>
+			<a href="##comments">#EntryRecord.getCommentCount()# Comments</a>
+		</p>
+	</cfif>
+	
+	<cfif UserRecord.isLoggedIn()>
+		<p>
 			<a href="index.cfm?event=EntryForm&entryId=#EntryRecord.getEntryId()#">Edit</a>
 			|
 			<a href="index.cfm?event=DeleteEntry&entryId=#EntryRecord.getEntryId()#" onclick="return confirm('Are your sure you want to delete this entry?');">Delete</a>
-		</cfif>
-	</p>
+		</p>
+	</cfif>
 		
 	<!--- output the categories --->
 	<cfset categoryQuery = EntryRecord.getCategoryQuery() />

@@ -32,7 +32,7 @@
 				CONVERT(varchar(2), MONTH(e.publicationDate)) + '/' + CONVERT(varchar(2), DAY(e.publicationDate)) + '/' + CONVERT(varchar(4), YEAR(e.publicationDate)) as publicationDate,
 				e.publicationDate as publicationDateTime,
 				e.views, c.categoryId, c.name as categoryName, 
-				u.firstName, u.lastName,
+				u.firstName, u.lastName, e.disableComments,
 				
 				count(DISTINCT m.commentId) as commentCount,
 				dbo.getAverageRating(e.entryId) as averageRating
@@ -67,7 +67,7 @@
 				CONVERT(varchar(2), MONTH(e.publicationDate)) + '/' + CONVERT(varchar(2), DAY(e.publicationDate)) + '/' + CONVERT(varchar(4), YEAR(e.publicationDate)),
 				e.publicationDate,
 				e.views, c.categoryId, c.name, 
-				u.firstName, u.lastName 
+				u.firstName, u.lastName, e.disableComments
 			ORDER BY e.publicationDate DESC
 		</cfquery>
 		
