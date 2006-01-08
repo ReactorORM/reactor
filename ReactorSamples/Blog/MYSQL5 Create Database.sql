@@ -108,14 +108,16 @@ INSERT INTO `ReactorBlog`.`User`
   `userName`,
   `password`,
   `firstName`,
-  `lastName`
+  `lastName`,
+  `emailAddress`
 )
 VALUES
 (
   'admin',
   'admin',
   'Admin',
-  'User'
+  'User',
+  'admin@example.com'
 );
 
 DELIMITER $$
