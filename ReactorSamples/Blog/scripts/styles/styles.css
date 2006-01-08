@@ -59,6 +59,7 @@ img{
 	min-height: 360px;
 	float: left;
 	overflow: expand;
+	margin-top: -27px;
 }
 
 #footer{
@@ -210,11 +211,16 @@ div .odd{
 #searchField{
 	color: #FFFFFF;
 	font-weight: bold;
-	position: relative;
-	left: 500px;
-	top: -60px;
 	width: 300px;
 	text-align: center;
+	position: relative;
+	top: -51px;
+	left: 500px;
+}
+
+#searchField form{
+	margin: 0px;
+	padding: 0px;
 }
 
 #searchField input.inputText{
