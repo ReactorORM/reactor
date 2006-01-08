@@ -1,7 +1,7 @@
 <cfcomponent displayname="blogConfig" hint="I am a config bean for the blog app.">
 	
 	<cfset variables.blogTitle = "" />
-	<cfset variables.baseUrl = "" />
+	<cfset variables.blogPath = "" />
 	<cfset variables.blogDescription = "" />
 	<cfset variables.authorEmailAddress = "" />
 	<cfset variables.authorName = "" />
@@ -16,9 +16,11 @@
 	<cfset variables.showFriendlyErrors = false />
 	<cfset variables.reactorConfigFile = "" />
 	
+	<cfset variables.componentRoot = "" />
+	
 	<cffunction name="init" access="public" hint="I configure and return the blogConfig" output="false" returntype="blogConfig">
 		<cfargument name="blogTitle" hint="I am the title of the blog." required="no" type="string" default="" />
-		<cfargument name="baseUrl" hint="I am the base url of the blog." required="no" type="string" default="" />
+		<cfargument name="blogPath" hint="I am the base url of the blog." required="no" type="string" default="" />
 		<cfargument name="blogDescription" hint="I am the description of the blog" required="no" type="string" default="" />
 		<cfargument name="authorEmailAddress" hint="I am the author's email address" required="no" type="string" default="" />
 		<cfargument name="authorName" hint="I am the author's name" required="no" type="string" default="" />
@@ -34,7 +36,7 @@
 		<cfargument name="reactorConfigFile" hint="I am the path to the reactor config file" required="no" type="string" default="" />
 		
 		<cfset setBlogTitle(arguments.blogTitle) />
-		<cfset setBaseUrl(arguments.baseUrl) />
+		<cfset setBlogPath(arguments.blogPath) />
 		<cfset setBlogDescription(arguments.blogDescription) />
 		<cfset setAuthorEmailAddress(arguments.authorEmailAddress) />
 		<cfset setAuthorName(arguments.authorName) />
@@ -66,14 +68,42 @@
        <cfreturn variables.blogTitle />
     </cffunction>
 	
-	<!--- baseUrl --->
-    <cffunction name="setBaseUrl" access="public" output="false" returntype="void">
-       <cfargument name="baseUrl" hint="I am the base url of the blog." required="yes" type="string" />
-       <cfset variables.baseUrl = arguments.baseUrl />
+	<!--- blogPath --->
+    <cffunction name="setBlogPath" access="public" output="false" returntype="void">
+		<cfargument name="blogPath" hint="I am the base url of the blog." required="yes" type="string" />
+		<cfset var dotPath = arguments.blogPath />
+		<cfset variables.blogPath = arguments.blogPath />
+		
+		<!--- replace double slashes --->
+		<cfset dotPath = ReReplace(dotPath, "/+", "/", "all") />
+		
+		<!--- create the component root --->
+		<cfif dotPath IS "/">
+			<cfset dotPath = "" />
+			
+		<cfelseif Len(dotPath)>
+			<!--- check to see if the left-most character is a "/" --->
+			<cfif Left(dotPath, 1) IS "/">
+				<cfset dotPath = Right(dotPath, Len(dotPath) - 1 ) />
+			</cfif>
+			
+			<!--- check to see if the right-most character is a "/" --->
+			<cfif Right(dotPath, 1) IS "/">
+				<cfset dotPath = Left(dotPath, Len(dotPath) - 1 ) />
+			</cfif>
+			
+			<cfset dotPath = Replace(dotPath, "/", ".", "all") & "." />
+		</cfif>
+		
+		<cfset variables.componentRoot = dotPath />
     </cffunction>
-    <cffunction name="getBaseUrl" access="public" output="false" returntype="string">
-       <cfreturn variables.baseUrl />
+    <cffunction name="getBlogPath" access="public" output="false" returntype="string">
+       <cfreturn variables.blogPath />
     </cffunction>
+	
+	<cffunction name="getComponentRoot" access="public" hint="I get the blogPath in dot syntax." output="false" returntype="string">
+		<cfreturn variables.componentRoot />
+	</cffunction>
 	
 	<!--- blogDescription --->
     <cffunction name="setBlogDescription" access="public" output="false" returntype="void">

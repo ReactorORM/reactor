@@ -13,6 +13,16 @@
 <body>
 <img src="images/logo.gif" alt="DougHughes.net" id="logo" />
 
+<cfif BlogConfig.searchEnabled()>
+	<div id="searchField">
+		<cfform name="search" action="index.cfm?event=search" method="post">
+			Search: 
+			<cfinput type="text" name="criteria" value="#viewstate.getValue('criteria')#" size="20" maxlength="40" class="inputText" />
+			<cfinput type="submit" name="Submit" value="Search" class="inputSubmit" />
+		</cfform>
+	</div>
+</cfif>
+
 <div id="body">
 	<cfif server.ColdFusion.ProductName IS "ColdFusion Server" AND ListFirst(server.ColdFusion.ProductVersion) GTE 7>
 		<!--- print --->
@@ -40,16 +50,6 @@
 			<cfoutput>#viewCollection.getView("leftNav")#</cfoutput>
 		</cfif>
 	</div>
-
-	<cfif BlogConfig.searchEnabled()>
-		<div id="searchField">
-			<cfform name="search" action="index.cfm?event=search" method="post">
-				Search: 
-				<cfinput type="text" name="criteria" value="#viewstate.getValue('criteria')#" size="20" maxlength="40" class="inputText" />
-				<cfinput type="submit" name="Submit" value="Search" class="inputSubmit" />
-			</cfform>
-		</div>
-	</cfif>
 </div>
 
 <br style="clear: both;" />

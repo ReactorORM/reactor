@@ -21,11 +21,11 @@
 	
 		<cfoutput query="entries" group="entryId">
 			<item>
-				<title>#entries.title#</title>
+				<title>#Replace(entries.title, "&", "&amp;", "all")#</title>
 				<link>#link#?event=viewEntry&amp;entryId=#entries.entryID#</link>
-				<description>#Trim(ReReplace(entries.preview, "<[^<]+?>", "", "all"))#</description>
+				<description>#Replace(Trim(ReReplace(entries.preview, "<[^<]+?>", "", "all")), "&", "&amp;", "all")#</description>
 				<cfoutput>
-					<category>#entries.categoryName#</category>
+					<category>#Replace(entries.categoryName, "&", "&amp;", "all")#</category>
 				</cfoutput>
 				<pubDate>#dateFormat(entries.publicationDateTime, "ddd, dd mmm yyyy") & " " & timeFormat(entries.publicationDateTime, "HH:mm:ss") & " -" & numberFormat(getTimeZoneInfo().utcHourOffset, "00") & "00"#</pubDate>
 				<guid>#link#?event=viewEntry&amp;entryId=#entries.entryID#</guid>

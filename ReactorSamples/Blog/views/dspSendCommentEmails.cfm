@@ -12,15 +12,15 @@
 	</p>	
 	<p>
 		<strong>Entry:</strong><br>
-		<a href="#BlogConfig.getBaseUrl()#?event=ViewEntry&entryId=#EntryRecord.getEntryId()#">#EntryRecord.getTitle()#</a>
+		<a href="http://#CGI.SERVER_NAME#/#BlogConfig.getBlogPath()#?event=ViewEntry&entryId=#EntryRecord.getEntryId()#">#EntryRecord.getTitle()#</a>
 	</p>	
 	<p>
 		<strong>URL:</strong><br>
-		<a href="#BlogConfig.getBaseUrl()#?event=ViewEntry&entryId=#EntryRecord.getEntryId()#">#BlogConfig.getBaseUrl()#?event=ViewEntry&entryId=#EntryRecord.getEntryId()#</a>
+		<a href="http://#CGI.SERVER_NAME#/#BlogConfig.getBlogPath()#?event=ViewEntry&entryId=#EntryRecord.getEntryId()#">http://#CGI.SERVER_NAME#/#BlogConfig.getBlogPath()#?event=ViewEntry&amp;entryId=#EntryRecord.getEntryId()#</a>
 	</p>		
 	<p>
 		<strong>Comment Made By:</strong><br>
-		#particpants.name#
+		#CommentRecord.getName()#
 	</p>		
 	<p>
 		<strong>Comment:</strong><br>

@@ -31,6 +31,20 @@
 		
 	</cffunction>
 	
+	<!--- indexQuery --->
+	<cffunction name="indexQuery" access="public" hint="I index the provided query" output="false" returntype="void">
+		<cfargument name="query" hint="I am the query to index. (must have url, title and body fields.)" required="yes" type="query" />
+		
+		<cfindex action="update"
+			query="arguments.query"
+			key="url"
+			body="body"
+			URLpath="url"
+			title="title"
+			collection="#getPrimaryCollection()#" />
+		
+	</cffunction>
+	
 	<!--- search --->
 	<cffunction name="search" access="public" hint="I search for the string" output="false" returntype="struct">
 		<cfargument name="criteria" hint="I am the criteria to search for" required="yes" type="string" />
