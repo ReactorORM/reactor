@@ -166,7 +166,7 @@
 		
 	</cffunction>
 	
-	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Skike's blog at http://www.spike.org.uk/blog/index.cfm?do=blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
+	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Skike's blog at http://www.spike.org.uk/blog/index.cfm?do=ReactorSamples.Blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
 		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any">
 		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any">
 		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any">
