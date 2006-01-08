@@ -245,6 +245,16 @@
 		
 		<cfset arguments.event.setValue("entries", variables.EntryGateway.getMatching(categoryId, month, year)) />
 	</cffunction>
+		
+	<!--- DoValidateEntryExists --->
+	<cffunction name="DoValidateEntryExists" access="Public" returntype="void" output="false" hint="I validate that an entry exists.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var entry = variables.EntryGateway.getByFields(entryId=arguments.event.getValue("entryId", 0)) />
+		
+		<cfif NOT entry.recordCount>
+			<cfset arguments.event.addResult("NoSuchEntry") />
+		</cfif>
+	</cffunction>
 	
 	<!--- DoGetEntry --->
 	<cffunction name="DoGetEntry" access="Public" returntype="void" output="false" hint="I get or create an entry.">

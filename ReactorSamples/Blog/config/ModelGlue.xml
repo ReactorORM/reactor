@@ -52,7 +52,8 @@
 			<message-listener message="NeedUser" function="DoGetUser" />
 			<message-listener message="DeleteUser" function="DoDeleteUser" />
 			<message-listener message="ValidateUser" function="DoValidateUser" />
-			<message-listener message="SaveUser" function="DoSaveUser" />	
+			<message-listener message="SaveUser" function="DoSaveUser" />
+			<message-listener message="ValidateEntryExists" function="DoValidateEntryExists" />
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -132,6 +133,7 @@
 		
 		<event-handler name="ViewEntry">
 			<broadcasts>
+				<message name="ValidateEntryExists" />
 				<message name="NeedEntry" />
 				<message name="IncramentViewCount" />
 				<message name="NeedComments" />
@@ -143,6 +145,7 @@
 				<include name="body" template="dspCommentForm.cfm" append="true" />
 			</views>
 			<results>
+				<result do="Home" name="NoSuchEntry" redirect="true" />
 				<result do="Layout" />
 			</results>
 		</event-handler>
