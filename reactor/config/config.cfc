@@ -51,7 +51,7 @@
 	</cffunction>
 	
 	<!--- getObjectConfig --->
-	<cffunction name="getObjectConfig" access="public" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned." output="false" returntype="xml">
+	<cffunction name="getObjectConfig" access="public" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned." output="false" returntype="string">
 		<cfargument name="object" hint="I am the object to get the configuration for" required="yes" type="string" />
 		<cfset var configXml = getConfigXml() />
 		<cfset var tableConfig = XmlSearch(configXml, "/reactor/objects/object") />
@@ -68,11 +68,12 @@
 			</cfloop>
 		</cfif>
 		
-		<cfif IsXML(table)>
+		<cftry>
 			<cfset table = XmlParse(ToString(table)) />
-		<cfelse>
-			<cfset table = XmlParse("<object name=""#arguments.object#"" />") />
-		</cfif>
+			<cfcatch>
+				<cfset table = XmlParse("<object name=""#arguments.object#"" />") />
+			</cfcatch>
+		</cftry>
 		
 		<!--- return the base config --->
 		<cfreturn table />
@@ -146,10 +147,10 @@
 	
 	<!--- configXml --->
     <cffunction name="setConfigXml" access="private" output="false" returntype="void">
-       <cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="xml" />
+       <cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="string" />
        <cfset variables.configXml = arguments.configXml />
     </cffunction>
-    <cffunction name="getConfigXml" access="private" output="false" returntype="xml">
+    <cffunction name="getConfigXml" access="private" output="false" returntype="string">
        <cfreturn variables.configXml />
     </cffunction>
 	

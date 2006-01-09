@@ -14,6 +14,6 @@
 	
 	<!-- The maximum length of fortune to return. Use 0 to allow any length. MaxLength must be greater than or equal to minLength. -->
 	<property name="maxLength">
-		<value>200</value>
+		<value>300</value>
 	</property>
 </bean>

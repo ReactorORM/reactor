@@ -32,10 +32,10 @@
 	
 	<!--- errorData --->
     <cffunction name="setErrorData" access="private" output="false" returntype="void">
-       <cfargument name="errorData" hint="I am the error data read from the provided xml file." required="yes" type="xml" />
+       <cfargument name="errorData" hint="I am the error data read from the provided xml file." required="yes" type="string" />
        <cfset variables.errorData = arguments.errorData />
     </cffunction>
-    <cffunction name="getErrorData" access="private" output="false" returntype="xml">
+    <cffunction name="getErrorData" access="private" output="false" returntype="string">
        <cfreturn variables.errorData />
     </cffunction>
 

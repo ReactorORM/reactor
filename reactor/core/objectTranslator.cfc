@@ -57,7 +57,7 @@
 	</cffunction>
 	
 	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
-		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="xml" />
+		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="string" />
 		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="string" />
 		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="string" />
 		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
@@ -277,7 +277,7 @@
 	</cffunction>
 	
 	<cffunction name="FormatErrorXml" access="public" hint="I format the Xml Errors doc to make it more easily human readable." output="false" returntype="string">
-		<cfargument name="XmlErrors" hint="I am the xml error document to format." required="yes" type="xml" />
+		<cfargument name="XmlErrors" hint="I am the xml error document to format." required="yes" type="string" />
 		<cfset arguments.XmlErrors = ToString(arguments.XmlErrors) />
 		
 		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*<table ", chr(13) & chr(10) & chr(9) & "<table ", "all") />
@@ -305,7 +305,7 @@
 		
 	<!--- 
 	<cffunction name="copyNodes" access="private" hint="I copy an XML object's nodes into another XML object." output="false" returntype="void">
-		<cfargument name="document" hint="I am the destination document." required="yes" type="xml" />
+		<cfargument name="document" hint="I am the destination document." required="yes" type="string" />
 		<cfargument name="destNode" hint="I am the destination node to copy into." required="yes" type="any" />
 		<cfargument name="sourceNode" hint="I am the source node to copy from" required="yes" type="any" />
 		<cfargument name="temp" required="no" default="1" />

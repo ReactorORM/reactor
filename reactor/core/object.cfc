@@ -27,7 +27,7 @@
 		<cfreturn getXml().object.XmlAttributes.signature />
 	</cffunction>
 		
-	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="xml">
+	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
 		<cfset var Config = getConfig().getObjectConfig(getName()) />
 		<cfset var fields = getFields() />
 		<cfset var linkerRelationships = 0 />
@@ -131,7 +131,7 @@
 	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">
 		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="reactor.core.field" />
-		<cfargument name="config" hint="I am the field to add to the xml" required="yes" type="xml" />
+		<cfargument name="config" hint="I am the field to add to the xml" required="yes" type="string" />
 		<cfset var xmlField = 0 />
 		<cfset var overriddenFields = 0 />
 		
@@ -277,10 +277,10 @@
 	
 	<!--- xml
     <cffunction name="setXml" access="private" output="false" returntype="void">
-       <cfargument name="xml" hint="I return the xml document which describes this object." required="yes" type="xml" />
+       <cfargument name="xml" hint="I return the xml document which describes this object." required="yes" type="string" />
        <cfset variables.xml = arguments.xml />
     </cffunction>
-    <cffunction name="getXml" access="public" output="false" returntype="xml">
+    <cffunction name="getXml" access="public" output="false" returntype="string">
        <cfreturn variables.xml />
     </cffunction> --->
 </cfcomponent>
