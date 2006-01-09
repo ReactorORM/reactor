@@ -16,7 +16,7 @@
 <cfset classes = "field" />
 
 <!--- this is a little fix for safari --->
-<cfif attributes.type IS "editor" AND NOT (FindNoCase("Gecko", cgi.HTTP_USER_AGENT) OR FindNoCase("MSIE", cgi.HTTP_USER_AGENT))>
+<cfif attributes.type IS "editor" AND FindNoCase("safari", cgi.HTTP_USER_AGENT)>
 	<cfset attributes.type = "textarea" />
 </cfif>
 
@@ -73,10 +73,11 @@
 						<cfset FckEditor.create() />
 					<cfelse>
 						<textarea name="#attributes.name#"
-							style="width: #attributes.width#; height: #attributes.height#;"
+							style="width: 440px; height: 400px;"
 							wrap="virtual"
 							class="inputTextArea #attributes.class#">#attributes.value#</textarea>
 					</cfif>
+					
 				</cfcase>
 				
 				<!--- a checkbox --->
