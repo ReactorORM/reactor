@@ -40,17 +40,17 @@
 			<!--- generate the error messages --->
 			<cfset generateErrorMessages(pathToErrorFile) />
 		</cfif>
-					
+		
 		<!--- write the base object --->
 		<cfset generate(
 			objectXML,
-			expandPath("/reactor/xsl/#lcase(arguments.type)#.base.xsl"),
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.base.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "base"),
 			true) />
 		<!--- generate the custom object --->
 		<cfset generate(
 			objectXML,
-			expandPath("/reactor/xsl/#lcase(arguments.type)#.custom.xsl"),
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.custom.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "custom"),
 			false) />
 		
