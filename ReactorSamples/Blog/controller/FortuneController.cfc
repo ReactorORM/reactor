@@ -1,4 +1,4 @@
-<cfcomponent displayname="UserController" output="false" hint="I am the controller for a User." extends="ModelGlue.Core.Controller">
+<cfcomponent displayname="FortuneController" output="false" hint="I am the controller for Fortunes." extends="ModelGlue.Core.Controller">
 
 	<cfset variables.Fortune = 0 />
 	<cfset variables.FortuneConfig = 0 />
