@@ -42,6 +42,5 @@
 				<relate from="productId" to="productId" />
 			</hasOne>
 		</object>
-		
 	</objects>
 </reactor>

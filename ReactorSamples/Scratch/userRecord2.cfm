@@ -4,7 +4,7 @@
 <!--- create a userRecord --->
 <cfset UserRecord = Reactor.createRecord("User") />
 
-<!--- create a new record --->
+<!--- populate the new record --->
 <cfset UserRecord.setUsername("jschmoe") />
 <cfset UserRecord.setPassword("foobar") />
 <cfset UserRecord.setFirstName("Joe") />

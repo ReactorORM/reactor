@@ -9,8 +9,8 @@
 
 <!--- output all the products on this invoice --->
 
-<!--- get all of the Invoice Product Records --->
+<!--- get all of the Products on the Invoice --->
 <cfset ProductQuery = InvoiceRecord.getProductQuery() />
 
-<!--- get all the products on this invoice --->
+<!--- dump the products --->
 <cfdump var="#ProductQuery#" />
