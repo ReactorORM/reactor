@@ -1,4 +1,4 @@
-<cfcomponent displayname="BlogController" output="false" hint="I am the controller for a ReactorSamples.Blog." extends="ModelGlue.Core.Controller">
+<cfcomponent displayname="BlogController" output="false" hint="I am the controller for a Blog." extends="ModelGlue.Core.Controller">
 
 	<cfset variables.Reactor = 0 />
 	<cfset variables.CategoryGateway = 0 />
@@ -92,7 +92,7 @@
 	</cffunction>
 	
 	<!--- DoGetUsers --->
-	<cffunction name="DoGetUsers" access="Public" returntype="void" output="false" hint="I get a query of all the Users in the ReactorSamples.Blog.">
+	<cffunction name="DoGetUsers" access="Public" returntype="void" output="false" hint="I get a query of all the Users in the Blog.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.setValue("Users", variables.UserGateway.getAllUsers()) />
 	</cffunction>
@@ -139,7 +139,7 @@
 	</cffunction>
 	
 	<!--- DoGetCategories --->
-	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the ReactorSamples.Blog.">
+	<cffunction name="DoGetCategories" access="Public" returntype="void" output="false" hint="I get a query of all the categories in the Blog.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset arguments.event.setValue("Categories", variables.CategoryGateway.getCountedCategories()) />
 	</cffunction>
