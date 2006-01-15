@@ -43,6 +43,7 @@
 		&lt;cfset qExists = <xsl:value-of select="object/@name" />Gateway.getByFields(
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 				<xsl:value-of select="@name" /> = arguments.to.<xsl:value-of select="@name" />
+				<xsl:if test="position() != last()">,</xsl:if>
 			</xsl:for-each>
 		) /&gt;
 		
