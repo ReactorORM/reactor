@@ -3,11 +3,13 @@
 -- SQL Create Script
 -- ----------------------------------------------------------------------
 
-SET FOREIGN_KEY_CHECKS = 0;
-
 CREATE DATABASE IF NOT EXISTS `ReactorBlog`;
 -- -------------------------------------
 -- Tables
+
+USE `ReactorBlog`;
+
+SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `ReactorBlog`.`Category`;
 CREATE TABLE `ReactorBlog`.`Category` (
@@ -41,7 +43,7 @@ CREATE TABLE `ReactorBlog`.`Entry` (
   `article` LONGTEXT NOT NULL,
   `publicationDate` DATETIME NOT NULL,
   `postedByUserId` INT(10) NOT NULL,
-  `disableComments` TINYINT(1) NOT NULL,
+  `disableComments` BOOLEAN NOT NULL,
   `views` INT(10) NOT NULL,
   PRIMARY KEY (`entryId`),
   CONSTRAINT `FK_Entry_User` FOREIGN KEY `FK_Entry_User` (`postedByUserId`)
