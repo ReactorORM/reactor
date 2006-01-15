@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tables>
+	<table name="Contact">
+		<field name="ContactId">
+			<errorMessage message="The ContactId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The ContactId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="FirstName">
+			<errorMessage message="The First Name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The First Name field must be a string value." name="invalidType"/>
+			<errorMessage message="The First Name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="LastName">
+			<errorMessage message="The Last Name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Last Name field must be a string value." name="invalidType"/>
+			<errorMessage message="The Last Name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Notes">
+			<errorMessage message="The Notes field must be a string value." name="invalidType"/>
+			<errorMessage message="The Notes field is too long.  This field must be no more than 2147483647 characters long." name="invalidLength"/>
+		</field>
+	</table>
+	<table name="EmailAddress">
+		<field name="EmailAddressId">
+			<errorMessage message="The EmailAddressId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The EmailAddressId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="ContactId">
+			<errorMessage message="The ContactId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The ContactId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="EmailAddress">
+			<errorMessage message="The Email Address field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Email Address field must be a string value." name="invalidType"/>
+			<errorMessage message="The Email Address field is too long.  This field must be no more than 100 characters long." name="invalidLength"/>
+		</field>
+	</table>
+	<table name="Address">
+		<field name="AddressId">
+			<errorMessage message="The AddressId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The AddressId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="ContactId">
+			<errorMessage message="The ContactId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The ContactId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Line1">
+			<errorMessage message="The First Line of the address is required but was not provided." name="notProvided"/>
+			<errorMessage message="The First Line of the address must be a string value." name="invalidType"/>
+			<errorMessage message="The First Line of the address is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="Line2">
+			<errorMessage message="The Second Line of the address must be a string value." name="invalidType"/>
+			<errorMessage message="The Second Line of the address is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+			<errorMessage message="The Line2 field is required but was not provided." name="notProvided"/>
+		</field>
+		<field name="City">
+			<errorMessage message="The City field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The City field must be a string value." name="invalidType"/>
+			<errorMessage message="The City field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="StateId">
+			<errorMessage message="The StateId field must be a numeric value." name="invalidType"/>
+			<errorMessage message="The StateId field is required but was not provided." name="notProvided"/>
+		</field>
+		<field name="PostalCode">
+			<errorMessage message="The Postal Code field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Postal Code field must be a string value." name="invalidType"/>
+			<errorMessage message="The Postal Code field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
+		</field>
+		<field name="CountryId">
+			<errorMessage message="The CountryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The CountryId field must be a numeric value." name="invalidType"/>
+		</field>
+	</table>
+	<table name="State">
+		<field name="StateId">
+			<errorMessage message="The StateId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The StateId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Abbreviation">
+			<errorMessage message="The Abbreviation field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Abbreviation field must be a string value." name="invalidType"/>
+			<errorMessage message="The Abbreviation field is too long.  This field must be no more than 5 characters long." name="invalidLength"/>
+		</field>
+		<field name="Name">
+			<errorMessage message="The Name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Name field must be a string value." name="invalidType"/>
+			<errorMessage message="The Name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+	</table>
+	<table name="Country">
+		<field name="CountryId">
+			<errorMessage message="The CountryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The CountryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="Abbreviation">
+			<errorMessage message="The Abbreviation field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Abbreviation field must be a string value." name="invalidType"/>
+			<errorMessage message="The Abbreviation field is too long.  This field must be no more than 10 characters long." name="invalidLength"/>
+		</field>
+		<field name="Name">
+			<errorMessage message="The Name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Name field must be a string value." name="invalidType"/>
+			<errorMessage message="The Name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="SortOrder">
+			<errorMessage message="The SortOrder field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The SortOrder field must be a numeric value." name="invalidType"/>
+		</field>
+	</table>
+	<table name="PhoneNumber">
+		<field name="PhoneNumberId">
+			<errorMessage message="The PhoneNumberId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The PhoneNumberId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="ContactId">
+			<errorMessage message="The ContactId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The ContactId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="PhoneNumber">
+			<errorMessage message="The PhoneNumber field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The PhoneNumber field must be a string value." name="invalidType"/>
+			<errorMessage message="The PhoneNumber field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+	</table>
+</tables>
