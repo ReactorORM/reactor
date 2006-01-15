@@ -7,12 +7,17 @@
 	</config>
 
 	<objects>
-		<object name="Customer">
+		<!--<object name="Customer">
 			<hasOne name="Address">
 				<relate from="addressId" to="addressId"  />
 			</hasOne>
 		</object>
-		<!--
+		-->
+		
+		<object name="Administrator">
+			
+		</object>
+		
 		<object name="User">
 			<hasOne name="UserType">
 				<relate from="userTypeId" to="userTypeId" />
@@ -22,16 +27,9 @@
 			</hasMany>
 		</object>
 		
-		<object name="Administrator">
-			<super name="User">
-				<relate from="administratorId" to="userID" />
-			</super>
-		</object>
+		<!--
 		
 		<object name="Merchant">
-			<super name="User">
-				<relate from="merchantId" to="userID" />
-			</super>
 			<hasOne name="Company">
 				<relate from="companyId" to="companyId" />
 			</hasOne>
@@ -56,9 +54,6 @@
 		</object>
 		
 		<object name="Customer">
-			<super name="User">
-				<relate from="customerId" to="userID" />
-			</super>
 			<hasMany name="Invoice">
 				<relate from="customerId" to="customerId" />
 			</hasMany>
