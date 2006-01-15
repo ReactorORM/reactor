@@ -2,6 +2,6 @@
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
-<cfset CustomerRecord = reactor.createRecord("Customer") />
+<cfset AdministratorRecord = reactor.createRecord("Administrator") />
 
-<cfdump var="#CustomerRecord#" />
+<cfdump var="#AdministratorRecord#" />
