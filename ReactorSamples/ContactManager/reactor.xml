@@ -1,9 +1,9 @@
 <reactor>
 	<config>
-		<dsn value="ContactManager" />
-		<type value="mssql" />
+		<dsn value="ContactManager2" />
+		<type value="mysql" />
 		<mapping value="/ContactManagerData" />
-		<mode value="development" />
+		<mode value="production" />
 	</config>
 
 	<objects>
