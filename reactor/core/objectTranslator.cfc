@@ -47,6 +47,7 @@
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.base.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "base"),
 			true) />
+		
 		<!--- generate the custom object --->
 		<cfset generate(
 			objectXML,
@@ -70,7 +71,7 @@
 			<cffile action="read" file="#arguments.xslPath#" variable="xsl" />
 			<!--- transform this structure into the base TO object --->
 			<cfset code = XMLTransform(arguments.objectXML, xsl) />
-			<!--- insure the outputPath director exists --->
+			<!--- insure the outputPath directory exists --->
 			<cfset insurePathExists(arguments.outputPath)>
 			<!--- write the file to disk --->
 			<cffile action="write" file="#arguments.outputPath#" output="#code#" />
@@ -261,6 +262,7 @@
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
+		<cfset var root = "" />
 		
 		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
@@ -273,7 +275,16 @@
 				detail="The class argument must be one of: base, custom" />
 		</cfif>
 		
-		<cfreturn expandPath(getConfig().getMapping() & "/" & arguments.type & "/" & getConfig().getType() & "/" & Iif(arguments.class IS "base", DE('base/'), DE('')) & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc") />
+		<cfif arguments.class IS "base">
+			<!--- removed & getConfig().getType() & "/" from the following line of code --->
+			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project" & getConfig().getMapping() & "/" & arguments.type & "/"  />
+
+		<cfelseif arguments.class IS "custom">
+			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" & getConfig().getType() & "/") />
+
+		</cfif>
+		
+		<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
 	</cffunction>
 	
 	<cffunction name="FormatErrorXml" access="public" hint="I format the Xml Errors doc to make it more easily human readable." output="false" returntype="string">

@@ -4,7 +4,7 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the base Gateway object for the <xsl:value-of select="object/@name"/> table.  I am generated.  DO NOT EDIT ME."
+&lt;cfcomponent hint="I am the base Gateway object for the <xsl:value-of select="object/@name"/> table.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
 	extends="reactor.base.abstractGateway" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;

@@ -4,8 +4,8 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the custom Record object for the <xsl:value-of select="table/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="<xsl:value-of select="object/@mapping"/>.Record.<xsl:value-of select="object/@dbms"/>.base.<xsl:value-of select="object/@name"/>Record" &gt;
+&lt;cfcomponent hint="I am the custom Record object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+	extends="reactor.project.<xsl:value-of select="object/@mapping"/>.Record.<xsl:value-of select="object/@name"/>Record" &gt;
 	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;

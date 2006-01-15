@@ -4,16 +4,14 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the base Metadata object for the <xsl:value-of select="object/@name"/><xsl:text> </xsl:text><xsl:value-of select="object/@type"/>.  I am generated.  DO NOT EDIT ME."
+&lt;cfcomponent hint="I am the base Metadata object for the <xsl:value-of select="object/@name"/><xsl:text> </xsl:text><xsl:value-of select="object/@type"/>.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
 	extends="reactor.base.abstractMetadata" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" &gt;
 	
 	&lt;cfset variables.metadata.name = "<xsl:value-of select="object/@name" />" /&gt;
-	&lt;cfset variables.metadata.owner = "<xsl:value-of select="object/@owner" />" /&gt;
 	&lt;cfset variables.metadata.type = "<xsl:value-of select="object/@type" />" /&gt;
 	&lt;cfset variables.metadata.database = "<xsl:value-of select="object/@database" />" /&gt;
-	&lt;cfset variables.metadata.dbms = "<xsl:value-of select="object/@dbms" />" /&gt;
 	
 	&lt;!--- Super Object ---&gt;
 	&lt;cfset variables.metadata.super = structNew() /&gt;

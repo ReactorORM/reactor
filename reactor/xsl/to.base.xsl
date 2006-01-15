@@ -4,11 +4,8 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the base TO object for the <xsl:value-of select="object/@name"/><xsl:text> </xsl:text><xsl:value-of select="object/@type"/>.  I am generated.  DO NOT EDIT ME."
-	extends="<xsl:choose>
-		<xsl:when test="count(object/super)"><xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/super/@name"/>To</xsl:when>
-		<xsl:otherwise>reactor.base.abstractTo</xsl:otherwise>
-	</xsl:choose>" &gt;
+&lt;cfcomponent hint="I am the base TO object for the <xsl:value-of select="object/@name"/><xsl:text> </xsl:text><xsl:value-of select="object/@type"/>.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
+	extends="reactor.base.abstractTo" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 	<xsl:for-each select="object/fields/field">

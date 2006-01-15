@@ -96,12 +96,12 @@
 			</cfif>
 		</cfloop>
 		
-		<!--- if this object has a super object read that and add it into this --->
+		<!--- (This has been removed to allow for greater code portability) if this object has a super object read that and add it into this
 		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
 			<!--- create a new object node --->
 			<cfset ArrayAppend(Config.object.super.XmlChildren, XMLElemNew(Config, "object")) />
 			<cfset copyNode(Config, Config.object.super.object, getXml(Config.object.super.XmlAttributes.name).object) />
-		</cfif>
+		</cfif> --->
 		
 		<!--- add the fields to the config settings --->
 		<cfset Config.Object.fields = XMLElemNew(Config, "fields") />
@@ -138,7 +138,7 @@
 		<!--- create the field node--->
 		<cfset xmlField = XMLElemNew(arguments.config, "field") />
 		
-		<!--- get any super fields with the same name and override them --->
+		<!--- get any super fields with the same name and override them
 		<cfif IsDefined("arguments.config.object.super.XmlAttributes.name")>	
 			<cfset overriddenFields = XmlSearch(arguments.config, "/object/super/object/fields/field[@name = '#field.getName()#']") />
 			<cfif ArrayLen(overriddenFields)>
@@ -146,7 +146,7 @@
 					<cfset overriddenFields[y].XmlAttributes["overridden"] = 'true' />
 				</cfloop>
 			</cfif>
-		</cfif>
+		</cfif> --->
 		
 		<!--- set the field's properties --->
 		<cfset xmlField.XmlAttributes["name"] = arguments.field.getName() />

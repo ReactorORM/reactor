@@ -4,16 +4,13 @@
 	<xsl:output method="text" indent="no"  />
 	<xsl:template match="/">
 	
-&lt;cfcomponent hint="I am the base DAO object for the <xsl:value-of select="object/@name"/> table.  I am generated.  DO NOT EDIT ME."
-	extends="<xsl:choose>
-		<xsl:when test="count(object/super)"><xsl:value-of select="object/@mapping"/>.Dao.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/super/@name"/>Dao</xsl:when>
-		<xsl:otherwise>reactor.base.abstractDao</xsl:otherwise>
-	</xsl:choose>" &gt;
+&lt;cfcomponent hint="I am the base DAO object for the <xsl:value-of select="object/@name"/> table.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
+	extends="reactor.base.abstractDao" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
 	&lt;cffunction name="save" access="public" hint="I create or update a <xsl:value-of select="object/@name" /> record." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 
 		<xsl:choose>
 			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) &gt; 0">
@@ -39,7 +36,7 @@
 	
 	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
 	&lt;cffunction name="exists" access="public" hint="I check to see if the <xsl:value-of select="object/@name" /> object exists." output="false" returntype="boolean"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qExists = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
 				
@@ -58,7 +55,7 @@
 	</xsl:if>
 	
 	&lt;cffunction name="create" access="public" hint="I create a <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qCreate = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">
@@ -98,27 +95,43 @@
 						</xsl:if>
 					</xsl:for-each>
 				)
-				<xsl:if test="object/fields/field[@identity = 'true']">
-					<xsl:choose>
-						<xsl:when test="object/@dbms = 'mysql'">
-							&lt;/cfquery&gt;
-							
-							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-								#Convention.lastInseredIdSyntax(getObjectMetadata())#
-						</xsl:when>
-						<xsl:when test="object/@dbms = 'mysql4'">
-							&lt;/cfquery&gt;
-							
-							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-								#Convention.lastInseredIdSyntax(getObjectMetadata())#
-						</xsl:when>
-						<xsl:otherwise>
-								#Convention.lastInseredIdSyntax(getObjectMetadata())#
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:if>
 				
-				&lt;/cfquery&gt;
+				<!-- some dbms require the last inserted id syntax to be run at the same time as the query -->
+				&lt;cfif ListFindNoCase("mssql", _getConfig().getType())&gt;
+					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+				&lt;/cfif&gt;
+				
+			&lt;/cfquery&gt;
+			<!-- other dbms require this in a seperate query -->
+			&lt;cfif NOT ListFindNoCase("mssql", _getConfig().getType())&gt;
+				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+				&lt;/cfquery&gt;		
+			&lt;/cfif&gt;
+			
+			<!-- 
+			<xsl:if test="object/fields/field[@identity = 'true']">
+				<xsl:choose>
+					<xsl:when test="object/@dbms = 'mysql'">
+						&lt;/cfquery&gt;
+						
+						&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+					</xsl:when>
+					<xsl:when test="object/@dbms = 'mysql4'">
+						&lt;/cfquery&gt;
+						
+						&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+					</xsl:when>
+					<xsl:otherwise>
+							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			
+			&lt;/cfquery&gt;
+			-->
 		&lt;/cftransaction&gt;
 			
 		<xsl:if test="object/fields/field[@identity = 'true']">
@@ -130,7 +143,7 @@
 	
 	<xsl:if test="count(object/fields/field[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
 		
@@ -159,7 +172,7 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="update" access="public" hint="I update a <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to update a record in the table." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to update a record in the table." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qUpdate = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">
@@ -211,7 +224,7 @@
 	&lt;/cffunction&gt;
 	</xsl:if>
 	&lt;cffunction name="delete" access="public" hint="I delete a record in the <xsl:value-of select="object/@name" /> table." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to delete from the table." required="yes" type="<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@dbms"/>.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to delete from the table." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qDelete = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">
