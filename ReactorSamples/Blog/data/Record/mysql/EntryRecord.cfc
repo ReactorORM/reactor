@@ -35,6 +35,12 @@
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />
 	</cffunction>
 	
+	<cffunction name="getDistinctCategoryQuery" access="public" hint="I get the distinct categories this entry is in" output="false" returntype="query">
+		<cfset var CategoryQuery = createCategoryQuery() />
+		<cfset CategoryQuery.setDistinct(true) />
+		<cfreturn getCategoryQuery(CategoryQuery) />
+	</cffunction>
+	
 	<cffunction name="save" access="public" hint="I save the Entry record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void">
 		<cfset var CategoryGateway = _getReactorFactory().createGateway("Category") />
 		<cfset var EntryCategoryGateway = _getReactorFactory().createGateway("EntryCategory") />

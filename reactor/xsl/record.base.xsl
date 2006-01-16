@@ -153,12 +153,12 @@
 	<xsl:for-each select="object/hasOne">
 	&lt;!--- Record For <xsl:value-of select="@alias"/> ---&gt;
 	&lt;cffunction name="set<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="/object/@dbms"/>.<xsl:value-of select="@name"/>Record" /&gt;
+	    &lt;cfargument name="Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
 		<xsl:for-each select="relate">
 			&lt;cfset set<xsl:value-of select="@from" />(Record.get<xsl:value-of select="@to" />()) /&gt;
 		</xsl:for-each>
 	&lt;/cffunction&gt;
-	&lt;cffunction name="get<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="/object/@dbms"/>.<xsl:value-of select="@name"/>Record"&gt;
+	&lt;cffunction name="get<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
 		&lt;cfset var Record = _getReactorFactory().createRecord("<xsl:value-of select="@name" />") /&gt;
 		<xsl:for-each select="relate">
 			&lt;cfset Record.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;

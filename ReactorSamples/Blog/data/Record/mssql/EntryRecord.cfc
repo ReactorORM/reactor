@@ -6,10 +6,23 @@
 	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
 		<cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) />
+		<!--- strip all html and special characters to see if the user actually provided an article --->
+		<cfset var article = Trim(ReReplaceNoCase(getArticle(), '(<(.|\n)+?>)|&.+?;|\r|\n|\t', "", "all")) />
+		
+		<!--- validate the Entry --->
 		<cfset super.validate(arguments.ValidationErrorCollection) />
+				
+		<!--- make sure the user actually provided an article --->
+		<cfif NOT Len(article)>
+			<cfset arguments.ValidationErrorCollection.addError("article", ErrorManager.getError("Entry", "Article", "notProvided")) />
+		</cfif>
+		
+		<!--- insure that at least one category was selected/provided --->
+		<cfif NOT Len(getNewCategoryList()) AND NOT Len(getCategoryIdList())>
+			<cfset arguments.ValidationErrorCollection.addError("categoryIdList", ErrorManager.getError("Entry", "CategoryIdList", "NoCategorySelected")) />
+		</cfif>
 		
 		<!--- Add custom validation logic here, it will not be overwritten --->
-		
 		<cfreturn arguments.ValidationErrorCollection />
 	</cffunction>
 	
@@ -20,6 +33,12 @@
 		<!--- get the category ids for this entry --->
 		<cfset categories = getCategoryQuery() />
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />
+	</cffunction>
+	
+	<cffunction name="getDistinctCategoryQuery" access="public" hint="I get the distinct categories this entry is in" output="false" returntype="query">
+		<cfset var CategoryQuery = createCategoryQuery() />
+		<cfset CategoryQuery.setDistinct(true) />
+		<cfreturn getCategoryQuery(CategoryQuery) />
 	</cffunction>
 	
 	<cffunction name="save" access="public" hint="I save the Entry record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void">

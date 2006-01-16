@@ -23,7 +23,7 @@
 	</cfif>
 		
 	<!--- output the categories --->
-	<cfset categoryQuery = EntryRecord.getCategoryQuery() />
+	<cfset categoryQuery = EntryRecord.getDistinctCategoryQuery() />
 	<cfif categoryQuery.recordCount>
 		<p>
 			<strong>Categories:</strong>

@@ -7,7 +7,7 @@
 		<cfset var categories = 0 />
 		
 		<cfquery name="categories" datasource="#_getConfig().getDsn()#">
-			SELECT c.categoryId, c.name, count(ec.entryId) as entryCount
+			SELECT c.categoryId, c.name, count(DISTINCT ec.entryId) as entryCount
 			FROM Category as c LEFT JOIN EntryCategory as ec 
 				ON c.categoryId = ec.categoryId
 			GROUP BY c.categoryId, c.name
