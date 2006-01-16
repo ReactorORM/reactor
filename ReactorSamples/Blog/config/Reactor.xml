@@ -1,7 +1,7 @@
 <reactor>
 	<config>
-		<dsn value="ReactorBlogMysql" />
-		<type value="mysql" />
+		<dsn value="ReactorBlog" />
+		<type value="mssql" />
 		<mapping value="/ReactorBlogData" />
 		<mode value="production" />
 	</config>
