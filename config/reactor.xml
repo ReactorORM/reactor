@@ -3,7 +3,7 @@
 		<dsn value="scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="always" />
+		<mode value="development" />
 	</config>
 
 	<objects>
@@ -13,6 +13,48 @@
 			</hasOne>
 		</object>
 		-->
+		
+		<object name="table1">
+			<hasMany name="table2">
+				<link name="table4"/>
+			</hasMany>
+			<hasMany name="table3">
+				<link name="table4"/>
+			</hasMany>
+		</object>
+		<object name="table2">
+			<hasMany name="table1">
+				<link name="table4"/>
+			</hasMany>
+			<hasMany name="table3">
+				<link name="table4"/>
+			</hasMany>
+		</object>
+		<object name="table3">
+			<hasMany name="table1">
+				<link name="table4"/>
+			</hasMany>
+			<hasMany name="table2">
+				<link name="table4"/>
+			</hasMany>
+		</object>
+		<object name="table4">
+			<hasOne name="table1">
+				<relate from="FK1" to="PK1"/>
+			</hasOne>
+			<hasOne name="table2" alias="foobar">
+				<relate from="FK2" to="PK2"/>
+			</hasOne>
+			<hasOne name="table3">
+				<relate from="FK3" to="PK3"/>
+			</hasOne>
+		</object>
+
+		
+		
+		
+		<!-- -->
+		
 		
 		<object name="Administrator">
 			
@@ -27,7 +69,6 @@
 			</hasMany>
 		</object>
 		
-		<!--
 		
 		<object name="Merchant">
 			<hasOne name="Company">
@@ -78,7 +119,7 @@
 		</object>
 		
 		<object name="InvoiceProduct">
-			<hasOne name="Product">
+			<hasOne name="Product" alias="Froduct">
 				<relate from="productId" to="productId" />
 			</hasOne>
 			<hasOne name="Invoice">
@@ -126,6 +167,6 @@
 			<hasMany name="Address">
 				<relate from="stateProvId" to="stateProvId" />
 			</hasMany>
-		</object>	-->
+		</object>
 	</objects>
 </reactor>

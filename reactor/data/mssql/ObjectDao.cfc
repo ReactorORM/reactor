@@ -114,14 +114,14 @@
 			</cfcase>
 			<cfcase value="string">
 				<!--- insure that the first and last characters are "'" --->
-				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
+				<cfif ReFindNoCase("'*newId()'*", arguments.sqlDefaultValue)>
+					<cfreturn "##CreateUUID()##" />
+					<!---  IS "newId()" --->
+				<cfelseif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
 					<!--- mssql functions must be constants.  for this reason I can convert anything quoted in single quotes safely to a string --->
 					<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
 					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, "''", "'", "All") />
 					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, """", """""", "All") />
-					<cfreturn arguments.sqlDefaultValue />
-				<cfelseif arguments.sqlDefaultValue IS "newId()">
-					<cfreturn "##CreateUUID()##" />
 				<cfelse>
 					<cfreturn "" />
 				</cfif>
