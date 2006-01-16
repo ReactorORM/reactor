@@ -46,7 +46,9 @@
 		<!--- 
 		Expand linked relationships.
 		In otherwords, if the config indicates that this object links to another via a linking table, then copy the link into this xml document.
-		 --->
+		--->
+		<!---<cfdump var="#relationships#" /><br>--->
+		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
@@ -54,18 +56,24 @@
 			<cfif IsDefined("relationship.link")>
 				<!--- get the relationships that the linking object has --->
 				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-						
+		
 				<!--- find links back to this object --->
 				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
 					<cfset linkerRelationship = linkerRelationships[y] />
 					
 					<!--- if this is a link back to this object copy the node into this document --->
 					<cfif linkerRelationship.XmlAttributes.name IS getName()>
-						<!--- create a hasMany relationship int this document --->
+						<!--- create a hasMany relationship in this document --->
 						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
 						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
 						<cfset newHasMany.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
 						
+						<!---<cfif IsDefined("linkerRelationship.XmlAttributes.alias")>
+							<cfset newHasMany.XmlAttributes["alias"] = linkerRelationship.XmlAttributes.alias & relationship.link.XmlAttributes.name />
+						<cfelse>
+							<cfset newHasMany.XmlAttributes["alias"] = linkerRelationship.XmlAttributes.name & relationship.link.XmlAttributes.name />
+						</cfif>--->
+																		
 						<!--- add all relationships --->
 						<cfloop from="1" to="#ArrayLen(linkerRelationship.XmlChildren)#" index="z">
 							<cfset newRelationship = XMLElemNew(Config, "relate") />
@@ -76,8 +84,11 @@
 							<cfset ArrayAppend(newHasMany.XmlChildren, newRelationship) />
 						</cfloop>
 						
-						<!--- add the hasMany to the relationship --->
-						<cfset ArrayAppend(relationships, newHasMany) />
+						
+						<cfif NOT ArrayLen(XMLSearch(Config, "/object/hasMany[@name = '#newHasMany.XmlAttributes["name"]#']"))>
+							<!--- add the hasMany to the relationship --->
+							<cfset ArrayAppend(relationships, newHasMany) />
+						</cfif>
 						
 					</cfif>
 				</cfloop>
@@ -94,8 +105,9 @@
 					<cfset aliasList = ListAppend(aliasList, relationship.XmlAttributes["alias"]) />
 				</cfif>
 			</cfif>
+			
 		</cfloop>
-		
+					
 		<!--- (This has been removed to allow for greater code portability) if this object has a super object read that and add it into this
 		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
 			<!--- create a new object node --->
