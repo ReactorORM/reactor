@@ -22,7 +22,8 @@
 		&lt;/cfif&gt;
 			</xsl:when>
 			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
-		&lt;cfif exists(arguments.to)&gt;
+		
+		&lt;cfif <xsl:for-each select="object/fields/field[@primaryKey = 'true']">Len(arguments.to.<xsl:value-of select="@name" />) AND </xsl:for-each>exists(arguments.to)&gt;
 			&lt;cfset update(arguments.to) /&gt;
 		&lt;cfelse&gt;
 			&lt;cfset create(arguments.to) /&gt;

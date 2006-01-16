@@ -50,7 +50,7 @@
 		<cfargument name="value" hint="I am the value to format" required="yes" type="string" />
 		<cfargument name="dbDataType" hint="I am the type of data in the database" required="yes" type="string" />
 		
-		<cfif arguments.dbDataType IS "UniqueIdentifierType">
+		<cfif arguments.dbDataType IS "UniqueIdentifier">
 			<cfreturn Left(arguments.value, 23) & "-" & Right(arguments.value, 12) />
 		<cfelse>
 			<cfreturn arguments.value />

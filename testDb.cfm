@@ -2,8 +2,10 @@
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
-<cfset TestRecord = reactor.createRecord("Test") />
-<cfset TestRecord.setTestId("D357FBDC-ABA2-9CEE-69E7-CCE761733CB2") />
-<cfset TestRecord.load() />
+
+<cfset tmpRecord = reactor.createRecord("TMP")>
+<cfset tmpRecord.setMyColumn("test")>
+<cfset tmpRecord.save()>
+
 
 <cfdump var="#TestRecord.getTestId()#" />
