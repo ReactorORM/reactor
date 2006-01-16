@@ -4,6 +4,9 @@
 	<cfset variables.FromObject = 0 />
 	<cfset variables.ToObject = 0 />
 	
+	<!--- the join prefix --->
+	<cfset variables.prefix = "" />
+	
 	<!--- the type of join --->
 	<cfset variables.join = "" />
 	
@@ -14,10 +17,12 @@
 	<cffunction name="init" access="public" hint="I configure and return the join" output="false" returntype="reactor.query.join">
 		<cfargument name="FromObject" hint="I am the object being joined from." required="yes" type="reactor.query.object" />
 		<cfargument name="ToObject" hint="I am the object being joined to." required="yes" type="reactor.query.object" />
+		<cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="yes" type="string" default="" />
 		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="left" />
 		
 		<cfset setFromObject(arguments.FromObject) />
 		<cfset setToObject(arguments.ToObject) />	
+		<cfset setPrefix(arguments.prefix) />
 		<cfset setType(arguments.type) />
 		
 		<cfset addRelationships() />
@@ -93,6 +98,15 @@
     </cffunction>
     <cffunction name="getRelationships" access="package" output="false" returntype="array">
        <cfreturn variables.relationships />
+    </cffunction>
+	
+	<!--- prefix --->
+    <cffunction name="setPrefix" access="public" output="false" returntype="void">
+       <cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="yes" type="string" />
+       <cfset variables.prefix = arguments.prefix />
+    </cffunction>
+    <cffunction name="getPrefix" access="public" output="false" returntype="string">
+       <cfreturn variables.prefix />
     </cffunction>
 		
 	<!--- type --->

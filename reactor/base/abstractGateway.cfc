@@ -292,7 +292,6 @@
 				<cfdump var="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
 				<cfabort>
 			</cfif>--->
-			
 		</cfquery>
 		
 		<!---<cfset qGet.result = result />--->

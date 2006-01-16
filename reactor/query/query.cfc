@@ -19,23 +19,23 @@
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.query">
 		<cfargument name="BaseObjectMetadata" hint="I am the Metadata for the base object being queried" required="yes" type="reactor.base.abstractMetadata">
-		<cfset var Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata) />
+		<cfset var Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getName()) />
 		
 		<cfset setFrom(Object) />
 
-		<cfset joinSuper(Object) />
+		<!--- <cfset joinSuper(Object) /> --->
 
 		<cfreturn this />
 	</cffunction>
 	
 	<!--- returnObjectFields --->
 	<cffunction name="returnObjectFields" access="public" hint="I specify a particular object from which all fields should be returned. When this or returnField() is first called cause only the specified column to be returned.  Additional columns can be added with multiple calls." output="false" returntype="reactor.query.query">
-		<cfargument name="name" hint="I am the name or alias of the object." required="yes" type="string" />
-		<cfset var fields = findObject(arguments.name).getObjectMetadata().getFields() />
+		<cfargument name="alias" hint="I am the alias of the object." required="yes" type="string" />
+		<cfset var fields = findObject(arguments.alias).getObjectMetadata().getFields() />
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset returnField(arguments.name, fields[x].name) />
+			<cfset returnField(arguments.alias, fields[x].name) />
 		</cfloop>
 		
 		<cfreturn this />
@@ -43,7 +43,7 @@
 	
 	<!--- returnField --->
 	<cffunction name="returnField" access="public" hint="I specify a particular field a query should return.  When this or returnObjectFields() is first called I cause only the specified column to be returned.  Additional columns can be added with multiple calls." output="false" returntype="reactor.query.query">
-		<cfargument name="object" hint="I am the name or alias of the object." required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object." required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field." required="yes" type="string" />
 		<cfset var fieldStruct = getField(arguments.object, arguments.field) />
 		<cfset var returnFields = getReturnFields() />
@@ -73,23 +73,23 @@
 	
 	<!--- getSelectAsString --->
 	<cffunction name="getSelectAsString" access="public" hint="I convert the from objects to a sql select fragment" output="false" returntype="string">
-	<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
+		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
 		<cfreturn getFrom().getSelectAsString(arguments.Convention, getReturnFields()) />
 	</cffunction>
 	
 	<!--- findObject --->
 	<cffunction name="findObject" access="package" hint="I find an object in the query" output="false" returntype="reactor.query.object">
-		<cfargument name="name" hint="I am the name or alias of a object being searched for." required="yes" type="string" />
-		<cfset var Object = getFrom().findObject(arguments.name) />
+		<cfargument name="alias" hint="I am the alias of a object being searched for." required="yes" type="string" />
+		<cfset var Object = getFrom().findObject(arguments.alias) />
 		
 		<cfif IsObject(Object)>
 			<cfreturn Object />
 		</cfif>
 
-		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.name#' as an alias or name within the query." type="reactor.findObject.CanNotFindObject" />
+		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.alias#' as an alias or name within the query." type="reactor.findObject.CanNotFindObject" />
 	</cffunction>
 	
-	<!--- joinSuper --->
+	<!--- joinSuper
 	<cffunction name="joinSuper" access="private" hint="I join any super objects." output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to join onto supers." required="yes" type="reactor.query.object" />
 		<cfset var ObjectMetadata = arguments.Object.getObjectMetadata() />
@@ -97,18 +97,19 @@
 		<cfif ObjectMetadata.hasSuper()>
 			<cfset join(arguments.Object.getAlias(), ObjectMetadata.getSuperAlias()) />
 		</cfif>		
-	</cffunction>
+	</cffunction> --->
 	
 	<!--- join --->
 	<cffunction name="join" access="public" hint="I join one object to another." output="false" returntype="reactor.query.query">
-		<cfargument name="from" hint="I am the name or alias of a object being joined from." required="yes" type="string" />
-		<cfargument name="to" hint="I am the name or alias of an object being joined to." required="yes" type="string" />
+		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
+		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
+		<cfargument name="toPrefix" hint="I am an optional prefix appended to all fields in the to Object which are returned in this query." required="no" type="string" default="" />
 		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="left" />
 		<cfset var FromObject = findObject(arguments.from) />
 		<cfset var ToObject = FromObject.getRelatedObject(arguments.to) />
-		<cfset FromObject.join(ToObject, arguments.type) />
+		<cfset FromObject.join(ToObject, arguments.toPrefix, arguments.type) />
 		
-		<cfset joinSuper(ToObject) />
+		<!---<cfset joinSuper(ToObject) />--->
 		
 		<cfreturn this />
 	</cffunction>
@@ -142,7 +143,7 @@
 	
 	<!--- getField --->
 	<cffunction name="getField" access="public" hint="I get a column based on the provided object name/alias and field name" output="false" returntype="struct">
-		<cfargument name="object" hint="I am the name or alias of the object." required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object." required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field." required="yes" type="string" />
 		<cfreturn findObject(arguments.object).getObjectMetadata().getField(arguments.field) />
 	</cffunction>

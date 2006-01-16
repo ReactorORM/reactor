@@ -3,9 +3,8 @@
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
 
-<cfset tmpRecord = reactor.createRecord("TMP")>
-<cfset tmpRecord.setMyColumn("test")>
-<cfset tmpRecord.save()>
+<cfset AuctionGateway = reactor.createGateway("Auction")>
 
 
-<cfdump var="#TestRecord.getTestId()#" />
+
+<cfdump var="#AuctionGateway.getTestQuery()#" />

@@ -1,18 +1,54 @@
 <reactor>
 	<config>
-		<dsn value="scratch" />
+		<dsn value="vacationauctions" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
 	</config>
 
 	<objects>
+		<object name="Auction">
+			<hasMany name="Category">
+				<link name="AuctionCategory" />
+			</hasMany>
+			<hasMany name="Image">
+				<link name="AuctionImage" />
+			</hasMany>		
+			<hasOne name="Region">
+				<relate from="regionId" to="regionId" />
+			</hasOne>
+		</object>
+	
+		<object name="AuctionCategory">
+			<hasOne name="Auction">
+				<relate from="auctionId" to="auctionId" />
+			</hasOne>
+			<hasOne name="Category">
+				<relate from="categoryId" to="categoryId" />
+			</hasOne>
+		</object>
+		
+		<object name="Category">
+			<hasOne name="Image">
+				<relate from="imageId" to="imageId" />
+			</hasOne>
+		</object>
+	
+		<object name="AuctionImage">
+			<hasOne name="Auction">
+				<relate from="auctionId" to="auctionId" />
+			</hasOne>
+			<hasOne name="Image">
+				<relate from="imageId" to="imageId" />
+			</hasOne>
+		</object>
+	
 		<!--<object name="Customer">
 			<hasOne name="Address">
 				<relate from="addressId" to="addressId"  />
 			</hasOne>
 		</object>
-		-->
+		
 		
 		<object name="table1">
 			<hasMany name="table2">
@@ -52,8 +88,6 @@
 
 		
 		
-		
-		<!-- -->
 		
 		
 		<object name="Administrator">
@@ -98,10 +132,10 @@
 			<hasMany name="Invoice">
 				<relate from="customerId" to="customerId" />
 			</hasMany>
-			<hasOne name="Address">
+			<hasOne name="Address" alias="MailingAddress">
 				<relate from="mailingAddress" to="addressId" />
 			</hasOne>
-			<hasOne name="Address">
+			<hasOne name="Address" alias="BillingAddress">
 				<relate from="billingAddress" to="addressId" />
 			</hasOne>
 		</object>
@@ -167,6 +201,6 @@
 			<hasMany name="Address">
 				<relate from="stateProvId" to="stateProvId" />
 			</hasMany>
-		</object>
+		</object>-->
 	</objects>
 </reactor>

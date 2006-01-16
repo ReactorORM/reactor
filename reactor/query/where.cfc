@@ -24,7 +24,7 @@
 	
 	<!--- validateField --->
 	<cffunction name="validateField" access="private" output="false" returntype="void">
-		<cfargument name="object" hint="I am the name or alias of the object of the field should be in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object of the field should be in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field to validate" required="yes" type="string" />
 		
 		<cfset getQuery().findObject(arguments.object).getObjectMetadata().getField(arguments.field) />
@@ -116,7 +116,7 @@
 	</cffunction>
 				
 	<cffunction name="isBetween" access="public" hint="I return an where which checks if a field is between two other values." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		<cfargument name="value1" hint="I am the first value" required="yes" type="string" />
 		<cfargument name="value2" hint="I am the second value" required="yes" type="string" />
@@ -127,11 +127,11 @@
 	</cffunction>
 			
 	<cffunction name="isBetweenFields" access="public" hint="I return an where which checks if a field is between two other fields." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject2" hint="I am the name or alias of the object the second comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject2" hint="I am the alias of the object the second comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField2" hint="I am the second comparison field to compare" required="yes" type="string" />
 				
 		<cfset validateField(arguments.object, arguments.field) />
@@ -142,7 +142,7 @@
 	</cffunction>
 	
 	<cffunction name="isEqual" access="public" hint="I return an where which checks if a fields equals a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare" required="yes" type="string" />
 				
@@ -152,9 +152,9 @@
 	</cffunction>
 	
 	<cffunction name="isEqualField" access="public" hint="I return an where which checks if two fields in the query are equal." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -164,7 +164,7 @@
 	</cffunction>
 	
 	<cffunction name="isNotEqual" access="public" hint="I return an where which checks if a field does not equal a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare" required="yes" type="string" />
 		
@@ -174,9 +174,9 @@
 	</cffunction>
 	
 	<cffunction name="isNotEqualField" access="public" hint="I return an where which checks if two fields in the query are not equal." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -186,7 +186,7 @@
 	</cffunction>
 	
 	<cffunction name="isGte" access="public" hint="I return an where which checks if a field is greater than or equal to a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
@@ -196,9 +196,9 @@
 	</cffunction>
 	
 	<cffunction name="isGteField" access="public" hint="I return an where which checks if a field is greater than or equal to another field." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -208,7 +208,7 @@
 	</cffunction>
 	
 	<cffunction name="isGt" access="public" hint="I return an where which checks if a field is greater than a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
@@ -218,9 +218,9 @@
 	</cffunction>
 	
 	<cffunction name="isGtField" access="public" hint="I return an where which checks if a field is greater than another field." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -230,7 +230,7 @@
 	</cffunction>
 	
 	<cffunction name="isLike" access="public" hint="I return an where which checks if a field is 'like' a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="no" type="string" default="anywhere" />
@@ -245,7 +245,7 @@
 	</cffunction>
 	
 	<cffunction name="isNotLike" access="public" hint="I return an where which checks if a field is 'not like' a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		<cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="no" type="string" default="anywhere" />
@@ -260,7 +260,7 @@
 	</cffunction>
 	
 	<cffunction name="isIn" access="public" hint="I return an where which checks if a field's value is in a list of values." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="values" hint="I am a comma delimited list of values to compare against" required="yes" type="string" />
 		
@@ -270,7 +270,7 @@
 	</cffunction>
 	
 	<cffunction name="isNotIn" access="public" hint="I return an where which checks if a field's value is not in a list of values." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="values" hint="I am a comma delimited list of values to compare against" required="yes" type="string" />
 		
@@ -280,7 +280,7 @@
 	</cffunction>
 	
 	<cffunction name="isNotNull" access="public" hint="I return an where which checks if a field's is not null." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -289,7 +289,7 @@
 	</cffunction>
 	
 	<cffunction name="isNull" access="public" hint="I return an where which checks if a field's is null." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -298,7 +298,7 @@
 	</cffunction>
 	
 	<cffunction name="isLte" access="public" hint="I return an where which checks if a field is greater than or equal to a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
@@ -308,9 +308,9 @@
 	</cffunction>
 	
 	<cffunction name="isLteField" access="public" hint="I return an where which checks if a field is greater than or equal to another field." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />
@@ -320,7 +320,7 @@
 	</cffunction>
 	
 	<cffunction name="isLt" access="public" hint="I return an where which checks if a field is greater than a value." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare against" required="yes" type="string" />
 		
@@ -330,9 +330,9 @@
 	</cffunction>
 	
 	<cffunction name="isLtField" access="public" hint="I return an where which checks if a field is greater than another field." output="false" returntype="reactor.query.where">
-		<cfargument name="object" hint="I am the name or alias of the object the field is in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the field to compare" required="yes" type="string" />
-		<cfargument name="compareToObject1" hint="I am the name or alias of the object the first comparison field is in" required="yes" type="string" />
+		<cfargument name="compareToObject1" hint="I am the alias of the object the first comparison field is in" required="yes" type="string" />
 		<cfargument name="compareToField1" hint="I am the first comparison field to compare" required="yes" type="string" />
 		
 		<cfset validateField(arguments.object, arguments.field) />

@@ -23,7 +23,7 @@
 	
 	<!--- validateField --->
 	<cffunction name="validateField" access="private" output="false" returntype="void">
-		<cfargument name="object" hint="I am the name or alias of the object of the field should be in" required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object of the field should be in" required="yes" type="string" />
 		<cfargument name="field" hint="I am the name of the field to validate" required="yes" type="string" />
 		
 		<cfset getQuery().findObject(arguments.object).getObjectMetadata().getField(arguments.field) />

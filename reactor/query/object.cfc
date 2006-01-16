@@ -3,7 +3,7 @@
 	<!--- this is metadata on the actual object --->
 	<cfset variables.ObjectMetadata = 0 />
 	
-	<!--- this is the object's query alias --->
+	<!--- this is the object's alias --->
 	<cfset variables.alias = "" />
 	
 	<!--- this is an array of objects this object is joined to --->
@@ -12,7 +12,7 @@
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I am configure and return the query object" output="false" returntype="reactor.query.object">
 		<cfargument name="ObjectMetadata" hint="I am the metadata for the object being encapsulated" required="yes" type="reactor.base.abstractMetadata" />
-		<cfargument name="alias" hint="I am an optional alias for this object." required="no" type="string" default="#ObjectMetadata.getName()#" />
+		<cfargument name="alias" hint="I am a required alias for this object." required="yes" type="string" />
 		
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />
 		<cfset setAlias(arguments.alias) />
@@ -50,35 +50,28 @@
 	<cffunction name="getSelectAsString" access="package" hint="I get this object as fragment of a select statement" output="false" returntype="string">
 		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
 		<cfargument name="returnFields" hint="I am an array of fields to return. If empty, return all fields." required="yes" type="array" />
+		<cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="no" type="string" default="" />
 		<cfset var select = "" />
 		<cfset var field = "" />
 		<cfset var joinedFields = "" />
 		<cfset var fields = getObjectMetadata().getFields() />
 		<cfset var joins = getJoins() />
 		<cfset var x = 0 />
-		<cfset var alias = "" />
 		<cfset var allowedFieldList = getAllowedFields(arguments.returnFields) />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
-			<cfset alias = "" />
-			
-			<!--- if this object has an alais get it --->
-			<cfif getAlias() IS NOT getObjectMetadata().getName()>
-				<cfset alias = getAlias() />
-			</cfif>
-			
+					
 			<!--- add the field alias --->
-			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].name, alias) />
+			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].name, arguments.prefix) />
 			
 			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].name) OR ListFindNoCase(allowedFieldList, alias) >
 				<cfset select = ListAppend(select, field & chr(13) & chr(10)) />
 			</cfif>
-			
 		</cfloop>
 		
 		<cfloop from="1" to="#ArrayLen(joins)#" index="x">
-			<cfset joinedFields = joins[x].getToObject().getSelectAsString(arguments.Convention, arguments.returnFields) />
+			<cfset joinedFields = joins[x].getToObject().getSelectAsString(arguments.Convention, arguments.returnFields, joins[x].getPrefix()) />
 			
 			<cfif Len(joinedFields)>
 				<cfset select = ListAppend(select, joinedFields) />
@@ -87,7 +80,7 @@
 		
 		<!--- add spaces after commas --->
 		<cfset select = Replace(select, ",", ", ", "all") />
-		
+	
 		<cfreturn select />		
 	</cffunction>
 	
@@ -112,13 +105,13 @@
 	
 	<!--- findObject --->
 	<cffunction name="findObject" access="public" hint="I find an object in the query" output="false" returntype="reactor.query.object">
-		<cfargument name="name" hint="I am the name or alias of a object being searched for." required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of a object being searched for." required="yes" type="string" />
 		<cfset var joins = getJoins() />
 		<cfset var Join = 0 />
 		<cfset var x = 0 />
 		
 		<!--- am I what's being looked for? --->
-		<cfif getAlias() IS arguments.name>
+		<cfif getAlias() IS arguments.alias>
 			<!--- yes --->
 			<cfreturn this />
 			
@@ -129,33 +122,33 @@
 				<cfset Join = joins[x] />
 				
 				<cftry>
-					<cfreturn Join.getToObject().findObject(arguments.name) />
+					<cfreturn Join.getToObject().findObject(arguments.alias) />
 					<cfcatch />
 				</cftry>
 			</cfloop>
 		
 		</cfif>
 
-		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.name#' as an alias or name within the query." type="reactor.findObject.CanNotFindObject" />
+		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.alias#' as an alias within the query." type="reactor.findObject.CanNotFindObject" />
 	</cffunction>
 	
 	<!--- getRelatedObject --->
 	<cffunction name="getRelatedObject" access="public" hint="I return a related object." output="false" returntype="reactor.query.object">
-		<cfargument name="name" hint="I am the name or alias of a related object to get." required="yes" type="string" />
-		<cfset var relationshipStruct = getObjectMetadata().getRelationship(arguments.name) />
+		<cfargument name="alias" hint="I am the alias of a related object to get." required="yes" type="string" />
+		<cfset var relationshipStruct = getObjectMetadata().getRelationship(arguments.alias) />
 		<cfset var RelatedObjectMetadata = 0 />
 		<cfset var RelatedObject = 0 />
 		
 		<!--- check to see if this is a linked table --->
 		<cfif IsDefined("relationshipStruct.link")>
-			<cfthrow message="Can Not Get Related Objects From HasMany Links" detail="Can create join object that relates '#getObjectMetadata().getName()#' to '#arguments.name#' via a hasMany relationship.  You need to explicity use the intermediary object, '#relationshipStruct.link#'." type="reactor.getRelatedObject.CanNotGetRelatedObjectsFromHasManyLinks" />
+			<cfthrow message="Can Not Get Related Objects From HasMany Links" detail="Can't get relation from '#getObjectMetadata().getAlias()#' to '#arguments.alias#' via a hasMany relationship.  You need to explicity use the intermediary object, '#relationshipStruct.link#'." type="reactor.getRelatedObject.CanNotGetRelatedObjectsFromHasManyLinks" />
 		</cfif>
 		
 		<!--- if it's not a linked table get the related object's metadata --->
-		<cfset RelatedObjectMetadata = getObjectMetadata().getRelationshipMetadata(arguments.name) />
+		<cfset RelatedObjectMetadata = getObjectMetadata().getRelationshipMetadata(arguments.alias) />
 		
 		<!--- create the related object --->
-		<cfset RelatedObject = CreateObject("Component", "reactor.query.object").init(RelatedObjectMetadata, arguments.name) />
+		<cfset RelatedObject = CreateObject("Component", "reactor.query.object").init(RelatedObjectMetadata, arguments.alias) />
 		
 		<!--- return the related object --->
 		<cfreturn RelatedObject />
@@ -164,9 +157,11 @@
 	<!--- join --->
 	<cffunction name="join" access="public" hint="I add a join from this object to another object." output="false" returntype="void">
 		<cfargument name="ToObject" hint="I am the query object being joined to" required="yes" type="reactor.query.object" />
+		<cfargument name="toPrefix" hint="I am the prefix appended to all fields in the ToObject." required="yes" type="string" />
 		<cfargument name="type" hint="I am the type of join." required="yes" type="string" />
 		<cfset var joins = getJoins() />
-		<cfset var Join = CreateObject("Component", "reactor.query.join").init(this, arguments.ToObject, arguments.type) />
+		<cfset var Join = CreateObject("Component", "reactor.query.join").init(this, arguments.ToObject, arguments.toPrefix, arguments.type) />
+		
 		<cfset ArrayAppend(joins, join) />
 		<cfset setJoins(joins) />
 	</cffunction>

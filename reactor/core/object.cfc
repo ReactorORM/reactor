@@ -43,6 +43,16 @@
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
 		
+		<!--- insure aliases are set --->
+		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+			<cfset relationship = relationships[x] />
+			
+			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
+				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
+			</cfif>
+			
+		</cfloop>
+		
 		<!--- 
 		Expand linked relationships.
 		In otherwords, if the config indicates that this object links to another via a linking table, then copy the link into this xml document.

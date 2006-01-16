@@ -4,7 +4,7 @@
 	<cfset variables.field = "" />
 
 	<cffunction name="init" access="public" hint="I configure and return the field." output="false" returntype="reactor.query.field">
-		<cfargument name="object" hint="I am the name of the object the field is in." required="yes" type="string" />
+		<cfargument name="object" hint="I am the alias of the object the field is in." required="yes" type="string" />
 		<cfargument name="field" hint="I am the field name in the object" required="yes" type="string" />
 	
 		<cfset setObject(arguments.object) />
@@ -15,7 +15,7 @@
 	
 	<!--- object --->
     <cffunction name="setObject" access="private" output="false" returntype="void">
-       <cfargument name="object" hint="I am the name of the object the field is in." required="yes" type="string" />
+       <cfargument name="object" hint="I am the alias of the object the field is in." required="yes" type="string" />
        <cfset variables.object = arguments.object />
     </cffunction>
     <cffunction name="getObject" access="public" output="false" returntype="string">
