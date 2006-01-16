@@ -3,7 +3,7 @@
 		<dsn value="scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="development" />
+		<mode value="always" />
 	</config>
 
 	<objects>
