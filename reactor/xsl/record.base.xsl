@@ -83,7 +83,7 @@
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@name" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
-					&lt;cfif NOT IsDate(get<xsl:value-of select="@name" />())&gt;
+					&lt;cfif NOT IsDate(get<xsl:value-of select="@name" />())<xsl:if test="@nullable = 'true'"> AND Len(Trim(get<xsl:value-of select="@name" />()))</xsl:if>&gt;
 						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@name" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@name" />", "invalidType")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
