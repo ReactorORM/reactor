@@ -52,7 +52,7 @@ There's got to be a better way!)  Roughly 24 changes should be made.
 
 7) Open the ModelGlue.xml and Reactor.xml files and change all instances of "/ReactorSamples/blog" to the correct location.  For
 example, if your placed the blog under "/foobar", you would replace "/ReactorSamples/blog" with "/foobar" everywhere.  (I also hate this step,
-but it's less offensive than the last step.)  Roughly 5 changes should be made.  All of these are in the ModelGlue.xml and Reactor.xml files
+but it's less offensive than the last step.)  Roughly 5 changes should be made.  All of these are in the ModelGlue.xml and the config/beans/blogConfig.xml files
 
 8) Open the /config/beans/blogConfig.xml file.  Review the settings in here and make changes as needed.  In particular, change these: blogTitle,
 blogDescription, authorEmailAddress, authorName, pingUrlArray, blogSearchCollection (set this to empty for no search or the name of the collection
