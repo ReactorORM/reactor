@@ -37,10 +37,10 @@
 	<p>
 		<strong>Rate this entry:</strong>
 		<cfloop from="1" to="#EntryRecord.getAverageRating()#" index="x">
-			<a href="index.cfm?event=rateEntry&entryId=#EntryRecord.getEntryId()#&rating=#x#"><img src="images/starOn.gif" alt="Rate this at #x# out of 5."/></a>
+			<a href="##" onclick="location.href = 'index.cfm?event=rateEntry&entryId=#EntryRecord.getEntryId()#&rating=#x#';"><img src="images/starOn.gif" alt="Rate this at #x# out of 5."/></a>
 		</cfloop>
 		<cfloop from="#EntryRecord.getAverageRating() + 1#" to="5" index="x">
-			<a href="index.cfm?event=rateEntry&entryId=#EntryRecord.getEntryId()#&rating=#x#"><img src="images/starOff.gif" alt="Rate this at #x# out of 5." /></a>
+			<a href="##" onclick="location.href = 'index.cfm?event=rateEntry&entryId=#EntryRecord.getEntryId()#&rating=#x#';"><img src="images/starOff.gif" alt="Rate this at #x# out of 5." /></a>
 		</cfloop>
 		<small>Rated #EntryRecord.getRatingCount()# times in #EntryRecord.getViews()# views.</small>
 	</p>	

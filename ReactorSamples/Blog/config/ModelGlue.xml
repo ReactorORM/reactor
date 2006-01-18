@@ -3,7 +3,7 @@
 		<setting name="beanMappings" value="/ReactorSamples/Blog/config/beans/" />
 		<setting name="viewMappings" value="/ReactorSamples/Blog/views" />
 		<setting name="defaultEvent" value="Home" />
-		<setting name="reload" value="true" />
+		<setting name="reload" value="false" />
 		<setting name="debug" value="false " />
 		<!-- These are all optional as of 1.0	
 		<setting name="statebuilder" value="ModelGlue.Util.GenericCollection" />

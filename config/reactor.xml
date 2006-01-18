@@ -1,6 +1,6 @@
 <reactor>
 	<config>
-		<dsn value="vacationauctions" />
+		<dsn value="auctionsample" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
@@ -42,6 +42,8 @@
 				<relate from="imageId" to="imageId" />
 			</hasOne>
 		</object>
+	</object>
+</reactor>
 	
 		<!--<object name="Customer">
 			<hasOne name="Address">
