@@ -28,6 +28,12 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<!--- DoGetMostViewedEntries
+	<cffunction name="DoGetMostViewedEntries" access="Public" returntype="void" output="false" hint="I return the highest rated entries in the blog">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("highestRatedEntries", variables.EntryGateway.getMostViewedEntries()) />
+	</cffunction> --->
+	
 	<!--- DoGetCommentParticipants --->
 	<cffunction name="DoGetCommentParticipants" access="Public" returntype="void" output="false" hint="I get the email addresses of people who have been participating in the comments.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">

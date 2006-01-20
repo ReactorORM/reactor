@@ -54,6 +54,7 @@
 			<message-listener message="ValidateUser" function="DoValidateUser" />
 			<message-listener message="SaveUser" function="DoSaveUser" />
 			<message-listener message="ValidateEntryExists" function="DoValidateEntryExists" />
+			<!-- <message-listener message="NeedMostViewedEntries" function="DoGetMostViewedEntries" /> -->
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -108,6 +109,20 @@
 				<result do="Layout" />
 			</results>
 		</event-handler>
+		
+		<!-- <event-handler name="Stats">
+			<broadcasts>
+				<message name="NeedHighestAverageRatingEntries" />
+				<message name="NeedMostViewedEntries" />
+				<message name="NeedMostCommentedOn" />
+			</broadcasts>
+			<views>
+				<include name="body" template="dspEntryStats.cfm" />
+			</views>
+			<results>
+				<result do="Layout" />
+			</results>
+		</event-handler> -->
 		
 		<event-handler name="RSS">
 			<broadcasts>

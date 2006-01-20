@@ -21,6 +21,16 @@
 		<cfreturn getByQuery(EntryQuery) />
 	</cffunction>
 	
+	<!---<cffunction name="getMostViewedEntries" access="public" hint="I return the highest rated entries" output="false" returntype="query">
+		<cfset var entries = 0 />
+		
+		<cfquery name="entries" datasource="#_getConfig().getDsn()#">
+			
+		</cfquery>
+		
+		<cfreturn entries />
+	</cffunction>--->
+	
 	<cffunction name="getMatching" access="public" hint="I return an array of matching blog entries records." output="false" returntype="query">
 		<cfargument name="categoryId" hint="I am a category to match" required="yes" type="numeric" default="0" />
 		<cfargument name="month" hint="I am a month to filter for" required="yes" type="numeric" default="0" />
