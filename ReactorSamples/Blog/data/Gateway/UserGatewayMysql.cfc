@@ -1,6 +1,6 @@
 
-<cfcomponent hint="I am the custom Gateway object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.ReactorBlogData.Gateway.UserGateway" >
+<cfcomponent hint="I am the mysql custom Gateway object for the User table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+	extends="UserGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="getAllUsers" access="public" hint="I return a query of users and the number of entries they've created" output="false" returntype="query">
@@ -8,7 +8,7 @@
 		
 		<cfquery name="users" datasource="#_getConfig().getDsn()#">
 			SELECT u.userId, u.firstName, u.lastName, u.userName, COUNT(e.entryId) as entryCount
-			FROM "User" as u LEFT JOIN Entry as e
+			FROM `User` as u LEFT JOIN Entry as e
 				ON u.userId = e.postedByUserId
 			GROUP BY u.userId, u.firstName, u.lastName, u.userName
 			ORDER BY u.firstName, u.lastName
@@ -24,12 +24,14 @@
 		
 		<cfquery name="validate" datasource="#_getConfig().getDsn()#">
 			SELECT userId
-			FROM "User" 
+			FROM `User` 
 			WHERE userId != <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userId#" />
 				AND userName = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="20" value="#arguments.userName#" />
 		</cfquery>
 		
 		<cfreturn validate.recordcount IS 1 />
 	</cffunction>
+	
+
 </cfcomponent>
 	
