@@ -375,9 +375,11 @@
 				<message name="NeedToSetSubscriptionStatus" />
 			</broadcasts>
 			<views>
-				<!-- <include template="dspSubscriptionStatusSet.cfm" /> -->
+				<include name="body" template="dspSubscriptionStatusSet.cfm" />
 			</views>
-			<results />
+			<results>
+				<result do="Layout" />
+			</results>
 		</event-handler>
 		
 		<event-handler name="ViewCaptcha">

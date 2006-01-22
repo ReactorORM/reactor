@@ -77,7 +77,8 @@ CREATE TABLE [dbo].[Comment] (
 	[name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
 	[emailAddress] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
 	[comment] [text] COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
-	[posted] [datetime] NOT NULL 
+	[posted] [datetime] NOT NULL ,
+	[subscribe] [bit] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -173,7 +174,8 @@ ALTER TABLE [dbo].[User] WITH NOCHECK ADD
 GO
 
 ALTER TABLE [dbo].[Comment] ADD 
-	CONSTRAINT [DF_Comments_posted] DEFAULT (getdate()) FOR [posted]
+	CONSTRAINT [DF_Comments_posted] DEFAULT (getdate()) FOR [posted],
+	CONSTRAINT [DF_Comments_subscribe] DEFAULT (1) FOR [subscribe]
 GO
 
 ALTER TABLE [dbo].[Entry] ADD 

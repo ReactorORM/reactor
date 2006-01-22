@@ -27,6 +27,7 @@ CREATE TABLE `ReactorBlog`.`Comment` (
   `emailAddress` VARCHAR(50) NULL,
   `comment` LONGTEXT NOT NULL,
   `posted` DATETIME NOT NULL,
+  `subscribe` BIT NOT NULL DEFAULT 1,
   PRIMARY KEY (`commentID`),
   CONSTRAINT `FK_Comments_Entry` FOREIGN KEY `FK_Comments_Entry` (`entryId`)
     REFERENCES `ReactorBlog`.`Entry` (`entryId`)
