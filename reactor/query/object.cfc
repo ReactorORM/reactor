@@ -116,7 +116,6 @@
 			<cfreturn this />
 			
 		<cfelse>
-			
 			<!--- no, loop over all my sub-objects and check them --->
 			<cfloop from="1" to="#ArrayLen(joins)#" index="x">
 				<cfset Join = joins[x] />
@@ -126,7 +125,6 @@
 					<cfcatch />
 				</cftry>
 			</cfloop>
-		
 		</cfif>
 
 		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.alias#' as an alias within the query." type="reactor.findObject.CanNotFindObject" />
@@ -141,7 +139,7 @@
 		
 		<!--- check to see if this is a linked table --->
 		<cfif IsDefined("relationshipStruct.link")>
-			<cfthrow message="Can Not Get Related Objects From HasMany Links" detail="Can't get relation from '#getObjectMetadata().getAlias()#' to '#arguments.alias#' via a hasMany relationship.  You need to explicity use the intermediary object, '#relationshipStruct.link#'." type="reactor.getRelatedObject.CanNotGetRelatedObjectsFromHasManyLinks" />
+			<cfthrow message="Can Not Get Related Objects From HasMany Links" detail="Can't get relation from '#getObjectMetadata().getName()#' to '#arguments.alias#' via a hasMany relationship.  You need to explicity use the intermediary object, '#relationshipStruct.link#'." type="reactor.getRelatedObject.CanNotGetRelatedObjectsFromHasManyLinks" />
 		</cfif>
 		
 		<!--- if it's not a linked table get the related object's metadata --->

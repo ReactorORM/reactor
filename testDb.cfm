@@ -1,12 +1,11 @@
 
 
-<!---<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
+<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
 
 
-<cfset AuctionGateway = reactor.createGateway("Auction")>
+<cfset UserRecord = reactor.createRecord("User")>
+<cfset UserRecord.setEmailAddress("doug@doughughes.net") />
+<cfset UserRecord.load("emailAddress") />
 
+<cfdump var="#UserRecord.getFirstName()#" />
 
-
-<cfdump var="#AuctionGateway.getTestQuery()#" />--->
-
-<cfset test = CreateObject("Component", "ReactorBlogData.Gateway.CategoryGatewayMssql") />

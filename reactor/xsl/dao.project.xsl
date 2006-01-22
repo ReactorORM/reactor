@@ -146,17 +146,28 @@
 	<xsl:if test="count(object/fields/field[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
+		&lt;cfset var <xsl:value-of select="object/@name" />Query = <xsl:value-of select="object/@name" />Gateway.createQuery() /&gt;
+		&lt;cfset var field = "" /&gt;
 		
-		&lt;cfset qRead = <xsl:value-of select="object/@name" />Gateway.getByFields(
-			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
-				<xsl:value-of select="@name" /> = arguments.to.<xsl:value-of select="@name" />
-				<xsl:if test="position() != last()">, </xsl:if>
-			</xsl:for-each>
-		) /&gt;
+		&lt;cfif Len(arguments.loadFieldList)&gt;
+			&lt;cfloop list="#arguments.loadFieldList#" index="field"&gt;
+				&lt;cfset <xsl:value-of select="object/@name" />Query.getWhere().isEqual("<xsl:value-of select="object/@name" />", field, arguments.to[field]) /&gt;
+			&lt;/cfloop&gt;
+			
+			&lt;cfset qRead = <xsl:value-of select="object/@name" />Gateway.getByQuery(<xsl:value-of select="object/@name" />Query) /&gt;
+		&lt;cfelse&gt;
+			&lt;cfset qRead = <xsl:value-of select="object/@name" />Gateway.getByFields(
+				<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
+					<xsl:value-of select="@name" /> = arguments.to.<xsl:value-of select="@name" />
+					<xsl:if test="position() != last()">, </xsl:if>
+				</xsl:for-each>
+			) /&gt;
+		&lt;/cfif&gt;
 		
-		&lt;cfif qRead.recordCount&gt;<xsl:for-each select="object/superTables[@sort = 'backward']//fields/fields[@overridden = 'false']">
+		&lt;cfif qRead.recordCount IS 1&gt;<xsl:for-each select="object/superTables[@sort = 'backward']//fields/fields[@overridden = 'false']">
 			&lt;cfset arguments.to.<xsl:value-of select="@name" /> = qRead.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
 			<xsl:for-each select="//field[@overridden = 'false']">
 				&lt;cfset arguments.to.<xsl:value-of select="@name" /> = 
@@ -170,6 +181,8 @@
 				</xsl:choose>
 				/&gt;
 			</xsl:for-each>
+		&lt;cfelseif qRead.recordCount GT 1&gt;
+			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.AmbiguousRecord" /&gt;
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
 	

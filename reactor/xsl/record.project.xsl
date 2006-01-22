@@ -137,7 +137,9 @@
 	</xsl:for-each>
 	
 	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
-		&lt;cfset _getDao().read(_getTo()) /&gt;
+		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
+		
+		&lt;cfset _getDao().read(_getTo(), arguments.loadFieldList) /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@name"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
