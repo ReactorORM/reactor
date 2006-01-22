@@ -43,7 +43,6 @@
 		
 		<cfreturn ObjectArray />
 	</cffunction>
-
 	
 	<!--- getByQuery --->
 	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="query">
