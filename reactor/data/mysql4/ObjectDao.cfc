@@ -31,7 +31,7 @@
 		
 		<!--- set the owner --->
 		<cfset arguments.Object.setDatabase(dbName) />
-		<cfset arguments.Object.setType("table") /> <!--- don't know how to tell views from tables --->
+		<cfset arguments.Object.setType("table") /> <!--- mysql 4 doesn't have views --->
 		
 		<cfreturn qObject />
 		
@@ -46,13 +46,40 @@
 		<cfset var length = 0 />
 				
 		<cfloop query="qFields">
-			<cfif REFind(".*\(.*\)",qFields.TYPE) eq 0>
-				<cfset dataType = qFields.TYPE />
-				<cfset length = 0 />
-			<cfelse>
-				<cfset dataType = REReplace(qFields.TYPE,"(.*)\((.*)\)","\1") />
-				<cfset length = REReplace(qFields.TYPE,"(.*)\((.*)\)","\2") />
-			</cfif>
+			<!--- 
+				mod by SPJ: in MySql 4 tinytext, text, mediumtext and longtext don't report their maxlength value, so we 
+				have to set it by hand.  The field lengths were obtained from http://www.cs.wcupa.edu/~rkline/mysqlEZinfo/data_types.html#Storage_requirements
+			--->
+			<cfswitch expression="#qFields.TYPE#">
+				<cfcase value="tinytext">
+					<cfset dataType = "text" />
+					<cfset length = 2^8 />
+				</cfcase>
+				<cfcase value="text">
+					<cfset dataType = "text" />
+					<cfset length = 2^16 + 1 />
+				</cfcase>
+				<cfcase value="mediumtext">
+					<cfset dataType = "text" />
+					<cfset length = 2^24 + 2 />
+				</cfcase>
+				<cfcase value="longtext">
+					<cfset dataType = "longtext" />
+					<cfset length = 2^32 + 3 />
+				</cfcase>
+				<cfdefaultcase>
+					<!--- this is the original MySql 4 code, look for textfields in the format type(maxlen) --->
+					<cfif REFind(".*\(.*\)",qFields.TYPE) eq 0>
+						<cfset dataType = qFields.TYPE />
+						<cfset length = 0 />
+					<cfelse>
+						<cfset dataType = REReplace(qFields.TYPE,"(.*)\((.*)\)","\1") />
+						<cfset length = REReplace(qFields.TYPE,"(.*)\((.*)\)","\2") />
+					</cfif>
+				</cfdefaultcase>
+			</cfswitch>
+			<!--- end mod by SPJ --->
+			
 			<!--- create the field --->
 			<cfset Field = CreateObject("Component", "reactor.core.field") />
 			<cfset Field.setName(qFields.FIELD) />
@@ -154,7 +181,7 @@
 				<cfreturn "cf_sql_date" />
 			</cfcase>
 			<cfcase value="datetime">
-				<cfreturn "cf_sql_date" />
+				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
 			<cfcase value="timestamp">
 				<cfreturn "cf_sql_timestamp" />

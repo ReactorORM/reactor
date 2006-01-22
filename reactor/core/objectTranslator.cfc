@@ -41,20 +41,27 @@
 			<cfset generateErrorMessages(pathToErrorFile) />
 		</cfif>
 		
+		<!--- write the project object --->
+		<cfset generate(
+			objectXML,
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.project.xsl",
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Project"),
+			true) />
+		
 		<!--- write the base object --->
 		<cfset generate(
 			objectXML,
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.base.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "base"),
-			true) />
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Base"),
+			false) />
 		
 		<!--- generate the custom object --->
 		<cfset generate(
 			objectXML,
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.custom.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "custom"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Custom"),
 			false) />
-		
+			
 	</cffunction>
 	
 	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
@@ -261,7 +268,7 @@
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
-		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: base, custom" required="yes" type="string" />
+		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfset var root = "" />
 		
 		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
@@ -269,22 +276,28 @@
 				message="Invalid Type Argument"
 				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
 		</cfif>
-		<cfif NOT ListFindNoCase("base,custom", arguments.class)>
+		<cfif NOT ListFindNoCase("Project,Base,Custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Class Argument"
-				detail="The class argument must be one of: base, custom" />
+				detail="The class argument must be one of: Project, Base, Custom" />
 		</cfif>
 		
-		<cfif arguments.class IS "base">
+		<cfif arguments.class IS "Project">
 			<!--- removed & getConfig().getType() & "/" from the following line of code --->
 			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project" & getConfig().getMapping() & "/" & arguments.type & "/"  />
-
-		<cfelseif arguments.class IS "custom">
-			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" & getConfig().getType() & "/") />
-
+			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
+			
+		<cfelseif arguments.class IS "Base">
+			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
+			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
+		
+		<cfelseif arguments.class IS "Custom">
+			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
+			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & Ucase(Left(getConfig().getType(), 1)) & Lcase(Right(getConfig().getType(), Len(getConfig().getType()) - 1)) & ".cfc" />
+			
 		</cfif>
 		
-		<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
+		
 	</cffunction>
 	
 	<cffunction name="FormatErrorXml" access="public" hint="I format the Xml Errors doc to make it more easily human readable." output="false" returntype="string">

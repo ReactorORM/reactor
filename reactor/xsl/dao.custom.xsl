@@ -4,8 +4,8 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the custom DAO object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.<xsl:value-of select="object/@mapping"/>.Dao.<xsl:value-of select="object/@name"/>Dao" &gt;
+&lt;cfcomponent hint="I am the <xsl:value-of select="object/@dbms"/> custom DAO object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+	extends="<xsl:value-of select="object/@name"/>Dao" &gt;
 	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 &lt;/cfcomponent&gt;
 	</xsl:template>

@@ -4,14 +4,9 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the base TO object for the <xsl:value-of select="object/@name"/><xsl:text> </xsl:text><xsl:value-of select="object/@type"/>.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
-	extends="reactor.base.abstractTo" &gt;
-	
-	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
-	<xsl:for-each select="object/fields/field">
-		&lt;cfset this.<xsl:value-of select="@name" /> = "<xsl:value-of select="@default" />" /&gt;
-	</xsl:for-each>
-	
+&lt;cfcomponent hint="I am the database agnostic custom TO object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+	extends="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To"&gt;
+	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

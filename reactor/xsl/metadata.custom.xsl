@@ -4,8 +4,8 @@
 	<xsl:output method="text" indent="no"  />
 
 	<xsl:template match="/">
-&lt;cfcomponent hint="I am the custom Metadata object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.<xsl:value-of select="object/@mapping"/>.Metadata.<xsl:value-of select="object/@name"/>Metadata"&gt;
+&lt;cfcomponent hint="I am the <xsl:value-of select="object/@dbms"/> custom Metadata object for the <xsl:value-of select="object/@name"/> table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+	extends="<xsl:value-of select="object/@name"/>Metadata"&gt;
 	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 
 	&lt;cfset variables.metadata.owner = "<xsl:value-of select="object/@owner" />" /&gt;
