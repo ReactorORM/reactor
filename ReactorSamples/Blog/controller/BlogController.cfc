@@ -28,11 +28,23 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<!--- DoGetMostViewedEntries
-	<cffunction name="DoGetMostViewedEntries" access="Public" returntype="void" output="false" hint="I return the highest rated entries in the blog">
+	<!--- DoGetHighestRatedEntries --->
+	<cffunction name="DoGetHighestRatedEntries" access="Public" returntype="void" output="false" hint="I return the highest rated entries in the blog">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset arguments.event.setValue("highestRatedEntries", variables.EntryGateway.getMostViewedEntries()) />
-	</cffunction> --->
+		<cfset arguments.event.setValue("highestRatedEntries", variables.EntryGateway.getHighestRatedEntries(variables.BlogConfig.getStatsLimit())) />
+	</cffunction>
+	
+	<!--- DoGetMostViewedEntries --->
+	<cffunction name="DoGetMostViewedEntries" access="Public" returntype="void" output="false" hint="I return the most viewed entries in the blog">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("mostViewedEntries", variables.EntryGateway.GetMostViewedEntries(variables.BlogConfig.getStatsLimit())) />
+	</cffunction>
+	
+	<!--- DoGetMostCommentedOn --->
+	<cffunction name="DoGetMostCommentedOn" access="Public" returntype="void" output="false" hint="I return the most commented on entries in the blog">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset arguments.event.setValue("mostCommentedOn", variables.EntryGateway.GetMostCommentedOn(variables.BlogConfig.getStatsLimit())) />
+	</cffunction>
 	
 	<!--- DoGetCommentParticipants --->
 	<cffunction name="DoGetCommentParticipants" access="Public" returntype="void" output="false" hint="I get the email addresses of people who have been participating in the comments.">
@@ -216,10 +228,17 @@
 		</cfif>
 	</cffunction>
 	
+	<!--- DoSetSubscriptionStatus --->
+	<cffunction name="DoSetSubscriptionStatus" access="Public" returntype="void" output="false" hint="I set a commenter's subscription status for an entry.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset variables.CommentGateway.setSubscriptionStatus(arguments.event.getValue("emailAddress"), arguments.event.getValue("subscribe", 0), arguments.event.getValue("EntryId", 0)) />
+	</cffunction>
+	
 	<!--- DoSaveComment --->
 	<cffunction name="DoSaveComment" access="Public" returntype="void" output="false" hint="I save an comment.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var CommentRecord = arguments.event.getValue("CommentRecord") />
+		<cfset CommentRecord.setSubscribe(arguments.event.getValue("subscribe", 0)) />
 		<cfset CommentRecord.save() />
 	</cffunction>
 	

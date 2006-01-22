@@ -5,6 +5,7 @@
 	<cfset variables.blogDescription = "" />
 	<cfset variables.authorEmailAddress = "" />
 	<cfset variables.authorName = "" />
+	<cfset variables.statsLimit = 5 />
 	<cfset variables.recentEntryDays = 0 />
 	<cfset variables.useCaptcha = false />
 	<cfset variables.captchaKey = "" />
@@ -24,6 +25,7 @@
 		<cfargument name="blogDescription" hint="I am the description of the blog" required="no" type="string" default="" />
 		<cfargument name="authorEmailAddress" hint="I am the author's email address" required="no" type="string" default="" />
 		<cfargument name="authorName" hint="I am the author's name" required="no" type="string" default="" />
+		<cfargument name="statsLimit" hint="I am the number of items to show for each statistic in the 'Best of the Blog' section." required="no" type="numeric" default="5" />
 		<cfargument name="recentEntryDays" hint="I am the number of days an entry is shown on the home page." required="no" type="numeric" default="0" />
 		<cfargument name="useCaptcha" hint="I indicate if captcha images should be displayed." required="no" type="boolean" default="false" />
 		<cfargument name="captchaKey" hint="I am the license key to use with the Alagad Captcah component wehn useCaptcha is true." required="no" type="string" default="" />
@@ -40,6 +42,7 @@
 		<cfset setBlogDescription(arguments.blogDescription) />
 		<cfset setAuthorEmailAddress(arguments.authorEmailAddress) />
 		<cfset setAuthorName(arguments.authorName) />
+		<cfset setStatsLimit(arguments.statsLimit) />
 		<cfset setRecentEntryDays(arguments.recentEntryDays) />
 		<cfset setUseCaptcha(arguments.useCaptcha) />
 		<cfset setCaptchaKey(arguments.captchaKey) />
@@ -130,6 +133,15 @@
     </cffunction>
     <cffunction name="getAuthorName" access="public" output="false" returntype="string">
        <cfreturn variables.authorName />
+    </cffunction>
+	
+	<!--- statsLimit --->
+    <cffunction name="setStatsLimit" access="public" output="false" returntype="void">
+       <cfargument name="statsLimit" hint="I am the number of items to show for each statistic in the 'Best of the Blog' section." required="yes" type="numeric" />
+       <cfset variables.statsLimit = arguments.statsLimit />
+    </cffunction>
+    <cffunction name="getStatsLimit" access="public" output="false" returntype="numeric">
+       <cfreturn variables.statsLimit />
     </cffunction>
 	
 	<!--- recentEntryDays --->

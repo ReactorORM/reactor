@@ -26,5 +26,10 @@
 		<strong>Comment:</strong><br>
 		#CommentRecord.getComment()#
 	</p>
-		
+	
+	<p>To stop getting messages related to this blog entry please visit the following link:
+	<a href="http://#CGI.SERVER_NAME#/#BlogConfig.getBlogPath()#?event=SetSubscriptionStatus&entryId=#EntryRecord.getEntryId()#&emailAddress=#particpants.emailAddress#"></a></p>
+	
+	<p>To stop getting all messages from this blog please visit the following link:
+	<a href="http://#CGI.SERVER_NAME#/#BlogConfig.getBlogPath()#?event=SetSubscriptionStatus&emailAddress=#particpants.emailAddress#"></a></p>
 </cfmail>

@@ -105,6 +105,10 @@
 			<errorMessage message="The Posted field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Posted field must be a date value." name="invalidType"/>
 		</field>
+		<field name="Subscribe">
+			<errorMessage message="The Subscribe field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The Subscribe field must be a numeric value." name="invalidType"/>
+		</field>
 	</table>
 	<table name="EntryCategory">
 		<field name="EntryCategoryId">

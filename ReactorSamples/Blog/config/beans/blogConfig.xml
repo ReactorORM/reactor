@@ -29,6 +29,11 @@
 		<value>Doug Hughes</value>
 	</property>
 	
+	<!-- I am the number of items to show for each statistic in the "Best of the Blog" section. -->
+	<property name="statsLimit">
+		<value>5</value>
+	</property>
+	
 	<!-- I am the number of days an entry is shown on the home page. -->
 	<property name="recentEntryDays">
 		<value>30</value>

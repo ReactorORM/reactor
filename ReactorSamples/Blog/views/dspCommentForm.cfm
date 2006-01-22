@@ -35,7 +35,14 @@
 			name="comment"
 			height="150px"
 			value="#CommentRecord.getComment()#" />
-			
+		
+		<cf_input
+			label="Notify me when more comments are posted."
+			errors="#Errors#"
+			type="checkbox"
+			name="subscribe"
+			value="#CommentRecord.getSubscribe()#" />
+		
 		<cfif BlogConfig.getUseCaptcha()>
 			<cf_input
 				label="Enter This Code Below:"

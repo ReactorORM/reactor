@@ -3,7 +3,7 @@
 		<setting name="beanMappings" value="/ReactorSamples/Blog/config/beans/" />
 		<setting name="viewMappings" value="/ReactorSamples/Blog/views" />
 		<setting name="defaultEvent" value="Home" />
-		<setting name="reload" value="false" />
+		<setting name="reload" value="true" />
 		<setting name="debug" value="false " />
 		<!-- These are all optional as of 1.0	
 		<setting name="statebuilder" value="ModelGlue.Util.GenericCollection" />
@@ -35,6 +35,7 @@
 			<message-listener message="NeedComment" function="DoGetComment" />	
 			<message-listener message="ValidateComment" function="DoValidateComment" />	
 			<message-listener message="SaveComment" function="DoSaveComment" />	
+			<message-listener message="NeedToSetSubscriptionStatus" function="DoSetSubscriptionStatus" />			
 			<message-listener message="ResetComment" function="DoResetComment" />	
 			<message-listener message="DeleteComment" function="DoDeleteComment" />	
 			<message-listener message="AnnounceNewEntry" function="DoPings" />	
@@ -54,7 +55,9 @@
 			<message-listener message="ValidateUser" function="DoValidateUser" />
 			<message-listener message="SaveUser" function="DoSaveUser" />
 			<message-listener message="ValidateEntryExists" function="DoValidateEntryExists" />
-			<!-- <message-listener message="NeedMostViewedEntries" function="DoGetMostViewedEntries" /> -->
+			<message-listener message="NeedHighestRatedEntries" function="DoGetHighestRatedEntries" />
+			<message-listener message="NeedMostViewedEntries" function="DoGetMostViewedEntries" />
+			<message-listener message="NeedMostCommentedOn" function="DoGetMostCommentedOn" />
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
@@ -110,9 +113,9 @@
 			</results>
 		</event-handler>
 		
-		<!-- <event-handler name="Stats">
+		<event-handler name="Stats">
 			<broadcasts>
-				<message name="NeedHighestAverageRatingEntries" />
+				<message name="NeedHighestRatedEntries" />
 				<message name="NeedMostViewedEntries" />
 				<message name="NeedMostCommentedOn" />
 			</broadcasts>
@@ -122,7 +125,7 @@
 			<results>
 				<result do="Layout" />
 			</results>
-		</event-handler> -->
+		</event-handler>
 		
 		<event-handler name="RSS">
 			<broadcasts>
@@ -356,12 +359,23 @@
 		<event-handler name="SaveComment" access="private">
 			<broadcasts>
 				<message name="SaveComment" />
+				<message name="NeedToSetSubscriptionStatus" />
 				<message name="NeedEntry" />
 				<message name="NeedCommentParticipants" />
 			</broadcasts>
 			<views>
 				<include name="emails" template="dspSendCommentEmails.cfm" />
 				<include name="redirect" template="dspRedirectToEntry.cfm" />
+			</views>
+			<results />
+		</event-handler>
+		
+		<event-handler name="SetSubscriptionStatus">
+			<broadcasts>
+				<message name="NeedToSetSubscriptionStatus" />
+			</broadcasts>
+			<views>
+				<!-- <include template="dspSubscriptionStatusSet.cfm" /> -->
 			</views>
 			<results />
 		</event-handler>

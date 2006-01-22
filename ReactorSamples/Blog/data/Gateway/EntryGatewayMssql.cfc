@@ -55,5 +55,49 @@
 		
 		<cfreturn entries />
 	</cffunction>
+	
+	<cffunction name="getHighestRatedEntries" access="public" hint="I return the highest rated entries"  output="false" returntype="query">
+		<cfargument name="limit" hint="I am the maximum number of entries to return" required="yes" type="numeric" />
+		<cfset var qHighest = 0 />
+		
+		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
+			SELECT TOP #limit# e.entryId, e.title, IsNull(sum(r.rating)/Convert(float, count(e.entryId)), 0) as averageRating
+			FROM Entry as e JOIN Rating as r
+				ON e.entryId = r.entryId
+			GROUP BY e.entryId, e.title
+			ORDER BY averageRating DESC
+		</cfquery>
+		
+		<cfreturn qHighest />
+	</cffunction>
+	
+	<cffunction name="GetMostViewedEntries" access="public" hint="I return the most viewed entries"  output="false" returntype="query">
+		<cfargument name="limit" hint="I am the maximum number of entries to return" required="yes" type="numeric" />
+		<cfset var qViews = 0 />
+		
+		<cfquery name="qViews" datasource="#_getConfig().getDsn()#">
+			SELECT TOP #limit# e.entryId, e.title, e.views
+			FROM Entry as e
+			ORDER BY e.views DESC
+		</cfquery>
+		
+		<cfreturn qViews />
+	</cffunction>
+	
+	<cffunction name="GetMostCommentedOn" access="public" hint="I return the most commented on entries"  output="false" returntype="query">
+		<cfargument name="limit" hint="I am the maximum number of entries to return" required="yes" type="numeric" />
+		<cfset var qComments = 0 />
+		
+		<cfquery name="qComments" datasource="#_getConfig().getDsn()#">
+			SELECT TOP #limit# e.entryId, e.title, count(c.commentId) as comments
+			FROM Entry as e JOIN Comment as c
+				ON e.entryId = c.entryId
+			GROUP BY e.entryId, e.title
+			ORDER BY comments DESC
+		</cfquery>
+		
+		<cfreturn qComments />
+	</cffunction>
+		
 </cfcomponent>
 	
