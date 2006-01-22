@@ -3,7 +3,7 @@
 		<dsn value="ContactManager2" />
 		<type value="mysql" />
 		<mapping value="/ContactManagerData" />
-		<mode value="production" />
+		<mode value="development" />
 	</config>
 
 	<objects>

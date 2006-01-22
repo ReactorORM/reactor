@@ -68,7 +68,7 @@ INSERT INTO `State`
 ) VALUES (
   'AB',
   'Alberta'
-)
+);
 
 INSERT INTO `State`
 (
