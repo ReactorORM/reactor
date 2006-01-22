@@ -1,5 +1,5 @@
 
-<cfcomponent hint="I am the custom Record object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+<cfcomponent hint="I am the database agnostic custom Record object for the Entry table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
 	extends="reactor.project.ReactorBlogData.Record.EntryRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
@@ -183,17 +183,11 @@
 	</cffunction>
 	
 	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
-		<cfset var qRating = 0 />		
+		<cfset var RatingQuery = createRatingQuery() />		
+		<cfset RatingQuery.returnField("Rating", "Rating") />
+		<cfset RatingQuery = getRatingQuery(RatingQuery) />
 		
-		<!---
-		note: I'm not using a cfquery param for two reasons.  1: I want to easily cache this for a few seconds and you can't with a
-		cfqueryparam and 2: getEntryId()'s data type is already enforced as a numeric value
-		--->
-		<cfquery name="qRating" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,0,5)#">
-			SELECT dbo.getAverageRating(#getEntryId()#) avgRating
-		</cfquery>
-		
-		<cfreturn qRating.avgRating />
+		<cfreturn Round(ArrayAvg(ListToArray(ValueList(RatingQuery.Rating)))) />
 	</cffunction>
 	
 	<cffunction name="setCategoryIdList" access="public" output="false" returntype="void">

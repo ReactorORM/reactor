@@ -1,5 +1,5 @@
 
-<cfcomponent hint="I am the custom Record object for the  table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
+<cfcomponent hint="I am the database agnostic custom Record object for the Comment table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
 	extends="reactor.project.ReactorBlogData.Record.CommentRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
@@ -36,6 +36,7 @@
 		<cfreturn comment />
 	</cffunction>
 	
+
 	
 </cfcomponent>
 	
