@@ -36,7 +36,6 @@ Here are the steps I follow to deply the blog to a different location:
 1) Copy all the files from /ReactorSamples/Blog/ to your target directory.
 
 2) Run the correct SQL file to create the database.  Be sure to change the db name from ReactorBlog to whatever you need.
-	(Tip: Make sure that the SQL function getAverageRating is created correctly - at least one user had issues with this on mysql.)
 	
 3) Create a coldfusion datasource for the database.
 

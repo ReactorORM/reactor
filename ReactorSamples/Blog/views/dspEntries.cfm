@@ -34,7 +34,7 @@
 				<!--- output various links --->
 				<p>
 					<a href="index.cfm?event=viewEntry&entryId=#entries.entryId#">View Full Entry</a> 
-					<cfif Len(entries.disableComments)>
+					<cfif NOT entries.disableComments>
 						|
 						<a href="index.cfm?event=viewEntry&entryId=#entries.entryId###comments">#entries.commentCount# Comments</a>
 					</cfif>

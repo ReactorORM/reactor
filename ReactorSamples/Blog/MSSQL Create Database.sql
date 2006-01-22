@@ -65,30 +65,6 @@ GO
 SET ANSI_NULLS ON 
 GO
 
-CREATE FUNCTION getAverageRating(@entryId int)
-RETURNS int
-BEGIN 
-
-	DECLARE @rating int
-	
-	SELECT
-		@rating = CASE
-			WHEN AVG(rating) IS NULL THEN 0
-			ELSE ROUND(AVG(CONVERT(float, rating)), 0)
-		END
-	FROM Rating
-	WHERE entryId = @entryId
-
-	RETURN @rating
-END
-
-
-GO
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
 CREATE TABLE [dbo].[Category] (
 	[categoryId] [int] IDENTITY (1, 1) NOT NULL ,
 	[name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 

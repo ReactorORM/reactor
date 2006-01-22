@@ -122,27 +122,5 @@ VALUES
   'admin@example.com'
 );
 
-DELIMITER $$
-
-DROP FUNCTION IF EXISTS `ReactorBlog`.`getAverageRating` $$
-CREATE FUNCTION `getAverageRating`(entryIdToRate int) RETURNS int(11)
-BEGIN
-  DECLARE myRating int;
-
-  SELECT
-    CASE
-      WHEN AVG(rating) IS NULL THEN 1
-      ELSE ROUND(AVG(rating + 0.0))
-    END INTO myRating
-  FROM `Rating`
-  WHERE `Rating`.`entryId` = entryIdToRate
-  GROUP BY `Rating`.`entryId`;
-
-  RETURN myRating;
-
-END $$
-
-DELIMITER ;
-
 -- ----------------------------------------------------------------------
 -- EOF

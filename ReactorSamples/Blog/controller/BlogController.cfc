@@ -272,7 +272,6 @@
 		
 		<!--- update the entry --->
 		<cfset arguments.event.makeEventBean(EntryRecord) />
-		<cfset EntryRecord.setDisableComments(arguments.event.getValue("disableComments", false)) />
 		<cfset arguments.event.setValue("EntryRecord", EntryRecord) />		
 	</cffunction>
 	
@@ -293,7 +292,9 @@
 	<cffunction name="DoSaveEntry" access="Public" returntype="void" output="false" hint="I save an entry.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var EntryRecord = arguments.event.getValue("EntryRecord") />
+		<cfset EntryRecord.setDisableComments(arguments.event.getValue("disableComments", 0)) />
 		<cfset EntryRecord.setPostedByUserId(arguments.event.getValue("UserRecord").getUserId()) />
+		
 		<cfset EntryRecord.save() />
 	</cffunction>
 	

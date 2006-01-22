@@ -86,7 +86,7 @@
 					<cfinput name="#attributes.name#"
 						type="#attributes.type#" 
 						checked="#Iif(attributes.value, DE('true'), DE('false'))#"
-						value="true"
+						value="1"
 						style="#attributes.style#"
 						class="inputCheckbox #attributes.class#" />
 					<span>#Iif(attributes.required, DE('*'), DE(''))# #attributes.label#</span>
