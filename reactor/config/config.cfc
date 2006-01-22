@@ -80,7 +80,7 @@
 	</cffunction>
 	
 	<!--- dsn --->
-    <cffunction name="setDsn" access="private" output="false" returntype="void">
+    <cffunction name="setDsn" access="public" output="false" returntype="void">
        <cfargument name="dsn" hint="I am the DSN to connect to." required="yes" type="string" />
        <cfset variables.dsn = arguments.dsn />
     </cffunction>
@@ -89,7 +89,7 @@
     </cffunction>
 	
 	<!--- Type --->
-	<cffunction name="setType" access="private" output="false" returntype="void">
+	<cffunction name="setType" access="public" output="false" returntype="void">
 		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="string" />
 		
 		<cfif NOT ListFindNoCase("mssql,mysql,mysql4", arguments.Type)>
@@ -105,7 +105,7 @@
     </cffunction>
 	
 	<!--- mapping --->
-    <cffunction name="setMapping" access="private" output="false" returntype="void">
+    <cffunction name="setMapping" access="public" output="false" returntype="void">
 		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
 		
 		<cfif NOT DirectoryExists(expandPath(arguments.mapping))>
@@ -130,7 +130,7 @@
     </cffunction>
 	
 	<!--- mode --->
-    <cffunction name="setMode" access="private" output="false" returntype="void">
+    <cffunction name="setMode" access="public" output="false" returntype="void">
 		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="yes" type="string" />
 		
 		<cfif NOT ListFindNoCase("development,production,always", arguments.mode)>

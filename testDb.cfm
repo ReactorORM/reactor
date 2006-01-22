@@ -1,6 +1,6 @@
 
 
-<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml")) />
+<cfset reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath("/config/reactor.xml"), "vacationAuctions", "mssql", "/reactorData", "always") />
 
 
 <cfset UserRecord = reactor.createRecord("User")>
