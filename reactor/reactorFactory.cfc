@@ -8,6 +8,8 @@
 		<cfargument name="type" hint="I am the type of database the dsn is for" required="no" type="string" default="" />
 		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="no" type="string" default="" />
 		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="no" type="string" default="" />
+		<cfargument name="username" hint="I am the username to use for DSNs" required="no" type="string" default="" />
+		<cfargument name="password" hint="I am the password to use for DSNs" required="no" type="string" default="" />
 		
 		<cfset var config = CreateObject("Component", "reactor.config.config").init(arguments.pathToConfigXml) />
 		
@@ -22,6 +24,12 @@
 		</cfif>
 		<cfif Len(arguments.mode)>
 			<cfset config.setMode(arguments.mode) />
+		</cfif>
+		<cfif Len(arguments.username)>
+			<cfset config.setUsername(arguments.username) />
+		</cfif>
+		<cfif Len(arguments.password)>
+			<cfset config.setPassword(arguments.password) />
 		</cfif>
 		
 		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(config, this)) />

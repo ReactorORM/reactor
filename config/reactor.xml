@@ -1,10 +1,12 @@
 <reactor>
-	<!-- <config>
+	<config>
 		<dsn value="vacationAuctions" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
-	</config> -->
+		<!-- <username value="always" />
+		<password value="always" /> -->
+	</config>
 
 	<objects>
 		<object name="Auction">

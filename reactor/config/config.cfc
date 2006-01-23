@@ -5,6 +5,8 @@
 	<cfset variables.Type = "" />
 	<cfset variables.mapping = "" />
 	<cfset variables.mode = "" />
+	<cfset variables.username = "" />
+	<cfset variables.password = "" />
 	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
@@ -45,6 +47,12 @@
 				</cfcase>
 				<cfcase value="mode">
 					<cfset setMode(config[x].XmlAttributes.Value) />
+				</cfcase>
+				<cfcase value="username">
+					<cfset setUsername(config[x].XmlAttributes.Value) />
+				</cfcase>
+				<cfcase value="password">
+					<cfset setPassword(config[x].XmlAttributes.Value) />
 				</cfcase>
 			</cfswitch>
 		</cfloop>
@@ -143,6 +151,24 @@
     </cffunction>
     <cffunction name="getMode" access="public" output="false" returntype="string">
        <cfreturn variables.mode />
+    </cffunction>
+	
+	<!--- username --->
+    <cffunction name="setUsername" access="public" output="false" returntype="void">
+       <cfargument name="username" hint="I am the username to use for DSNs" required="yes" type="string" />
+       <cfset variables.username = arguments.username />
+    </cffunction>
+    <cffunction name="getUsername" access="public" output="false" returntype="string">
+       <cfreturn variables.username />
+    </cffunction>
+	
+	<!--- password --->
+    <cffunction name="setPassword" access="public" output="false" returntype="void">
+       <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="string" />
+       <cfset variables.password = arguments.password />
+    </cffunction>
+    <cffunction name="getPassword" access="public" output="false" returntype="string">
+       <cfreturn variables.password />
     </cffunction>
 	
 	<!--- configXml --->

@@ -12,7 +12,7 @@
 		<cfargument name="Object" hint="I am the object to check on." required="yes" type="reactor.core.object" />
 		<cfset qObject = 0 />
 		
-		<cfstoredproc datasource="#getDsn()#" procedure="sp_tables">
+		<cfstoredproc datasource="#getDsn()#" procedure="sp_tables" username="#getUsername()#" password="#getPassword()#">
 			<cfprocparam cfsqltype="cf_sql_varchar" scale="384" value="#arguments.Object.getName()#" />
 			<cfprocresult name="qObject" />
 		</cfstoredproc>
@@ -32,7 +32,7 @@
 		<cfset var qFields = 0 />
 		<cfset var Field = 0 />
 				
-		<cfquery name="qFields" datasource="#getDsn()#">
+		<cfquery name="qFields" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT 
 				col.COLUMN_NAME as name,
 				CASE

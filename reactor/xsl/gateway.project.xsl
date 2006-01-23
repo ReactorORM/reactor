@@ -10,15 +10,18 @@
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
 	&lt;cffunction name="getAll" access="public" hint="I return all rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="query"&gt;
-		&lt;cfreturn getByFields() /&gt;
+		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="string" default="" /&gt;
+		&lt;cfreturn getByFields(sortByFieldList=arguments.sortByFieldList) /&gt;
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="getByFields" access="public" hint="I return all matching rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="query"&gt;
 		<xsl:for-each select="//field[@overridden = 'false']">
 			&lt;cfargument name="<xsl:value-of select="@name" />" hint="If provided, I match the provided value to the <xsl:value-of select="@name" /> field in the <xsl:value-of select="/object/@name" /> table." required="no" type="string" /&gt;
 		</xsl:for-each>
+		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="string" default="" /&gt;
 		&lt;cfset var Query = createQuery() /&gt;
 		&lt;cfset var Where = Query.getWhere() /&gt;
+		&lt;cfset var x = 0 /&gt;
 		
 		<xsl:for-each select="//field[@overridden = 'false']">
 			&lt;cfif IsDefined('arguments.<xsl:value-of select="@name" />')&gt;
@@ -34,6 +37,10 @@
 				, "<xsl:value-of select="@name" />", arguments.<xsl:value-of select="@name" />) /&gt;
 			&lt;/cfif&gt;
 		</xsl:for-each>
+		
+		&lt;cfloop list="#arguments.sortByFieldList#" index="x"&gt;
+			&lt;cfset Query.getOrder().setAsc("<xsl:value-of select="object/@name" />", trim(x)) /&gt;
+		&lt;/cfloop&gt;
 		
 		&lt;cfreturn getByQuery(Query) /&gt;
 	&lt;/cffunction&gt;

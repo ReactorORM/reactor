@@ -68,7 +68,7 @@
 		</xsl:if>
 			
 		&lt;cftransaction&gt;
-			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;
+			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 				INSERT INTO #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
 				(
 					<xsl:for-each select="object/fields/field">
@@ -106,7 +106,7 @@
 			&lt;/cfquery&gt;
 			<!-- other dbms require this in a seperate query -->
 			&lt;cfif NOT ListFindNoCase("mssql", _getConfig().getType())&gt;
-				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
+				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;	
 					#Convention.lastInseredIdSyntax(getObjectMetadata())#
 				&lt;/cfquery&gt;		
 			&lt;/cfif&gt;
@@ -197,7 +197,7 @@
 			&lt;cfset super.update(arguments.to) /&gt;
 		</xsl:if>
 		
-		&lt;cfquery name="qUpdate" datasource="#_getConfig().getDsn()#"&gt;
+		&lt;cfquery name="qUpdate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 			UPDATE #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
 			SET 
 			<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
@@ -248,7 +248,7 @@
 			</xsl:if>
 		</xsl:if>
 		
-		&lt;cfquery name="qDelete" datasource="#_getConfig().getDsn()#"&gt;
+		&lt;cfquery name="qDelete" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 			DELETE FROM #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
 			WHERE
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">

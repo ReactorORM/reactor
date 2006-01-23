@@ -12,7 +12,7 @@
 		<cfargument name="Object" hint="I am the object to check on." required="yes" type="reactor.core.object" />
 		<cfset qObject = 0 />
 		
-		<cfquery name="qObject" datasource="#getDsn()#">
+		<cfquery name="qObject" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT database() as DATABASE_NAME, TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE
 			FROM information_schema.TABLES
 			WHERE TABLE_SCHEMA = database() AND TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
@@ -32,7 +32,7 @@
 		<cfset var qFields = 0 />
 		<cfset var Field = 0 />
 				
-		<cfquery name="qFields" datasource="#getDsn()#">
+		<cfquery name="qFields" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT COLUMN_NAME as name,
 			CASE
 				WHEN COLUMN_KEY = 'PRI' THEN 'true'

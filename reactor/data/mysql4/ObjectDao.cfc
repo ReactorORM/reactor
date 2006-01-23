@@ -15,13 +15,13 @@
 		<cfset var qObject = 0 />
 		<cfset var dbName = 0 />
 		
-		<cfquery name="qObject" datasource="#getDsn()#">
+		<cfquery name="qObject" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT database() as DATABASE_NAME
 		</cfquery>
 		<cfset dbName = qObject.DATABASE_NAME />
 		
 		<cftry>
-			<cfquery name="qObject" datasource="#getDsn()#">
+			<cfquery name="qObject" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 				EXPLAIN #arguments.Object.getName()#
 			</cfquery>
 			<cfcatch type="any">

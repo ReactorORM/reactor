@@ -54,7 +54,7 @@
 		<cfset var whereNode = 0 />
 		<cfset var orderNodes = 0 />
 		
-		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#">
+		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
 			SELECT
 			
 			<!--- distinct --->

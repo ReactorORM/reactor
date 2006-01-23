@@ -99,7 +99,7 @@
 	<cffunction name="getObject" access="private" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
 		<cfset var Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
-		<cfset var ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn()) />		
+		<cfset var ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />		
 		
 		<cfset ObjectDao.read(Object) />
 		
