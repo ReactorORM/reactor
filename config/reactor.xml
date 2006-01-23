@@ -4,8 +4,8 @@
 		<type value="mssql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
-		<!-- <username value="always" />
-		<password value="always" /> -->
+		<!-- <username value="" />
+		<password value="" /> -->
 	</config>
 
 	<objects>

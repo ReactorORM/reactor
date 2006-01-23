@@ -5,8 +5,8 @@
 		<mapping value="/ScratchData" />
 		<mode value="development" />
 		<!-- These config values are not required -->
-		<!-- <username value="always" />
-		<password value="always" /> -->
+		<!-- <username value="" />
+		<password value="" /> -->
 	</config>
 
 	<objects>
