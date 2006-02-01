@@ -10,7 +10,7 @@
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
 	&lt;cffunction name="save" access="public" hint="I create or update a <xsl:value-of select="object/@name" /> record." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 
 		<xsl:choose>
 			<xsl:when test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) &gt; 0">
@@ -37,7 +37,7 @@
 	
 	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
 	&lt;cffunction name="exists" access="public" hint="I check to see if the <xsl:value-of select="object/@name" /> object exists." output="false" returntype="boolean"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var qExists = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
 				
@@ -57,7 +57,7 @@
 	</xsl:if>
 	
 	&lt;cffunction name="create" access="public" hint="I create a <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" />" required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qCreate = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">
@@ -145,7 +145,7 @@
 	
 	<xsl:if test="count(object/fields/field[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@name" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@name" />") /&gt;
@@ -187,7 +187,7 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="update" access="public" hint="I update a <xsl:value-of select="object/@name" /> object." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to update a record in the table." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to update a record in the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qUpdate = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">
@@ -239,7 +239,7 @@
 	&lt;/cffunction&gt;
 	</xsl:if>
 	&lt;cffunction name="delete" access="public" hint="I delete a record in the <xsl:value-of select="object/@name" /> table." output="false" returntype="void"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to delete from the table." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@name" /> which will be used to delete from the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qDelete = 0 /&gt;
 		<xsl:if test="count(object/super) &gt; 0">

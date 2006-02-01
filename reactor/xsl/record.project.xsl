@@ -9,7 +9,7 @@
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 	
-	&lt;cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="reactor.project.<xsl:value-of select="object/@mapping"/>.Record.<xsl:value-of select="object/@name"/>Record"&gt;
+	&lt;cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Record.<xsl:value-of select="object/@name"/>Record"&gt;
 		<xsl:for-each select="//field[@overridden = 'false']">
 			&lt;cfargument name="<xsl:value-of select="@name" />" hint="I am the default value for the  <xsl:value-of select="@name" /> field." required="no" type="string" default="<xsl:value-of select="@default" />" /&gt;
 		</xsl:for-each>
@@ -136,10 +136,27 @@
 		&lt;/cffunction&gt;	
 	</xsl:for-each>
 	
-	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
-		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
+	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="object/@name"/>Record"&gt;
+		&lt;!--- cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
+		&lt;cfset var loadFieldList = StructKeyList(arguments) /&gt;
+		&lt;cfset var item = 0 /&gt;
+		&lt;cfset var func = 0 /&gt;
 		
-		&lt;cfset _getDao().read(_getTo(), arguments.loadFieldList) /&gt;
+		&lt;cfif IsDefined("arguments") AND loadFieldList IS 1&gt;
+			&lt;cfset loadFieldList = arguments[1] /&gt;
+			
+		&lt;cfelseif IsDefined("arguments") AND loadFieldList IS NOT 1&gt;
+			&lt;cfloop collection="#arguments#" item="item"&gt;
+				&lt;cfset func = this["set#item#"] /&gt;
+				&lt;cfset func(arguments[item]) /&gt;
+			&lt;/cfloop&gt;
+			
+		&lt;/cfif&gt;
+		
+		
+		&lt;cfset _getDao().read(_getTo(), loadFieldList) /&gt;
+		
+		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@name"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
@@ -155,12 +172,12 @@
 	<xsl:for-each select="object/hasOne">
 	&lt;!--- Record For <xsl:value-of select="@alias"/> ---&gt;
 	&lt;cffunction name="set<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
+	    &lt;cfargument name="Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
 		<xsl:for-each select="relate">
 			&lt;cfset set<xsl:value-of select="@from" />(Record.get<xsl:value-of select="@to" />()) /&gt;
 		</xsl:for-each>
 	&lt;/cffunction&gt;
-	&lt;cffunction name="get<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@mapping"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
+	&lt;cffunction name="get<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
 		&lt;cfset var Record = _getReactorFactory().createRecord("<xsl:value-of select="@name" />") /&gt;
 		<xsl:for-each select="relate">
 			&lt;cfset Record.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
@@ -267,19 +284,19 @@
 			
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
+	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To" /&gt;
 	    &lt;cfset variables.to = arguments.to /&gt;
 	&lt;/cffunction&gt;
-	&lt;cffunction name="_getTo" access="public" output="false" returntype="reactor.project.<xsl:value-of select="object/@mapping"/>.To.<xsl:value-of select="object/@name"/>To"&gt;
+	&lt;cffunction name="_getTo" access="public" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@name"/>To"&gt;
 		&lt;cfreturn variables.to /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;!--- dao ---&gt;
 	&lt;cffunction name="_setDao" access="private" output="false" returntype="void"&gt;
-	    &lt;cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="reactor.project.<xsl:value-of select="object/@mapping"/>.Dao.<xsl:value-of select="object/@name"/>Dao" /&gt;
+	    &lt;cfargument name="dao" hint="I am the Dao this Record uses to load and save itself." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.Dao.<xsl:value-of select="object/@name"/>Dao" /&gt;
 	    &lt;cfset variables.dao = arguments.dao /&gt;
 	&lt;/cffunction&gt;
-	&lt;cffunction name="_getDao" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@mapping"/>.Dao.<xsl:value-of select="object/@name"/>Dao"&gt;
+	&lt;cffunction name="_getDao" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Dao.<xsl:value-of select="object/@name"/>Dao"&gt;
 	    &lt;cfreturn variables.dao /&gt;
 	&lt;/cffunction&gt;
 	

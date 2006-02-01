@@ -42,28 +42,28 @@
 	</cffunction>
 	
 	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="reactor.base.abstractRecord">
-		<cfargument name="name" hint="I am the name of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "Record") />
+		<cfargument name="objectName" hint="I am the name of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectName, "Record") />
 	</cffunction>
 	
 	<cffunction name="createDao" access="public" hint="I return a Dao object." output="false" returntype="reactor.base.abstractDao">
-		<cfargument name="name" hint="I am the name of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "Dao") />
+		<cfargument name="objectName" hint="I am the name of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectName, "Dao") />
 	</cffunction>
 	
 	<cffunction name="createTo" access="public" hint="I return a To object." output="false" returntype="reactor.base.abstractTo">
-		<cfargument name="name" hint="I am the name of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "To") />
+		<cfargument name="objectName" hint="I am the name of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectName, "To") />
 	</cffunction>
 	
 	<cffunction name="createGateway" access="public" hint="I return a gateway object." output="false" returntype="reactor.base.abstractGateway">
-		<cfargument name="name" hint="I am the name of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "Gateway") />
+		<cfargument name="objectName" hint="I am the name of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectName, "Gateway") />
 	</cffunction>
 
 	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="reactor.base.abstractMetadata">
-		<cfargument name="name" hint="I am the name of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.name, "Metadata") />
+		<cfargument name="objectName" hint="I am the name of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectName, "Metadata") />
 	</cffunction>
 	
 	<!--- ObjectFactory --->
