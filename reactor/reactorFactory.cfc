@@ -4,6 +4,7 @@
 	<cffunction name="init" access="public" hint="I configure this object factory" returntype="reactorFactory">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
 		
+		<cfargument name="project" hint="I am the configured project name." required="no" type="string" default="" />
 		<cfargument name="dsn" hint="I am the DSN to connect to." required="no" type="string" default="" />
 		<cfargument name="type" hint="I am the type of database the dsn is for" required="no" type="string" default="" />
 		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="no" type="string" default="" />
@@ -13,6 +14,9 @@
 		
 		<cfset var config = CreateObject("Component", "reactor.config.config").init(arguments.pathToConfigXml) />
 		
+		<cfif Len(arguments.project)>
+			<cfset config.setProject(arguments.project) />
+		</cfif>
 		<cfif Len(arguments.dsn)>
 			<cfset config.setDsn(arguments.dsn) />
 		</cfif>
@@ -32,7 +36,7 @@
 			<cfset config.setPassword(arguments.password) />
 		</cfif>
 		
-		<cfset setObjectFactory(CreateObject("Component", "reactor.core.ObjectFactory").init(config, this)) />
+		<cfset setObjectFactory(CreateObject("Component", "reactor.core.objectFactory").init(config, this)) />
 		
 		<cfreturn this />
 	</cffunction>

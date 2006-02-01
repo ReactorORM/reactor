@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the database agnostic custom Record object for the Entry table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.ReactorBlogData.Record.EntryRecord" >
+	extends="reactor.project.ReactorBlog.Record.EntryRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">

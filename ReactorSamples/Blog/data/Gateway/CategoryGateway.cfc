@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the database agnostic custom Gateway object for the Category table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.ReactorBlogData.Gateway.CategoryGateway" >
+	extends="reactor.project.ReactorBlog.Gateway.CategoryGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="getCountedCategories" access="public" hint="I return a query of categories and the number of times used sorted by the times used and name" output="false" returntype="query">

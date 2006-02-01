@@ -1,9 +1,10 @@
 <reactor>
 	<config>
+		<project value="ReactorBlog" />
 		<dsn value="ReactorBlog" />
 		<type value="mssql" />
 		<mapping value="/ReactorBlogData" />
-		<mode value="development" />
+		<mode value="production" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->

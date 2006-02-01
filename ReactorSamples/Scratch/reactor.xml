@@ -1,5 +1,6 @@
 <reactor>
 	<config>
+		<project value="Scratch" />
 		<dsn value="Scratch" />
 		<type value="mssql" />
 		<mapping value="/ScratchData" />

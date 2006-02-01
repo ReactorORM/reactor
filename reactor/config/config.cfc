@@ -1,6 +1,7 @@
 <cfcomponent hint="I am a bean used to encapsulate Reactor's configuration.">
 	
 	<cfset variables.configXml = "" />
+	<cfset variables.project = "" />
 	<cfset variables.dsn = "" />
 	<cfset variables.Type = "" />
 	<cfset variables.mapping = "" />
@@ -12,7 +13,11 @@
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
 		<cfset var xml = 0 />
 		
-		
+		<!--- attempt to expand the path to config --->
+		<cfif FileExists(expandPath(arguments.pathToConfigXml))>
+			<cfset arguments.pathToConfigXml = expandPath(arguments.pathToConfigXml) />
+		</cfif>
+				
 		<!--- read and parse the xml --->
 		<cffile action="read" file="#arguments.pathToConfigXml#" variable="xml" />
 		<cfset xml = XMLParse(xml) />
@@ -23,7 +28,7 @@
 		<!--- load the basic configuration settings --->
 		<cfset loadConfig() />
 		
-		<cfreturn this />		
+		<cfreturn this />
 	</cffunction>
 	
 	<!--- loadConfig --->
@@ -36,6 +41,9 @@
 		
 		<cfloop from="1" to="#ArrayLen(config)#" index="x">
 			<cfswitch expression="#config[x].XmlName#">
+				<cfcase value="project">
+					<cfset setProject(config[x].XmlAttributes.Value) />
+				</cfcase>
 				<cfcase value="dsn">
 					<cfset setDsn(config[x].XmlAttributes.Value) />
 				</cfcase>
@@ -151,6 +159,15 @@
     </cffunction>
     <cffunction name="getMode" access="public" output="false" returntype="string">
        <cfreturn variables.mode />
+    </cffunction>
+	
+	<!--- project --->
+    <cffunction name="setProject" access="public" output="false" returntype="void">
+       <cfargument name="project" hint="I am the name of the project." required="yes" type="string" />
+       <cfset variables.project = ReReplace(arguments.project, "[\W]", "", "all") />
+    </cffunction>
+    <cffunction name="getProject" access="public" output="false" returntype="string">
+       <cfreturn variables.project />
     </cffunction>
 	
 	<!--- username --->

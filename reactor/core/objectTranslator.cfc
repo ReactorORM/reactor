@@ -21,15 +21,13 @@
 		<cfargument name="name" hint="I am the name of the object to create." required="yes" type="string" />--->
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var objectXML = getObject().getXml() />
-		<cfset var super = XmlSearch(objectXML, "/object/super") />
+		<!---<cfset var super = XmlSearch(objectXML, "/object/super") />--->
 		<cfset var pathToErrorFile = "" />
 		
-		<!---<cfdump var="#objectXML#" /><cfabort>--->
-		
-		<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
+		<!---<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
 			<!--- we need to insure that the base object exists for Dao, Record --->
 			<cfset getObjectFactory().create(super[1].XmlAttributes.name, arguments.type) />
-		</cfif>
+		</cfif>--->
 		
 		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
 		<cfif arguments.type IS "Record">
@@ -271,6 +269,8 @@
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfset var root = "" />
 		
+		<cfset arguments.type = lcase(arguments.type) />
+		
 		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
@@ -281,22 +281,21 @@
 				message="Invalid Class Argument"
 				detail="The class argument must be one of: Project, Base, Custom" />
 		</cfif>
-		
+	
 		<cfif arguments.class IS "Project">
 			<!--- removed & getConfig().getType() & "/" from the following line of code --->
-			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project" & getConfig().getMapping() & "/" & arguments.type & "/"  />
-			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
-			
+			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/" & arguments.type & "/" />
+			<cfreturn root & arguments.name & arguments.type & ".cfc" />
+		
 		<cfelseif arguments.class IS "Base">
 			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
-			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & ".cfc" />
+			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Custom">
 			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
-			<cfreturn root & Ucase(Left(arguments.name, 1)) & Lcase(Right(arguments.name, Len(arguments.name) - 1)) & arguments.type & Ucase(Left(getConfig().getType(), 1)) & Lcase(Right(getConfig().getType(), Len(getConfig().getType()) - 1)) & ".cfc" />
-			
-		</cfif>
+			<cfreturn root & arguments.name & arguments.type & getConfig().getType() & ".cfc" />
 		
+		</cfif>
 		
 	</cffunction>
 	

@@ -1,5 +1,6 @@
 <reactor>
 	<config>
+		<project value="reactor" />
 		<dsn value="vacationAuctions" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />

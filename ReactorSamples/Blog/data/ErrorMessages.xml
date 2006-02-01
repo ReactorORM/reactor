@@ -30,6 +30,35 @@
 			<errorMessage message="The EmailAddress field must be a string value." name="invalidType"/>
 			<errorMessage message="The EmailAddress field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
 		</field>
+		<field name="userId">
+			<errorMessage message="The userId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The userId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="username">
+			<errorMessage message="The username field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The username field must be a string value." name="invalidType"/>
+			<errorMessage message="The username field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
+		</field>
+		<field name="password">
+			<errorMessage message="The password field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The password field must be a string value." name="invalidType"/>
+			<errorMessage message="The password field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
+		</field>
+		<field name="firstName">
+			<errorMessage message="The firstName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The firstName field must be a string value." name="invalidType"/>
+			<errorMessage message="The firstName field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
+		</field>
+		<field name="lastName">
+			<errorMessage message="The lastName field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The lastName field must be a string value." name="invalidType"/>
+			<errorMessage message="The lastName field is too long.  This field must be no more than 20 characters long." name="invalidLength"/>
+		</field>
+		<field name="emailAddress">
+			<errorMessage message="The emailAddress field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The emailAddress field must be a string value." name="invalidType"/>
+			<errorMessage message="The emailAddress field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
 	</table>
 	<table name="Category">
 		<field name="CategoryId">
@@ -40,6 +69,15 @@
 			<errorMessage message="The Name field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Name field must be a string value." name="invalidType"/>
 			<errorMessage message="The Name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="categoryId">
+			<errorMessage message="The categoryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The categoryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="name">
+			<errorMessage message="The name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The name field must be a string value." name="invalidType"/>
+			<errorMessage message="The name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
 		</field>
 	</table>
 	<table name="Entry">

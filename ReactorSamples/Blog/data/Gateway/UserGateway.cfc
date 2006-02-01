@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the database agnostic custom Gateway object for the User table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.ReactorBlogData.Gateway.UserGateway" >
+	extends="reactor.project.ReactorBlog.Gateway.UserGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 </cfcomponent>
 	

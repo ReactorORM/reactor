@@ -46,7 +46,7 @@
        <cfset variables.name = arguments.name />
     </cffunction>
     <cffunction name="getName" access="public" output="false" returntype="string">
-       <cfreturn Ucase(Left(variables.name, 1)) & Right(variables.name, Len(variables.name) - 1) />
+       <cfreturn variables.name />
     </cffunction>
 	
 	<!--- dbDataType --->

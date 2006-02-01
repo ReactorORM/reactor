@@ -17,7 +17,7 @@
 		
 		<!--- Controllers are in the application scope:  Put any application startup code here. --->
 		<cfset variables.BlogConfig = getModelGlue().getConfigBean("blogConfig.xml", true) /> 
-		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(expandPath(variables.BlogConfig.getReactorConfigFile())) />
+		<cfset variables.Reactor = CreateObject("Component", "reactor.reactorFactory").init(variables.BlogConfig.getReactorConfigFile()) />
 		<cfset variables.CategoryGateway = Reactor.createGateway("Category") /> 
 		<cfset variables.CommentGateway = Reactor.createGateway("Comment") /> 
 		<cfset variables.UserGateway = Reactor.createGateway("User") /> 

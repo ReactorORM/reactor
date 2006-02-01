@@ -1,5 +1,6 @@
 <reactor>
 	<config>
+		<project value="ContactManager" />
 		<dsn value="ContactManager2" />
 		<type value="mysql" />
 		<mapping value="/ContactManagerData" />

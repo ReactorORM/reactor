@@ -1,6 +1,6 @@
 
 <cfcomponent hint="I am the database agnostic custom Gateway object for the Comment table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
-	extends="reactor.project.ReactorBlogData.Gateway.CommentGateway" >
+	extends="reactor.project.ReactorBlog.Gateway.CommentGateway" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
 	<cffunction name="getParticipants" access="public" hint="I return a query of all the participants in comments on a blog entry." output="false" returntype="query">

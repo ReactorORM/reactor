@@ -112,6 +112,12 @@
 		<!--- <cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" /> --->
 		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
 		
+		<cfset arguments.type = lcase(arguments.type) />
+		
+		<!---<cfdump var="#arguments.type#" />
+		<cfdump var="#arguments.name#" />
+		<cfabort>--->
+		
 		<cfreturn creationPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
 	</cffunction>
 	

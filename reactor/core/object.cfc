@@ -57,7 +57,6 @@
 		Expand linked relationships.
 		In otherwords, if the config indicates that this object links to another via a linking table, then copy the link into this xml document.
 		--->
-		<!---<cfdump var="#relationships#" /><br>--->
 		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
@@ -138,15 +137,14 @@
 		<cfset Config.Object.XmlAttributes["database"] = getDatabase() />
 		
 		<!--- config meta data required for generating objects --->
+		<cfset Config.Object.XmlAttributes["project"] = getConfig().getProject() />
 		<cfset Config.Object.XmlAttributes["mapping"] = getConfig().getMappingObjectStem() />
 		<cfset Config.Object.XmlAttributes["dbms"] = getConfig().getType() />
 		
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---
-		<cfdump var="#Config#" /><cfabort>
-		--->
+		<!---<cfdump var="#Config#" /><cfabort>--->
 		
 		<cfreturn Config />
 	</cffunction>
