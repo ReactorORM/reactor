@@ -137,15 +137,15 @@
 	</xsl:for-each>
 	
 	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="object/@name"/>Record"&gt;
-		&lt;!--- cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
-		&lt;cfset var loadFieldList = StructKeyList(arguments) /&gt;
+		&lt;!--- cfargument name="fieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
+		&lt;cfset var fieldList = StructKeyList(arguments) /&gt;
 		&lt;cfset var item = 0 /&gt;
 		&lt;cfset var func = 0 /&gt;
 		
-		&lt;cfif IsDefined("arguments") AND loadFieldList IS 1&gt;
-			&lt;cfset loadFieldList = arguments[1] /&gt;
+		&lt;cfif IsDefined("arguments") AND fieldList IS 1&gt;
+			&lt;cfset fieldList = arguments[1] /&gt;
 			
-		&lt;cfelseif IsDefined("arguments") AND loadFieldList IS NOT 1&gt;
+		&lt;cfelseif IsDefined("arguments") AND fieldList IS NOT 1&gt;
 			&lt;cfloop collection="#arguments#" item="item"&gt;
 				&lt;cfset func = this["set#item#"] /&gt;
 				&lt;cfset func(arguments[item]) /&gt;
@@ -154,7 +154,7 @@
 		&lt;/cfif&gt;
 		
 		
-		&lt;cfset _getDao().read(_getTo(), loadFieldList) /&gt;
+		&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
 		
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;	
@@ -164,7 +164,14 @@
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
+		&lt;!--- cfargument name="fieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
+		
+		&lt;cfif IsDefined("arguments")&gt;
+			&lt;cfinvoke component="#this#" method="load" argumentcollection="#arguments#" /&gt;
+		&lt;/cfif&gt;
+	
 		&lt;cfset _getDao().delete(_getTo()) /&gt;
+		
 		&lt;!--- reset the to ---&gt;
 		&lt;cfset _setTo(_getReactorFactory().createTo("<xsl:value-of select="object/@name" />")) /&gt;
 	&lt;/cffunction&gt;

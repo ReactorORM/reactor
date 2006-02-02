@@ -73,10 +73,7 @@
 <cfset countryQuery = CountryGateway.getByQuery(CountryQuery) />
 
 <!--- Create a contact record object.  Record objects represent one row in the database and have save, and delete methods --->
-<cfset ContactRecord = Application.Reactor.createRecord("Contact") />
-<!--- load the contact --->
-<cfset ContactRecord.setContactId(url.contactId) />
-<cfset ContactRecord.load() />
+<cfset ContactRecord = Application.Reactor.createRecord("Contact").load(contactId=url.contactId) />
 
 <cfoutput>
 	<h2>Viewing Contact</h2>

@@ -1,9 +1,6 @@
 
 <!--- load the emailAddress record --->
-<cfset ContactRecord = Application.Reactor.createRecord("Contact") />
-<cfset ContactRecord.setContactId(url.contactId) />
-<cfset ContactRecord.load() />
-
+<cfset ContactRecord = Application.Reactor.createRecord("Contact").load(contactId=url.contactId) />
 
 <!--- delete the contact's email addresses --->
 <cfset ContactEmailAddressArray = ContactRecord.getEmailAddressArray() />

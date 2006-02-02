@@ -115,6 +115,40 @@
 			<errorMessage message="The Views field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Views field must be a numeric value." name="invalidType"/>
 		</field>
+		<field name="entryId">
+			<errorMessage message="The entryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The entryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="title">
+			<errorMessage message="The title field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The title field must be a string value." name="invalidType"/>
+			<errorMessage message="The title field is too long.  This field must be no more than 200 characters long." name="invalidLength"/>
+		</field>
+		<field name="preview">
+			<errorMessage message="The preview field must be a string value." name="invalidType"/>
+			<errorMessage message="The preview field is too long.  This field must be no more than 1000 characters long." name="invalidLength"/>
+		</field>
+		<field name="article">
+			<errorMessage message="The article field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The article field must be a string value." name="invalidType"/>
+			<errorMessage message="The article field is too long.  This field must be no more than 2147483647 characters long." name="invalidLength"/>
+		</field>
+		<field name="publicationDate">
+			<errorMessage message="The publicationDate field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The publicationDate field must be a date value." name="invalidType"/>
+		</field>
+		<field name="postedByUserId">
+			<errorMessage message="The postedByUserId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The postedByUserId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="disableComments">
+			<errorMessage message="The disableComments field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The disableComments field must be a true or false value." name="invalidType"/>
+		</field>
+		<field name="views">
+			<errorMessage message="The views field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The views field must be a numeric value." name="invalidType"/>
+		</field>
 	</table>
 	<table name="Comment">
 		<field name="CommentID">
@@ -147,6 +181,36 @@
 			<errorMessage message="The Subscribe field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Subscribe field must be a numeric value." name="invalidType"/>
 		</field>
+		<field name="commentID">
+			<errorMessage message="The commentID field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The commentID field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="entryId">
+			<errorMessage message="The entryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The entryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="name">
+			<errorMessage message="The name field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The name field must be a string value." name="invalidType"/>
+			<errorMessage message="The name field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="emailAddress">
+			<errorMessage message="The emailAddress field must be a string value." name="invalidType"/>
+			<errorMessage message="The emailAddress field is too long.  This field must be no more than 50 characters long." name="invalidLength"/>
+		</field>
+		<field name="comment">
+			<errorMessage message="The comment field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The comment field must be a string value." name="invalidType"/>
+			<errorMessage message="The comment field is too long.  This field must be no more than 2147483647 characters long." name="invalidLength"/>
+		</field>
+		<field name="posted">
+			<errorMessage message="The posted field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The posted field must be a date value." name="invalidType"/>
+		</field>
+		<field name="subscribe">
+			<errorMessage message="The subscribe field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The subscribe field must be a numeric value." name="invalidType"/>
+		</field>
 	</table>
 	<table name="EntryCategory">
 		<field name="EntryCategoryId">
@@ -160,6 +224,18 @@
 		<field name="CategoryId">
 			<errorMessage message="The CategoryId field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The CategoryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="entryCategoryId">
+			<errorMessage message="The entryCategoryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The entryCategoryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="entryId">
+			<errorMessage message="The entryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The entryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="categoryId">
+			<errorMessage message="The categoryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The categoryId field must be a numeric value." name="invalidType"/>
 		</field>
 	</table>
 	<table name="Rating">

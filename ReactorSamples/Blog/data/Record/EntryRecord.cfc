@@ -28,8 +28,10 @@
 	
 	<cffunction name="load" access="public" hint="I load the Entry record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void">
 		<cfset var categories = 0 />
+		
 		<!--- load the entry --->
 		<cfset super.load() />
+		
 		<!--- get the category ids for this entry --->
 		<cfset categories = getCategoryQuery() />
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />

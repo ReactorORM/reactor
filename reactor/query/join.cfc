@@ -18,7 +18,7 @@
 		<cfargument name="FromObject" hint="I am the object being joined from." required="yes" type="reactor.query.object" />
 		<cfargument name="ToObject" hint="I am the object being joined to." required="yes" type="reactor.query.object" />
 		<cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="yes" type="string" default="" />
-		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="left" />
+		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="inner" />
 		
 		<cfset setFromObject(arguments.FromObject) />
 		<cfset setToObject(arguments.ToObject) />	
@@ -113,8 +113,8 @@
     <cffunction name="setType" access="public" output="false" returntype="void">
 		<cfargument name="type" hint="I am the type of join" required="yes" type="string" />
 		
-		<cfif NOT ListFindNoCase("left,right,full", arguments.type)>
-			<cfthrow message="Invalid Join Type" detail="The join type '#arguments.type#' is not a valdid join type.  Options are: left, right, full" type="reactor.setType.InvalidJoinType" />
+		<cfif NOT ListFindNoCase("inner,left,right,full", arguments.type)>
+			<cfthrow message="Invalid Join Type" detail="The join type '#arguments.type#' is not a valdid join type.  Options are: inner, left, right, full" type="reactor.setType.InvalidJoinType" />
 		</cfif>
 		
 		<cfset variables.type = arguments.type />

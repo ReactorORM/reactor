@@ -92,10 +92,7 @@
 	<!--- DoGetUser --->
 	<cffunction name="DoGetUser" access="Public" returntype="void" output="false" hint="I get or create a User.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var UserRecord = variables.Reactor.createRecord("User") />
-		
-		<cfset UserRecord.setUserId(arguments.event.getValue("UserId", 0)) />
-		<cfset UserRecord.load() />
+		<cfset var UserRecord = variables.Reactor.createRecord("User").load(UserId=arguments.event.getValue("UserId", 0)) />
 		
 		<!--- update the User --->
 		<cfset arguments.event.makeEventBean(UserRecord) />
@@ -139,11 +136,8 @@
 	<!--- DoGetCategory --->
 	<cffunction name="DoGetCategory" access="Public" returntype="void" output="false" hint="I get or create a category.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var CategoryRecord = variables.Reactor.createRecord("Category") />
-		
-		<cfset CategoryRecord.setCategoryId(arguments.event.getValue("categoryId", 0)) />
-		<cfset CategoryRecord.load() />
-		
+		<cfset var CategoryRecord = variables.Reactor.createRecord("Category").load(categoryId=arguments.event.getValue("categoryId", 0)) />
+				
 		<!--- update the category --->
 		<cfset arguments.event.makeEventBean(CategoryRecord) />
 		<cfset arguments.event.setValue("CategoryRecord", CategoryRecord) />		
@@ -297,11 +291,8 @@
 	<!--- DoGetComment --->
 	<cffunction name="DoGetComment" access="Public" returntype="void" output="false" hint="I get or create a comment.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var CommentRecord = variables.Reactor.createRecord("Comment") />
+		<cfset var CommentRecord = variables.Reactor.createRecord("Comment").load(commentId=arguments.event.getValue("commentId", 0)) />
 		
-		<cfset CommentRecord.setCommentId(arguments.event.getValue("commentId", 0)) />
-		<cfset CommentRecord.load() />
-					
 		<!--- update the entry --->
 		<cfset arguments.event.makeEventBean(CommentRecord) />
 		<cfset arguments.event.setValue("CommentRecord", CommentRecord) />	

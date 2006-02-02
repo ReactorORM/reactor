@@ -1,8 +1,8 @@
 <reactor>
 	<config>
 		<project value="reactor" />
-		<dsn value="vacationAuctions" />
-		<type value="mssql" />
+		<dsn value="test" />
+		<type value="mysql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
 		<!-- <username value="" />

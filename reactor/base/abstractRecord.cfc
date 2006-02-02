@@ -9,7 +9,9 @@
 		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactor factory." required="yes" type="reactor.reactorFactory" />
 		<cfset super.configure(arguments.config, arguments.name, arguments.ReactorFactory) />
-		
+		<!---
+		<cfdump var="#getMetadata(_getReactorFactory().createTo(arguments.name))#" /><cfabort>
+		--->
 		<cfset _setTo(_getReactorFactory().createTo(arguments.name)) />
 		<cfset _setDao(_getReactorFactory().createDao(arguments.name)) />
 		

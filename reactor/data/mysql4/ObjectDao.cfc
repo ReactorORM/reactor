@@ -151,7 +151,9 @@
 	
 	<cffunction name="getCfSqlType" access="private" hint="I translate the MSSQL data type names into ColdFusion cf_sql_xyz names" output="false" returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="string" />
-		
+
+		<cfset arguments.typeName = ReplaceNoCase(arguments.typeName, " unsigned", "") />
+
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bit,bool,boolean">
 				<cfreturn "cf_sql_bit" />

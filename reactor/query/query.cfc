@@ -104,7 +104,7 @@
 		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
 		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
 		<cfargument name="toPrefix" hint="I am an optional prefix appended to all fields in the to Object which are returned in this query." required="no" type="string" default="" />
-		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="left" />
+		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="inner" />
 		<cfset var FromObject = findObject(arguments.from) />
 		<cfset var ToObject = FromObject.getRelatedObject(arguments.to) />
 		<cfset FromObject.join(ToObject, arguments.toPrefix, arguments.type) />
