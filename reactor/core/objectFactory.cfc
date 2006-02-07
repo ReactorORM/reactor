@@ -37,11 +37,11 @@
 				<cfset DbObject = getObject(arguments.name) />
 			</cfcatch>
 		</cftry>
-				
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
+		
+		<cfif NOT ListFind("Record,Dao,Gateway,Go,Metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
+				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata" />
 		</cfif>
 		
 		<cftry>
