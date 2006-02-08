@@ -38,7 +38,7 @@
 			</cfcatch>
 		</cftry>
 		
-		<cfif NOT ListFind("Record,Dao,Gateway,Go,Metadata", arguments.type)>
+		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
 				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata" />
@@ -111,13 +111,7 @@
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<!--- <cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" /> --->
 		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
-		
-		<cfset arguments.type = lcase(arguments.type) />
-		
-		<!---<cfdump var="#arguments.type#" />
-		<cfdump var="#arguments.name#" />
-		<cfabort>--->
-		
+				
 		<cfreturn creationPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
 	</cffunction>
 	

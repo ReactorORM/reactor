@@ -264,19 +264,17 @@
 	</cffunction>
 	
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfset var root = "" />
 		
-		<cfset arguments.type = lcase(arguments.type) />
-		
-		<cfif NOT ListFindNoCase("record,dao,gateway,to,metadata", arguments.type)>
+		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
-				detail="The type argument must be one of: record, dao, gateway, to, metadata" />
+				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata" />
 		</cfif>
-		<cfif NOT ListFindNoCase("Project,Base,Custom", arguments.class)>
+		<cfif NOT ListFind("Project,Base,Custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Class Argument"
 				detail="The class argument must be one of: Project, Base, Custom" />
