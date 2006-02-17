@@ -4,6 +4,7 @@
 	<cfset variables.config = 0 />
 	<cfset variables.name = "" />
 	<cfset variables.ReactorFactory = 0 />
+	<cfset variables.instanceId = CreateUUID() />
 	
 	<!---
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
@@ -50,5 +51,10 @@
     </cffunction>
     <cffunction name="_getReactorFactory" access="private" output="false" returntype="reactor.reactorFactory">
        <cfreturn variables.reactorFactory />
+    </cffunction>
+	
+	<!--- instanceId --->
+    <cffunction name="_getInstanceId" access="public" output="false" returntype="uuid">
+       <cfreturn variables.instanceId />
     </cffunction>
 </cfcomponent>

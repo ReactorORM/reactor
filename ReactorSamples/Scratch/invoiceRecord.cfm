@@ -10,7 +10,7 @@
 <!--- output all the products on this invoice --->
 
 <!--- get all of the Products on the Invoice --->
-<cfset ProductQuery = InvoiceRecord.getProductQuery() />
+<cfset ProductQuery = InvoiceRecord.getProductIterator().getQuery() />
 
 <!--- dump the products --->
 <cfdump var="#ProductQuery#" />

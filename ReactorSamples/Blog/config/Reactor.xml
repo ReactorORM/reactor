@@ -4,7 +4,7 @@
 		<dsn value="ReactorBlog" />
 		<type value="mssql" />
 		<mapping value="/ReactorBlogData" />
-		<mode value="production" />
+		<mode value="development" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->

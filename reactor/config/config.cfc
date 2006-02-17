@@ -84,15 +84,13 @@
 			</cfloop>
 		</cfif>
 		
-		<cftry>
-			<cfset table = XmlParse(ToString(table)) />
-			<cfcatch>
-				<cfset table = XmlParse("<object name=""#arguments.object#"" />") />
-			</cfcatch>
-		</cftry>
-		
+		<!--- if we don't have a configuration for this object then return a default configuration --->
+		<cfif table IS 0>
+			<cfset table = "<object name=""#arguments.object#"" />" />
+		</cfif>
+						
 		<!--- return the base config --->
-		<cfreturn table />
+		<cfreturn XmlParse(ToString(table)) />
 	</cffunction>
 	
 	<!--- dsn --->

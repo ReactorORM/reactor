@@ -240,7 +240,7 @@
 	<cffunction name="DoGetComments" access="Public" returntype="void" output="false" hint="I get the comments for a blog entries.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var EntryRecord = arguments.event.getValue("EntryRecord") />
-		<cfset arguments.event.setValue("CommentArray", EntryRecord.getCommentArray()) />
+		<cfset arguments.event.setValue("CommentArray", EntryRecord.getCommentIterator().getArray()) />
 	</cffunction>
 	
 	<!--- DoGetRecentEntries --->

@@ -1,48 +1,24 @@
 <reactor>
 	<config>
 		<project value="reactor" />
-		<dsn value="test" />
-		<type value="mysql" />
+		<dsn value="scratch" />
+		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="always" />
+		<mode value="production" />
 		<!-- <username value="" />
 		<password value="" /> -->
 	</config>
 
 	<objects>
-		<object name="Auction">
-			<hasMany name="Category">
-				<link name="AuctionCategory" />
+		<object name="Customer">
+			<hasMany name="Address">
+				<relate from="customerId" to="customerId" />
 			</hasMany>
-			<hasMany name="Image">
-				<link name="AuctionImage" />
-			</hasMany>		
-			<hasOne name="Region">
-				<relate from="regionId" to="regionId" />
-			</hasOne>
 		</object>
 	
-		<object name="AuctionCategory">
-			<hasOne name="Auction">
-				<relate from="auctionId" to="auctionId" />
-			</hasOne>
-			<hasOne name="Category">
-				<relate from="categoryId" to="categoryId" />
-			</hasOne>
-		</object>
-		
-		<object name="Category">
-			<hasOne name="Image">
-				<relate from="imageId" to="imageId" />
-			</hasOne>
-		</object>
-	
-		<object name="AuctionImage">
-			<hasOne name="Auction">
-				<relate from="auctionId" to="auctionId" />
-			</hasOne>
-			<hasOne name="Image">
-				<relate from="imageId" to="imageId" />
+		<object name="Address">
+			<hasOne name="Customer">
+				<relate from="customerId" to="customerId" />
 			</hasOne>
 		</object>
 	</objects>

@@ -33,14 +33,15 @@
 		<cfset super.load() />
 		
 		<!--- get the category ids for this entry --->
-		<cfset categories = getCategoryQuery() />
+		<cfset categories = getCategoryIterator().getQuery() />
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />
 	</cffunction>
 	
 	<cffunction name="getDistinctCategoryQuery" access="public" hint="I get the distinct categories this entry is in" output="false" returntype="query">
-		<cfset var CategoryQuery = createCategoryQuery() />
-		<cfset CategoryQuery.setDistinct(true) />
-		<cfreturn getCategoryQuery(CategoryQuery) />
+		<cfset var CategoryIterator = getCategoryIterator() />
+		<cfset CategoryIterator.setDistinct(true) />
+		<cfset CategoryIterator.getOrder().setAsc("Category", "name") />
+		<cfreturn CategoryIterator.getQuery() />
 	</cffunction>
 	
 	<cffunction name="save" access="public" hint="I save the Entry record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void">
@@ -177,17 +178,15 @@
 	</cffunction>
 	
 	<cffunction name="getCommentCount" access="public" hint="I return the number of comments on this entry" output="false" returntype="numeric">
-		<cfreturn getCommentQuery().recordCount />
+		<cfreturn getCommentIterator().getRecordCount() />
 	</cffunction>
 	
 	<cffunction name="getRatingCount" access="public" hint="I return the number of ratings on this entry" output="false" returntype="numeric">
-		<cfreturn getRatingQuery().recordCount />
+		<cfreturn getRatingIterator().getRecordCount() />
 	</cffunction>
 	
 	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
-		<cfset var RatingQuery = createRatingQuery() />		
-		<cfset RatingQuery.returnField("Rating", "Rating") />
-		<cfset RatingQuery = getRatingQuery(RatingQuery) />
+		<cfset var RatingQuery = getRatingIterator().getQuery() />		
 		
 		<cfreturn Round(ArrayAvg(ListToArray(ValueList(RatingQuery.Rating)))) />
 	</cffunction>

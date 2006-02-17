@@ -11,7 +11,7 @@
 		<cfreturn query />
 	</cffunction>
 	
-	<!--- getArrayByQuery --->
+	<!--- getArrayByQuery
 	<cffunction name="getArrayByQuery" access="public" hint="I return an array of objects matching the query" output="false" returntype="array">
 		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" default="reactor.query.query" />
 		<cfset var ObjectQuery = 0 />
@@ -42,7 +42,7 @@
 		</cfloop>
 		
 		<cfreturn ObjectArray />
-	</cffunction>
+	</cffunction> --->
 	
 	<!--- getByQuery --->
 	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="query">

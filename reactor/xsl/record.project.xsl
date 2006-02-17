@@ -34,10 +34,16 @@
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
 		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) /&gt;
+		&lt;cfset var Event = 0 /&gt;
 		
 		<xsl:if test="count(object/super) &gt; 0">
 			&lt;cfset arguments.ValidationErrorCollection = super.validate(arguments.ValidationErrorCollection) /&gt;
 		</xsl:if>
+		
+		&lt;!--- raise the beforeValidate event ---&gt;
+		&lt;cfset Event = newEvent("beforeValidate") /&gt;
+		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
 		
 		<xsl:for-each select="object/fields/field">
 			<xsl:choose>
@@ -89,7 +95,7 @@
 				</xsl:when>
 				
 				<xsl:when test="@cfDataType = 'numeric'">
-					<xsl:if test="@nullable = 'false' and @index = 'false'">
+					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@name" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@name" />()))&gt;
 							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@name" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@name" />", "notProvided")) /&gt;
@@ -122,6 +128,12 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
+		
+		&lt;!--- raise the afterValidate event ---&gt;
+		&lt;cfset Event = newEvent("afterValidate") /&gt;
+		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
+		
 		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
 	&lt;/cffunction&gt;
 	
@@ -137,10 +149,13 @@
 	</xsl:for-each>
 	
 	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="object/@name"/>Record"&gt;
-		&lt;!--- cfargument name="fieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
 		&lt;cfset var fieldList = StructKeyList(arguments) /&gt;
 		&lt;cfset var item = 0 /&gt;
 		&lt;cfset var func = 0 /&gt;
+		
+		&lt;!--- raise the beforeLoad event ---&gt;
+		&lt;cfset Event = newEvent("beforeLoad") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfif IsDefined("arguments") AND fieldList IS 1&gt;
 			&lt;cfset fieldList = arguments[1] /&gt;
@@ -153,18 +168,31 @@
 			
 		&lt;/cfif&gt;
 		
-		
 		&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
+		
+		&lt;!--- raise the afterLoad event ---&gt;
+		&lt;cfset Event = newEvent("afterLoad") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@name"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
-		&lt;cfset _getDao().save(_getTo()) /&gt;
+		&lt;!--- raise the beforeSave event ---&gt;
+		&lt;cfset Event = newEvent("beforeSave") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
+		
+		&lt;cfset _getDao().save(_getTo()) /&gt;	
+		
+		&lt;!--- raise the afterSave event ---&gt;
+		&lt;cfset Event = newEvent("afterSave") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;	
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="object/@name"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
-		&lt;!--- cfargument name="fieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /---&gt;
+		&lt;!--- raise the beforeDelete event ---&gt;
+		&lt;cfset Event = newEvent("beforeDelete") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfif IsDefined("arguments")&gt;
 			&lt;cfinvoke component="#this#" method="load" argumentcollection="#arguments#" /&gt;
@@ -174,33 +202,71 @@
 		
 		&lt;!--- reset the to ---&gt;
 		&lt;cfset _setTo(_getReactorFactory().createTo("<xsl:value-of select="object/@name" />")) /&gt;
+		
+		&lt;!--- raise the afterDelete event ---&gt;
+		&lt;cfset Event = newEvent("afterDelete") /&gt;
+		&lt;cfset announceEvent(Event) /&gt;
 	&lt;/cffunction&gt;
 	
 	<xsl:for-each select="object/hasOne">
 	&lt;!--- Record For <xsl:value-of select="@alias"/> ---&gt;
 	&lt;cffunction name="set<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
+	    &lt;cfargument name="<xsl:value-of select="@alias"/>Record" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
 		<xsl:for-each select="relate">
-			&lt;cfset set<xsl:value-of select="@from" />(Record.get<xsl:value-of select="@to" />()) /&gt;
+			&lt;cfset set<xsl:value-of select="@from" />(arguments.<xsl:value-of select="../@alias"/>Record.get<xsl:value-of select="@to" />()) /&gt;
 		</xsl:for-each>
+		
+		&lt;cfset variables.<xsl:value-of select="@alias"/>Record = arguments.<xsl:value-of select="@alias"/>Record /&gt;
 	&lt;/cffunction&gt;
 	&lt;cffunction name="get<xsl:value-of select="@alias"/>Record" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
-		&lt;cfset var Record = _getReactorFactory().createRecord("<xsl:value-of select="@name" />") /&gt;
-		<xsl:for-each select="relate">
-			&lt;cfset Record.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
-		</xsl:for-each>
-		&lt;cfset Record.load() /&gt;
-		&lt;cfreturn Record /&gt;
+		&lt;cfif NOT IsDefined("variables.<xsl:value-of select="@alias"/>Record")&gt;
+			&lt;cfset variables.<xsl:value-of select="@alias"/>Record = _getReactorFactory().createRecord("<xsl:value-of select="@name" />") /&gt;
+			<xsl:for-each select="relate">
+				&lt;cfset variables.<xsl:value-of select="../@alias"/>Record.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
+			</xsl:for-each>
+			&lt;cfset variables.<xsl:value-of select="@alias"/>Record.load() /&gt;
+		&lt;/cfif&gt;
+		
+		&lt;cfreturn variables.<xsl:value-of select="@alias"/>Record /&gt;
 	&lt;/cffunction&gt;
 	</xsl:for-each>
 	
 	<xsl:for-each select="object/hasMany">
-		&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
+		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
+		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
+			&lt;cfset var relationship = 0 /&gt;
+			
+			&lt;cfif NOT IsDefined("variables.<xsl:value-of select="@alias"/>Iterator")&gt;
+				&lt;cfset variables.<xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>", "<xsl:value-of select="link/@name"/>") />
+					
+				<xsl:choose>
+					<xsl:when test="count(relate) &gt; 0">
+						<xsl:for-each select="relate">
+							&lt;cfset variables.<xsl:value-of select="../@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="count(link) &gt; 0">
+						&lt;cfset relationship = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="/object/@name"/>").relate /&gt;
+			
+						&lt;cfloop from="1" to="#ArrayLen(relationship)#" index="x"&gt;
+							&lt;cfset variables.<xsl:value-of select="@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].from, evaluate("get#relationship[x].to#()")) /&gt;
+						&lt;/cfloop&gt;
+					</xsl:when>
+				</xsl:choose>
+				
+			&lt;/cfif&gt;
+			
+			&lt;cfreturn variables.<xsl:value-of select="@alias"/>Iterator /&gt;
+		&lt;/cffunction&gt;
+	</xsl:for-each>	
+		
+		<!-- 
+		&lt;!- - - Query For <xsl:value-of select="@alias"/> - - -&gt;
 		&lt;cffunction name="create<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="reactor.query.query"&gt;
 			&lt;cfset var Query = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>").createQuery() /&gt;
 			
 			<xsl:if test="count(link) &gt; 0">
-				&lt;!--- if this is a linked table add a join back to the linking table ---&gt;
+				&lt;!- - - if this is a linked table add a join back to the linking table - - -&gt;
 				&lt;cfset Query.join("<xsl:value-of select="@name"/>", "<xsl:value-of select="link/@name"/>") /&gt;
 			</xsl:if>
 			
@@ -209,7 +275,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="count(relate) &gt; 0">
-				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
+				&lt;!- - - Query For <xsl:value-of select="@alias"/> - - -&gt;
 				&lt;cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
 					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>Gateway = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>") /&gt;
@@ -219,8 +285,29 @@
 					&lt;cfreturn <xsl:value-of select="@name"/>Gateway.getByQuery(arguments.Query)&gt;
 				&lt;/cffunction&gt;
 			</xsl:when>
+			
+			
+			<xsl:when test="count(relate) &gt; 0 and @collection = 'true'">
+				&lt;!- - - Collection For <xsl:value-of select="@alias"/> - - -&gt;
+				&lt;cffunction name="get<xsl:value-of select="@alias"/>Collection" access="public" output="false" returntype="reactor.collection.Collection"&gt;
+					
+					&lt;cfif NOT IsDefined("variables.<xsl:value-of select="@alias"/>Collection")&gt;
+						&lt;cfset variables.<xsl:value-of select="@alias"/>Collection = CreateObject("Component", "reactor.collection.Collection").init(_getReactorFactory(), "<xsl:value-of select="@name"/>") /&gt;
+					
+						&lt;!- - - add constraints to this collection - - -&gt;
+						<xsl:for-each select="relate">
+							&lt;cfset variables.<xsl:value-of select="../@alias"/>Collection.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
+						</xsl:for-each>
+					
+					&lt;/cfif&gt;
+					
+					&lt;cfreturn variables.<xsl:value-of select="@alias"/>Collection /&gt;
+				&lt;/cffunction&gt;
+			</xsl:when>
+			
+			
 			<xsl:when test="count(link) &gt; 0">
-				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
+				&lt;!- - - Query For <xsl:value-of select="@alias"/> - - -&gt;
 				&lt;cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
 					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
 					&lt;cfset var <xsl:value-of select="@name"/>Gateway = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>") /&gt;
@@ -234,35 +321,10 @@
 
 					&lt;cfreturn <xsl:value-of select="@name"/>Gateway.getByQuery(arguments.Query)&gt;
 				&lt;/cffunction&gt;
-				
-				&lt;!--- Query For <xsl:value-of select="@alias"/> ---&gt;
-				&lt;!--- cffunction name="get<xsl:value-of select="@alias"/>Query" access="public" output="false" returntype="query"&gt;
-					&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
-					&lt;cfset var relationships = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="@alias"/>").relate /&gt;
-					&lt;cfset var x = 0 /&gt;
-					&lt;cfset var relationship = 0 /&gt;
-					&lt;cfset var LinkedGateway = _getReactorFactory().createGateway("<xsl:value-of select="@name"/>") /&gt;
-					&lt;cfset var LinkedQuery = LinkedGateway.createQuery() /&gt;
-					&lt;cfset var <xsl:value-of select="link/@name"/>Query = get<xsl:value-of select="link/@name"/>Query() /&gt;
-
-					&lt;cfif <xsl:value-of select="link/@name"/>Query.recordCount&gt;
-						&lt;cfloop from="1" to="#ArrayLen(relationships)#" index="x"&gt;
-							&lt;cfset relationship = relationships[x] /&gt;
-							
-							&lt;cfset LinkedQuery.getWhere().isIn("<xsl:value-of select="@name"/>", relationship.to, evaluate("ValueList(<xsl:value-of select="link/@name"/>Query.#relationship.from#)")) /&gt;
-							
-						&lt;/cfloop&gt;
-					&lt;cfelse&gt;
-						&lt;cfset LinkedQuery.setMaxRows(0) /&gt;
-							
-					&lt;/cfif&gt;
-					
-					&lt;cfreturn LinkedGateway.getByQuery(LinkedQuery) /&gt;
-				&lt;/cffunction---&gt;
 			</xsl:when>
 		</xsl:choose>
 		
-		&lt;!--- Array For <xsl:value-of select="@alias"/> ---&gt;
+		&lt;!- - - Array For <xsl:value-of select="@alias"/> - - -&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>Array" access="public" output="false" returntype="array"&gt;
 			&lt;cfargument name="Query" hint="I am the query object to use to filter the results of this method" required="no" default="#create<xsl:value-of select="@alias"/>Query()#" type="reactor.query.query" /&gt;
 			&lt;cfset var <xsl:value-of select="@name"/>Query = get<xsl:value-of select="@alias"/>Query(arguments.Query) /&gt;
@@ -275,7 +337,7 @@
 				&lt;cfset <xsl:value-of select="@name"/>Record = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") &gt;
 				&lt;cfset <xsl:value-of select="@name"/>To = <xsl:value-of select="@name"/>Record._getTo() /&gt;
 	
-				&lt;!--- populate the record's to ---&gt;
+				&lt;!- - - populate the record's to - - -&gt;
 				&lt;cfloop list="#<xsl:value-of select="@name"/>Query.columnList#" index="field"&gt;
 					&lt;cfset <xsl:value-of select="@name"/>To[field] = <xsl:value-of select="@name"/>Query[field][<xsl:value-of select="@name"/>Query.currentrow] &gt;
 				&lt;/cfloop&gt;
@@ -286,8 +348,8 @@
 			&lt;/cfloop&gt;
 	
 			&lt;cfreturn <xsl:value-of select="@name"/>Array /&gt;
-		&lt;/cffunction&gt;		
-	</xsl:for-each>
+		&lt;/cffunction&gt;		 -->
+	
 			
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
