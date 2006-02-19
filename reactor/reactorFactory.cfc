@@ -65,6 +65,11 @@
 		<cfargument name="objectName" hint="I am the name of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().create(arguments.objectName, "Metadata") />
 	</cffunction>
+
+	<cffunction name="createIterator" access="public" hint="I return an iterator object." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="objectName" hint="I am the name of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectName) />
+	</cffunction>
 	
 	<!--- ObjectFactory --->
     <cffunction name="setObjectFactory" access="private" output="false" returntype="void">

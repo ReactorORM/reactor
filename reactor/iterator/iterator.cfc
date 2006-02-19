@@ -6,8 +6,7 @@
 	<cfset variables.QueryObject = 0 />
 	
 	<cfset variables.query = 0/>
-	<cfset variables.array = ArrayNew(1) />
-	
+	<cfset variables.array = 0 />
 	<cfset variables.index = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="Iterator">
@@ -54,37 +53,80 @@
 		<cfreturn Array[variables.index] />
 	</cffunction>
 	
+	<!--- query --->
+    <cffunction name="getQuery" access="public" output="false" returntype="query">
+		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="0" />
+		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="0" />
+		<cfset var x = 0 />
+		<cfset var To = 0 />
+		<cfset var column = 0 />
+		<cfset var querysubset = 0 />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.query = getGateway().getByQuery(getQueryObject()) />
+		</cfif>
+		
+		<!--- check to see if we're limiting the records that can be returned. --->
+		<cfif arguments.from AND arguments.count>
+			<cfset querysubset = QueryNew(variables.query.columnList) />
+				
+			<cfloop query="variables.query" startrow="#arguments.from#" endrow="#arguments.from + arguments.count - 1#">
+				<cfset QueryAddRow(querysubset) />
+				
+				<cfloop list="#variables.query.columnList#" index="column">
+					<cfset querysubset[column][querysubset.recordcount] = variables.query[column][variables.query.currentRow] />
+				</cfloop>
+			</cfloop>
+				
+			<cfreturn querysubset/>			
+		<cfelse>
+			<cfreturn variables.query />
+		</cfif>
+		
+		
+    </cffunction>
+	
 	<!--- getArray --->
 	<cffunction name="getArray" access="public" hint="I return an array of objects in the iterator" output="false" returntype="array">
-		<cfset var Query = 0 />
+		<cfargument name="from" hint="I am the first index to return." required="no" type="numeric" default="0" />
+		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="0" />
+		
+		<cfif NOT IsArray(variables.array) AND NOT (arguments.from AND arguments.count)>
+			<cfset variables.array = queryRecords(getQuery()) />
+		
+		<cfelseif arguments.from AND arguments.count>
+			<cfreturn queryRecords(getQuery(arguments.from, arguments.count)) />
+
+		</cfif>
+		
+		<cfreturn variables.array />
+	</cffunction>
+	
+	<!--- queryRecords --->
+	<cffunction name="queryRecords" access="private" hint="I translate a query to an array of records" output="false" returntype="array">
+		<cfargument name="query" hint="I am the query to translate." required="yes" type="query" />
 		<cfset var Array = ArrayNew(1) />
 		<cfset var Record = 0 />
 		<cfset var To = 0 />
 		<cfset var field = "" />
 		
-		<cfif NOT IsArray(variables.array)>
-			<cfset Query = getQuery() />
-			
-			<cfloop query="Query">
-				<cfset Record = getReactorFactory().createRecord(getName()) >
-				<cfset To = Record._getTo() />
-	
-				<!--- populate the record's to --->
-				<cfloop list="#Query.columnList#" index="field">
-					<cfset To[field] = Query[field][Query.currentrow] >
-				</cfloop>
-				
-				<cfset Record._setTo(To) />
-				
-				<cfset Array[ArrayLen(Array) + 1] = Record >
+		<cfloop query="Query">
+			<cfset Record = getReactorFactory().createRecord(getName()) >
+			<cfset To = Record._getTo() />
+
+			<!--- populate the record's to --->
+			<cfloop list="#Query.columnList#" index="field">
+				<cfset To[field] = Query[field][Query.currentrow] >
 			</cfloop>
+			
+			<cfset Record._setTo(To) />
+			
+			<cfset Array[ArrayLen(Array) + 1] = Record >
+		</cfloop>
 		
-			<cfset variables.array = Array />
-		</cfif>
-		
-		<cfreturn variables.array />
+		<cfreturn Array />		
 	</cffunction>
-		
+	
 	<!--- reset --->
 	<cffunction name="reset" access="public" hint="I reset the array and query that backs this iterator." output="false" returntype="void">
 		<cfset variables.query = 0 />
@@ -127,19 +169,6 @@
     </cffunction>
     <cffunction name="getQueryObject" access="private" output="false" returntype="reactor.query.query">
        <cfreturn variables.queryObject />
-    </cffunction>
-	
-	<!--- query --->
-    <cffunction name="getQuery" access="public" output="false" returntype="query">
-		<cfset var x = 0 />
-		<cfset var To = 0 />
-		<cfset var column = 0 />
-		
-		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.query = getGateway().getByQuery(getQueryObject()) />
-		</cfif>
-		
-		<cfreturn variables.query />
     </cffunction>
 	
 	<!--- name --->
