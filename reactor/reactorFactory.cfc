@@ -2,41 +2,15 @@
 	<cfset variables.ObjectFactory = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure this object factory" returntype="reactorFactory">
-		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
+		<cfargument name="configuration" hint="I am either a relative or absolute path to the config XML file or an instance of a reactor.config.config component" required="yes" type="any" />
 		
-		<cfargument name="project" hint="I am the configured project name." required="no" type="string" default="" />
-		<cfargument name="dsn" hint="I am the DSN to connect to." required="no" type="string" default="" />
-		<cfargument name="type" hint="I am the type of database the dsn is for" required="no" type="string" default="" />
-		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="no" type="string" default="" />
-		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="no" type="string" default="" />
-		<cfargument name="username" hint="I am the username to use for DSNs" required="no" type="string" default="" />
-		<cfargument name="password" hint="I am the password to use for DSNs" required="no" type="string" default="" />
-		
-		<cfset var config = CreateObject("Component", "reactor.config.config").init(arguments.pathToConfigXml) />
-		
-		<cfif Len(arguments.project)>
-			<cfset config.setProject(arguments.project) />
-		</cfif>
-		<cfif Len(arguments.dsn)>
-			<cfset config.setDsn(arguments.dsn) />
-		</cfif>
-		<cfif Len(arguments.type)>
-			<cfset config.setType(arguments.type) />
-		</cfif>
-		<cfif Len(arguments.mapping)>
-			<cfset config.setMapping(arguments.mapping) />
-		</cfif>
-		<cfif Len(arguments.mode)>
-			<cfset config.setMode(arguments.mode) />
-		</cfif>
-		<cfif Len(arguments.username)>
-			<cfset config.setUsername(arguments.username) />
-		</cfif>
-		<cfif Len(arguments.password)>
-			<cfset config.setPassword(arguments.password) />
+		<!--- if the config was not passed in, load the XML file --->
+		<cfif NOT IsObject(arguments.configuration)>
+			<cfset arguments.configuration = CreateObject("Component", "reactor.config.config").init(arguments.configuration) />
 		</cfif>
 		
-		<cfset setObjectFactory(CreateObject("Component", "reactor.core.objectFactory").init(config, this)) />
+		<!--- pass the configuration into the objectFactory --->
+		<cfset setObjectFactory(CreateObject("Component", "reactor.core.objectFactory").init(arguments.configuration, this)) />
 		
 		<cfreturn this />
 	</cffunction>
