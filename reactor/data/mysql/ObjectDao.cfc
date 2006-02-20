@@ -167,7 +167,7 @@
 			<cfcase value="char">
 				<cfreturn "cf_sql_char" />
 			</cfcase>
-			<cfcase value="varchar">
+			<cfcase value="varchar,enum,set">
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 			<cfcase value="tinytext,text,mediumtext,longtext">

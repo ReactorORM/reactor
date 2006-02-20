@@ -1,6 +1,6 @@
 <cfcomponent hint="I am the convention object for mysql.  I translate data into formats that the DBMS supports." extends="reactor.data.abstractConvention">
 	
-	<cffunction name="lastInseredIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
+	<cffunction name="lastInsertedIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		
 		<cfreturn "SELECT LAST_INSERT_ID() as Id" />

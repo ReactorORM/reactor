@@ -3,7 +3,7 @@
 	extends="reactor.project.Scratch.To.UserTo">
 	<!--- Place custom code here, it will not be overwritten --->
 	
-	<cfset this.DateCreated = now() />
+	<!---<cfset this.DateCreated = now() />--->
 
 </cfcomponent>
 	

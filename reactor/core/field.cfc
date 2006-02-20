@@ -105,7 +105,7 @@
 	
 	<!--- default --->
     <cffunction name="setDefault" access="public" output="false" returntype="void">
-       <cfargument name="default" hint="I am teh default value of this field" required="yes" type="string" />
+       <cfargument name="default" hint="I am teh default value of this field" required="yes" default="" type="string" />
        <cfset variables.default = arguments.default />
     </cffunction>
     <cffunction name="getDefault" access="public" output="false" returntype="string">

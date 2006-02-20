@@ -74,7 +74,7 @@
 						<cfset length = 0 />
 					<cfelse>
 						<cfset dataType = REReplace(qFields.TYPE,"(.*)\((.*)\)","\1") />
-						<cfset length = REReplace(qFields.TYPE,"(.*)\((.*)\)","\2") />
+						<cfset length = val(REReplace(qFields.TYPE,"(.*)\((.*)\)","\2")) />
 					</cfif>
 				</cfdefaultcase>
 			</cfswitch>
@@ -191,7 +191,7 @@
 			<cfcase value="char">
 				<cfreturn "cf_sql_char" />
 			</cfcase>
-			<cfcase value="varchar">
+			<cfcase value="varchar,enum,set">
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 			<cfcase value="tinytext,text,mediumtext,longtext">

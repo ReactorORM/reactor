@@ -100,14 +100,14 @@
 				
 				<!-- some dbms require the last inserted id syntax to be run at the same time as the query -->
 				&lt;cfif ListFindNoCase("mssql", _getConfig().getType())&gt;
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 				&lt;/cfif&gt;
 				
 			&lt;/cfquery&gt;
 			<!-- other dbms require this in a seperate query -->
 			&lt;cfif NOT ListFindNoCase("mssql", _getConfig().getType())&gt;
 				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;	
-					#Convention.lastInseredIdSyntax(getObjectMetadata())#
+					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 				&lt;/cfquery&gt;		
 			&lt;/cfif&gt;
 			
@@ -118,16 +118,16 @@
 						&lt;/cfquery&gt;
 						
 						&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 					</xsl:when>
 					<xsl:when test="object/@dbms = 'mysql4'">
 						&lt;/cfquery&gt;
 						
 						&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#"&gt;	
-							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 					</xsl:when>
 					<xsl:otherwise>
-							#Convention.lastInseredIdSyntax(getObjectMetadata())#
+							#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>

@@ -164,7 +164,7 @@
 			</cfloop> --->
 		</cfif>
 		
-		<cfthrow message="Relationship Does Not Exist" detail="The object '#getName()#' does have have a relationship with an alias of '#arguments.alias#'." type="reactor.getRelationship.RelationshipDoesNotExist" />
+		<cfthrow message="Relationship Does Not Exist" detail="The object '#getName()#' does not have a relationship with an alias of '#arguments.alias#'." type="reactor.getRelationship.RelationshipDoesNotExist" />
 	</cffunction>
 		
 	<!---- getRelationshipMetadata --->
