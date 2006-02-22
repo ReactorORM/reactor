@@ -33,7 +33,7 @@
 		<cfargument name="node" hint="I am the node to append" required="yes" type="struct" />
 		<cfargument name="direction" hint="I am the direction" required="yes" type="string" />
 		<cfset var order = getOrder() />
-				
+
 		<cfset arguments.node.direction = arguments.direction />
 		
 		<cfset ArrayAppend(order, node) />	

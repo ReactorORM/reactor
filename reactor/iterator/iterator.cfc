@@ -16,17 +16,11 @@
 				
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setName(arguments.name) />
-		
+		<cfset setJoin(arguments.join) />
 		<!--- create and set the gateway we'll use to execute queries --->		
-		<cfset setGateway(arguments.ReactorFactory.createGateway(arguments.name)) />
-		<!--- get the query object that will back this iterator --->
-		<cfset setQueryObject(getGateway().createQuery()) />
-		<!--- filter to only this object's fields --->
-		<cfset getQueryObject().returnObjectFields(arguments.name) />
+		<cfset setGateway(getReactorFactory().createGateway(arguments.name)) />
 		
-		<cfif Len(arguments.join)>
-			<cfset getQueryObject().join(arguments.name, arguments.join) />
-		</cfif>
+		<cfset reset() />
 		
 		<cfreturn this />
 	</cffunction>
@@ -132,6 +126,16 @@
 		<cfset variables.query = 0 />
 		<cfset variables.array = 0 />
 		<cfset variables.index = 0 />
+		
+		<!--- get the query object that will back this iterator --->
+		<cfset setQueryObject(getGateway().createQuery()) />
+		<!--- filter to only this object's fields --->
+		<cfset getQueryObject().returnObjectFields(getName()) />
+		
+		<cfif Len(getJoin())>
+			<cfset getQueryObject().join(getName(), getJoin()) />
+		</cfif>
+		
 	</cffunction>
 	
 	<!--- getWhere --->
@@ -180,6 +184,15 @@
        <cfreturn variables.name />
     </cffunction>
 	
+	<!--- join --->
+    <cffunction name="setJoin" access="private" output="false" returntype="void">
+       <cfargument name="join" hint="I am the name of an optional object to join" required="yes" type="string" />
+       <cfset variables.join = arguments.join />
+    </cffunction>
+    <cffunction name="getJoin" access="private" output="false" returntype="string">
+       <cfreturn variables.join />
+    </cffunction>
+	
 	<!--- reactorFactory --->
     <cffunction name="setReactorFactory" access="private" output="false" returntype="void">
        <cfargument name="reactorFactory" hint="I am the ReactorFactory" required="yes" type="reactor.ReactorFactory" />
@@ -190,48 +203,3 @@
     </cffunction>
 		
 </cfcomponent>
-
-<!---
-
-
-	<!---<cfset variables.deleteConditions = ArrayNew(1) />
-	<cfset variables.newRecords = ArrayNew(1) />--->
-
-<!--- delete --->
-	<cffunction name="delete" access="public" hint="I delete matching items from the collection" output="false" returntype="void">
-		<cfset var item = 0 />
-		<cfset var Where = getWhere() />
-		
-		<!--- this method essentially caches an array of the conditions underwhich to delete records. --->
-		<cfset ArrayAppend(variables.deleteConditions, arguments) />
-		
-	</cffunction>
-		
-	<!--- new --->
-	<cffunction name="new" access="public" hint="I create a new record in this collection and return it." output="false" returntype="reactor.base.abstractRecord">
-		<cfset var Record = getReactorFactory().createRecord(getName()) />
-		<cfset ArrayAppend(variables.newRecords, Record) />
-		<cfset reset() />
-		<cfreturn Record />
-	</cffunction>
-	
-	<!--- save --->
-	<cffunction name="save" access="public" hint="I save the collection" output="false" returntype="void">
-		<cfset var item = 0 />
-		<cfset var To = 0 />
-		<cfset var x = 0 />
-		
-		<cfloop from="1" to="#ArrayLen(variables.newRecords)#" index="x">
-			<cfset To = variables.newRecords[x]._getTo() />
-
-			<!--- set the FK values --->
-			<cfloop collection="#arguments#" item="item">
-				<cfset To[item] = arguments[item] />
- 			</cfloop>
-			
-			<!--- save this object --->
-			<cfset variables.newRecords[x].save() />
-		</cfloop>
- 	</cffunction>
-
---->
