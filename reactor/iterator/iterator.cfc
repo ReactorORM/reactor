@@ -20,6 +20,15 @@
 		<!--- create and set the gateway we'll use to execute queries --->		
 		<cfset setGateway(getReactorFactory().createGateway(arguments.name)) />
 		
+		<!--- get the query object that will back this iterator --->
+		<cfset setQueryObject(getGateway().createQuery()) />
+		<!--- filter to only this object's fields --->
+		<cfset getQueryObject().returnObjectFields(getName()) />
+		
+		<cfif Len(getJoin())>
+			<cfset getQueryObject().join(getName(), getJoin()) />
+		</cfif>
+		
 		<cfset reset() />
 		
 		<cfreturn this />
@@ -126,16 +135,6 @@
 		<cfset variables.query = 0 />
 		<cfset variables.array = 0 />
 		<cfset variables.index = 0 />
-		
-		<!--- get the query object that will back this iterator --->
-		<cfset setQueryObject(getGateway().createQuery()) />
-		<!--- filter to only this object's fields --->
-		<cfset getQueryObject().returnObjectFields(getName()) />
-		
-		<cfif Len(getJoin())>
-			<cfset getQueryObject().join(getName(), getJoin()) />
-		</cfif>
-		
 	</cffunction>
 	
 	<!--- getWhere --->
@@ -152,9 +151,15 @@
 	</cffunction>
 		
 	<!--- getOrder --->
-	<cffunction name="getOrder" access="public" hint="I get the order object that filters the query that backs this iterator" output="false" returntype="reactor.query.order">
+	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator" output="false" returntype="reactor.query.order">
 		<cfset reset() />
 		<cfreturn getQueryObject().getOrder() />
+	</cffunction>
+	
+	<!--- resetOrder --->
+	<cffunction name="resetOrder" access="public" hint="I reset the order object that sorts the query that backs this iterator" output="false" returntype="void">
+		<cfset reset() />
+		<cfset getQueryObject().resetOrder() />
 	</cffunction>
 	
 	<!--- gateway --->

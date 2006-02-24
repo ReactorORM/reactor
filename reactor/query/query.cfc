@@ -140,6 +140,9 @@
     <cffunction name="getWhere" access="public" output="false" returntype="reactor.query.where">
        <cfreturn variables.where />
     </cffunction>
+	<cffunction name="resetWhere" access="public" output="false" returntype="void">
+		<cfset variables.where = CreateObject("Component", "reactor.query.where").init(this) />
+	</cffunction>
 	
 	<!--- getField --->
 	<cffunction name="getField" access="public" hint="I get a column based on the provided object name/alias and field name" output="false" returntype="struct">
@@ -156,6 +159,9 @@
     <cffunction name="getOrder" access="public" output="false" returntype="reactor.query.order">
        <cfreturn variables.order />
     </cffunction>
+	<cffunction name="resetOrder" access="public" output="false" returntype="void">
+		<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
+	</cffunction>
 	
 	<!--- returnFields --->
     <cffunction name="setReturnFields" access="private" output="false" returntype="void">
@@ -165,4 +171,7 @@
     <cffunction name="getReturnFields" access="private" output="false" returntype="array">
        <cfreturn variables.returnFields />
     </cffunction>
+	<cffunction name="resetReturnFields" access="public" output="false" returntype="void">
+		<cfset variables.returnFields = ArrayNew(1) />
+	</cffunction>
 </cfcomponent>
