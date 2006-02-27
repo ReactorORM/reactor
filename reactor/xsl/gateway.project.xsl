@@ -39,7 +39,7 @@
 		</xsl:for-each>
 		
 		&lt;cfloop list="#arguments.sortByFieldList#" index="x"&gt;
-			&lt;cfset Query.getOrder().setAsc("<xsl:value-of select="object/@name" />", trim(x)) /&gt;
+			&lt;cfset Query.getOrder().setAsc("<xsl:value-of select="object/@alias" />", trim(x)) /&gt;
 		&lt;/cfloop&gt;
 		
 		&lt;cfreturn getByQuery(Query) /&gt;

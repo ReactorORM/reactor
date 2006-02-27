@@ -226,7 +226,7 @@
 			&lt;cfset var relationship = 0 /&gt;
 			
 			&lt;cfif NOT IsDefined("variables.<xsl:value-of select="@alias"/>Iterator")&gt;
-				&lt;cfset variables.<xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@alias"/>", 
+				&lt;cfset variables.<xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>", 
 					"<xsl:for-each select="link">
 						<xsl:value-of select="@name"/>
 						<xsl:if test="position() != last()">,</xsl:if>

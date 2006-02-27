@@ -61,7 +61,7 @@
 		<cfset var fromField = 0 />
 		<cfset var toField = 0 />
 		<cfset var temp = 0 />
-		
+				
 		<cfif FromObjectMetadata.hasRelationship(ToObjectMetadata.getAlias()) >
 			<cfset relationships = FromObjectMetadata.getRelationship(ToObjectMetadata.getAlias()) />
 		
