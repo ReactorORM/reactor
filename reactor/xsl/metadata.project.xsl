@@ -49,7 +49,10 @@
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:when test="count(link) &gt; 0">
-				&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].link = "<xsl:value-of select="link/@name" />" /&gt;
+				&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].link = ArrayNew(1) />
+				<xsl:for-each select="link">
+					&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].link[<xsl:value-of select="position()" />] = "<xsl:value-of select="@name" />" /&gt;
+				</xsl:for-each>
 			</xsl:when>
 		</xsl:choose>		
 	</xsl:for-each>

@@ -30,14 +30,58 @@
 	<cffunction name="getSignature" access="public" hint="I get this table's signature" output="false" returntype="string">
 		<cfreturn getXml().object.XmlAttributes.signature />
 	</cffunction>
+	
+ 	<cffunction name="getRelationships" access="private" hint="I find relationships between the two provided object aliases" output="false" returntype="array">
+		<cfargument name="from" hint="I am the alias of the object the relationship is from" required="yes" type="string" />
+		<cfargument name="to" hint="I am the alias of the object the relationship is to" required="yes" type="string" />
+		<cfset var fromObject = getConfig().getObjectConfig(arguments.from) />
+		<cfset var toObject = getConfig().getObjectConfig(arguments.to) />
+		<cfset var relationships = XmlSearch(fromObject, "/object/hasMany[@name='#toObject.object.XmlAttributes.alias#']/relate/..|/object/hasOne[@name='#toObject.object.XmlAttributes.alias#']") />
+		<cfset var invert = false />
+		<cfset var relationship = ArrayNew(1) />
+				
+		<!--- check the from object for a relationship to the to object --->
+		<cfif NOT ArrayLen(relationships)>
+			<cfset relationships = XmlSearch(toObject, "/object/hasMany[@name='#fromObject.object.XmlAttributes.alias#']/relate/..|/object/hasOne[@name='#fromObject.object.XmlAttributes.alias#']") />
+			<cfset invert = true />
+		</cfif>
 		
+		<!--- if we don't have any relationships throw an error --->
+		<cfif NOT ArrayLen(relationships)>
+			<cfthrow message="Relationship Does Not Exist" detail="No relationship exists between #arguments.from# and #arguments.to#." type="reactor.core.object.getRelationships.RelationshipDoesNotExist" />
+		</cfif>
+		
+		<!--- get the first relationship --->
+		<cfset relationships = relationships[1] />
+		
+		<!--- loop over the relations between from and to and make an array --->
+		<cfloop from="1" to="#ArrayLen(relationships.XmlChildren)#" index="x">
+			<cfset relationship[x] = StructNew() />
+			
+			<cfif NOT invert>
+				<cfset relationship[x].from = relationships.XmlChildren[x].XmlAttributes.from />
+				<cfset relationship[x].to = relationships.XmlChildren[x].XmlAttributes.to />
+			<cfelse>
+				<cfset relationship[x].from = relationships.XmlChildren[x].XmlAttributes.to />
+				<cfset relationship[x].to = relationships.XmlChildren[x].XmlAttributes.from />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn relationship />
+	</cffunction>
+	
 	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
 		<cfset var Config = Duplicate(getObjectConfig()) />
 		<cfset var fields = getFields() />
-		<cfset var linkerRelationships = 0 />
-		<cfset var linkerRelationship = 0 />
-		<cfset var newHasMany = 0 />
+		<cfset var links = 0 />
+		<cfset var link = 0 />
+		<cfset var linkFrom = 0 />
+		<cfset var linkTo = 0 />
 		<cfset var newRelationship = 0 />
+		<cfset var newRelationships = 0 />
+		<!---
+		<cfset var linkerRelationship = 0 />
+		<cfset var newHasMany = 0 />--->
 		<cfset var x = 0 />
 		<cfset var y = 0 />
 		<cfset var z = 0 />
@@ -46,7 +90,7 @@
 		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne") />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
-				
+			
 		<!--- insure aliases are set --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
@@ -56,58 +100,10 @@
 			</cfif>
 		</cfloop>
 		
-		<!--- 
-		Expand linked relationships.
-		In otherwords, if the config indicates that this object links to another via linking tables, then copy the links into this xml document.
-		--->
+		<!--- Assign aliases for relationships that don't have them --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
-			<!--- if this is a has-many relationship with a link, expand it --->
-			<cfif IsDefined("relationship.link")>
-				<!--- get the relationships that the linking object has --->
-				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-				
-				<!--- find links back to this object --->
-				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
-					<cfset linkerRelationship = linkerRelationships[y] />
-					
-					<!--- if this is a link back to this object copy the node into this document --->
-					<cfif linkerRelationship.XmlAttributes.name IS getAlias()>
-						
-						<!--- create a hasMany relationship in this document --->
-						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
-						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
-						<cfset newHasMany.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
-						
-						<!---<cfif IsDefined("linkerRelationship.XmlAttributes.alias")>
-							<cfset newHasMany.XmlAttributes["alias"] = linkerRelationship.XmlAttributes.alias & relationship.link.XmlAttributes.name />
-						<cfelse>
-							<cfset newHasMany.XmlAttributes["alias"] = linkerRelationship.XmlAttributes.name & relationship.link.XmlAttributes.name />
-						</cfif>--->
-																		
-						<!--- add all relationships --->
-						<cfloop from="1" to="#ArrayLen(linkerRelationship.XmlChildren)#" index="z">
-							<cfset newRelationship = XMLElemNew(Config, "relate") />
-							<cfset newRelationship.XmlAttributes["from"] = linkerRelationship.XmlChildren[z].XmlAttributes.to />
-							<cfset newRelationship.XmlAttributes["to"] = linkerRelationship.XmlChildren[z].XmlAttributes.from />
-							
-							<!--- add the relationship --->
-							<cfset ArrayAppend(newHasMany.XmlChildren, newRelationship) />
-						</cfloop>
-						
-						<cfif NOT ArrayLen(XMLSearch(Config, "/object/hasMany[@name = '#newHasMany.XmlAttributes["name"]#']"))>
-							<!--- add the hasMany to the relationship --->
-							<cfset ArrayAppend(relationships, newHasMany) />
-						</cfif>
-						
-						<!--- add this new relationship into the document --->
-						<cfset ArrayAppend(Config.XmlRoot.XmlChildren, newHasMany) />		
-					</cfif>
-				
-				</cfloop>
-			</cfif>
-					
 			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 				<!--- make sure this alias hasn't already been used --->
@@ -159,6 +155,8 @@
 		
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
+		
+		<!---<cfdump var="#Config#" /><cfabort>--->
 		
 		<cfreturn Config />
 	</cffunction>

@@ -147,21 +147,55 @@
 		
 		<cfthrow message="Relationship Does Not Exist" detail="The object '#getAlias()#' does not have a relationship with an alias of '#arguments.alias#'." type="reactor.getRelationship.RelationshipDoesNotExist" />
 	</cffunction>
+	
+	<!--- hasRelationship --->
+	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="boolean">
+		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
+		<cfset var objectMetadata = getObjectMetadata() />
+		<cfset var relationships = 0 />
+		<cfset var x = 0 />
+				
+		<!--- check the hasone relationships --->
+		<cfif ArrayLen(objectMetadata.hasOne)>
+			<cfset relationships = objectMetadata.hasOne />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif relationships[x].alias IS arguments.alias>
+					<!--- this is a match --->
+					<cfreturn true/>
+				</cfif> 
+			</cfloop>
+		</cfif>
+		
+		<!--- check the hasMany relationships --->
+		<cfif ArrayLen(objectMetadata.hasMany)>
+			<cfset relationships = objectMetadata.hasMany />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif relationships[x].alias IS arguments.alias>
+					<!--- this is a match --->
+					<cfreturn true/>
+				</cfif> 
+			</cfloop>
+		</cfif>
+		
+		<cfreturn false/>
+	</cffunction>
 		
 	<!---- getRelationshipMetadata --->
 	<cffunction name="getRelationshipMetadata" access="public" hint="I return a related object's metadata based on the provided alias" output="false" returntype="reactor.base.abstractMetadata">
 		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
-		<cfset var relationship = getRelationship(arguments.alias) />
-		<cfset var RelationshipMetadata = _getReactorFactory().createMetadata(relationship.name) />
+		<!---<cfset var relationship = getRelationship(arguments.alias) />
+		<cfset var RelationshipMetadata = _getReactorFactory().createMetadata(relationship.name) />--->
 		
-		<cfreturn RelationshipMetadata />
+		<cfreturn _getReactorFactory().createMetadata(arguments.alias) />
 	</cffunction>
 	
 	<!--- metadata --->
     <cffunction name="getObjectMetadata" access="public" output="false" returntype="struct">
        <cfreturn variables.metadata />
     </cffunction>
-	
+		
 	<!---<cffunction name="dumpVariables">
 		<cfdump var="#variables#" />
 		<cfabort />

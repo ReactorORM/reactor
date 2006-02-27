@@ -12,11 +12,15 @@
 	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="Iterator">
 		<cfargument name="ReactorFactory" hint="I am the gateway object used to query the DB." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="name" hint="I am the gateway object used to query the DB." required="yes" type="string" />
-		<cfargument name="join" hint="I am the name of an optional object to join." required="no" default="" type="string" />
+		<cfargument name="joinList" hint="I am comma delimited list of optional object to join." required="no" default="" type="string" />
+		<cfset var joinTo = 0 />
+		<cfset var joinFrom = 0 />
+		<cfset var joins = 0 />
+		<cfset var x = 0 />
 		
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setName(arguments.name) />
-		<cfset setJoin(arguments.join) />
+		<cfset setJoinList(arguments.joinList) />
 		<!--- create and set the gateway we'll use to execute queries --->		
 		<cfset setGateway(getReactorFactory().createGateway(arguments.name)) />
 		
@@ -25,8 +29,15 @@
 		<!--- filter to only this object's fields --->
 		<cfset getQueryObject().returnObjectFields(getName()) />
 		
-		<cfif Len(getJoin())>
-			<cfset getQueryObject().join(getName(), getJoin()) />
+		<cfset joins = ListToArray(joinList) />
+		<cfset joinFrom = getName() />
+		
+		<cfif Len(getJoinList())>
+			<cfloop from="#ArrayLen(joins)#" to="1" index="x" step="-1">
+				<cfset joinTo = joins[x] />
+				<cfset getQueryObject().join(joinFrom, joinTo) />
+				<cfset joinFrom = joinTo />
+			</cfloop>
 		</cfif>
 		
 		<cfset reset() />
@@ -189,13 +200,13 @@
        <cfreturn variables.name />
     </cffunction>
 	
-	<!--- join --->
-    <cffunction name="setJoin" access="private" output="false" returntype="void">
-       <cfargument name="join" hint="I am the name of an optional object to join" required="yes" type="string" />
-       <cfset variables.join = arguments.join />
+	<!--- joinList --->
+    <cffunction name="setJoinList" access="public" output="false" returntype="void">
+       <cfargument name="joinList" hint="I am a comma seperated list of other objects to join" required="yes" type="string" />
+       <cfset variables.joinList = arguments.joinList />
     </cffunction>
-    <cffunction name="getJoin" access="private" output="false" returntype="string">
-       <cfreturn variables.join />
+    <cffunction name="getJoinList" access="public" output="false" returntype="string">
+       <cfreturn variables.joinList />
     </cffunction>
 	
 	<!--- reactorFactory --->

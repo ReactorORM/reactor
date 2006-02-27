@@ -133,9 +133,30 @@
 	<!--- getRelatedObject --->
 	<cffunction name="getRelatedObject" access="public" hint="I return a related object." output="false" returntype="reactor.query.object">
 		<cfargument name="alias" hint="I am the alias of a related object to get." required="yes" type="string" />
-		<cfset var relationshipStruct = getObjectMetadata().getRelationship(arguments.alias) />
+		<cfset var ToObjectMetadata = getObjectMetadata().getRelationshipMetadata(arguments.alias) />
+		<cfset var relationshipStruct = 0 />
 		<cfset var RelatedObjectMetadata = 0 />
 		<cfset var RelatedObject = 0 />
+		<cfset var x = 0 />
+		<cfset var temp = 0 />
+		
+		<cfif getObjectMetadata().hasRelationship(arguments.alias) >
+			<cfset relationshipStruct = getObjectMetadata().getRelationship(arguments.alias) />
+		
+		<cfelseif ToObjectMetadata.hasRelationship(getObjectMetadata().getAlias())>
+			<cfset relationshipStruct = ToObjectMetadata.getRelationship(getObjectMetadata().getAlias()) />
+			
+			<!--- invert the relationship --->
+			<cfset relationshipStruct.alias = ToObjectMetadata.getAlias() />
+			<cfset relationshipStruct.name = ToObjectMetadata.getName() />
+			
+			<cfloop from="1" to="#ArrayLen(relationshipStruct.relate)#" index="x">
+				<cfset temp = relationshipStruct.relate[x].from />
+				<cfset relationshipStruct.relate[x].from = relationshipStruct.relate[x].to />
+				<cfset relationshipStruct.relate[x].to = temp />
+			</cfloop>
+		
+		</cfif>	
 		
 		<!--- check to see if this is a linked table --->
 		<cfif IsDefined("relationshipStruct.link")>

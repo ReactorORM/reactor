@@ -1,44 +1,46 @@
 <reactor>
 	<config>
-		<project value="ReactorBlog" />
-		<dsn value="ReactorBlog" />
+		<project value="lande" />
+		<dsn value="TESTINGSQL" />
 		<type value="mssql" />
-		<mapping value="/ReactorBlogData" />
+		<mapping value="/ReactorData" />
 		<mode value="always" />
-		<!-- These config values are not required -->
-		<!-- <username value="" />
-		<password value="" /> -->
 	</config>
-
+	
 	<objects>
-		<object name="Entry" alias="MyEntry">
-			<hasMany name="Category">
-				<link name="EntryCategory" />
+		<object name="Daisy">
+			<!-- <hasMany name="ChildDaisy">
+				<relate from="daisyId" to="daisyId" />
 			</hasMany>
-			<hasMany name="Comment">
-				<relate from="entryId" to="entryId" />
+			<hasMany name="Child">
+				<link name="ChildDaisy" />
+			</hasMany> -->
+			<hasMany name="Group">
+				<link name="ChildDaisy" />
+				<link name="ChildDaisyGroup" />
 			</hasMany>
-			<hasMany name="Rating">
-				<relate from="entryId" to="entryId" />
+		</object>
+		
+		<object name="ChildDaisy">
+			<hasOne name="Daisy">
+				<relate from="daisyId" to="daisyId" />
+			</hasOne>
+			<hasMany name="ChildDaisyGroup">
+				<relate from="childDaisyId" to="childDaisyId" />
 			</hasMany>
-			<hasOne name="User" alias="Author">
-				<relate from="postedByUserId" to="userId" />
+		</object>
+		
+		<object name="ChildDaisyGroup">
+			<hasOne name="ChildDaisy">
+				<relate from="childDaisyId" to="childDaisyId" />
+			</hasOne>
+			<hasOne name="Group">
+				<relate from="groupId" to="groupId" />
 			</hasOne>
 		</object>
 		
-		<object name="EntryCategory">
-			<hasOne name="MyEntry">
-				<relate from="entryId" to="entryId" />
-			</hasOne>
-			<hasOne name="Category">
-				<relate from="categoryId" to="categoryId" />
-			</hasOne>
-		</object>
+		<object name="Group" />
 		
-		<object name="Category">
-			<hasMany name="MyEntry">
-				<link name="EntryCategory" />
-			</hasMany>
-		</object>
+		
 	</objects>
 </reactor>

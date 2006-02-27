@@ -56,10 +56,31 @@
 	<cffunction name="addRelationships" access="public" hint="I add a relationship to this join." output="false" returntype="void">
 		<cfset var FromObjectMetadata = getFromObject().getObjectMetadata() />
 		<cfset var ToObjectMetadata = getToObject().getObjectMetadata() />
-		<cfset var relationships = FromObjectMetadata.getRelationship(getToObject().getAlias()).relate />
+		<cfset var relationships = 0 />
 		<cfset var Relationship = 0 />
 		<cfset var fromField = 0 />
 		<cfset var toField = 0 />
+		<cfset var temp = 0 />
+		
+		<cfif FromObjectMetadata.hasRelationship(ToObjectMetadata.getAlias()) >
+			<cfset relationships = FromObjectMetadata.getRelationship(ToObjectMetadata.getAlias()) />
+		
+		<cfelseif ToObjectMetadata.hasRelationship(FromObjectMetadata.getAlias())>
+			<cfset relationships = ToObjectMetadata.getRelationship(FromObjectMetadata.getAlias()) />
+			
+			<!--- invert the relationship --->
+			<cfset relationships.alias = ToObjectMetadata.getAlias() />
+			<cfset relationships.name = ToObjectMetadata.getName() />
+			
+			<cfloop from="1" to="#ArrayLen(relationships.relate)#" index="x">
+				<cfset temp = relationships.relate[x].from />
+				<cfset relationships.relate[x].from = relationships.relate[x].to />
+				<cfset relationships.relate[x].to = temp />
+			</cfloop>
+		
+		</cfif>	
+		
+		<cfset relationships = relationships.relate />
 		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset fromField = CreateObject("Component", "reactor.query.field").init(FromObjectMetadata.getAlias(), FromObjectMetadata.getField(relationships[x].from).name, FromObjectMetadata.getField(relationships[x].from).alias) />

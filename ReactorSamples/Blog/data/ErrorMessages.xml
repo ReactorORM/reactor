@@ -251,5 +251,17 @@
 			<errorMessage message="The Rating field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Rating field must be a numeric value." name="invalidType"/>
 		</field>
+		<field name="ratingId">
+			<errorMessage message="The ratingId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The ratingId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="entryId">
+			<errorMessage message="The entryId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The entryId field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="rating">
+			<errorMessage message="The rating field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The rating field must be a numeric value." name="invalidType"/>
+		</field>
 	</table>
 </tables>
