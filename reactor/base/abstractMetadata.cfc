@@ -16,6 +16,10 @@
 		<cfreturn getObjectMetadata().name />
 	</cffunction>
 	
+	<cffunction name="getAlias" access="public" hint="I return the alias of the object." output="false" returntype="string">
+		<cfreturn getObjectMetadata().alias />
+	</cffunction>
+	
 	<cffunction name="getOwner" access="public" hint="I return the owner of this object." output="false" returntype="string">
 		<cfreturn getObjectMetadata().owner />
 	</cffunction>
@@ -45,14 +49,14 @@
 	</cffunction>
 	
 	<cffunction name="getField" access="public" hint="I return a structure of data about a specific field." output="false" returntype="struct">
-		<cfargument name="name" hint="I am the name of the field to get" required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="string" />
 		<cfset var fields = getFields() />
 		<cfset var field = 0 />
 		<cfset var x = 0 />
 		
 		<!--- loop over the fields and look for a match --->
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfif fields[x].name IS arguments.name>
+			<cfif fields[x].alias IS arguments.alias>
 				<cfset field = fields[x] />
 				<cfbreak />
 			</cfif>
@@ -61,12 +65,9 @@
 		<cfif IsStruct(field)>
 			<!--- return the field's attributes --->
 			<cfreturn field />
-						
-		<!--- <cfelseif hasSuper()>
-			<cfreturn getSuperObjectMetadata().getField(arguments.name) /> --->
-			
+				
 		<cfelse>
-			<cfthrow message="Field Does Not Exist" detail="The field '#arguments.name#' does not exist for the '#getAlias()#' object." type="reactor.getField.FieldDoesNotExist" />
+			<cfthrow message="Field Does Not Exist" detail="The field '#arguments.alias#' does not exist for the '#getAlias()#' object." type="reactor.getField.FieldDoesNotExist" />
 			
 		</cfif>
 	</cffunction>
@@ -79,37 +80,38 @@
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset columList = ListAppend(columList, fields[x].name) />
+			<cfset columList = ListAppend(columList, fields[x].alias) />
 		</cfloop>
-		
-		<cfif hasSuper()>
-			<cfset superFields = getSuperObjectMetadata().getFieldList() />
-			
-			<cfloop list="#superFields#" index="field">
-				<cfif NOT ListFindNoCase(columList, field)>
-					<cfset columList = ListAppend(columList, field) />
-				</cfif>
-			</cfloop>
-		</cfif>
 		
 		<cfreturn columList />
 	</cffunction>
 	
-	<!--- hasSuper --->
-	<cffunction name="hasSuper" access="public" hint="I indicate if this object has a super relationship" output="false" returntype="boolean">
+	<!--- getRelationships --->
+	<cffunction name="getRelationships" access="public" hint="I get an array of all relationships" output="false" returntype="array">
 		<cfset var objectMetadata = getObjectMetadata() />
+		<cfset var allRelationships = ArrayNew(1) />
+		<cfset var relationships = 0 />
+		<cfset var x = 0 />
 		
-		<!--- check the super relationship --->
-		<cfif IsDefined("objectMetadata.super.alias")>
-			<cfreturn true />
+		<!--- check the hasone relationships --->
+		<cfif ArrayLen(objectMetadata.hasOne)>
+			<cfset relationships = objectMetadata.hasOne />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfset ArrayAppend(allRelationships, relationships[x]) />
+			</cfloop>
 		</cfif>
 		
-		<cfreturn false />
-	</cffunction>
-	
-	<!--- getSuperAlias --->
-	<cffunction name="getSuperAlias" access="public" hint="I return the super object's alias" output="false" returntype="string">
-		<cfreturn getObjectMetadata().super.alias />
+		<!--- check the hasMany relationships --->
+		<cfif ArrayLen(objectMetadata.hasMany)>
+			<cfset relationships = objectMetadata.hasMany />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfset ArrayAppend(allRelationships, relationships[x]) />
+			</cfloop>
+		</cfif>
+		
+		<cfreturn allRelationships />
 	</cffunction>
 	
 	<!--- getRelationship --->
@@ -118,12 +120,7 @@
 		<cfset var objectMetadata = getObjectMetadata() />
 		<cfset var relationships = 0 />
 		<cfset var x = 0 />
-		
-		<!--- check the super relationship
-		<cfif IsDefined("objectMetadata.super.alias") AND objectMetadata.super.alias IS arguments.name>
-			<cfreturn objectMetadata.super />
-		</cfif> --->
-		
+				
 		<!--- check the hasone relationships --->
 		<cfif ArrayLen(objectMetadata.hasOne)>
 			<cfset relationships = objectMetadata.hasOne />
@@ -134,14 +131,6 @@
 					<cfreturn relationships[x]/>
 				</cfif> 
 			</cfloop>
-			
-			<!--- loop over the relationships and find a match by name
-			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].name IS arguments.name>
-					<!--- this is a match --->
-					<cfreturn relationships[x]/>
-				</cfif> 
-			</cfloop> --->
 		</cfif>
 		
 		<!--- check the hasMany relationships --->
@@ -154,17 +143,9 @@
 					<cfreturn relationships[x]/>
 				</cfif> 
 			</cfloop>
-			
-			<!--- loop over the relationships and find a match by name
-			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].name IS arguments.name>
-					<!--- this is a match --->
-					<cfreturn relationships[x]/>
-				</cfif> 
-			</cfloop> --->
 		</cfif>
 		
-		<cfthrow message="Relationship Does Not Exist" detail="The object '#getName()#' does not have a relationship with an alias of '#arguments.alias#'." type="reactor.getRelationship.RelationshipDoesNotExist" />
+		<cfthrow message="Relationship Does Not Exist" detail="The object '#getAlias()#' does not have a relationship with an alias of '#arguments.alias#'." type="reactor.getRelationship.RelationshipDoesNotExist" />
 	</cffunction>
 		
 	<!---- getRelationshipMetadata --->
@@ -180,5 +161,10 @@
     <cffunction name="getObjectMetadata" access="public" output="false" returntype="struct">
        <cfreturn variables.metadata />
     </cffunction>
+	
+	<!---<cffunction name="dumpVariables">
+		<cfdump var="#variables#" />
+		<cfabort />
+	</cffunction>--->
 
 </cfcomponent>

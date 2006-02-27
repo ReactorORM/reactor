@@ -42,24 +42,29 @@
 		<cfset var toName = "" />
 		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-			<cfset fromName = arguments.Convention.formatFieldName(relationships[x].getFromField(), fromAlias) />
-			<cfset toName = arguments.Convention.formatFieldName(relationships[x].getToField(), toAlias) />
+			<cfset fromName = arguments.Convention.formatFieldName(relationships[x].getFromField().getField(), fromAlias) />
+			<cfset toName = arguments.Convention.formatFieldName(relationships[x].getToField().getField(), toAlias) />
 			<cfset output = ListAppend(output, fromName & " = " & toName, ",") />
 		</cfloop>
 		
 		<cfset output = Replace(output, ",", " and ", "all") />
-		
+
 		<cfreturn output & " " />
 	</cffunction>
 	
 	<!--- addRelationships --->
 	<cffunction name="addRelationships" access="public" hint="I add a relationship to this join." output="false" returntype="void">
 		<cfset var FromObjectMetadata = getFromObject().getObjectMetadata() />
+		<cfset var ToObjectMetadata = getToObject().getObjectMetadata() />
 		<cfset var relationships = FromObjectMetadata.getRelationship(getToObject().getAlias()).relate />
 		<cfset var Relationship = 0 />
+		<cfset var fromField = 0 />
+		<cfset var toField = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-			<cfset addRelationship(CreateObject("Component", "reactor.query.relationship").init(relationships[x].from, relationships[x].to)) />
+			<cfset fromField = CreateObject("Component", "reactor.query.field").init(FromObjectMetadata.getAlias(), FromObjectMetadata.getField(relationships[x].from).name, FromObjectMetadata.getField(relationships[x].from).alias) />
+			<cfset toField = CreateObject("Component", "reactor.query.field").init(ToObjectMetadata.getAlias(), ToObjectMetadata.getField(relationships[x].to).name, ToObjectMetadata.getField(relationships[x].to).alias) />
+			<cfset addRelationship(CreateObject("Component", "reactor.query.relationship").init(fromField, toField)) />
 		</cfloop>
 	</cffunction>
 	

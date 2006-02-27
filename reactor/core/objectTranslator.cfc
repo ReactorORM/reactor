@@ -17,17 +17,9 @@
 	</cffunction>
 	
 	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
-		<!---<cfargument name="objectTranslator" hint="I am the objectTranslator to use to generate the To." required="yes" type="reactor.core.objectTranslator" />
-		<cfargument name="name" hint="I am the name of the object to create." required="yes" type="string" />--->
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var objectXML = getObject().getXml() />
-		<!---<cfset var super = XmlSearch(objectXML, "/object/super") />--->
 		<cfset var pathToErrorFile = "" />
-		
-		<!---<cfif ArrayLen(super) and arguments.type IS NOT "gateway">
-			<!--- we need to insure that the base object exists for Dao, Record --->
-			<cfset getObjectFactory().create(super[1].XmlAttributes.name, arguments.type) />
-		</cfif>--->
 		
 		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
 		<cfif arguments.type IS "Record">
@@ -43,21 +35,21 @@
 		<cfset generate(
 			objectXML,
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.project.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Project"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Project"),
 			true) />
 		
 		<!--- write the base object --->
 		<cfset generate(
 			objectXML,
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.base.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Base"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Base"),
 			false) />
 		
 		<!--- generate the custom object --->
 		<cfset generate(
 			objectXML,
 			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.custom.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.name, "Custom"),
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Custom"),
 			false) />
 			
 	</cffunction>

@@ -61,11 +61,11 @@
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
-					
-			<!--- add the field alias --->
-			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].name, arguments.prefix) />
 			
-			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].name) OR ListFindNoCase(allowedFieldList, alias) >
+			<!--- add the field alias --->
+			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].alias, arguments.prefix) />
+			
+			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].alias) OR ListFindNoCase(allowedFieldList, alias) >
 				<cfset select = ListAppend(select, field & chr(13) & chr(10)) />
 			</cfif>
 		</cfloop>
@@ -93,10 +93,10 @@
 		
 		<cfloop from="1" to="#ArrayLen(arguments.returnFields)#" index="x">
 			<cfset Field = arguments.returnFields[x] />
-						
+			
 			<!--- if this field is in this object append it ot the list of fields --->
 			<cfif Field.getObject() IS this.getAlias()>
-				<cfset fields = ListAppend(fields, Field.getField()) />
+				<cfset fields = ListAppend(fields, Field.getAlias()) />
 			</cfif>
 		</cfloop>
 		

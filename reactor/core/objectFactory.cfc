@@ -15,7 +15,7 @@
 	</cffunction>
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
-		<cfargument name="name" hint="I am the name of the table create an object for." required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var DbObject = 0 />
 		<cfset var DbObjectDao = 0 />
@@ -24,17 +24,17 @@
 		<cfset var objectTranslator = 0 />
 		
 		<!--- if we don't have a cached version of this object create one --->
-		<cfif NOT variables.TimedCache.exists(arguments.name)>
+		<cfif NOT variables.TimedCache.exists(arguments.alias)>
 			<!--- create and load a reactor.core.object object --->
-			<cfset variables.TimedCache.setValue(arguments.name, getObject(arguments.name), createTimeSpan(0, 0, 0, 8)) />
+			<cfset variables.TimedCache.setValue(arguments.alias, getObject(arguments.alias), createTimeSpan(0, 0, 0, 8)) />
 		</cfif>
 		
 		<!--- get the cached object --->
 		<cftry>
-			<cfset DbObject = variables.TimedCache.getValue(arguments.name) />
+			<cfset DbObject = variables.TimedCache.getValue(arguments.alias) />
 			<cfcatch>
 				<!--- it's possible that the cache timed out between when we checked to see if it existed and now --->
-				<cfset DbObject = getObject(arguments.name) />
+				<cfset DbObject = getObject(arguments.alias) />
 			</cfcatch>
 		</cftry>
 		
@@ -52,7 +52,7 @@
 				<cfcase value="development">
 					<cftry>
 						<!--- create an instance of the object and check its signature --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
 						<cfcatch>
 							<cfset generate = true />
 						</cfcatch>
@@ -67,7 +67,7 @@
 				<cfcase value="production">
 					<cftry>
 						<!--- create an instance of the object and check it's signature --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.name)) />
+						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
 						<cfcatch>
 							<cfset generate = true />
 						</cfcatch>
@@ -76,7 +76,7 @@
 			</cfswitch>
 			
 			<cfcatch type="Reactor.NoSuchObject">
-				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.name#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.name#.'" />
+				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
 		</cftry>
 		
@@ -86,10 +86,10 @@
 			
 			<cfset ObjectTranslator.generateObject(arguments.type) />	
 			
-			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.name)).configure(getConfig(), arguments.name, getReactorFactory()) />
+			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory()) />
 
 		<cfelse>
-			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.name, getReactorFactory()) />
+			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory()) />
 
 		</cfif>
 		

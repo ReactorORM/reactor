@@ -68,7 +68,7 @@
 	
 	<!--- getObjectConfig --->
 	<cffunction name="getObjectConfig" access="public" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned." output="false" returntype="string">
-		<cfargument name="object" hint="I am the object to get the configuration for" required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of the object to get the configuration for" required="yes" type="string" />
 		<cfset var configXml = getConfigXml() />
 		<cfset var tableConfig = XmlSearch(configXml, "/reactor/objects/object") />
 		<cfset var table = 0 />
@@ -77,18 +77,25 @@
 		<!--- if a matching element is found then convert it to be it's own document.  Otherwise create a new document. --->
 		<cfif ArrayLen(tableConfig)>
 			<cfloop from="1" to="#ArrayLen(tableConfig)#" index="x">
-				<cfif tableConfig[x].XmlAttributes.name IS arguments.object>
+				<cfset table = tableConfig[x] />
+				<cfif NOT IsDefined("table.XmlAttributes.alias")>
+					<cfset table.XmlAttributes["alias"] = table.XmlAttributes.name />
+				</cfif>
+				
+				<cfif table.XmlAttributes.alias IS arguments.alias>
 					<cfset table = tableConfig[x] />
 					<cfbreak />
+				<cfelse>
+					<cfset table = 0 />
 				</cfif>
 			</cfloop>
 		</cfif>
 		
 		<!--- if we don't have a configuration for this object then return a default configuration --->
 		<cfif table IS 0>
-			<cfset table = "<object name=""#arguments.object#"" />" />
+			<cfset table = "<object name=""#arguments.alias#"" alias=""#arguments.alias#"" />" />
 		</cfif>
-						
+		
 		<!--- return the base config --->
 		<cfreturn XmlParse(ToString(table)) />
 	</cffunction>

@@ -2,7 +2,9 @@
 
 	<!---<cfset variables.config = "" />--->
 	<cfset variables.Config = 0 />
+	<cfset variables.ObjectConfig = 0 />
 	<cfset variables.Xml = 0 />
+	<cfset variables.alias = "" />
 	<cfset variables.name = "" />
 	<cfset variables.owner = "" />
 	<cfset variables.type = "" />
@@ -11,11 +13,13 @@
 	<cfset variables.fields = ArrayNew(1) />
 	
 	<cffunction name="init" access="public" hint="I configure the object." returntype="reactor.core.object">
-		<cfargument name="name" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of the obeject being represented." required="yes" type="string" />
 		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
 		
-		<cfset setName(arguments.name) />
+		<cfset setAlias(arguments.alias) />
 		<cfset setConfig(arguments.Config) />
+		<cfset setObjectConfig(getConfig().getObjectConfig(getAlias())) />
+		<cfset setName(getObjectConfig().object.XmlAttributes.name) />
 		
 		<!--- this creates the base XML document
 		<cfset createXml() /> --->
@@ -28,7 +32,7 @@
 	</cffunction>
 		
 	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
-		<cfset var Config = getConfig().getObjectConfig(getName()) />
+		<cfset var Config = Duplicate(getObjectConfig()) />
 		<cfset var fields = getFields() />
 		<cfset var linkerRelationships = 0 />
 		<cfset var linkerRelationship = 0 />
@@ -39,10 +43,10 @@
 		<cfset var z = 0 />
 		
 		<!--- add/validate relationship aliases --->
-		<cfset var relationships = Config.object.XmlChildren />
+		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne") />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
-		
+				
 		<!--- insure aliases are set --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
@@ -50,14 +54,12 @@
 			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 			</cfif>
-			
 		</cfloop>
 		
 		<!--- 
 		Expand linked relationships.
-		In otherwords, if the config indicates that this object links to another via a linking table, then copy the link into this xml document.
+		In otherwords, if the config indicates that this object links to another via linking tables, then copy the links into this xml document.
 		--->
-		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
@@ -65,13 +67,14 @@
 			<cfif IsDefined("relationship.link")>
 				<!--- get the relationships that the linking object has --->
 				<cfset linkerRelationships = getConfig().getObjectConfig(relationship.link.XmlAttributes.name).object.XmlChildren />
-		
+				
 				<!--- find links back to this object --->
 				<cfloop from="1" to="#ArrayLen(linkerRelationships)#" index="y">
 					<cfset linkerRelationship = linkerRelationships[y] />
 					
 					<!--- if this is a link back to this object copy the node into this document --->
-					<cfif linkerRelationship.XmlAttributes.name IS getName()>
+					<cfif linkerRelationship.XmlAttributes.name IS getAlias()>
+						
 						<!--- create a hasMany relationship in this document --->
 						<cfset newHasMany = XMLElemNew(Config, "hasMany") />
 						<cfset newHasMany.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
@@ -93,16 +96,18 @@
 							<cfset ArrayAppend(newHasMany.XmlChildren, newRelationship) />
 						</cfloop>
 						
-						
 						<cfif NOT ArrayLen(XMLSearch(Config, "/object/hasMany[@name = '#newHasMany.XmlAttributes["name"]#']"))>
 							<!--- add the hasMany to the relationship --->
 							<cfset ArrayAppend(relationships, newHasMany) />
 						</cfif>
 						
+						<!--- add this new relationship into the document --->
+						<cfset ArrayAppend(Config.XmlRoot.XmlChildren, newHasMany) />		
 					</cfif>
+				
 				</cfloop>
 			</cfif>
-			
+					
 			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 				<!--- make sure this alias hasn't already been used --->
@@ -116,7 +121,7 @@
 			</cfif>
 			
 		</cfloop>
-					
+		
 		<!--- (This has been removed to allow for greater code portability) if this object has a super object read that and add it into this
 		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
 			<!--- create a new object node --->
@@ -125,10 +130,21 @@
 		</cfif> --->
 		
 		<!--- add the fields to the config settings --->
-		<cfset Config.Object.fields = XMLElemNew(Config, "fields") />
+		
+		<!--- check to see if a fields node already exists --->
+		<cfif NOT IsDefined("Config.Object.fields")>
+			<cfset Config.Object.fields = XMLElemNew(Config, "fields") />
+		</cfif>
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset addXmlField(fields[x], Config) />
+		</cfloop>
+		
+		<!--- delete the fields from the base config file --->
+		<cfloop from="#ArrayLen(Config.object.xmlChildren)#" to="1" index="x" step="-1">
+			<cfif Config.object.xmlChildren[x].XmlName IS "field">
+				<cfset ArrayDeleteAt(Config.object.xmlChildren, x) />
+			</cfif>
 		</cfloop>
 		
 		<!--- set the base config settings --->
@@ -144,33 +160,25 @@
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfdump var="#Config#" /><cfabort>--->
-		
-		
 		<cfreturn Config />
 	</cffunction>
 	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">
 		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="reactor.core.field" />
-		<cfargument name="config" hint="I am the field to add to the xml" required="yes" type="string" />
+		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="string" />
 		<cfset var xmlField = 0 />
-		<cfset var overriddenFields = 0 />
+		<cfset var alias = XmlSearch(arguments.config, "/object/field[@name='#arguments.field.getName()#']") />
 		
 		<!--- create the field node--->
 		<cfset xmlField = XMLElemNew(arguments.config, "field") />
 		
-		<!--- get any super fields with the same name and override them
-		<cfif IsDefined("arguments.config.object.super.XmlAttributes.name")>	
-			<cfset overriddenFields = XmlSearch(arguments.config, "/object/super/object/fields/field[@name = '#field.getName()#']") />
-			<cfif ArrayLen(overriddenFields)>
-				<cfloop from="1" to="#ArrayLen(overriddenFields)#" index="y">
-					<cfset overriddenFields[y].XmlAttributes["overridden"] = 'true' />
-				</cfloop>
-			</cfif>
-		</cfif> --->
-		
 		<!--- set the field's properties --->
 		<cfset xmlField.XmlAttributes["name"] = arguments.field.getName() />
+		<cfif ArrayLen(alias)>
+			<cfset xmlField.XmlAttributes["alias"] = alias[1].XmlAttributes.alias />
+		<cfelse>
+			<cfset xmlField.XmlAttributes["alias"] = arguments.field.getName() />
+		</cfif>
 		<cfset xmlField.XmlAttributes["primaryKey"] = arguments.field.getPrimaryKey() />
 		<cfset xmlField.XmlAttributes["identity"] = arguments.field.getIdentity() />
 		<cfset xmlField.XmlAttributes["nullable"] = arguments.field.getNullable() />
@@ -179,7 +187,6 @@
 		<cfset xmlField.XmlAttributes["cfSqlType"] = arguments.field.getCfSqlType() />
 		<cfset xmlField.XmlAttributes["length"] = arguments.field.getLength() />
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.getDefault() />
-		<cfset xmlField.XmlAttributes["overridden"] = 'false' />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
 		
 		<!--- add the field node --->
@@ -243,6 +250,15 @@
        <cfreturn variables.name />
     </cffunction>
 	
+	<!--- alias --->
+    <cffunction name="setAlias" access="public" output="false" returntype="void">
+       <cfargument name="alias" hint="I am the alias this object is known as." required="yes" type="string" />
+       <cfset variables.alias = arguments.alias />
+    </cffunction>
+    <cffunction name="getAlias" access="public" output="false" returntype="string">
+       <cfreturn variables.alias />
+    </cffunction>
+	
 	<!--- owner --->
     <cffunction name="setOwner" access="public" output="false" returntype="void">
        <cfargument name="owner" hint="I am the object owner." required="yes" type="string" />
@@ -294,6 +310,15 @@
     </cffunction>
     <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
        <cfreturn variables.config />
+    </cffunction>
+	
+	<!--- objectConfig --->
+    <cffunction name="setObjectConfig" access="private" output="false" returntype="void">
+       <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="xml" />
+       <cfset variables.objectConfig = arguments.objectConfig />
+    </cffunction>
+    <cffunction name="getObjectConfig" access="private" output="false" returntype="xml">
+       <cfreturn variables.objectConfig />
     </cffunction>
 	
 	<!--- xml

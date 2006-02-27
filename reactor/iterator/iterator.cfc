@@ -13,7 +13,7 @@
 		<cfargument name="ReactorFactory" hint="I am the gateway object used to query the DB." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="name" hint="I am the gateway object used to query the DB." required="yes" type="string" />
 		<cfargument name="join" hint="I am the name of an optional object to join." required="no" default="" type="string" />
-				
+		
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setName(arguments.name) />
 		<cfset setJoin(arguments.join) />

@@ -19,10 +19,10 @@
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.query">
 		<cfargument name="BaseObjectMetadata" hint="I am the Metadata for the base object being queried" required="yes" type="reactor.base.abstractMetadata">
-		<cfset var Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getName()) />
+		<cfset var Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
 		
 		<cfset setFrom(Object) />
-
+		
 		<!--- <cfset joinSuper(Object) /> --->
 
 		<cfreturn this />
@@ -35,7 +35,7 @@
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset returnField(arguments.alias, fields[x].name) />
+			<cfset returnField(arguments.alias, fields[x].alias) />
 		</cfloop>
 		
 		<cfreturn this />
@@ -44,13 +44,12 @@
 	<!--- returnField --->
 	<cffunction name="returnField" access="public" hint="I specify a particular field a query should return.  When this or returnObjectFields() is first called I cause only the specified column to be returned.  Additional columns can be added with multiple calls." output="false" returntype="reactor.query.query">
 		<cfargument name="object" hint="I am the alias of the object." required="yes" type="string" />
-		<cfargument name="field" hint="I am the name of the field." required="yes" type="string" />
+		<cfargument name="field" hint="I am the alias of the field." required="yes" type="string" />
 		<cfset var fieldStruct = getField(arguments.object, arguments.field) />
 		<cfset var returnFields = getReturnFields() />
 		
 		<!--- add a field to return --->
-		<cfset ArrayAppend(returnFields, CreateObject("Component", "reactor.query.field").init(arguments.object, arguments.field)) />
-		
+		<cfset ArrayAppend(returnFields, CreateObject("Component", "reactor.query.field").init(arguments.object, fieldStruct.name, fieldStruct.alias)) />
 		<cfset setReturnFields(returnFields) />
 		
 		<cfreturn this />

@@ -1,25 +1,44 @@
 <reactor>
 	<config>
-		<project value="reactor" />
-		<dsn value="NorthwindAccess" />
-		<type value="access" />
-		<mapping value="/reactorData" />
+		<project value="ReactorBlog" />
+		<dsn value="ReactorBlog" />
+		<type value="mssql" />
+		<mapping value="/ReactorBlogData" />
 		<mode value="always" />
+		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
 	</config>
 
 	<objects>
-		<object name="Customer">
-			<hasMany name="Address">
-				<relate from="customerId" to="customerId" />
+		<object name="Entry" alias="MyEntry">
+			<hasMany name="Category">
+				<link name="EntryCategory" />
 			</hasMany>
-		</object>
-	
-		<object name="Address">
-			<hasOne name="Customer">
-				<relate from="customerId" to="customerId" />
+			<hasMany name="Comment">
+				<relate from="entryId" to="entryId" />
+			</hasMany>
+			<hasMany name="Rating">
+				<relate from="entryId" to="entryId" />
+			</hasMany>
+			<hasOne name="User" alias="Author">
+				<relate from="postedByUserId" to="userId" />
 			</hasOne>
+		</object>
+		
+		<object name="EntryCategory">
+			<hasOne name="MyEntry">
+				<relate from="entryId" to="entryId" />
+			</hasOne>
+			<hasOne name="Category">
+				<relate from="categoryId" to="categoryId" />
+			</hasOne>
+		</object>
+		
+		<object name="Category">
+			<hasMany name="MyEntry">
+				<link name="EntryCategory" />
+			</hasMany>
 		</object>
 	</objects>
 </reactor>

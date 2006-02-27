@@ -40,13 +40,17 @@
 		<cfset var where = getWhere() />
 		<cfset var mode = getMode() />
 		
+		<cfset node.alias = node.field />
+		<cfset node.field = getQuery().findObject(node.object).getObjectMetadata().getField(node.field).name />
+		
 		<cfif ArrayLen(where) GT 0>
 			<cfset ArrayAppend(where, mode) />
 		</cfif>
-		
+				
 		<cfset arguments.node.comparison = arguments.comparison />
 		
 		<cfset ArrayAppend(where, node) />	
+		
 		<cfset setWhere(where) />
 		
 		<cfreturn this />
@@ -143,7 +147,7 @@
 	
 	<cffunction name="isEqual" access="public" hint="I return an where which checks if a fields equals a value." output="false" returntype="reactor.query.where">
 		<cfargument name="object" hint="I am the alias of the object the field is in" required="yes" type="string" />
-		<cfargument name="field" hint="I am the name of the field" required="yes" type="string" />
+		<cfargument name="field" hint="I am the alias of the field" required="yes" type="string" />
 		<cfargument name="value" hint="I am the value to compare" required="yes" type="string" />
 				
 		<cfset validateField(arguments.object, arguments.field) />
