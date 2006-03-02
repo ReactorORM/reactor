@@ -14,8 +14,8 @@
 	<cffunction name="getAuthor" access="public" hint="I return the author who created a record" output="false" returntype="query">
 		<cfargument name="entryId" hint="I am the entryId to match" required="yes" type="numeric" default="0" />
 		<cfset var EntryQuery = createQuery() />
-		<cfset EntryQuery.join("Entry", "Author") />
-		<cfset EntryQuery.returnObjectFields("Author") />
+		<cfset EntryQuery.join("Entry", "User") />
+		<cfset EntryQuery.returnObjectFields("User") />
 		<cfset EntryQuery.getWhere().isEqual("Entry", "entryId", arguments.entryId) />
 		
 		<cfreturn getByQuery(EntryQuery) />

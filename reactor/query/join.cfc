@@ -60,7 +60,6 @@
 		<cfset var Relationship = 0 />
 		<cfset var fromField = 0 />
 		<cfset var toField = 0 />
-		<cfset var temp = 0 />
 				
 		<cfif FromObjectMetadata.hasRelationship(ToObjectMetadata.getAlias()) >
 			<cfset relationships = FromObjectMetadata.getRelationship(ToObjectMetadata.getAlias()) />
@@ -81,7 +80,7 @@
 		</cfif>	
 		
 		<cfset relationships = relationships.relate />
-		
+				
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset fromField = CreateObject("Component", "reactor.query.field").init(FromObjectMetadata.getAlias(), FromObjectMetadata.getField(relationships[x].from).name, FromObjectMetadata.getField(relationships[x].from).alias) />
 			<cfset toField = CreateObject("Component", "reactor.query.field").init(ToObjectMetadata.getAlias(), ToObjectMetadata.getField(relationships[x].to).name, ToObjectMetadata.getField(relationships[x].to).alias) />

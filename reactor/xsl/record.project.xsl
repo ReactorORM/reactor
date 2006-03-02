@@ -32,6 +32,7 @@
 		&lt;!--- raise the beforeValidate event ---&gt;
 		&lt;cfset Event = newEvent("beforeValidate") /&gt;
 		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		<xsl:for-each select="object/fields/field">
@@ -121,6 +122,7 @@
 		&lt;!--- raise the afterValidate event ---&gt;
 		&lt;cfset Event = newEvent("afterValidate") /&gt;
 		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
@@ -144,6 +146,7 @@
 		
 		&lt;!--- raise the beforeLoad event ---&gt;
 		&lt;cfset Event = newEvent("beforeLoad") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfif IsDefined("arguments") AND fieldList IS 1&gt;
@@ -161,6 +164,7 @@
 		
 		&lt;!--- raise the afterLoad event ---&gt;
 		&lt;cfset Event = newEvent("afterLoad") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfreturn this /&gt;
@@ -169,18 +173,21 @@
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
 		&lt;!--- raise the beforeSave event ---&gt;
 		&lt;cfset Event = newEvent("beforeSave") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfset _getDao().save(_getTo()) /&gt;	
 		
 		&lt;!--- raise the afterSave event ---&gt;
 		&lt;cfset Event = newEvent("afterSave") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;	
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
 		&lt;!--- raise the beforeDelete event ---&gt;
 		&lt;cfset Event = newEvent("beforeDelete") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
 		&lt;cfif IsDefined("arguments")&gt;
@@ -194,6 +201,7 @@
 		
 		&lt;!--- raise the afterDelete event ---&gt;
 		&lt;cfset Event = newEvent("afterDelete") /&gt;
+		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 	&lt;/cffunction&gt;
 	

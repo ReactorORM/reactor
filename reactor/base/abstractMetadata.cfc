@@ -126,7 +126,7 @@
 			<cfset relationships = objectMetadata.hasOne />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].alias IS arguments.alias>
+				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn relationships[x]/>
 				</cfif> 
@@ -138,7 +138,7 @@
 			<cfset relationships = objectMetadata.hasMany />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].alias IS arguments.alias>
+				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn relationships[x]/>
 				</cfif> 
@@ -151,16 +151,17 @@
 	<!--- hasRelationship --->
 	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="boolean">
 		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
+		<cfargument name="temp" type="boolean" default="false" />
 		<cfset var objectMetadata = getObjectMetadata() />
 		<cfset var relationships = 0 />
 		<cfset var x = 0 />
-				
+		
 		<!--- check the hasone relationships --->
 		<cfif ArrayLen(objectMetadata.hasOne)>
 			<cfset relationships = objectMetadata.hasOne />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].alias IS arguments.alias>
+				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn true/>
 				</cfif> 
@@ -172,7 +173,7 @@
 			<cfset relationships = objectMetadata.hasMany />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].alias IS arguments.alias>
+				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn true/>
 				</cfif> 

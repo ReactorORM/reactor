@@ -1,6 +1,6 @@
 
 <cfset reactor = CreateObject("Component", "reactor.reactorFactory").init("/config/reactor.xml") />
 
-<cfset DaisyIterator = reactor.createIterator("Daisy") />
+<cfset FuzzyGateway = reactor.createGateway("Fuzzy") />
 
-<cfdump var="#DaisyIterator.getQuery()#" />
+<cfdump var="#FuzzyGateway.getByFields(fuzzyId=5, sortByFieldList='fuzzyId')#" />

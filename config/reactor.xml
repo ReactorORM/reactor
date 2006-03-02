@@ -8,39 +8,10 @@
 	</config>
 	
 	<objects>
-		<object name="Daisy">
-			<!-- <hasMany name="ChildDaisy">
-				<relate from="daisyId" to="daisyId" />
-			</hasMany>
-			<hasMany name="Child">
-				<link name="ChildDaisy" />
-			</hasMany> -->
-			<hasMany name="Group">
-				<link name="ChildDaisy" />
-				<link name="ChildDaisyGroup" />
-			</hasMany>
+		
+		<object name="Daisy" alias="Fuzzy">
+			<field name="daisyId" alias="fuzzyId" />
 		</object>
-		
-		<object name="ChildDaisy">
-			<hasOne name="Daisy">
-				<relate from="daisyId" to="daisyId" />
-			</hasOne>
-			<hasMany name="ChildDaisyGroup">
-				<relate from="childDaisyId" to="childDaisyId" />
-			</hasMany>
-		</object>
-		
-		<object name="ChildDaisyGroup">
-			<hasOne name="ChildDaisy">
-				<relate from="childDaisyId" to="childDaisyId" />
-			</hasOne>
-			<hasOne name="Group">
-				<relate from="groupId" to="groupId" />
-			</hasOne>
-		</object>
-		
-		<object name="Group" />
-		
 		
 	</objects>
 </reactor>
