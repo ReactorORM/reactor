@@ -30,6 +30,10 @@
 	</table>
 </cfoutput>
 
+<h2>CGI Details</h2>
+
+<cfdump var="#CGI#" expand="no" />
+
 <h2>User Tracks</h2>
 
 <cfloop from="#ArrayLen(tracks)#" to="1" index="x" step="-1">
@@ -73,10 +77,12 @@
 										<span style="text-decoration: underline;">#item#:</span> 
 									</td>
 									<td>
-										<cfif IsSimpleValue(Values[item])>
-											#Values[item]#
+										<cfif IsObject(Values[item])>
+											<em>Object</em>
+										<cfelseif NOT IsSimpleValue(Values[item])>
+											<cfdump var="#Values[item]#" expand="no" />
 										<cfelse>
-											<em>Complex Value</em>
+											#Values[item]#
 										</cfif>
 									</td>
 								</tr>
