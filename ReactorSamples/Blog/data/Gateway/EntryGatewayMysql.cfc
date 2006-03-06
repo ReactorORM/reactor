@@ -9,7 +9,7 @@
 		<cfargument name="year" hint="I am a year to filter for" required="yes" type="numeric" default="0" />
 		<cfset var entries = 0 />
 		
-		<cfquery name="entries" datasource="#_getConfig().getDsn()#">
+		<cfquery name="entries" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,10,0)#">
 			SELECT e.entryId, e.title, e.preview,
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y') as publicationDate,
 				e.publicationDate as publicationDateTime,

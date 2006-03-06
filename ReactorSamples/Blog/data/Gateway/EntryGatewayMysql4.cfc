@@ -12,7 +12,7 @@
 		<cfset var entries = 0 />
 		<cfset var recentEntryCutoff = 0 /> 	<!--- needed for MySql 4.0.x b/c the date logic has to be done in CF --->
 		
-		<cfquery name="entries" datasource="#_getConfig().getDsn()#">
+		<cfquery name="entries" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,10,0)#">
 			SELECT e.entryId, e.title, e.preview,
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y') as publicationDate,
 				e.publicationDate as publicationDateTime,

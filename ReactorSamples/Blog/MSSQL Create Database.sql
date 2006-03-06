@@ -60,11 +60,6 @@ if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User]') an
 drop table [dbo].[User]
 GO
 
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS ON 
-GO
-
 CREATE TABLE [dbo].[Category] (
 	[categoryId] [int] IDENTITY (1, 1) NOT NULL ,
 	[name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
@@ -226,6 +221,24 @@ ALTER TABLE [dbo].[Rating] ADD
 	)
 GO
 
+DECLARE @bErrors as bit
+
+BEGIN TRANSACTION
+SET @bErrors = 0
+
+CREATE NONCLUSTERED INDEX [Entry5] ON [dbo].[Entry] ([publicationDate] DESC, [entryId] ASC, [title] ASC )
+IF( @@error <> 0 ) SET @bErrors = 1
+
+IF( @bErrors = 0 )
+  COMMIT TRANSACTION
+ELSE
+  ROLLBACK TRANSACTION
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
 INSERT INTO [User]
 (
 	[userName],
@@ -242,3 +255,4 @@ VALUES
 	'User',
 	'admin@example.com'
 )
+
