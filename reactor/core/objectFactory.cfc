@@ -18,25 +18,9 @@
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var DbObject = 0 />
-		<cfset var DbObjectDao = 0 />
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
-		
-		<!--- if we don't have a cached version of this object create one --->
-		<cfif NOT variables.TimedCache.exists(arguments.alias)>
-			<!--- create and load a reactor.core.object object --->
-			<cfset variables.TimedCache.setValue(arguments.alias, getObject(arguments.alias), createTimeSpan(0, 0, 0, 8)) />
-		</cfif>
-		
-		<!--- get the cached object --->
-		<cftry>
-			<cfset DbObject = variables.TimedCache.getValue(arguments.alias) />
-			<cfcatch>
-				<!--- it's possible that the cache timed out between when we checked to see if it existed and now --->
-				<cfset DbObject = getObject(arguments.alias) />
-			</cfcatch>
-		</cftry>
 		
 		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
@@ -47,9 +31,13 @@
 		<cftry>
 			<cfswitch expression="#getConfig().getMode()#">
 				<cfcase value="always">
+					<!--- we always need the db object to transform --->
+					<cfset DbObject = getObject(arguments.alias) />
 					<cfset generate = true />
 				</cfcase>
 				<cfcase value="development">
+					<!--- we always need the db object to compare to our existing object --->
+					<cfset DbObject = getObject(arguments.alias) />
 					<cftry>
 						<!--- create an instance of the object and check its signature --->
 						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
@@ -69,6 +57,8 @@
 						<!--- create an instance of the object and check it's signature --->
 						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
 						<cfcatch>
+							<!--- we only need the dbobject if it doesn't already exist --->
+							<cfset DbObject = getObject(arguments.alias) />
 							<cfset generate = true />
 						</cfcatch>
 					</cftry>
@@ -79,7 +69,7 @@
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
 		</cftry>
-		
+
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
@@ -98,11 +88,28 @@
 	
 	<cffunction name="getObject" access="private" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
-		<cfset var Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
-		<cfset var ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />		
+		<cfset var Object = 0 />
+		<cfset var ObjectDao = 0/>
+
+		<!--- check for a cached version of the object --->
+		<cfif variables.TimedCache.exists(arguments.name)>
+			<cftry>
+				<!--- try to get the object --->
+				<cfset Object = variables.TimedCache.getValue(arguments.name) />
+				<cfcatch/>
+			</cftry>
+		</cfif>
 		
-		<cfset ObjectDao.read(Object) />
+		<!--- if the object isn't an object then it wasn't cached and we need to create a new one --->
+		<cfif NOT IsObject(Object)>
+			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+			<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
+			
+			<!--- read the object --->
+			<cfset ObjectDao.read(Object) />
+		</cfif>
 		
+		<!--- return the object --->
 		<cfreturn Object />
 	</cffunction>
 	
