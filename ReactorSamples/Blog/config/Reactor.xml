@@ -18,9 +18,6 @@
 			<hasMany name="Comment">
 				<relate from="entryId" to="entryId" />
 			</hasMany>
-			<hasMany name="Rating">
-				<relate from="entryId" to="entryId" />
-			</hasMany>
 			<hasOne name="User" alias="Author">
 				<relate from="postedByUserId" to="userId" />
 			</hasOne>

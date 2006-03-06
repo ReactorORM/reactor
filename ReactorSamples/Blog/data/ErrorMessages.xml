@@ -149,6 +149,12 @@
 			<errorMessage message="The views field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The views field must be a numeric value." name="invalidType"/>
 		</field>
+		<field name="totalRating">
+			<errorMessage message="The totalRating field must be a numeric value." name="invalidType"/>
+		</field>
+		<field name="timesRated">
+			<errorMessage message="The timesRated field must be a numeric value." name="invalidType"/>
+		</field>
 	</table>
 	<table name="Comment">
 		<field name="CommentID">

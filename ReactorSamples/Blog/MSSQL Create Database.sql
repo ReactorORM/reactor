@@ -20,16 +20,8 @@ if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[FK_EntryCa
 ALTER TABLE [dbo].[EntryCategory] DROP CONSTRAINT FK_EntryCategory_Entry
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[FK_Rating_Entry]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
-ALTER TABLE [dbo].[Rating] DROP CONSTRAINT FK_Rating_Entry
-GO
-
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[FK_Entry_User]') and OBJECTPROPERTY(id, N'IsForeignKey') = 1)
 ALTER TABLE [dbo].[Entry] DROP CONSTRAINT FK_Entry_User
-GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[getAverageRating]') and xtype in (N'FN', N'IF', N'TF'))
-drop function [dbo].[getAverageRating]
 GO
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Category]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -46,10 +38,6 @@ GO
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[EntryCategory]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[EntryCategory]
-GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Rating]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-drop table [dbo].[Rating]
 GO
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Subscriber]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -85,7 +73,9 @@ CREATE TABLE [dbo].[Entry] (
 	[publicationDate] [datetime] NOT NULL ,
 	[postedByUserId] [int] NOT NULL ,
 	[disableComments] [bit] NOT NULL ,
-	[views] [int] NOT NULL 
+	[views] [int] NOT NULL,
+	[totalRating] [int] NOT NULL,
+	[timesRated] [int] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -93,13 +83,6 @@ CREATE TABLE [dbo].[EntryCategory] (
 	[entryCategoryId] [int] IDENTITY (1, 1) NOT NULL ,
 	[entryId] [int] NOT NULL ,
 	[categoryId] [int] NOT NULL 
-) ON [PRIMARY]
-GO
-
-CREATE TABLE [dbo].[Rating] (
-	[ratingId] [int] IDENTITY (1, 1) NOT NULL ,
-	[entryId] [int] NOT NULL ,
-	[rating] [int] NOT NULL 
 ) ON [PRIMARY]
 GO
 
@@ -144,13 +127,6 @@ ALTER TABLE [dbo].[EntryCategory] WITH NOCHECK ADD
 	CONSTRAINT [PK_EntryCategory] PRIMARY KEY  CLUSTERED 
 	(
 		[entryCategoryId]
-	) WITH  FILLFACTOR = 90  ON [PRIMARY] 
-GO
-
-ALTER TABLE [dbo].[Rating] WITH NOCHECK ADD 
-	CONSTRAINT [PK_Rating] PRIMARY KEY  CLUSTERED 
-	(
-		[ratingId]
 	) WITH  FILLFACTOR = 90  ON [PRIMARY] 
 GO
 
@@ -205,15 +181,6 @@ ALTER TABLE [dbo].[EntryCategory] ADD
 		[categoryId]
 	),
 	CONSTRAINT [FK_EntryCategory_Entry] FOREIGN KEY 
-	(
-		[entryId]
-	) REFERENCES [dbo].[Entry] (
-		[entryId]
-	)
-GO
-
-ALTER TABLE [dbo].[Rating] ADD 
-	CONSTRAINT [FK_Rating_Entry] FOREIGN KEY 
 	(
 		[entryId]
 	) REFERENCES [dbo].[Entry] (

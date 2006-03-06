@@ -9,7 +9,7 @@
 		<cfargument name="year" hint="I am a year to filter for" required="yes" type="numeric" default="0" />
 		<cfset var entries = 0 />
 		
-		<cfquery name="entries" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,10,0)#">
+		<cfquery name="entries" datasource="#_getConfig().getDsn()#">
 			SELECT e.entryId, e.title, e.preview,
 				CONVERT(varchar(2), MONTH(e.publicationDate)) + '/' + CONVERT(varchar(2), DAY(e.publicationDate)) + '/' + CONVERT(varchar(4), YEAR(e.publicationDate)) as publicationDate,
 				e.publicationDate as publicationDateTime,
@@ -17,7 +17,7 @@
 				u.firstName, u.lastName, e.disableComments,
 				
 				count(DISTINCT m.commentId) as commentCount,				
-				IsNull(Round(sum(r.rating)/Convert(float, count(e.entryId)), 0), 0) as averageRating
+				IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0) as averageRating
 				
 			FROM Entry as e LEFT JOIN EntryCategory as ec
 				ON e.entryId = ec.entryId
@@ -27,8 +27,6 @@
 				ON e.postedByUserId = u.userID
 			LEFT JOIN Comment as m
 				ON e.entryId = m.entryId
-			LEFT JOIN Rating as r
-				ON e.entryId = r.entryId
 			
 			WHERE e.publicationDate <= getDate()
 				<!--- filter by categoryId --->
@@ -49,7 +47,8 @@
 				CONVERT(varchar(2), MONTH(e.publicationDate)) + '/' + CONVERT(varchar(2), DAY(e.publicationDate)) + '/' + CONVERT(varchar(4), YEAR(e.publicationDate)),
 				e.publicationDate,
 				e.views, c.categoryId, c.name, 
-				u.firstName, u.lastName, e.disableComments
+				u.firstName, u.lastName, e.disableComments,
+				IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0)
 			ORDER BY e.publicationDate DESC
 		</cfquery>
 		
@@ -61,10 +60,8 @@
 		<cfset var qHighest = 0 />
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
-			SELECT TOP #limit# e.entryId, e.title, IsNull(sum(r.rating)/Convert(float, count(e.entryId)), 0) as averageRating
-			FROM Entry as e JOIN Rating as r
-				ON e.entryId = r.entryId
-			GROUP BY e.entryId, e.title
+			SELECT TOP #limit# e.entryId, e.title, IsNull(e.totalRating/Convert(float, e.timesRated), 0) as averageRating
+			FROM Entry as e
 			ORDER BY averageRating DESC
 		</cfquery>
 		

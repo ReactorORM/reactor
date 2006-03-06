@@ -263,6 +263,7 @@
 		<cfset var year = arguments.event.getValue("year", 0) />
 		
 		<cfset arguments.event.setValue("entries", variables.EntryGateway.getMatching(categoryId, month, year)) />
+		
 	</cffunction>
 		
 	<!--- DoValidateEntryExists --->
@@ -332,15 +333,15 @@
 	<!--- DoRateEntry --->
 	<cffunction name="DoRateEntry" access="Public" returntype="void" output="false" hint="I rate an entry.  Users can only rate an entry one time per session.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var RatingRecord = variables.Reactor.createRecord("Rating") />
+		<cfset var EntryRecord = arguments.event.getValue("EntryRecord") />
 		<cfset var ScopeFacade = CreateObject("Component", "ReactorSamples.Blog.model.util.ScopeFacade").init("session") />
 		<cfset var EntriesRatedList = ScopeFacade.getValue("EntriesRatedList", "") />
 		
 		<cfif NOT ListFind(EntriesRatedList, arguments.event.getValue("entryId")) AND arguments.event.getValue("rating") GTE 1 AND arguments.event.getValue("rating") LTE 5>
 			<!--- rate the entry --->
-			<cfset RatingRecord.setEntryId(arguments.event.getValue("entryId")) />
-			<cfset RatingRecord.setRating(arguments.event.getValue("rating")) />
-			<cfset RatingRecord.save() />
+			<cfset EntryRecord.setTotalRating(EntryRecord.getTotalRating() + round(arguments.event.getValue("rating"))) />
+			<cfset EntryRecord.setTimesRated(EntryRecord.getTimesRated() + 1) />
+			<cfset EntryRecord.save() />
 			<!--- save the fact that this user has rated this entry --->
 			<cfset EntriesRatedList = ListAppend(EntriesRatedList, arguments.event.getValue("entryId")) />
 		</cfif>

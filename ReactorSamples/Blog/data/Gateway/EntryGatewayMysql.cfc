@@ -9,7 +9,7 @@
 		<cfargument name="year" hint="I am a year to filter for" required="yes" type="numeric" default="0" />
 		<cfset var entries = 0 />
 		
-		<cfquery name="entries" datasource="#_getConfig().getDsn()#" cachedwithin="#CreateTimespan(0,0,10,0)#">
+		<cfquery name="entries" datasource="#_getConfig().getDsn()#">
 			SELECT e.entryId, e.title, e.preview,
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y') as publicationDate,
 				e.publicationDate as publicationDateTime,
@@ -18,7 +18,8 @@
 				
 				count(DISTINCT m.commentId) as commentCount,
 				
-				Round(Sum(r.rating)/count(e.entryId)) as averageRating
+				Round(e.totalRating/e.timesRated) as averageRating
+				
 				
 			FROM Entry as e LEFT JOIN EntryCategory as ec
 				ON e.entryId = ec.entryId
@@ -28,8 +29,6 @@
 				ON e.postedByUserId = u.userID
 			LEFT JOIN Comment as m
 				ON e.entryId = m.entryId
-			LEFT JOIN Rating as r
-				ON e.entryId = r.entryId
 			
 			WHERE e.publicationDate <= now()
 				<!--- filter by categoryId --->
@@ -62,10 +61,8 @@
 		<cfset var qHighest = 0 />
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
-			SELECT e.entryId, e.title, Sum(r.rating)/count(e.entryId) as averageRating
-			FROM Entry as e JOIN Rating as r
-				ON e.entryId = r.entryId
-			GROUP BY e.entryId, e.title
+			SELECT e.entryId, e.title, e.totalRating/e.timesRated as averageRating
+			FROM Entry as e
 			ORDER BY averageRating DESC
 			LIMIT 0, #arguments.limit#
 		</cfquery>

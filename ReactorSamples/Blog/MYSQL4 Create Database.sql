@@ -54,6 +54,8 @@ CREATE TABLE `ReactorBlog`.`Entry` (
   `postedByUserId` INT(10) NOT NULL,
   `disableComments` TINYINT NOT NULL,
   `views` INT(10) NOT NULL,
+  `totalRating` INT(10) NOT NULL,
+  `timesRated` INT(10) NOT NULL,
   PRIMARY KEY (`entryId`),
   INDEX `IX_Entry_PostedByUserId` (postedByUserID),
   CONSTRAINT `FK_Entry_User` FOREIGN KEY `FK_Entry_User` (`postedByUserId`)
@@ -99,21 +101,6 @@ CREATE TABLE `ReactorBlog`.`EntryCategory` (
     ON UPDATE NO ACTION
 )
 ENGINE = INNODB;
-
-DROP TABLE IF EXISTS `ReactorBlog`.`Rating`;
-CREATE TABLE `ReactorBlog`.`Rating` (
-  `ratingId` INT(10) NOT NULL auto_increment,
-  `entryId` INT(10) NOT NULL,
-  `rating` INT(10) NOT NULL,
-  PRIMARY KEY (`ratingId`),
-  INDEX `IX_Rating_EntryID` (entryID),
-  CONSTRAINT `FK_Rating_Entry` FOREIGN KEY `FK_Rating_Entry` (`entryId`)
-    REFERENCES `ReactorBlog`.`Entry` (`entryId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-ENGINE = INNODB;
-
 
 SET FOREIGN_KEY_CHECKS = 1;
 

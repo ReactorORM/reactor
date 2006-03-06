@@ -182,13 +182,11 @@
 	</cffunction>
 	
 	<cffunction name="getRatingCount" access="public" hint="I return the number of ratings on this entry" output="false" returntype="numeric">
-		<cfreturn getRatingIterator().getRecordCount() />
+		<cfreturn getTimesRated() />
 	</cffunction>
 	
 	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
-		<cfset var RatingQuery = getRatingIterator().getQuery() />		
-		
-		<cfreturn Round(ArrayAvg(ListToArray(ValueList(RatingQuery.Rating)))) />
+		<cfreturn Round(getTotalRating()/getTimesRated()) />
 	</cffunction>
 	
 	<cffunction name="setCategoryIdList" access="public" output="false" returntype="void">
