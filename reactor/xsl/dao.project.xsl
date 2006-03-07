@@ -125,10 +125,11 @@
 		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
 		&lt;cfset var qRead = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@alias" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@alias" />") /&gt;
-		&lt;cfset var <xsl:value-of select="object/@alias" />Query = <xsl:value-of select="object/@alias" />Gateway.createQuery() /&gt;
+		&lt;cfset var <xsl:value-of select="object/@alias" />Query = 0 /&gt;
 		&lt;cfset var field = "" /&gt;
 		
 		&lt;cfif Len(arguments.loadFieldList)&gt;
+			&lt;cfset <xsl:value-of select="object/@alias" />Query = <xsl:value-of select="object/@alias" />Gateway.createQuery() /&gt;
 			&lt;cfloop list="#arguments.loadFieldList#" index="field"&gt;
 				&lt;cfset <xsl:value-of select="object/@alias" />Query.getWhere().isEqual("<xsl:value-of select="object/@alias" />", field, arguments.to[field]) /&gt;
 			&lt;/cfloop&gt;
