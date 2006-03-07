@@ -52,13 +52,19 @@
 		<cfargument name="returnFields" hint="I am an array of fields to return. If empty, return all fields." required="yes" type="array" />
 		<cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="no" type="string" default="" />
 		<cfset var select = "" />
+		<cfset var comma = "" />
 		<cfset var field = "" />
 		<cfset var joinedFields = "" />
+		<cfset var x = 0 />
 		<cfset var fields = getObjectMetadata().getFields() />
 		<cfset var joins = getJoins() />
-		<cfset var x = 0 />
 		<cfset var allowedFieldList = getAllowedFields(arguments.returnFields) />
 		
+		<!---
+			Sean 3/6/2006:
+			- changed from listAppend() and replace() to pure string concatenation
+			  it's a little faster / more efficient but no big improvements
+		--->
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
 			
@@ -66,7 +72,8 @@
 			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].alias, arguments.prefix) />
 			
 			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].alias) OR ListFindNoCase(allowedFieldList, alias) >
-				<cfset select = ListAppend(select, field & chr(13) & chr(10)) />
+				<cfset select = select & comma & field & chr(13) & chr(10) />
+				<cfset comma = ", " />
 			</cfif>
 		</cfloop>
 		
@@ -74,13 +81,11 @@
 			<cfset joinedFields = joins[x].getToObject().getSelectAsString(arguments.Convention, arguments.returnFields, joins[x].getPrefix()) />
 			
 			<cfif Len(joinedFields)>
-				<cfset select = ListAppend(select, joinedFields) />
+				<cfset select = select & comma & joinedFields />
+				<cfset comma = ", " />
 			</cfif>
 		</cfloop>
 		
-		<!--- add spaces after commas --->
-		<cfset select = Replace(select, ",", ", ", "all") />
-	
 		<cfreturn select />		
 	</cffunction>
 	
