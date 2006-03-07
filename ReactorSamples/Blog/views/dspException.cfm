@@ -32,7 +32,7 @@
 
 <h2>CGI Details</h2>
 
-<cfdump var="#CGI#" expand="no" />
+<cfdump var="#CGI#" />
 
 <h2>User Tracks</h2>
 
@@ -80,7 +80,7 @@
 										<cfif IsObject(Values[item])>
 											<em>Object</em>
 										<cfelseif NOT IsSimpleValue(Values[item])>
-											<cfdump var="#Values[item]#" expand="no" />
+											<em>Complex Value</em>
 										<cfelse>
 											#Values[item]#
 										</cfif>
