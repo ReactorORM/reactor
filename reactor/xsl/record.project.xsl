@@ -221,7 +221,12 @@
 			<xsl:for-each select="relate">
 				&lt;cfset variables.<xsl:value-of select="../@alias"/>Record.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
 			</xsl:for-each>
+<<<<<<< .mine
+			
+			&lt;cfset variables.<xsl:value-of select="@alias"/>Record.load('<xsl:for-each select="relate"><xsl:value-of select="@to" /><xsl:if test="position() != last()">,</xsl:if></xsl:for-each>') /&gt;
+=======
 			&lt;cfset variables.<xsl:value-of select="@alias"/>Record.load('<xsl:for-each select="relate"><xsl:value-of select="@to" />,</xsl:for-each>') /&gt;
+>>>>>>> .r197
 		&lt;/cfif&gt;
 		
 		&lt;cfreturn variables.<xsl:value-of select="@alias"/>Record /&gt;
