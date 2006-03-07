@@ -118,13 +118,6 @@
 			
 		</cfloop>
 		
-		<!--- (This has been removed to allow for greater code portability) if this object has a super object read that and add it into this
-		<cfif IsDefined("Config.object.super.XmlAttributes.name")>	
-			<!--- create a new object node --->
-			<cfset ArrayAppend(Config.object.super.XmlChildren, XMLElemNew(Config, "object")) />
-			<cfset copyNode(Config, Config.object.super.object, getXml(Config.object.super.XmlAttributes.name).object) />
-		</cfif> --->
-		
 		<!--- add the fields to the config settings --->
 		
 		<!--- check to see if a fields node already exists --->
