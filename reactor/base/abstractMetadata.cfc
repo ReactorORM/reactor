@@ -111,7 +111,7 @@
 			</cfloop>
 		</cfif>
 		
-		<cfreturn allRelationships />
+		<cfreturn Duplicate(allRelationships) />
 	</cffunction>
 	
 	<!--- getRelationship --->
@@ -120,6 +120,10 @@
 		<cfset var objectMetadata = getObjectMetadata() />
 		<cfset var relationships = 0 />
 		<cfset var x = 0 />
+		
+		<cfif IsDefined("request.foobar")>
+			<cfdump var="#objectMetadata#" /><cfabort>
+		</cfif>
 				
 		<!--- check the hasone relationships --->
 		<cfif ArrayLen(objectMetadata.hasOne)>
@@ -128,7 +132,7 @@
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
-					<cfreturn relationships[x]/>
+					<cfreturn Duplicate(relationships[x])/>
 				</cfif> 
 			</cfloop>
 		</cfif>
@@ -140,7 +144,7 @@
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 				<cfif relationships[x].name IS arguments.alias>
 					<!--- this is a match --->
-					<cfreturn relationships[x]/>
+					<cfreturn Duplicate(relationships[x])/>
 				</cfif> 
 			</cfloop>
 		</cfif>
