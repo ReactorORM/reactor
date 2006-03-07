@@ -60,7 +60,7 @@
 		<cfset var qHighest = 0 />
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
-			SELECT TOP #limit# e.entryId, e.title, IsNull(e.totalRating/Convert(float, e.timesRated), 0) as averageRating
+			SELECT TOP #limit# e.entryId, e.title, IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0) as averageRating
 			FROM Entry as e
 			ORDER BY averageRating DESC
 		</cfquery>

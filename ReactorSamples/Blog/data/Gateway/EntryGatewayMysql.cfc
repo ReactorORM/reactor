@@ -61,7 +61,7 @@
 		<cfset var qHighest = 0 />
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
-			SELECT e.entryId, e.title, e.totalRating/e.timesRated as averageRating
+			SELECT e.entryId, e.title, Round(e.totalRating/e.timesRated) as averageRating
 			FROM Entry as e
 			ORDER BY averageRating DESC
 			LIMIT 0, #arguments.limit#

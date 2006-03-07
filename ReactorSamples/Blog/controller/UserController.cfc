@@ -35,7 +35,7 @@
 			<!--- restore the user's event --->
 			<cfset RestoreEventValues(arguments.event) />
 			
-			<cfset arguments.event.forward(UserRecord.getPostLoginEvent(), true) />
+			<cfset arguments.event.forward(UserRecord.getPostLoginEvent(),"") />
 		<cfelse>
 			<cfset arguments.event.addResult("invalid") />
 		</cfif>

@@ -116,7 +116,7 @@
 		<cfif NOT ListFind("mssql,mysql,mysql4,access", arguments.Type)>
 			<cfthrow type="reactor.InvalidType"
 				message="Invalid Type Setting"
-				detail="The Type argument must be one of: mssql,mysql,mysql4,access" />
+				detail="The Type argument must be one of: mssql,mysql,mysql4,posgresql" />
 		</cfif>
 		
 		<cfset variables.Type = arguments.Type />

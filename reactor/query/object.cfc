@@ -185,7 +185,7 @@
 		<cfargument name="type" hint="I am the type of join." required="yes" type="string" />
 		<cfset var joins = getJoins() />
 		<cfset var Join = CreateObject("Component", "reactor.query.join").init(this, arguments.ToObject, arguments.toPrefix, arguments.type) />
-		
+ 						
 		<cfset ArrayAppend(joins, join) />
 		<cfset setJoins(joins) />
 	</cffunction>

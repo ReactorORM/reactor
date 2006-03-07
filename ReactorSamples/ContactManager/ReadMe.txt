@@ -4,6 +4,7 @@ was written the options were:
 
 MSSQL Create Database.sql	- For Microsoft SQL
 MySQL Create Database.sql	- For MySQL (4 or 5, I think)
+Postgres Create Database.sql	- For PostgreSQL
 
 After you've created the database create a DSN named ContactManager.  If you need to change the name of the
 DSN update the reactor.xml file and set the dsn value to your new DSN.  For example, change

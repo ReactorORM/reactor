@@ -73,7 +73,7 @@
 				(
 					<xsl:for-each select="object/fields/field">
 						<xsl:if test="@identity != 'true'">
-							#Convention.formatFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
+							#Convention.formatInsertFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
 							<xsl:if test="position() != last()">,</xsl:if>
 						</xsl:if>
 					</xsl:for-each>

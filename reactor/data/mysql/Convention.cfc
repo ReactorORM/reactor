@@ -31,6 +31,14 @@
 		
 	</cffunction>
 	
+	<cffunction name="formatInsertFieldName" access="public" hint="I format the field name" output="false" returntype="string">
+		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
+		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
+		
+		<cfreturn formatFieldName(arguments.fieldName, arguments.alias) />
+		
+	</cffunction>
+	
 	<cffunction name="formatUpdateFieldName" access="public" hint="I format the field name" output="false" returntype="string">
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
 		
@@ -44,6 +52,10 @@
 		
 		<cfreturn "`#arguments.alias##arguments.fieldName#`" />
 		
+	</cffunction>
+	
+	<cffunction name="supportsSequences" access="public" hint="I indicate if the DB support sequences" output="false" returntype="boolean">
+		<cfreturn false />		
 	</cffunction>
 	
 	<cffunction name="formatValue" access="public" hint="I format a value based on it's type." output="false" returntype="string">

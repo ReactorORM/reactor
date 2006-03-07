@@ -68,7 +68,7 @@
 <cfset CountryGateway = Application.Reactor.createGateway("Country") />
 <cfset CountryQuery = CountryGateway.createQuery() />
 <!--- sort the query based on the sortOrder Column and then the name of the country --->
-<cfset CountryQuery.getOrder().setDesc("Country", "sortOrder").setAsc("Country", "Name") />
+<cfset CountryQuery.getOrder().setDesc("Country", "sortOrder").setAsc("Country", "name") />
 <!--- overwrite the query object with the actualy query data (this is sloppy, but it does the trick) --->
 <cfset countryQuery = CountryGateway.getByQuery(CountryQuery) />
 
