@@ -186,7 +186,13 @@
 	</cffunction>
 	
 	<cffunction name="getAverageRating" access="public" hint="I return the average rating for this entry" output="false" returntype="numeric">
-		<cfreturn Round(getTotalRating()/getTimesRated()) />
+		<cfset var rating = 0 />
+
+		<cfif getTimesRated()>
+			<cfset rating = Round(getTotalRating()/getTimesRated()) />
+		</cfif>
+
+		<cfreturn rating />
 	</cffunction>
 	
 	<cffunction name="setCategoryIdList" access="public" output="false" returntype="void">

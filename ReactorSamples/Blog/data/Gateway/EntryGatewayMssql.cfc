@@ -17,7 +17,10 @@
 				u.firstName, u.lastName, e.disableComments,
 				
 				count(DISTINCT m.commentId) as commentCount,				
-				IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0) as averageRating
+				CASE 
+					WHEN e.timesRated = 0 THEN 0
+					ELSE IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0)
+				END as averageRating
 				
 			FROM Entry as e LEFT JOIN EntryCategory as ec
 				ON e.entryId = ec.entryId
@@ -48,7 +51,10 @@
 				e.publicationDate,
 				e.views, c.categoryId, c.name, 
 				u.firstName, u.lastName, e.disableComments,
-				IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0)
+				CASE 
+					WHEN e.timesRated = 0 THEN 0
+					ELSE IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0)
+				END
 			ORDER BY e.publicationDate DESC
 		</cfquery>
 		
@@ -60,7 +66,7 @@
 		<cfset var qHighest = 0 />
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
-			SELECT TOP #limit# e.entryId, e.title, IsNull(Round(e.totalRating/Convert(float, e.timesRated), 0), 0) as averageRating
+			SELECT TOP #limit# e.entryId, e.title, IsNull(e.totalRating/Convert(float, e.timesRated), 0) as averageRating
 			FROM Entry as e
 			ORDER BY averageRating DESC
 		</cfquery>
