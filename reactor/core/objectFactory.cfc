@@ -21,6 +21,7 @@
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
+		<cfset var objName = "" />
 		
 		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
@@ -54,8 +55,31 @@
 				</cfcase>
 				<cfcase value="production">
 					<cftry>
-						<!--- create an instance of the object and check it's signature --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
+
+						<cfset objName = getObjectName(arguments.type, arguments.alias) />
+
+						<!--- get an instance of the object from cache or create it --->
+						<cfif listFind("Dao,Gateway,Metadata",arguments.type)>
+
+							<cfif variables.TimedCache.exists(objName)>
+								<cftry>
+									<cfset GeneratedObject = variables.TimedCache.getValue(objName) />
+									<cfcatch/>
+								</cftry>
+							</cfif>
+
+							<cfif not isObject(GeneratedObject)>
+								<cfset GeneratedObject = CreateObject("Component", objName) />
+								<cfset variables.TimedCache.setValue(objName,GeneratedObject) />
+							</cfif>
+
+						<cfelse>
+
+							<!--- we never cache Record or To objects --->
+							<cfset GeneratedObject = CreateObject("Component", objName) />
+
+						</cfif>
+
 						<cfcatch>
 							<!--- we only need the dbobject if it doesn't already exist --->
 							<cfset DbObject = getObject(arguments.alias) />
@@ -72,6 +96,7 @@
 
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
+
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
 			
 			<cfset ObjectTranslator.generateObject(arguments.type) />	
@@ -79,8 +104,9 @@
 			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory()) />
 
 		<cfelse>
-			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory()) />
 
+			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory()) />
+			
 		</cfif>
 		
 		<cfreturn GeneratedObject />
@@ -103,6 +129,7 @@
 		<!--- if the object isn't an object then it wasn't cached and we need to create a new one --->
 		<cfif NOT IsObject(Object)>
 			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+			<cfset variables.TimedCache.setValue(arguments.name,Object) />
 			<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 			
 			<!--- read the object --->
