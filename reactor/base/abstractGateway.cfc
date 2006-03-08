@@ -1,19 +1,57 @@
 <cfcomponent hint="I am used primarly to allow type definitions for return values.  I also loosely define an interface for gateway objects and some core methods." extends="reactor.base.abstractObject">
-	
+
+	<!--- a gateway keeps a pool of query objects --->
+	<cfset variables.queryPool = 0 />
+		
 	<!--- metadata --->
     <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
        <cfreturn _getReactorFactory().createMetadata(_getName()) />
     </cffunction>	
+
+	<!---
+		Sean 3/7/2006: add pool management for query objects
+		pool management: queryPool is a linked-list with 0 as the terminator
+	--->
+	
+	<!--- get a query object from the pool (thread-safe) --->
+	<cffunction name="getQueryObject" access="private" output="false" returntype="reactor.query.query">
+		<cfset var query = 0 />
+		<cfif isStruct(variables.queryPool)>
+			<cflock name="reactor_gateway_#_getName()#_pool" timeout="10" type="exclusive">
+				<cfif isStruct(variables.queryPool)>
+					<cfset query = variables.queryPool.head />
+					<cfset variables.queryPool = variables.queryPool.next />
+				</cfif>
+			</cflock>
+		</cfif>
+		<!--- create a new object if the pool was empty --->
+		<cfif not isObject(query)>
+			<cfset query = createObject("component","reactor.query.query") />
+		</cfif>
+		<cfreturn query />
+	</cffunction>	
+	
+	<!--- return a query object to the pool (thread-safe) --->
+	<cffunction name="releaseQueryObject" access="private" output="false" returntype="void">
+		<cfargument name="query" required="true" />
+		<cfset var link = structNew() />
+		<cfset link.head = arguments.query />
+		<cflock name="reactor_gateway_#_getName()#_pool" timeout="10" type="exclusive">
+			<cfset link.next = variables.queryPool />
+			<cfset variables.queryPool = link />
+		</cflock>
+	</cffunction>	
 	
 	<!--- createQuery --->
 	<cffunction name="createQuery" access="public" hint="I return a query object which can be used to compose and execute complex queries on this gateway." output="false" return="reactor.query.criteria">
-		<cfset var query = CreateObject("Component", "reactor.query.query").init(getObjectMetadata()) />
+		<cfset var query = getQueryObject().init(getObjectMetadata()) />
 		<cfreturn query />
 	</cffunction>
 	
 	<!--- getByQuery --->
 	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="query">
-		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" default="reactor.query.query" />
+		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="reactor.query.query" />
+		<cfargument name="releaseQuery" hint="I indicate whether to return the Query to the resource pool after use." type="boolean" default="false" />
 		<cfset var qGet = 0 />
 		<cfset var Convention = getObjectMetadata().getConventions() />
 		<cfset var where = arguments.Query.getWhere().getWhere() />
@@ -264,6 +302,9 @@
 			
 		</cfquery>
 		
+		<cfif arguments.releaseQuery>
+			<cfset releaseQueryObject(arguments.Query) />
+		</cfif>
 		<!---<cfset qGet.result = result />--->
 		
 		<!--- return the query result --->

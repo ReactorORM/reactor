@@ -1,13 +1,22 @@
 <cfcomponent hint="I am an object used to create wheres for where statements">
-
+	<!---
+		Sean 3/7/2006: since we pool where objects (as part of query objects), there's
+		no point in initializing variables in the pseudo-constructor
 	<cfset variables.mode = "and" />
 	<cfset variables.where = ArrayNew(1) />
 	<cfset variables.query = 0 />
-	
+	--->
+
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.where">
 		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query">
 		
+		<!---
+			Sean 3/7/2006: where objects remain part of pooled query objects now
+			need to re-init everything because we rely on the query object re-running our init()
+		--->
+		<cfset variables.mode = "and" />
+		<cfset variables.where = ArrayNew(1) />
 		<cfset setQuery(arguments.query) />
 		
 		<cfreturn this />

@@ -1,12 +1,20 @@
 <cfcomponent hint="I am am object which represents an order imposed on a query.">
-	
+	<!---
+		Sean 3/7/2006: since we pool order objects (as part of query objects), there's
+		no point in initializing variables in the pseudo-constructor
 	<cfset variables.order = ArrayNew(1) />
 	<cfset variables.query = 0 />
-	
+	--->
+ 
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.order">
 		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query">
 		
+		<!---
+			Sean 3/7/2006: order objects remain part of pooled query objects now
+			need to re-init everything because we rely on the query object re-running our init()
+		--->
+		<cfset variables.order = ArrayNew(1) />
 		<cfset setQuery(arguments.query) />
 		
 		<cfreturn this />

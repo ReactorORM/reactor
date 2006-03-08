@@ -42,7 +42,7 @@
 			&lt;cfset Query.getOrder().setAsc("<xsl:value-of select="object/@alias" />", trim(x)) /&gt;
 		&lt;/cfloop&gt;
 		
-		&lt;cfreturn getByQuery(Query) /&gt;
+		&lt;cfreturn getByQuery(Query,true) /&gt;
 	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;

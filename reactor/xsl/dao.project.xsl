@@ -134,7 +134,7 @@
 				&lt;cfset <xsl:value-of select="object/@alias" />Query.getWhere().isEqual("<xsl:value-of select="object/@alias" />", field, arguments.to[field]) /&gt;
 			&lt;/cfloop&gt;
 			
-			&lt;cfset qRead = <xsl:value-of select="object/@alias" />Gateway.getByQuery(<xsl:value-of select="object/@alias" />Query) /&gt;
+			&lt;cfset qRead = <xsl:value-of select="object/@alias" />Gateway.getByQuery(<xsl:value-of select="object/@alias" />Query,true) /&gt;
 		&lt;cfelse&gt;
 			&lt;cfset qRead = <xsl:value-of select="object/@alias" />Gateway.getByFields(
 				<xsl:for-each select="object/fields/field[@primaryKey = 'true']">

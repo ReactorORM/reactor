@@ -1,25 +1,57 @@
 <cfcomponent hint="I am a component used to define ad-hoc queries.">
-	
-	<!--- the from object --->
+	<!---
+		Sean 3/7/2006: since we pool query objects, there's no point in
+		initializing variables in the pseudo-constructor, except for creating
+		the where and order objects - uninitialized (createObject() is the
+		expense we're trying to avoid for future initializations!)
+
+	< !--- the from object --- >
 	<cfset variables.From = 0 />
 
-	<!--- query parts --->
+	< !--- query parts --- >
 	<cfset variables.maxRows = -1 />
 	<cfset variables.distinct = false />	
 	
-	<!--- fields --->
+	< !--- fields --- >
 	<cfset variables.returnFields = ArrayNew(1) />
+	--->
 	
-	<!--- where --->
-	<cfset variables.where = CreateObject("Component", "reactor.query.where").init(this) />
+	<!--- default where object (initialized in init() below) --->
+	<cfset variables.where = CreateObject("Component", "reactor.query.where") />
 
-	<!--- order --->
-	<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
-	
+	<!--- default order object (initialized in init() below)  --->
+	<cfset variables.order = CreateObject("Component", "reactor.query.order") />
+ 
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.query">
 		<cfargument name="BaseObjectMetadata" hint="I am the Metadata for the base object being queried" required="yes" type="reactor.base.abstractMetadata">
-		<cfset var Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
+		<cfset var Object = 0 />
+		
+		<!---
+			Sean 3/7/2006: query objects are pooled now, so we do not create new
+			where and order objects each time we are initialized (only when we are
+			first created - see pseudo-constructor above)
+			
+			that also means we must initialize all our instance data here
+		--->
+
+		<!--- the from object --->
+		<cfset variables.From = 0 />
+	
+		<!--- query parts --->
+		<cfset variables.maxRows = -1 />
+		<cfset variables.distinct = false />	
+		
+		<!--- fields --->
+		<cfset variables.returnFields = ArrayNew(1) />
+		
+		<!--- where --->
+		<cfset variables.where.init(this) />
+	
+		<!--- order --->
+		<cfset variables.order.init(this) />
+
+		<cfset Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
 		
 		<cfset setFrom(Object) />
 		
