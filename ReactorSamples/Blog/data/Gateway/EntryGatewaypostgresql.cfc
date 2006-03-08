@@ -61,7 +61,8 @@
 				CAST(EXTRACT(MONTH FROM e."publicationDate") AS varchar(2)) || '/'::varchar || CAST(EXTRACT(DAY FROM e."publicationDate") AS varchar(2)) || '/'::varchar || CAST(EXTRACT(YEAR FROM e."publicationDate") AS varchar(4)),
 				e."publicationDate",
 				e."views", c."categoryId", c."name", 
-				u."firstName", u."lastName", e."disableComments"
+				u."firstName", u."lastName", e."disableComments",
+				(e."totalRating"/Cast(e."timesRated" AS float))
 			ORDER BY e."publicationDate" DESC
 		</cfquery>
 		

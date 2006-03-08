@@ -1,5 +1,5 @@
 
-
+<!---
 <cfset timer = getTickCount() />
 
 	<cfset reactor = CreateObject("Component", "reactor.reactorFactory") />
@@ -12,4 +12,11 @@
 <cfdump var="#data#" />
 
 <cfoutput>#timer# ms
-</cfoutput>
+</cfoutput>--->
+
+<cfquery name="test" datasource="SampleDB2">
+	SELECT *
+	FROM SYSIBM.SYSTABLES
+</cfquery>
+
+<cfdump var="#test#" />

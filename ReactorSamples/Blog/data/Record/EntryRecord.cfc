@@ -87,14 +87,10 @@
 	
 	<cffunction name="delete" access="public" hint="I delete the Entry record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void">
 		<cfset var EntryCategoryGateway = _getReactorFactory().createGateway("EntryCategory") />
-		<cfset var RatingGateway = _getReactorFactory().createGateway("Rating") />
 		
 		<!--- delete all categories associated with this entry --->
 		<cfset EntryCategoryGateway.deleteByEntryId(getEntryId()) />
-		
-		<!--- delete all raitings too --->
-		<cfset RatingGateway.deleteByEntryId(getEntryId()) />
-		
+				
 		<cfset super.delete() />
 	</cffunction>
 	

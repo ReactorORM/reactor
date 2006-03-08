@@ -8,8 +8,8 @@
 	--->
 	
 	
-	<!--- lastInseredIdSyntax won't work if the PostgreSQL table was explicitly set not to use oids when it was created --->
-	<cffunction name="lastInseredIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
+	<!--- lastInsertedIdSyntax won't work if the PostgreSQL table was explicitly set not to use oids when it was created --->
+	<cffunction name="lastInsertedIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		<cfset var fields = ObjectMetadata.getFields() />
 		<cfset var index = 0 />
@@ -41,9 +41,8 @@
 	<cffunction name="formatInsertFieldName" access="public" hint="I format the field name" output="false" returntype="string">
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
 		<cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
-		
-		<cfreturn formatFieldName(arguments.fieldName) />
-		
+
+		<cfreturn """#arguments.fieldName#""" />
 	</cffunction>
 	
 	<cffunction name="formatFieldName" access="public" hint="I format the field name" output="false" returntype="string">

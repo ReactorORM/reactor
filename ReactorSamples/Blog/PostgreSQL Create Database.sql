@@ -29,7 +29,7 @@ CREATE TABLE "Entry" (
   "disableComments" BOOLEAN NOT NULL,
   "views" INT NOT NULL,
   "totalRating" INT NOT NULL,
-  "timesRated" INT NOT NULL
+  "timesRated" INT NOT NULL,
   PRIMARY KEY ("entryId")
 );
 

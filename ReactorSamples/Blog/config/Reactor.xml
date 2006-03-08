@@ -1,8 +1,8 @@
 <reactor>
 	<config>
 		<project value="ReactorBlog" />
-		<dsn value="ReactorBlog" />
-		<type value="mssql" />
+		<dsn value="ReactorBlogPgSQL" />
+		<type value="postgresql" />
 		<mapping value="/ReactorBlogData" />
 		<mode value="production" />
 		<!-- These config values are not required -->
