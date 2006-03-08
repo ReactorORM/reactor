@@ -122,6 +122,8 @@
 			<cftry>
 				<!--- try to get the object --->
 				<cfset Object = variables.TimedCache.getValue(arguments.name) />
+				<!--- refresh the object in cache --->
+				<cfset variables.TimedCache.setValue(arguments.name,Object) />
 				<cfcatch/>
 			</cftry>
 		</cfif>
