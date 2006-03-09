@@ -55,8 +55,6 @@
 		
 		<cfset setFrom(Object) />
 		
-		<!--- <cfset joinSuper(Object) /> --->
-
 		<cfreturn this />
 	</cffunction>
 	
@@ -120,16 +118,6 @@
 		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.alias#' as an alias or name within the query." type="reactor.findObject.CanNotFindObject" />
 	</cffunction>
 	
-	<!--- joinSuper
-	<cffunction name="joinSuper" access="private" hint="I join any super objects." output="false" returntype="void">
-		<cfargument name="Object" hint="I am the object to join onto supers." required="yes" type="reactor.query.object" />
-		<cfset var ObjectMetadata = arguments.Object.getObjectMetadata() />
-		
-		<cfif ObjectMetadata.hasSuper()>
-			<cfset join(arguments.Object.getAlias(), ObjectMetadata.getSuperAlias()) />
-		</cfif>		
-	</cffunction> --->
-	
 	<!--- join --->
 	<cffunction name="join" access="public" hint="I join one object to another." output="false" returntype="reactor.query.query">
 		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
@@ -139,8 +127,6 @@
 		<cfset var FromObject = findObject(arguments.from) />
 		<cfset var ToObject = FromObject.getRelatedObject(arguments.to) />
 		<cfset FromObject.join(ToObject, arguments.toPrefix, arguments.type) />
-		
-		<!---<cfset joinSuper(ToObject) />--->
 		
 		<cfreturn this />
 	</cffunction>

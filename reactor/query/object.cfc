@@ -71,7 +71,12 @@
 			<!--- add the field alias --->
 			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].alias, arguments.prefix) />
 			
-			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].alias) OR ListFindNoCase(allowedFieldList, alias) >
+			<!--- 
+				DH 3/8/2006:
+				- removed "OR ListFindNoCase(allowedFieldList, alias)" from if.  not sure where alias is comming from and w
+				  always allowing columns		
+			--->
+			<cfif NOT ArrayLen(arguments.returnFields) OR ListFindNoCase(allowedFieldList, fields[x].alias) >
 				<cfset select = select & comma & field & chr(13) & chr(10) />
 				<cfset comma = ", " />
 			</cfif>

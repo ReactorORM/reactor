@@ -31,7 +31,10 @@
 				count(DISTINCT m."commentID") as commentCount,		
 				count(e."entryId") as temp1,
 				
-				(e."totalRating"/Cast(e."timesRated" AS float))::float  AS averageRating		
+				CASE
+					WHEN e."timesRated" = 0 THEN 0
+					ELSE (e."totalRating"/Cast(e."timesRated" AS float))::float
+				END AS averageRating		
 				
 			FROM "Entry" as e LEFT JOIN "EntryCategory" as ec
 				ON e."entryId" = ec."entryId"
@@ -62,7 +65,10 @@
 				e."publicationDate",
 				e."views", c."categoryId", c."name", 
 				u."firstName", u."lastName", e."disableComments",
-				(e."totalRating"/Cast(e."timesRated" AS float))
+				CASE
+					WHEN e."timesRated" = 0 THEN 0
+					ELSE (e."totalRating"/Cast(e."timesRated" AS float))::float
+				END
 			ORDER BY e."publicationDate" DESC
 		</cfquery>
 		
@@ -75,9 +81,11 @@
 		
 		<cfquery name="qHighest" datasource="#_getConfig().getDsn()#">
 			SELECT e."entryId", e."title", 
-			(e."totalRating"/Cast(e."timesRated" AS float))::float  AS averageRating
+			CASE
+				WHEN e."timesRated" = 0 THEN 0
+				ELSE (e."totalRating"/Cast(e."timesRated" AS float))::float
+			END AS averageRating
 			FROM "Entry" as e
-			GROUP BY e."entryId", e."title"
 			ORDER BY averageRating DESC
 			limit #limit#
 		</cfquery>
