@@ -14,10 +14,9 @@
 		<cfset var fields = ObjectMetadata.getFields() />
 		<cfset var index = 0 />
 		<cfloop from="1" to="#ArrayLen(fields)#" step="1" index="index">
-			<cfif fields[index]["primaryKey"] eq "true">
-				<cfreturn "SELECT "&formatFieldName(fields[index]['name'], ObjectMetadata.getName())
-					&" as ID from "&FormatObjectName(ObjectMetadata, '')
-					&" where oid = (select max(oid) from "&FormatObjectName(ObjectMetadata, '')&")" />
+			<cfif fields[index]["primaryKey"] eq "true" AND fields[index]["identity"] eq "true">
+				<cfreturn "SELECT max("&formatFieldName(fields[index]['name'], ObjectMetadata.getName())
+					&") as ID from "&FormatObjectName(ObjectMetadata, '')/>
 			</cfif>
 		</cfloop>
 	</cffunction>
