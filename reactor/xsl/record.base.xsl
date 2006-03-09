@@ -10,7 +10,7 @@
 	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
-		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) /&gt;
+		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.errorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) /&gt;
 		&lt;cfset super.validate(arguments.ValidationErrorCollection) /&gt;
 		
 		&lt;!--- Add custom validation logic here, it will not be overwritten ---&gt;
