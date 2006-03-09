@@ -21,9 +21,6 @@
 		<cfset setObjectConfig(getConfig().getObjectConfig(getAlias())) />
 		<cfset setName(getObjectConfig().object.XmlAttributes.name) />
 		
-		<!--- this creates the base XML document
-		<cfset createXml() /> --->
-		
 		<cfreturn this />
 	</cffunction>
 	
@@ -305,19 +302,11 @@
 	
 	<!--- objectConfig --->
     <cffunction name="setObjectConfig" access="private" output="false" returntype="void">
-       <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="xml" />
+       <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
     </cffunction>
     <cffunction name="getObjectConfig" access="private" output="false" returntype="xml">
        <cfreturn variables.objectConfig />
     </cffunction>
 	
-	<!--- xml
-    <cffunction name="setXml" access="private" output="false" returntype="void">
-       <cfargument name="xml" hint="I return the xml document which describes this object." required="yes" type="string" />
-       <cfset variables.xml = arguments.xml />
-    </cffunction>
-    <cffunction name="getXml" access="public" output="false" returntype="string">
-       <cfreturn variables.xml />
-    </cffunction> --->
 </cfcomponent>

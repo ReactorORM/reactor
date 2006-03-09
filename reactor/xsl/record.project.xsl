@@ -24,11 +24,7 @@
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
 		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) /&gt;
 		&lt;cfset var Event = 0 /&gt;
-		
-		<xsl:if test="count(object/super) &gt; 0">
-			&lt;cfset arguments.ValidationErrorCollection = super.validate(arguments.ValidationErrorCollection) /&gt;
-		</xsl:if>
-		
+				
 		&lt;!--- raise the beforeValidate event ---&gt;
 		&lt;cfset Event = newEvent("beforeValidate") /&gt;
 		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
@@ -112,7 +108,7 @@
 					&lt;/cfif&gt;
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> length ---&gt;
-					&lt;cfif Len(get<xsl:value-of select="@alias" />()) GT <xsl:value-of select="@length" /> &gt;
+					&lt;cfif Len(get<xsl:value-of select="@alias" />()) GT <xsl:value-of select="@length" /> AND <xsl:value-of select="@length" /> IS NOT -1 &gt;
 						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidLength")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>

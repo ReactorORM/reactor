@@ -17,7 +17,6 @@
 	
 	<cffunction name="formatObjectName" access="public" hint="I format the object/table name" output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
-		<cfargument name="alias" hint="I am this object/tables's alias" required="yes" type="string" />
 		
 		<cfreturn "[#arguments.ObjectMetadata.getName()#]" />
 		

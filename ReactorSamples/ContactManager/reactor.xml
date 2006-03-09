@@ -1,10 +1,10 @@
 <reactor>
 	<config>
 		<project value="ContactManager" />
-		<dsn value="ContactManager" />
-		<type value="mssql" />
+		<dsn value="ContactManagerDB2" />
+		<type value="db2" />
 		<mapping value="/ContactManagerData" />
-		<mode value="development" />
+		<mode value="production" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->

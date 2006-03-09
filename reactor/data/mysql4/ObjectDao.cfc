@@ -207,6 +207,8 @@
 				<cfreturn "cf_sql_binary" />
 			</cfcase>
 		</cfswitch>
+		
+		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 	</cffunction>
 
 	<cffunction name="getCfDataType" access="private" hint="I translate the MSSQL data type names into ColdFusion data type names" output="false" returntype="string">
@@ -232,6 +234,9 @@
 				<cfreturn "binary" />
 			</cfcase>			
 		</cfswitch>
+	
+		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
+		
 	</cffunction>
 
 </cfcomponent>

@@ -17,12 +17,11 @@
 			<cfprocresult name="qObject" />
 		</cfstoredproc>
 		
-		<!--- set the owner --->
-		<cfset arguments.Object.setDatabase(qObject.TABLE_QUALIFIER) />
-		<cfset arguments.Object.setOwner(qObject.TABLE_OWNER) />
-		<cfset arguments.Object.setType(qObject.TABLE_TYPE) />
-		
-		<cfif NOT qObject.recordCount>
+		<cfif qObject.recordCount>
+			<cfset arguments.Object.setDatabase(qObject.TABLE_QUALIFIER) />
+			<cfset arguments.Object.setOwner(qObject.TABLE_OWNER) />
+			<cfset arguments.Object.setType(qObject.TABLE_TYPE) />
+		<cfelse>		
 			<cfthrow type="Reactor.NoSuchObject" />
 		</cfif>		
 	</cffunction>
@@ -218,6 +217,8 @@
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 		</cfswitch>
+		
+		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 	</cffunction>
 
 	<cffunction name="getCfDataType" access="private" hint="I translate the MSSQL data type names into ColdFusion data type names" output="false" returntype="string">
@@ -297,6 +298,9 @@
 				<cfreturn "string" />
 			</cfcase>
 		</cfswitch>
+	
+		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
+		
 	</cffunction>
 
 </cfcomponent>

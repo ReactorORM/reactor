@@ -60,16 +60,10 @@
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" />" required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qCreate = 0 /&gt;
-		<xsl:if test="count(object/super) &gt; 0">
-			&lt;cfset super.create(arguments.to) /&gt;
-			<xsl:if test="object/super/relate/@from != object/super/relate/@to">
-				&lt;cfset arguments.to.<xsl:value-of select="object/super/relate/@from" /> = arguments.to.<xsl:value-of select="object/super/relate/@to" /> /&gt;
-			</xsl:if>
-		</xsl:if>
-			
+		
 		&lt;cftransaction&gt;
 			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
-				INSERT INTO #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
+				INSERT INTO #Convention.FormatObjectName(getObjectMetadata())#
 				(
 					<xsl:for-each select="object/fields/field">
 						<xsl:if test="@identity != 'true'">
@@ -144,8 +138,7 @@
 			) /&gt;
 		&lt;/cfif&gt;
 		
-		&lt;cfif qRead.recordCount IS 1&gt;<xsl:for-each select="object/superTables[@sort = 'backward']//fields/fields">
-			&lt;cfset arguments.to.<xsl:value-of select="@alias" /> = qRead.<xsl:value-of select="@name" /> /&gt;</xsl:for-each>
+		&lt;cfif qRead.recordCount IS 1&gt;
 			<xsl:for-each select="//field">
 				&lt;cfset arguments.to.<xsl:value-of select="@alias" /> = 
 				<xsl:choose>
@@ -167,15 +160,9 @@
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be used to update a record in the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qUpdate = 0 /&gt;
-		<xsl:if test="count(object/super) &gt; 0">
-			<xsl:if test="object/super/relate/@from != object/super/relate/@to">
-				&lt;cfset arguments.to.<xsl:value-of select="object/super/relate/@to" /> = arguments.to.<xsl:value-of select="object/super/relate/@from" /> /&gt;
-			</xsl:if>
-			&lt;cfset super.update(arguments.to) /&gt;
-		</xsl:if>
-		
+				
 		&lt;cfquery name="qUpdate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
-			UPDATE #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
+			UPDATE #Convention.FormatObjectName(getObjectMetadata())#
 			SET 
 			<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
@@ -219,17 +206,12 @@
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be used to delete from the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qDelete = 0 /&gt;
-		<xsl:if test="count(object/super) &gt; 0">
-			<xsl:if test="object/super/relate/@from != object/super/relate/@to">
-				&lt;cfset arguments.to.<xsl:value-of select="object/super/relate/@to" /> = arguments.to.<xsl:value-of select="object/super/relate/@from" /> /&gt;
-			</xsl:if>
-		</xsl:if>
 		
 		&lt;cfquery name="qDelete" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
-			DELETE FROM #Convention.FormatObjectName(getObjectMetadata(), '<xsl:value-of select="object/super/@name"/>')#
+			DELETE FROM #Convention.FormatObjectName(getObjectMetadata())#
 			WHERE
 			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
-				#Convention.formatFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
+				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						scale="<xsl:value-of select="@length" />"
@@ -247,9 +229,6 @@
 			</xsl:for-each>
 		&lt;/cfquery&gt;
 		
-		<xsl:if test="count(object/super) &gt; 0">
-			&lt;cfset super.delete(arguments.to) /&gt;
-		</xsl:if>
 	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;

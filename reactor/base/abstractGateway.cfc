@@ -298,8 +298,7 @@
 					</cfif>
 					
 				</cfloop>
-			</cfif>
-			
+			</cfif>			
 		</cfquery>
 		
 		<cfif arguments.releaseQuery>
