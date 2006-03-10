@@ -4,7 +4,7 @@
 		<dsn value="TESTINGSQL" />
 		<type value="mssql" />
 		<mapping value="/ReactorData" />
-		<mode value="production" />
+		<mode value="always" />
 	</config>
 	
 	<objects>
