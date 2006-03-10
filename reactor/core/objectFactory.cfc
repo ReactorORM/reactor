@@ -70,7 +70,7 @@
 
 							<cfif not isObject(GeneratedObject)>
 								<cfset GeneratedObject = CreateObject("Component", objName) />
-								<cfset variables.TimedCache.setValue(objName,GeneratedObject) />
+								<cfset variables.TimedCache.setValue(objName, GeneratedObject) />
 							</cfif>
 
 						<cfelse>
@@ -110,6 +110,62 @@
 		</cfif>
 		
 		<cfreturn GeneratedObject />
+	</cffunction>
+
+	<cffunction name="createDictionary" access="public" hint="I create and return a dictionary object for a specific table." output="false" returntype="reactor.dictionary.dictionary">
+		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
+		<cfset var DbObject = 0 />
+		<cfset var generate = false />
+		<cfset var DictionaryObject = 0 />
+		<cfset var dictionaryXmlPath = "#getConfig().getMapping()#/Dictionary/#arguments.alias#dictionary.xml" />
+		<cfset var ObjectTranslator = 0 />
+		
+		<cftry>
+			<cfswitch expression="#getConfig().getMode()#">
+				<cfcase value="production">
+					<cftry>
+						<!--- get an instance of the object from cache or create it --->
+						<cfif variables.TimedCache.exists(dictionaryXmlPath)>
+							<cftry>
+								<cfset DictionaryObject = variables.TimedCache.getValue(dictionaryXmlPath) />
+								<cfcatch/>
+							</cftry>
+						</cfif>
+
+						<cfif not isObject(DictionaryObject)>
+							<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
+							<cfset variables.TimedCache.setValue(dictionaryXmlPath, DictionaryObject) />
+						</cfif>
+
+						<cfcatch>
+							<!--- we only need the dbobject if it doesn't already exist --->
+							<cfset DbObject = getObject(arguments.alias) />
+							<cfset generate = true />
+						</cfcatch>
+					</cftry>
+				</cfcase>
+				<cfdefaultcase>
+					<!--- we always need the db object to update the xml --->
+					<cfset DbObject = getObject(arguments.alias) />
+					<cfset generate = true />
+				</cfdefaultcase>
+			</cfswitch>
+			
+			<cfcatch type="Reactor.NoSuchObject">
+				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
+			</cfcatch>
+		</cftry>
+
+		<!--- return either a generated object or the existing object --->
+		<cfif generate>
+			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
+			
+			<cfset ObjectTranslator.generateDictionary(dictionaryXmlPath) />	
+			
+			<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
+		</cfif>
+		
+		<cfreturn DictionaryObject />
 	</cffunction>
 	
 	<cffunction name="getObject" access="private" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">

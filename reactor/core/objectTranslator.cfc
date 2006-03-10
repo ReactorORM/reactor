@@ -21,7 +21,7 @@
 		<cfset var objectXML = getObject().getXml() />
 		<cfset var pathToErrorFile = "" />
 		
-		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file --->
+		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file
 		<cfif arguments.type IS "Record">
 			<!--- I am the path to the error file --->
 			<cfset pathToErrorFile = expandPath(getConfig().getMapping() & "/ErrorMessages.xml" ) />
@@ -29,7 +29,7 @@
 			<cfset insurePathExists(pathToErrorFile) />
 			<!--- generate the error messages --->
 			<cfset generateErrorMessages(pathToErrorFile) />
-		</cfif>
+		</cfif> --->
 		
 		<!--- write the project object --->
 		<cfset generate(
@@ -71,188 +71,105 @@
 			<!--- insure the outputPath directory exists --->
 			<cfset insurePathExists(arguments.outputPath)>
 			<!--- write the file to disk --->
-			<cffile action="write" file="#arguments.outputPath#" output="#code#" />
+			<cflock type="exclusive" timeout="30">
+				<cffile action="write" file="#arguments.outputPath#" output="#code#" />
+			</cflock>
 		</cfif>
-	</cffunction>	
-
-	<!--- generateErrorMessages --->
-	<cffunction name="generateErrorMessages" access="public" hint="I genereate / populate the ErrorMessages.xml file" output="false" returntype="void">
-		<cfargument name="pathToErrorFile" hint="I am the path to the ErrorMessages.xml file." required="yes" type="string" />
-		<cfset var XmlErrors = "" />
-		<cfset var XmlSearchResult = "" />
-		<cfset var Object = getObject() />
+	</cffunction>
+	
+	<!--- generateDictionary --->
+	<cffunction name="generateDictionary" access="public" hint="I generate the xml for a dictionary.xml file" output="false" returntype="void">
+		<cfargument name="dictionaryXmlPath" hint="I am the path to the dictionary xml file." required="yes" type="string" />
+		<cfset var dictionaryXml = "<dictionary />" />
+		<cfset var initialDictionaryXml = 0 />
 		<cfset var fields = Object.getFields() />
-		<cfset var tableNode = 0 />
-		<cfset var fieldNode = 0 />
-		<cfset var errorMessageNode = 0 />
+		<cfset var field = 0 />
+		<cfset arguments.dictionaryXmlPath = ExpandPath(arguments.dictionaryXmlPath)  />
 		
-		<!--- check to see if the error file exists --->
-		<cfif NOT FileExists(pathToErrorFile) > 
-			<cfsavecontent variable="XmlErrors">
-				<tables />
-			</cfsavecontent>
+		<!--- check to see if the dictionary.xml file exists at all --->
+		<cfif NOT FileExists(arguments.dictionaryXmlPath)>
+			<!--- insure the outputPath directory exists --->
+			<cfset insurePathExists(arguments.dictionaryXmlPath)>
 		<cfelse>
-			<!--- read the file --->
-			<cffile action="read" file="#pathToErrorFile#" variable="XmlErrors" />
-			<cfset tableExists = true />
+			<!--- read the dictionary Xml file --->
+			<cffile action="read" file="#arguments.dictionaryXmlPath#" variable="dictionaryXml" />
 		</cfif>
 		
-		<!--- parse the xml --->
-		<cfset XmlErrors = XmlParse(XmlErrors) />
+		<!--- parse the dictionaryXml --->
+		<cfset dictionaryXml = XMLParse(dictionaryXml, false) />
+		<cfset initialDictionaryXml = Duplicate(dictionaryXml) />
 		
-		<!--- insure a node exists for this table --->
-		<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']") />
-		<cfif NOT ArrayLen(XmlSearchResult)>
-			<cfset ArrayAppend(XmlErrors.tables.XmlChildren, XMLElemNew(XmlErrors, "table")) />
-			<cfset tableNode = XmlErrors.tables.XmlChildren[ArrayLen(XmlErrors.tables.XmlChildren)] />
-			<cfset tableNode.XmlAttributes["name"] = Object.getName() />
-		<cfelse>
-			<cfset tableNode = XmlSearchResult[1] />
-		</cfif>
-		
-		<!--- insure a node exists for all fields --->
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']") />
-			<cfif NOT ArrayLen(XmlSearchResult)>
-				<cfset ArrayAppend(tableNode.XmlChildren, XMLElemNew(XmlErrors, "field")) />
-				<cfset fieldNode = tableNode.XmlChildren[ArrayLen(tableNode.XmlChildren)] />
-				<cfset fieldNode.XmlAttributes["name"] = fields[x].getName() />
-			<cfelse>
-				<cfset fieldNode = XmlSearchResult[1] />
+			<!--- grab a specific field --->
+			<cfset field = fields[x] />
+			
+			<!--- insure the field exists --->
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#") />
+			
+			<!--- insure a label exists --->
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/label", "#field.getName()#") />
+			
+			<!--- insure a comment exists --->
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/comment", "") />
+			
+			<!--- required validation error message --->
+			<cfif NOT fields[x].getNullable()>
+				<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/notProvided", "The #field.getName()# field is required but was not provided.") />
 			</cfif>
 			
-			<!--- insure that all applicable error messages have been created for this fieldNode --->
-			<cfswitch expression="#fields[x].getCfDataType()#">
-				<cfcase value="binary">
-					<!--- required validation error message --->
-					<cfif NOT fields[x].getNullable()>
-						<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'notProvided']") />
-						<cfif NOT ArrayLen(XmlSearchResult)>
-							<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-							<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-							<cfset errorMessageNode.XmlAttributes["name"] = "notProvided" />
-							<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is required but was not provided." />
-						</cfif>
-					</cfif>
+			<!--- data type validation error message --->
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/invalidType", "The #field.getName()# field does not contain valid data.  This field must be a #fields[x].getCfDataType()# value.") />
 					
-					<!--- datatype validate error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidType']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidType" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field must be true or false." />
-					</cfif>
-					
-					<!--- size validataion error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidLength']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidLength" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is too long.  This field must be no more than #fields[x].getLength()# bytes long." />
-					</cfif>
-				</cfcase>
-				<cfcase value="boolean">
-					<!--- required validation error message --->
-					<cfif NOT fields[x].getNullable()>
-						<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'notProvided']") />
-						<cfif NOT ArrayLen(XmlSearchResult)>
-							<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-							<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-							<cfset errorMessageNode.XmlAttributes["name"] = "notProvided" />
-							<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is required but was not provided." />
-						</cfif>
-					</cfif>
-					
-					<!--- datatype validate error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidType']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidType" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field must be a true or false value." />
-					</cfif>
-				</cfcase>
-				<cfcase value="date">
-					<!--- required validation error message --->
-					<cfif NOT fields[x].getNullable()>
-						<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'notProvided']") />
-						<cfif NOT ArrayLen(XmlSearchResult)>
-							<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-							<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-							<cfset errorMessageNode.XmlAttributes["name"] = "notProvided" />
-							<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is required but was not provided." />
-						</cfif>
-					</cfif>
-					
-					<!--- datatype validate error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidType']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidType" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field must be a date value." />
-					</cfif>
-				</cfcase>
-				<cfcase value="numeric">
-					<!--- required validation error message --->
-					<cfif NOT fields[x].getNullable()>
-						<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'notProvided']") />
-						<cfif NOT ArrayLen(XmlSearchResult)>
-							<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-							<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-							<cfset errorMessageNode.XmlAttributes["name"] = "notProvided" />
-							<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is required but was not provided." />
-						</cfif>
-					</cfif>
-					
-					<!--- datatype validate error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidType']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidType" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field must be a numeric value." />
-					</cfif>
-				</cfcase>
-				<cfcase value="string">
-					<!--- required validation error message --->
-					<cfif NOT fields[x].getNullable()>
-						<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'notProvided']") />
-						<cfif NOT ArrayLen(XmlSearchResult)>
-							<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-							<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-							<cfset errorMessageNode.XmlAttributes["name"] = "notProvided" />
-							<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is required but was not provided." />
-						</cfif>
-					</cfif>
-					
-					<!--- datatype validate error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidType']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidType" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field must be a string value." />
-					</cfif>
-					
-					<!--- size validataion error message --->
-					<cfset XmlSearchResult = XmlSearch(XmlErrors, "/tables/table[@name = '#Object.getName()#']/field[@name = '#fields[x].getName()#']/errorMessage[@name = 'invalidLength']") />
-					<cfif NOT ArrayLen(XmlSearchResult)>
-						<cfset ArrayAppend(fieldNode.XmlChildren, XMLElemNew(XmlErrors, "errorMessage")) />
-						<cfset errorMessageNode = fieldNode.XmlChildren[ArrayLen(fieldNode.XmlChildren)] />
-						<cfset errorMessageNode.XmlAttributes["name"] = "invalidLength" />
-						<cfset errorMessageNode.XmlAttributes["message"] = "The #fields[x].getName()# field is too long.  This field must be no more than #fields[x].getLength()# characters long." />
-					</cfif>
-				</cfcase>
-			</cfswitch>
-		</cfloop>
+			<!--- size validataion error message --->
+			<cfif field.getLength()>
+				<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/invalidLength", "The #field.getName()# field is too long.  This field must be no more than #field.getLength()# bytes long.") />
+			</cfif>			
+		</cfloop>	
 		
-		<!--- format the xml and write it back to the ErrorFile --->
-		<cflock type="exclusive" timeout="30">
-			<cffile action="write" file="#pathToErrorFile#" output="#FormatErrorXml(XmlErrors)#" />
-		</cflock>
+		<!--- if the initial xml and the new xml are different, format the xml and write it back to the dictionary xml file --->
+		<cfif dictionaryXml IS NOT initialDictionaryXml>
+			<cflock type="exclusive" timeout="30">
+				<cffile action="write" file="#arguments.dictionaryXmlPath#" output="#formatXml(dictionaryXml)#" />
+			</cflock>
+		</cfif>
+	</cffunction>
+	
+	<!--- paramNode --->
+	<cffunction name="paramNode" access="private" hint="I insure that an xml node exists.  If not, I create it and set it to a default value." output="false" returntype="void">
+		<cfargument name="xml" hint="I am the xml document" required="yes" type="string" />
+		<cfargument name="pathToNode" hint="I am the xpath path to the parent node." required="yes" type="string" />
+		<cfargument name="value" hint="I am the default value for the node." required="no" type="string" default="" />
+		<cfset var matches = 0 />
+		<cfset var node = 0 />
+		<cfset var parentNodePath = 0 />
+		<cfset var parentNode = 0 />
+		
+		<!--- search to see if path exists in the document --->
+		<cfset matches = XmlSearch(arguments.xml, arguments.pathToNode) />
+		
+		<!--- if the path doesn't exist, create it --->
+		<cfif NOT ArrayLen(matches)>
+			<!--- get the parent node path --->
+			<cfset parentNodePath = ListDeleteAt(arguments.pathToNode, ListLen(arguments.pathToNode, "/"), "/") />
+			
+			<!--- first, make sure that the specified parent exists --->
+			<cfset paramNode(arguments.xml, parentNodePath) />
+			
+			<!--- create the node --->
+			<cfset node = XMLElemNew(arguments.xml, ListLast(arguments.pathToNode, "/")) />
+			
+			<!--- if a value has been provided, set it. --->
+			<cfif Len(arguments.value)>
+				<cfset node.XmlText = arguments.value />
+			</cfif>
+			
+			<!--- get the parent Node --->
+			<cfset parentNode = XmlSearch(arguments.xml, parentNodePath) />
+			<cfset parentNode = parentNode[1] />
+			
+			<!--- add the new node to its parent --->
+			<cfset ArrayAppend(parentNode.XmlChildren, node) />
+		</cfif>
 	</cffunction>
 	
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
@@ -289,21 +206,43 @@
 		
 	</cffunction>
 	
-	<cffunction name="FormatErrorXml" access="public" hint="I format the Xml Errors doc to make it more easily human readable." output="false" returntype="string">
-		<cfargument name="XmlErrors" hint="I am the xml error document to format." required="yes" type="string" />
-		<cfset arguments.XmlErrors = ToString(arguments.XmlErrors) />
+	<cffunction name="formatXml" access="public" hint="I format xml to make it more easily human readable." output="false" returntype="string">
+		<cfargument name="xml" hint="I am the xml to format." required="yes" type="string" />
+		<cfset var newXmlDocument = "" />
+		<cfset var splitXml = 0 />
+		<cfset var x = 0 />
+		<cfset var tabs = 0 />
+		<cfset arguments.xml = ToString(arguments.xml) />
 		
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*<table ", chr(13) & chr(10) & chr(9) & "<table ", "all") />
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*</table>", chr(13) & chr(10) & chr(9) & "</table>", "all") />
+		<!--- remove extra crlfs and tabs --->
+		<cfset arguments.xml = Trim(ReReplace(arguments.xml, "(?m)[\r\n]*[\t]*", "", "all")) />
 		
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*<field ", chr(13) & chr(10) & chr(9) & chr(9) & "<field ", "all") />
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*</field>", chr(13) & chr(10) & chr(9) & chr(9) & "</field>", "all") />
+		<!--- add the doctype to the newXmlDocument --->
+		<cfset newXmlDocument = Trim(Mid(arguments.xml, 1, find(chr(10), arguments.xml))) />
+		<cfset arguments.xml = Right(arguments.xml, Len(arguments.xml) - Len(newXmlDocument)) />
 		
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*<errorMessage ", chr(13) & chr(10) & chr(9) & chr(9) & chr(9) & "<errorMessage ", "all") />
-		
-		<cfset arguments.XmlErrors = ReReplace(arguments.XmlErrors, "[\s]*</tables>", chr(13) & chr(10) & "</tables>", "all") />
-		
-		<cfreturn arguments.XmlErrors />
+		<!--- add linebreaks before every tag --->
+		<cfset arguments.xml = Replace(arguments.xml, "<", chr(13) & chr(10) & "<", "all") />
+
+		<!--- fix all line breaks before close tags wrapping content --->
+		<cfset arguments.xml = ReReplace(arguments.xml, "(?m)([^>])([\r][\n]|[\n])</", "\1</", "all") />
+
+		<cfset splitXml = ListToArray(arguments.xml, chr(13) & chr(10)) />
+
+		<cfloop from="1" to="#ArrayLen(splitXml)#" index="x">
+			<cfif Left(splitXml[x], 2) IS "</">
+				<cfset tabs = tabs - 1 />
+			</cfif>
+			
+			<cfset newXmlDocument = newXmlDocument & chr(13) & chr(10) & RepeatString(chr(9), tabs) & splitXml[x] />
+			
+			<cfif NOT Find("/", splitXml[x], 1)>
+				<cfset tabs = tabs + 1 />
+			</cfif>
+			
+		</cfloop>
+
+		<cfreturn Trim(newXmlDocument) />
 	</cffunction>
 	
 	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
@@ -314,52 +253,6 @@
 			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" />
 		</cfif>
 	</cffunction>
-	
-		
-	<!--- 
-	<cffunction name="copyNodes" access="private" hint="I copy an XML object's nodes into another XML object." output="false" returntype="void">
-		<cfargument name="document" hint="I am the destination document." required="yes" type="string" />
-		<cfargument name="destNode" hint="I am the destination node to copy into." required="yes" type="any" />
-		<cfargument name="sourceNode" hint="I am the source node to copy from" required="yes" type="any" />
-		<cfargument name="temp" required="no" default="1" />
-		<cfset var attribute = 0 />
-		<cfset var sourceChild = 0 />
-		<cfset var x = 0 />
-		
-		<!--- copy attributes --->
-		<cfloop collection="#arguments.sourceNode.XmlAttributes#" item="attribute">
-			<cfset arguments.destNode.XmlAttributes[attribute] = arguments.sourceNode.XmlAttributes[attribute] />
-		</cfloop>
-		
-		<!--- copy children --->
-		<cfloop from="1" to="#ArrayLen(arguments.sourceNode.XmlChildren)#" index="x">
-			<cfset sourceChild = arguments.sourceNode.XmlChildren[x] />
-			<cfset destChild = XMLElemNew(document, sourceChild.XmlName) />
-			<!--- add the destNode to the dest xml children --->
-			<cfset ArrayAppend(arguments.destNode.XmlChildren, destChild) />
-			
-			
-			<!--- copy the nodes --->
-			<cfset copyNodes(arguments.document, Duplicate(destChild), sourceChild, temp + 1) />
-			
-			<cfif temp IS 1>
-				<cfdump var="#arguments.destNode#" />
-				<cfdump var="#arguments.sourceNode#" />
-				<cfabort>
-			</cfif>
-		</cfloop>
-		
-	</cffunction>
-	--->
-	
-	<!--- table
-    <cffunction name="setObject" access="private" output="false" returntype="void">
-       <cfargument name="table" hint="I am the table being translated" required="yes" type="reactor.core.object" />
-       <cfset variables.Object = arguments.table />
-    </cffunction>
-    <cffunction name="getObject" access="private" output="false" returntype="reactor.core.object">
-       <cfreturn variables.Object />
-    </cffunction> --->
 	
 	<!--- config --->
     <cffunction name="setConfig" access="public" output="false" returntype="void">

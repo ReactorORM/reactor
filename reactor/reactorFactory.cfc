@@ -44,6 +44,11 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
 	</cffunction>
+
+	<cffunction name="createDictionary" access="public" hint="I return a dictionary object." output="false" returntype="reactor.dictionary.dictionary">
+		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().createDictionary(arguments.objectAlias) />
+	</cffunction>
 	
 	<!--- ObjectFactory --->
     <cffunction name="setObjectFactory" access="private" output="false" returntype="void">

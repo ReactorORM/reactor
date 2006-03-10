@@ -22,7 +22,6 @@
 	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
 		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
-		&lt;cfset var ErrorManager = CreateObject("Component", "reactor.core.errorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) /&gt;
 		&lt;cfset var Event = 0 /&gt;
 				
 		&lt;!--- raise the beforeValidate event ---&gt;
@@ -37,18 +36,18 @@
 					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@alias" />()))&gt;
-							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "notProvided")) /&gt;
+							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.notProvided")) /&gt;
 						&lt;/cfif&gt;
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif NOT IsBinary(get<xsl:value-of select="@alias" />())&gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidType")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidType")) /&gt;
 					&lt;/cfif&gt;
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> length ---&gt;
 					&lt;cfif Len(get<xsl:value-of select="@alias" />()) GT <xsl:value-of select="@length" /> &gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidLength")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidLength")) /&gt;
 					&lt;/cfif&gt;				
 				</xsl:when>
 				
@@ -56,13 +55,13 @@
 					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@alias" />()))&gt;
-							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "notProvided")) /&gt;
+							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.notProvided")) /&gt;
 						&lt;/cfif&gt;
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif NOT IsBoolean(get<xsl:value-of select="@alias" />())&gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidType")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidType")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
 			
@@ -70,13 +69,13 @@
 					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@alias" />()))&gt;
-							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "notProvided")) /&gt;
+							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.notProvided")) /&gt;
 						&lt;/cfif&gt;
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif NOT IsDate(get<xsl:value-of select="@alias" />())<xsl:if test="@nullable = 'true'"> AND Len(Trim(get<xsl:value-of select="@name" />()))</xsl:if>&gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidType")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidType")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
 				
@@ -84,13 +83,13 @@
 					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@alias" />()))&gt;
-							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "notProvided")) /&gt;
+							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.notProvided")) /&gt;
 						&lt;/cfif&gt;
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif Len(Trim(get<xsl:value-of select="@alias" />())) AND NOT IsNumeric(get<xsl:value-of select="@name" />())&gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidType")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidType")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
 				
@@ -98,18 +97,18 @@
 					<xsl:if test="@nullable = 'false'">
 						&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 						&lt;cfif NOT Len(Trim(get<xsl:value-of select="@alias" />()))&gt;
-							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "notProvided")) /&gt;
+							&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.notProvided")) /&gt;
 						&lt;/cfif&gt;
 					</xsl:if>
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif NOT IsSimpleValue(get<xsl:value-of select="@alias" />())&gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidType")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidType")) /&gt;
 					&lt;/cfif&gt;
 					
 					&lt;!--- validate <xsl:value-of select="@alias" /> length ---&gt;
 					&lt;cfif Len(get<xsl:value-of select="@alias" />()) GT <xsl:value-of select="@length" /> AND <xsl:value-of select="@length" /> IS NOT -1 &gt;
-						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", ErrorManager.getError("<xsl:value-of select="../../@name" />", "<xsl:value-of select="@alias" />", "invalidLength")) /&gt;
+						&lt;cfset ValidationErrorCollection.addError("<xsl:value-of select="@alias" />", _getDictionary().getValue("<xsl:value-of select="@alias" />.invalidLength")) /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
 			</xsl:choose>
@@ -273,6 +272,11 @@
 	&lt;/cffunction&gt;
 	&lt;cffunction name="_getDao" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Dao.<xsl:value-of select="object/@alias"/>Dao"&gt;
 	    &lt;cfreturn variables.dao /&gt;
+	&lt;/cffunction&gt;
+	
+	&lt;!--- getDictionary ---&gt;
+	&lt;cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary"&gt;
+	    &lt;cfreturn _getReactorFactory().createDictionary("<xsl:value-of select="object/@alias"/>") /&gt;
 	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;
