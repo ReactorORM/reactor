@@ -44,6 +44,9 @@
 				
 		<cfset arguments.node.direction = arguments.direction />
 		
+		<cfset node.alias = node.field />
+		<cfset node.field = getQuery().findObject(node.object).getObjectMetadata().getField(node.field).name />
+		
 		<cfset ArrayAppend(order, node) />	
 		<cfset setOrder(order) />
 		
