@@ -84,6 +84,7 @@
 		<cfset var initialDictionaryXml = 0 />
 		<cfset var fields = Object.getFields() />
 		<cfset var field = 0 />
+		<cfset var x = 0 />
 		<cfset arguments.dictionaryXmlPath = ExpandPath(arguments.dictionaryXmlPath)  />
 		
 		<!--- check to see if the dictionary.xml file exists at all --->
@@ -107,10 +108,13 @@
 			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#") />
 			
 			<!--- insure a label exists --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/label", "#field.getName()#") />
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/label", field.getName()) />
 			
 			<!--- insure a comment exists --->
 			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/comment", "") />
+			
+			<!--- insure a maxLength exists --->
+			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/maxlength", field.getLength()) />
 			
 			<!--- required validation error message --->
 			<cfif NOT fields[x].getNullable()>

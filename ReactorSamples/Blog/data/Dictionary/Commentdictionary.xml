@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<dictionary>
+		<commentId>
+			<label>commentId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The commentId field is required but was not provided.</notProvided>
+			<invalidType>The commentId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The commentId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</commentId>
+		<comment>
+			<label>comment</label>
+			<comment/>
+			<maxlength>4000</maxlength>
+			<notProvided>The comment field is required but was not provided.</notProvided>
+			<invalidType>The comment field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The comment field is too long.  This field must be no more than 4000 bytes long.</invalidLength>
+		</comment>
+		<posted>
+			<label>posted</label>
+			<comment/>
+			<maxlength>7</maxlength>
+			<notProvided>The posted field is required but was not provided.</notProvided>
+			<invalidType>The posted field does not contain valid data.  This field must be a date value.</invalidType>
+			<invalidLength>The posted field is too long.  This field must be no more than 7 bytes long.</invalidLength>
+		</posted>
+		<subscribe>
+			<label>subscribe</label>
+			<comment/>
+			<maxlength>1</maxlength>
+			<notProvided>The subscribe field is required but was not provided.</notProvided>
+			<invalidType>The subscribe field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The subscribe field is too long.  This field must be no more than 1 bytes long.</invalidLength>
+		</subscribe>
+		<emailAddress>
+			<label>emailAddress</label>
+			<comment/>
+			<maxlength>50</maxlength>
+			<invalidType>The emailAddress field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The emailAddress field is too long.  This field must be no more than 50 bytes long.</invalidLength>
+		</emailAddress>
+		<name>
+			<label>name</label>
+			<comment/>
+			<maxlength>50</maxlength>
+			<notProvided>The name field is required but was not provided.</notProvided>
+			<invalidType>The name field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The name field is too long.  This field must be no more than 50 bytes long.</invalidLength>
+		</name>
+		<entryId>
+			<label>entryId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The entryId field is required but was not provided.</notProvided>
+			<invalidType>The entryId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The entryId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</entryId>
+	</dictionary>

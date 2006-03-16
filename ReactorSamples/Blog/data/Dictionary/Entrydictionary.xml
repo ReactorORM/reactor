@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<dictionary>
+		<entryId>
+			<label>entryId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The entryId field is required but was not provided.</notProvided>
+			<invalidType>The entryId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The entryId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</entryId>
+		<article>
+			<label>article</label>
+			<comment/>
+			<maxlength>4000</maxlength>
+			<notProvided>The article field is required but was not provided.</notProvided>
+			<invalidType>The article field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The article field is too long.  This field must be no more than 4000 bytes long.</invalidLength>
+		</article>
+		<publicationDate>
+			<label>publicationDate</label>
+			<comment/>
+			<maxlength>7</maxlength>
+			<notProvided>The publicationDate field is required but was not provided.</notProvided>
+			<invalidType>The publicationDate field does not contain valid data.  This field must be a date value.</invalidType>
+			<invalidLength>The publicationDate field is too long.  This field must be no more than 7 bytes long.</invalidLength>
+		</publicationDate>
+		<postedByUserId>
+			<label>postedByUserId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The postedByUserId field is required but was not provided.</notProvided>
+			<invalidType>The postedByUserId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The postedByUserId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</postedByUserId>
+		<disableComments>
+			<label>disableComments</label>
+			<comment/>
+			<maxlength>1</maxlength>
+			<notProvided>The disableComments field is required but was not provided.</notProvided>
+			<invalidType>The disableComments field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The disableComments field is too long.  This field must be no more than 1 bytes long.</invalidLength>
+		</disableComments>
+		<preview>
+			<label>preview</label>
+			<comment/>
+			<maxlength>1000</maxlength>
+			<invalidType>The preview field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The preview field is too long.  This field must be no more than 1000 bytes long.</invalidLength>
+		</preview>
+		<totalRating>
+			<label>totalRating</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The totalRating field is required but was not provided.</notProvided>
+			<invalidType>The totalRating field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The totalRating field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</totalRating>
+		<title>
+			<label>title</label>
+			<comment/>
+			<maxlength>200</maxlength>
+			<notProvided>The title field is required but was not provided.</notProvided>
+			<invalidType>The title field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The title field is too long.  This field must be no more than 200 bytes long.</invalidLength>
+		</title>
+		<timesRated>
+			<label>timesRated</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The timesRated field is required but was not provided.</notProvided>
+			<invalidType>The timesRated field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The timesRated field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</timesRated>
+		<views>
+			<label>views</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The views field is required but was not provided.</notProvided>
+			<invalidType>The views field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The views field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</views>
+	</dictionary>

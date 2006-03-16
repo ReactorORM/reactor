@@ -11,7 +11,21 @@
 	</config>
 
 	<objects>
+		<object name="User">
+			<field name="userId" sequence="User_userId" />
+		</object>
+		
+		<object name="Comment">
+			<field name="commentId" sequence="Comment_commentId" />
+		</object>
+		
+		<object name="Subscriber">
+			<field name="subscriberId" sequence="Subscriber_subscriberId" />
+		</object>
+				
 		<object name="Entry">
+			<field name="entryId" sequence="Entry_entryId" />
+			
 			<hasMany name="Category">
 				<link name="EntryCategory" />
 			</hasMany>
@@ -24,6 +38,8 @@
 		</object>
 		
 		<object name="EntryCategory">
+			<field name="entryCategoryId" sequence="EntryCategory_entryCategoryId" />
+			
 			<hasOne name="Entry">
 				<relate from="entryId" to="entryId" />
 			</hasOne>
@@ -33,6 +49,8 @@
 		</object>
 		
 		<object name="Category">
+			<field name="categoryId" sequence="Category_categoryId" />
+			
 			<hasMany name="Entry">
 				<link name="EntryCategory" />
 			</hasMany>

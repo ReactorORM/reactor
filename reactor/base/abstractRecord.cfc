@@ -4,7 +4,8 @@
 	<cfset variables.Dao = 0 />
 	<cfset variables.ObjectFactory = 0 />
 	<cfset variables.Observers = StructNew() />
-	
+	<cfset variables.ValidationErrorCollection = 0 />
+		
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
@@ -18,6 +19,11 @@
 		
 		<cfreturn this />
 	</cffunction>
+	
+	<!--- _getObjectMetadata --->
+    <cffunction name="_getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
+       <cfreturn _getReactorFactory().createMetadata(_getName()) />
+    </cffunction>	
 	
 	<!--- attachDelegate --->
 	<cffunction name="attachDelegate" access="public" hint="I attach a delegate which will listen for specific events.  Default events are: beforeValidate, afterValidate, beforeSave, afterSave, beforeLoad, afterLoad, beforeDelete, afterDelete" output="false" returntype="void">
@@ -73,7 +79,7 @@
 	<!--- detatchAllDelegates --->
 	<cffunction name="detatchAllDelegates" access="public" hint="I detach all delegates.  If an even is passed it only delegates for that event are removed." output="false" returntype="void">
 		<cfargument name="event" hint="I am the name of the event being listened for." required="no" default="" type="string" />
-		<cfset Observers = getObservers() />
+		<cfset var Observers = getObservers() />
 		
 		<cfif Len(arguments.event)>
 			<cfset StructDelete(Observers, arguments.event) />
@@ -127,6 +133,30 @@
 	</cffunction>
 	
 	<cffunction name="delete" access="public" hint="I delete this record." output="false" returntype="boolean">
+	</cffunction>
+	
+	<!--- validationErrorCollection --->
+    <cffunction name="_setValidationErrorCollection" access="private" output="false" returntype="void">
+       <cfargument name="validationErrorCollection" hint="I am this object's ValidationErrorCollection" required="yes" type="reactor.util.ValidationErrorCollection" />
+       <cfset variables.validationErrorCollection = arguments.validationErrorCollection />
+    </cffunction>
+    <cffunction name="_getValidationErrorCollection" access="public" output="false" returntype="reactor.util.ValidationErrorCollection">
+       <cfreturn variables.validationErrorCollection />
+    </cffunction>
+	
+	<!--- validated --->
+	<cffunction name="validated" access="public" hint="I indicate if this object has been validated at all" output="false" returntype="boolean">
+		<cfreturn IsObject(variables.validationErrorCollection) />
+	</cffunction>
+	
+	<!--- hasErrors --->
+	<cffunction name="hasErrors" access="public" hint="I indicate if this object has errors or not (based in the last call to validate)" output="false" returntype="boolean">
+		<cfreturn _getValidationErrorCollection().hasErrors() />
+	</cffunction>
+	
+	<!--- getDictionary --->
+	<cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary">
+	    <cfreturn _getReactorFactory().createDictionary(_getName()) />
 	</cffunction>
 	
 </cfcomponent>

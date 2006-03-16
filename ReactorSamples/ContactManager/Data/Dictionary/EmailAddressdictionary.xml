@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<dictionary>
+		<emailAddressId>
+			<label>emailAddressId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The emailAddressId field is required but was not provided.</notProvided>
+			<invalidType>The emailAddressId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The emailAddressId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</emailAddressId>
+		<contactId>
+			<label>contactId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The contactId field is required but was not provided.</notProvided>
+			<invalidType>The contactId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The contactId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</contactId>
+		<emailAddress>
+			<label>emailAddress</label>
+			<comment/>
+			<maxlength>100</maxlength>
+			<notProvided>The emailAddress field is required but was not provided.</notProvided>
+			<invalidType>The emailAddress field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The emailAddress field is too long.  This field must be no more than 100 bytes long.</invalidLength>
+		</emailAddress>
+	</dictionary>

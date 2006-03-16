@@ -61,53 +61,78 @@
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qCreate = 0 /&gt;
 		
+		<xsl:if test="//field[@sequence != '']">
+			&lt;cfif Convention.supportsSequences()&gt;
+				<xsl:for-each select="//field[@sequence != '']">
+					&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
+						#Convention.getNextSequenceSyntax("<xsl:value-of select="@sequence" />")#
+					&lt;/cfquery&gt;
+					&lt;cfset arguments.to.<xsl:value-of select="@alias" /> = qCreate.ID /&gt;
+				</xsl:for-each>
+			&lt;/cfif&gt;
+		</xsl:if>
+		
 		&lt;cftransaction&gt;
 			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 				INSERT INTO #Convention.FormatObjectName(getObjectMetadata())#
 				(
 					<xsl:for-each select="object/fields/field">
-						<xsl:if test="@identity != 'true'">
-							#Convention.formatInsertFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
-							<xsl:if test="position() != last()">,</xsl:if>
+						
+						<xsl:if test="@identity = 'true' or @sequence != ''">
+							&lt;cfif NOT Convention.supportsIdentity()&gt;
+						</xsl:if>
+						
+						#Convention.formatInsertFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
+						
+						<xsl:if test="position() != last()">,</xsl:if>
+						
+						<xsl:if test="@identity = 'true' or @sequence != ''">
+							&lt;/cfif&gt;
 						</xsl:if>
 					</xsl:for-each>
 				) VALUES (
 					<xsl:for-each select="object/fields/field">
-						<xsl:if test="@identity != 'true'">
-							&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"
-							<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
-								scale="<xsl:value-of select="@length" />"
-							</xsl:if>
-							value="<xsl:choose>
-								<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
-								<xsl:otherwise>#arguments.to.<xsl:value-of select="@alias" />#</xsl:otherwise>
-							</xsl:choose>"
-							<xsl:if test="@nullable = 'true'">	
-								null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@alias" />), DE(true), DE(false))#"
-							</xsl:if> /&gt;
-							<xsl:if test="position() != last()">
-								<xsl:text>,</xsl:text>
-							</xsl:if>
+						<xsl:if test="@identity = 'true' or @sequence != ''">
+							&lt;cfif NOT Convention.supportsIdentity()&gt;
 						</xsl:if>
+						
+						&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"
+						<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
+							scale="<xsl:value-of select="@length" />"
+						</xsl:if>
+						value="<xsl:choose>
+							<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
+							<xsl:otherwise>#arguments.to.<xsl:value-of select="@alias" />#</xsl:otherwise>
+						</xsl:choose>"
+						<xsl:if test="@nullable = 'true'">	
+							null="#Iif(NOT Len(arguments.to.<xsl:value-of select="@alias" />), DE(true), DE(false))#"
+						</xsl:if> /&gt;
+						
+						<xsl:if test="position() != last()">,</xsl:if>
+						
+						<xsl:if test="@identity = 'true' or @sequence != ''">
+							&lt;/cfif&gt;
+						</xsl:if>
+						
 					</xsl:for-each>
 				)
 				
 				<!-- some dbms require the last inserted id syntax to be run at the same time as the query -->
-				&lt;cfif ListFindNoCase("mssql", _getConfig().getType())&gt;
+				&lt;cfif Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
 					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
-				&lt;/cfif&gt;
-				
+				&lt;/cfif&gt;	
 			&lt;/cfquery&gt;
+			
 			<!-- other dbms require this in a seperate query -->
-			&lt;cfif NOT ListFindNoCase("mssql", _getConfig().getType())&gt;
+			&lt;cfif NOT Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
 				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;	
 					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
 				&lt;/cfquery&gt;		
 			&lt;/cfif&gt;
 		&lt;/cftransaction&gt;
-			
+		
 		<xsl:if test="object/fields/field[@identity = 'true']">
-			&lt;cfif qCreate.recordCount&gt;
+			&lt;cfif Convention.supportsIdentity() AND qCreate.recordCount&gt;
 				&lt;cfset arguments.to.<xsl:value-of select="object/fields/field[@identity = 'true']/@alias" /> = qCreate.id /&gt;
 			&lt;/cfif&gt;
 		</xsl:if>

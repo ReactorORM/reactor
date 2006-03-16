@@ -1,32 +1,44 @@
 -- Postgres Create Database
 
+-- The tables below could be created using the serial data type.  However, 
+-- because reactorblog is supposed to work across multiple systems I run into
+-- a problem with Oracle support.  Specifically, oracle's sequences are limited to 
+-- shorter names than postgres'.  So, I've decided to just go ahead and specify my
+-- sequence names and use those as the defaults for the columns that would otherwise
+-- typically be serial.
 
+create sequence "category_categoryid" ;
+create sequence "comment_commentid" ;
+create sequence "entrycategory_entrycategoryid" ;
+create sequence "entry_entryid" ;
+create sequence "subscriber_subscriberid" ;
+create sequence "user_userid" ;
 
 CREATE TABLE "Category" (
-  "categoryId" serial NOT NULL,
+  "categoryId" integer DEFAULT nextval('category_categoryid') NOT NULL,
   "name" VARCHAR(50) NOT NULL,
   PRIMARY KEY ("categoryId")
 );
 
 CREATE TABLE "Comment" (
-  "commentID" serial NOT NULL,
+  "commentId" integer DEFAULT nextval('comment_commentid') NOT NULL,
   "entryId" INT NOT NULL,
   "name" VARCHAR(50) NOT NULL,
   "emailAddress" VARCHAR(50) NULL,
   "comment" TEXT NOT NULL,
   "posted" TIMESTAMP NOT NULL,
   "subscribe" BOOLEAN NOT NULL DEFAULT true,
-  PRIMARY KEY ("commentID")
+  PRIMARY KEY ("commentId")
 );
 
 CREATE TABLE "Entry" (
-  "entryId" serial NOT NULL,
+  "entryId" integer DEFAULT nextval('entry_entryid') NOT NULL,
   "title" VARCHAR(200) NOT NULL,
   "preview" VARCHAR(1000) NULL,
   "article" TEXT NOT NULL,
   "publicationDate" TIMESTAMP NOT NULL,
   "postedByUserId" INT NOT NULL,
-  "disableComments" BOOLEAN NOT NULL,
+  "disableComments" INT2 NOT NULL,
   "views" INT NOT NULL,
   "totalRating" INT NOT NULL,
   "timesRated" INT NOT NULL,
@@ -34,20 +46,20 @@ CREATE TABLE "Entry" (
 );
 
 CREATE TABLE "EntryCategory" (
-  "entryCategoryId" serial NOT NULL,
+  "entryCategoryId" integer DEFAULT nextval('entrycategory_entrycategoryid') NOT NULL,
   "entryId" INT NOT NULL,
   "categoryId" INT NOT NULL,
   PRIMARY KEY ("entryCategoryId")
 );
 
 CREATE TABLE "Subscriber" (
-  "subscriberId" serial NOT NULL,
+  "subscriberId" integer DEFAULT nextval('subscriber_subscriberid') NOT NULL,
   "fullName" VARCHAR(50) NOT NULL,
   PRIMARY KEY ("subscriberId")
 );
 
 CREATE TABLE "User" (
-  "userId" serial NOT NULL,
+  "userId" integer DEFAULT nextval('user_userid') NOT NULL,
   "username" VARCHAR(20) NOT NULL,
   "password" VARCHAR(20) NOT NULL,
   "firstName" VARCHAR(20) NOT NULL,

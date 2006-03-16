@@ -57,7 +57,7 @@
 		<cfset var where = arguments.Query.getWhere().getWhere() />
 		<cfset var order = arguments.Query.getOrder().getOrder() />
 		<cfset var whereNode = 0 />
-		<cfset var orderNodes = 0 />
+		<cfset var orderNode = 0 />
 		<cfset var x = 0 />
 		
 		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
@@ -69,11 +69,11 @@
 			</cfif>
 			
 			<!--- collumns --->
-			#arguments.Query.getSelectAsString(Convention)#
+			#arguments.Query.getSelectAsString()#
 			
 			FROM
 						
-			#arguments.Query.getFromAsString(Convention)#
+			#arguments.Query.getFromAsString()#
 			
 			<cfif ArrayLen(where)>
 				WHERE
@@ -298,7 +298,11 @@
 					</cfif>
 					
 				</cfloop>
-			</cfif>			
+			</cfif>		
+			
+			<!---<cfif getMetadata(this).name IS "Data.Gateway.LocaleGatewaymssql">
+			<cfabort>	
+			</cfif>--->
 		</cfquery>
 		
 		<cfif arguments.releaseQuery>

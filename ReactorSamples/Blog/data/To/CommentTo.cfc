@@ -3,6 +3,8 @@
 	extends="reactor.project.ReactorBlog.To.CommentTo">
 	<!--- Place custom code here, it will not be overwritten --->
 	
+	<cfset this.subscribe = "0" />
 	<cfset this.Posted = Now() />
+	
 </cfcomponent>
 	

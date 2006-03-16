@@ -1,7 +1,7 @@
 <reactor>
 	<config>
 		<project value="ContactManager" />
-		<dsn value="ContactManagerDB2" />
+		<dsn value="ContactManagerDb2" />
 		<type value="db2" />
 		<mapping value="/ContactManagerData" />
 		<mode value="production" />
@@ -12,6 +12,8 @@
 
 	<objects>
 		<object name="Contact">
+			<field name="contactId" sequence="Contact_contactId" />
+			
 			<hasMany name="Address">
 				<relate from="contactId" to="contactId" />
 			</hasMany>
@@ -24,6 +26,8 @@
 		</object>
 		
 		<object name="Address">
+			<field name="addressId" sequence="Address_addressId" />			
+			
 			<hasOne name="State">
 				<relate from="stateId" to="stateId" />
 			</hasOne>
@@ -31,5 +35,14 @@
 				<relate from="countryId" to="countryId" />
 			</hasOne>
 		</object>
+		
+		<object name="EmailAddress">
+			<field name="emailAddressId" sequence="EmailAddress_emailAddressId" />			
+		</object>
+		
+		<object name="PhoneNumber">
+			<field name="phoneNumberId" sequence="PhoneNumber_phoneNumberId" />			
+		</object>
+		
 	</objects>
 </reactor>

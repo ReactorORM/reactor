@@ -291,7 +291,7 @@
 	<!--- DoGetComment --->
 	<cffunction name="DoGetComment" access="Public" returntype="void" output="false" hint="I get or create a comment.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var CommentRecord = variables.Reactor.createRecord("Comment").load(commentID=arguments.event.getValue("commentID", 0)) />
+		<cfset var CommentRecord = variables.Reactor.createRecord("Comment").load(commentId=arguments.event.getValue("commentId", 0)) />
 		
 		<!--- update the entry --->
 		<cfset arguments.event.makeEventBean(CommentRecord) />

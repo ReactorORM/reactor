@@ -18,7 +18,7 @@
 
 	<cffunction name="readObject" access="private" hint="I confirm that this object exists at all.  If not, I throw an error." output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to check on." required="yes" type="reactor.core.object" />
-		<cfset qObject = 0 />
+		<cfset var qObject = 0 />
 		
 		<cfquery name="qObject" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT 

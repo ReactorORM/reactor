@@ -201,8 +201,14 @@
 	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="string">
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
-		<!--- <cfargument name="base" hint="I indicate if the base object name should be returned.  If false, the custom is returned." required="no" type="boolean" default="false" /> --->
-		<cfset var creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
+		<cfset var creationPath = "" />
+		
+		<!--- if the user doesn't have a leading slash on their mapping then add one --->
+		<cfif left(getConfig().getMapping(), 1) IS NOT "/">
+			<cfset getConfig().setMapping("/" & getConfig().getMapping()) />
+		</cfif>
+		
+		<cfset creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
 				
 		<cfreturn creationPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
 	</cffunction>

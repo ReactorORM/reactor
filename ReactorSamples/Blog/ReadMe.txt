@@ -1,21 +1,11 @@
 
-To get this sample to work you will need to create the database using a create script.  When this document 
-was written the options were:
+To get this sample to work you will need to create the database using a create script. 
 
-MSSQL Create Database.sql	- For Microsoft SQL
-MySQL Create Database.sql	- For MySQL
-
-After you've created the database create a DSN named ReactorBlog.  If you need to change the name of the
-DSN update the reactor.xml in the config folder file and set the dsn value to your new DSN.  For example, change
+After you've created the database create a DSN and update the reactor.xml config file to use the correct DSN name.  For example:
 
 <dsn value="FooBarBlog" />
 
-To 
-
-<dsn value="MyBlog" />
-
-Also, you will need to update the type value to the correct type.  Options are (currently) mysql or mssql.
-(mysql4 is not supported yet.) Here's an example:
+Also, you will need to update the type value to the correct type.  See the docs for current examples.
 
 <type value="mysql" />
 
@@ -23,6 +13,9 @@ The blog sample application uses the Model-Glue framework.  If you don't already
 it from http://www.model-glue.com/index.cfm.  Extract it and create a ColdFusion mapping named "/ModelGlue" to the core ModelGlue folder.
 
 Also, in the /Config/Beans directory there are some configuration files you can tweak to make the blog behave as you want.   
+
+Note for DB2 and Oracle users:  The scripts are created assuming an administrative account.  So in DB2 the schema is NULLID.  In Oracle
+it's system.  If you have problems you should look in the dbms-specific custom metadata files and update these to be correct.
 
 --------------------------------------------------------------------------------------------------------------
 

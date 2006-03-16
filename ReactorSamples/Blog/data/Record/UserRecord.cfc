@@ -7,7 +7,7 @@
 	
 	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
-		<cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) />
+		<cfset var Dictionary = _getDictionary() />
 		<cfset var UserGateway = _getReactorFactory().createGateway("User") />
 		<cfset super.validate(arguments.ValidationErrorCollection) />
 		
@@ -15,7 +15,7 @@
 		
 		<!--- insure that another user with the same username does not already exist --->
 		<cfif UserGateway.validateUserName(getUserId(), getUserName())>
-			<cfset arguments.ValidationErrorCollection.addError("userName", ErrorManager.getError("User", "Username", "duplicateName")) />
+			<cfset arguments.ValidationErrorCollection.addError("userName", Dictionary.getValue("Username.duplicateName")) />
 		</cfif>
 		
 		<cfreturn arguments.ValidationErrorCollection />
@@ -23,7 +23,6 @@
 	
 	<cffunction name="validateLogon" access="public" hint="I validate that this object has the minimum information needed to logon." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
-		<cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) />
 		
 		<cfreturn arguments.ValidationErrorCollection />
 	</cffunction>

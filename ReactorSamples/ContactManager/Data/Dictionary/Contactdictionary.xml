@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<dictionary>
+		<contactId>
+			<label>contactId</label>
+			<comment/>
+			<maxlength>22</maxlength>
+			<notProvided>The contactId field is required but was not provided.</notProvided>
+			<invalidType>The contactId field does not contain valid data.  This field must be a numeric value.</invalidType>
+			<invalidLength>The contactId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
+		</contactId>
+		<lastName>
+			<label>lastName</label>
+			<comment/>
+			<maxlength>50</maxlength>
+			<notProvided>The lastName field is required but was not provided.</notProvided>
+			<invalidType>The lastName field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The lastName field is too long.  This field must be no more than 50 bytes long.</invalidLength>
+		</lastName>
+		<firstName>
+			<label>firstName</label>
+			<comment/>
+			<maxlength>50</maxlength>
+			<notProvided>The firstName field is required but was not provided.</notProvided>
+			<invalidType>The firstName field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The firstName field is too long.  This field must be no more than 50 bytes long.</invalidLength>
+		</firstName>
+	</dictionary>

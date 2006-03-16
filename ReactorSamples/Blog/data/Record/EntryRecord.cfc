@@ -5,7 +5,7 @@
 	
 	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
-		<cfset var ErrorManager = CreateObject("Component", "reactor.core.ErrorManager").init(expandPath("#_getConfig().getMapping()#/ErrorMessages.xml")) />
+		<cfset var Dictionary = _getDictionary() />
 		<!--- strip all html and special characters to see if the user actually provided an article --->
 		<cfset var article = Trim(ReReplaceNoCase(getArticle(), '(<(.|\n)+?>)|&.+?;|\r|\n|\t', "", "all")) />
 		
@@ -14,12 +14,12 @@
 				
 		<!--- make sure the user actually provided an article --->
 		<cfif NOT Len(article)>
-			<cfset arguments.ValidationErrorCollection.addError("article", ErrorManager.getError("Entry", "Article", "notProvided")) />
+			<cfset arguments.ValidationErrorCollection.addError("article", Dictionary.getValue("Article.notProvided")) />
 		</cfif>
 		
 		<!--- insure that at least one category was selected/provided --->
 		<cfif NOT Len(getNewCategoryList()) AND NOT Len(getCategoryIdList())>
-			<cfset arguments.ValidationErrorCollection.addError("categoryIdList", ErrorManager.getError("Entry", "CategoryIdList", "NoCategorySelected")) />
+			<cfset arguments.ValidationErrorCollection.addError("categoryIdList", Dictionary.getValue("CategoryIdList.NoCategorySelected")) />
 		</cfif>
 		
 		<!--- Add custom validation logic here, it will not be overwritten --->

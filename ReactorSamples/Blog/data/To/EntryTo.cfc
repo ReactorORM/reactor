@@ -3,8 +3,9 @@
 	extends="reactor.project.ReactorBlog.To.EntryTo">
 	<!--- Place custom code here, it will not be overwritten --->
 	
-	<cfset this.PublicationDate = Now() />
+	<cfset this.publicationDate = Now() />
 	<cfset this.categoryIdList = "0" />
+	<cfset this.disableComments = "0" />
 	<cfset this.newCategoryList = "" />
 	
 </cfcomponent>

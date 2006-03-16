@@ -4,7 +4,7 @@
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 		
 		<cfreturn "SELECT LAST_INSERT_ID() as Id" />
-		
+
 	</cffunction>
 	
 	<cffunction name="formatObjectAlias" access="public" hint="I format the object name" output="false" returntype="string">
@@ -55,6 +55,14 @@
 	
 	<cffunction name="supportsSequences" access="public" hint="I indicate if the DB support sequences" output="false" returntype="boolean">
 		<cfreturn false />		
+	</cffunction>
+
+	<cffunction name="supportsIdentity" access="public" hint="I indicate if the DB support identity columns (and has a system for automaticaly getting the last value)." output="false" returntype="boolean">
+		<cfreturn true />
+	</cffunction>
+
+	<cffunction name="supportsMultiStatementQueries" access="public" hint="I indicate if the DB support more than one statment in a query." output="false" returntype="boolean">
+		<cfreturn false />
 	</cffunction>
 	
 	<cffunction name="formatValue" access="public" hint="I format a value based on it's type." output="false" returntype="string">

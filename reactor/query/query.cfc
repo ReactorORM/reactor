@@ -50,6 +50,9 @@
 	
 		<!--- order --->
 		<cfset variables.order.init(this) />
+		
+		<!--- convention --->
+		<cfset variables.convention = arguments.BaseObjectMetadata.getConventions() />
 
 		<cfset Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
 		
@@ -96,14 +99,12 @@
 	
 	<!--- getFromAsString --->
 	<cffunction name="getFromAsString" access="public" hint="I convert the from objects to a sql from fragment." output="false" returntype="string">
-		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
-		<cfreturn getFrom().getFromAsString(arguments.Convention) />
+		<cfreturn getFrom().getFromAsString(variables.convention) />
 	</cffunction>
 	
 	<!--- getSelectAsString --->
 	<cffunction name="getSelectAsString" access="public" hint="I convert the from objects to a sql select fragment" output="false" returntype="string">
-		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
-		<cfreturn getFrom().getSelectAsString(arguments.Convention, getReturnFields()) />
+		<cfreturn getFrom().getSelectAsString(variables.convention, getReturnFields()) />
 	</cffunction>
 	
 	<!--- findObject --->

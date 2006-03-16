@@ -8,7 +8,7 @@
 	extends="reactor.base.abstractRecord" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
-	
+
 	&lt;cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record"&gt;
 		<xsl:for-each select="//field">
 			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="I am the default value for the <xsl:value-of select="@alias" /> field." required="no" type="string" default="<xsl:value-of select="@default" />" /&gt;
@@ -21,12 +21,13 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
-		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
+		&lt;cfargument name="ExternalValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
 		&lt;cfset var Event = 0 /&gt;
-				
+		&lt;cfset var ValidationErrorCollection = createErrorCollection() /&gt;
+		
 		&lt;!--- raise the beforeValidate event ---&gt;
 		&lt;cfset Event = newEvent("beforeValidate") /&gt;
-		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ExternalValidationErrorCollection) /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
@@ -114,13 +115,19 @@
 			</xsl:choose>
 		</xsl:for-each>
 		
+		&lt;!--- save this object's collection ---&gt;
+		&lt;cfset _setValidationErrorCollection(ValidationErrorCollection) /&gt;
+		
+		&lt;!--- merge this object's collection with the provide collection (if any) ---&gt;
+		&lt;cfset arguments.ExternalValidationErrorCollection.merge(ValidationErrorCollection) /&gt;
+		
 		&lt;!--- raise the afterValidate event ---&gt;
 		&lt;cfset Event = newEvent("afterValidate") /&gt;
-		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ValidationErrorCollection) /&gt;
+		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ExternalValidationErrorCollection) /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
 		&lt;cfset announceEvent(Event) /&gt;
 		
-		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
+		&lt;cfreturn arguments.ExternalValidationErrorCollection /&gt;
 	&lt;/cffunction&gt;
 	
 	<xsl:for-each select="object/fields/field">
@@ -256,6 +263,20 @@
 		&lt;/cffunction&gt;
 	</xsl:for-each>	
 	
+	
+	
+	<xsl:for-each select="object/hasOne[@lookup = 'true']">
+	&lt;!--- Lookup For <xsl:value-of select="@alias"/> ---&gt;
+	&lt;cffunction name="get<xsl:value-of select="@alias"/>Lookup" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
+		
+		&lt;cfif NOT IsDefined("variables.<xsl:value-of select="@alias"/>Lookup")&gt;
+			&lt;cfset variables.<xsl:value-of select="@alias"/>Lookup = _getReactorFactory().createIterator("<xsl:value-of select="@alias"/>") /&gt;
+		&lt;/cfif&gt;
+		
+		&lt;cfreturn variables.<xsl:value-of select="@alias"/>Lookup /&gt;
+	&lt;/cffunction&gt;
+	</xsl:for-each>
+	
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
 	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
@@ -272,11 +293,6 @@
 	&lt;/cffunction&gt;
 	&lt;cffunction name="_getDao" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Dao.<xsl:value-of select="object/@alias"/>Dao"&gt;
 	    &lt;cfreturn variables.dao /&gt;
-	&lt;/cffunction&gt;
-	
-	&lt;!--- getDictionary ---&gt;
-	&lt;cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary"&gt;
-	    &lt;cfreturn _getReactorFactory().createDictionary("<xsl:value-of select="object/@alias"/>") /&gt;
 	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;

@@ -55,7 +55,7 @@ CREATE TABLE [dbo].[Category] (
 GO
 
 CREATE TABLE [dbo].[Comment] (
-	[commentID] [int] IDENTITY (1, 1) NOT NULL ,
+	[commentId] [int] IDENTITY (1, 1) NOT NULL ,
 	[entryId] [int] NOT NULL ,
 	[name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
 	[emailAddress] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
@@ -112,7 +112,7 @@ GO
 ALTER TABLE [dbo].[Comment] WITH NOCHECK ADD 
 	CONSTRAINT [PK_Comments] PRIMARY KEY  CLUSTERED 
 	(
-		[commentID]
+		[commentId]
 	) WITH  FILLFACTOR = 90  ON [PRIMARY] 
 GO
 

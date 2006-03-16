@@ -1,63 +1,63 @@
 
 
 CREATE TABLE `Contact` (
-	`contactId` int NOT NULL auto_increment  ,
-	`firstName` varchar(50) NOT NULL ,
-	`lastName` varchar(50) NOT NULL ,
-	PRIMARY KEY  (`contactId`)
+  `contactId` int NOT NULL auto_increment  ,
+  `firstName` varchar(50) NOT NULL ,
+  `lastName` varchar(50) NOT NULL ,
+  PRIMARY KEY  (`contactId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `Country` (
-	`countryId` smallint NOT NULL auto_increment  ,
-	`abbreviation` varchar(10) NOT NULL ,
-	`name` varchar(50) NOT NULL ,
-	`sortOrder` tinyint NOT NULL ,
-	PRIMARY KEY  (`countryId`)
+  `countryId` smallint NOT NULL auto_increment  ,
+  `abbreviation` varchar(10) NOT NULL ,
+  `name` varchar(50) NOT NULL ,
+  `sortOrder` tinyint NOT NULL ,
+  PRIMARY KEY  (`countryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `State` (
-	`stateId` smallint NOT NULL auto_increment  ,
-	`abbreviation` varchar(5) NOT NULL ,
-	`name` varchar(50) NOT NULL ,
-	PRIMARY KEY  (`stateId`)
+  `stateId` smallint NOT NULL auto_increment  ,
+  `abbreviation` varchar(5) NOT NULL ,
+  `name` varchar(50) NOT NULL ,
+  PRIMARY KEY  (`stateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 CREATE TABLE `Address` (
-	`addressId` int NOT NULL auto_increment,
-	`contactId` int NOT NULL ,
-	`line1` varchar(50) NOT NULL ,
-	`line2` varchar(50) NULL ,
-	`city` varchar(50) NOT NULL ,
-	`stateId` smallint NULL ,
-	`postalCode` varchar(20) NOT NULL ,
-	`countryId` smallint NOT NULL ,
-	PRIMARY KEY  (`addressId`),
-	KEY `FK_address_1` (`stateId`),
-	KEY `FK_address_2` (`countryId`),
-	KEY `FK_address_3` (`contactId`),
-	CONSTRAINT `FK_address_1` FOREIGN KEY (`stateId`) REFERENCES `State` (`stateId`),
-	CONSTRAINT `FK_address_2` FOREIGN KEY (`countryId`) REFERENCES `Country` (`countryId`),
-	CONSTRAINT `FK_address_3` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
+  `addressId` int NOT NULL auto_increment,
+  `contactId` int NOT NULL ,
+  `line1` varchar(50) NOT NULL ,
+  `line2` varchar(50) NULL ,
+  `city` varchar(50) NOT NULL ,
+  `stateId` smallint NULL ,
+  `postalCode` varchar(20) NOT NULL ,
+  `countryId` smallint NOT NULL ,
+  PRIMARY KEY  (`addressId`),
+  KEY `FK_address_1` (`stateId`),
+  KEY `FK_address_2` (`countryId`),
+  KEY `FK_address_3` (`contactId`),
+  CONSTRAINT `FK_address_1` FOREIGN KEY (`stateId`) REFERENCES `State` (`stateId`),
+  CONSTRAINT `FK_address_2` FOREIGN KEY (`countryId`) REFERENCES `Country` (`countryId`),
+  CONSTRAINT `FK_address_3` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `EmailAddress` (
-	`emailAddressId` int NOT NULL auto_increment  ,
-	`contactId` int NOT NULL ,
-	`emailAddress` varchar(100) NOT NULL ,
-	PRIMARY KEY  (`emailAddressId`),
-	KEY `FK_EmailAddress_1` (`contactId`),
-	CONSTRAINT `FK_EmailAddress_1` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
+  `emailAddressId` int NOT NULL auto_increment  ,
+  `contactId` int NOT NULL ,
+  `emailAddress` varchar(100) NOT NULL ,
+  PRIMARY KEY  (`emailAddressId`),
+  KEY `FK_EmailAddress_1` (`contactId`),
+  CONSTRAINT `FK_EmailAddress_1` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `PhoneNumber` (
-	`phoneNumberId` int NOT NULL auto_increment  ,
-	`contactId` int NOT NULL ,
-	`phoneNumber` varchar(50) NOT NULL ,
-	PRIMARY KEY  (`phoneNumberId`),
-	KEY `FK_PhoneNumber_1` (`contactId`),
-	CONSTRAINT `FK_PhoneNumber_1` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
+  `phoneNumberId` int NOT NULL auto_increment  ,
+  `contactId` int NOT NULL ,
+  `phoneNumber` varchar(50) NOT NULL ,
+  PRIMARY KEY  (`phoneNumberId`),
+  KEY `FK_PhoneNumber_1` (`contactId`),
+  CONSTRAINT `FK_PhoneNumber_1` FOREIGN KEY (`contactId`) REFERENCES `Contact` (`contactId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -266,6 +266,7 @@ INSERT INTO `State`
   name
 ) VALUES (
   'KY',
+
   'Kentucky'
 );
 
@@ -742,3350 +743,3352 @@ INSERT INTO `State`
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ABW',
-	'Aruba',
-	'0'
+  'ABW',
+  'Aruba',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AFG',
-	'Afghanistan',
-	'0'
+  'AFG',
+  'Afghanistan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AGO',
-	'Angola',
-	'0'
+  'AGO',
+  'Angola',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AIA',
-	'Anguilla',
-	'0'
+  'AIA',
+  'Anguilla',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ALB',
-	'Albania',
-	'0'
+  'ALB',
+  'Albania',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AND',
-	'Andorra',
-	'0'
+  'AND',
+  'Andorra',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ANT',
-	'Netherlands Antilles',
-	'0'
+  'ANT',
+  'Netherlands Antilles',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ARE',
-	'United Arab Emirates',
-	'0'
+  'ARE',
+  'United Arab Emirates',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ARG',
-	'Argentina',
-	'0'
+  'ARG',
+  'Argentina',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ARM',
-	'Armenia',
-	'0'
+  'ARM',
+  'Armenia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ASM',
-	'American Samoa',
-	'0'
+  'ASM',
+  'American Samoa',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ATA',
-	'Antarctica',
-	'0'
+  'ATA',
+  'Antarctica',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ATF',
-	'French Southern Territories',
-	'0'
+  'ATF',
+  'French Southern Territories',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ATG',
-	'Antigua and Barbuda',
-	'0'
+  'ATG',
+  'Antigua and Barbuda',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AUS',
-	'Australia',
-	'0'
+  'AUS',
+  'Australia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AUT',
-	'Austria',
-	'0'
+  'AUT',
+  'Austria',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'AZE',
-	'Azerbaijan',
-	'0'
+  'AZE',
+  'Azerbaijan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BDI',
-	'Burundi',
-	'0'
+  'BDI',
+  'Burundi',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BEL',
-	'Belgium',
-	'0'
+  'BEL',
+  'Belgium',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BEN',
-	'Benin',
-	'0'
+  'BEN',
+  'Benin',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BFA',
-	'Burkina Faso',
-	'0'
+  'BFA',
+  'Burkina Faso',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BGD',
-	'Bangladesh',
-	'0'
+  'BGD',
+  'Bangladesh',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BGR',
-	'Bulgaria',
-	'0'
+  'BGR',
+  'Bulgaria',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BHR',
-	'Bahrain',
-	'0'
+  'BHR',
+  'Bahrain',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BHS',
-	'Bahamas',
-	'0'
+  'BHS',
+  'Bahamas',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BIH',
-	'Bosnia and Herzegowina',
-	'0'
+  'BIH',
+  'Bosnia and Herzegowina',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BLR',
-	'Belarus',
-	'0'
+  'BLR',
+  'Belarus',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BLZ',
-	'Belize',
-	'0'
+  'BLZ',
+  'Belize',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BMU',
-	'Bermuda',
-	'0'
+  'BMU',
+  'Bermuda',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BOL',
-	'Bolivia',
-	'0'
+  'BOL',
+  'Bolivia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BRA',
-	'Brazil',
-	'0'
+  'BRA',
+  'Brazil',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BRB',
-	'Barbados',
-	'0'
+  'BRB',
+  'Barbados',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BRN',
-	'Brunei Darussalam',
-	'0'
+  'BRN',
+  'Brunei Darussalam',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BTN',
-	'Bhutan',
-	'0'
+  'BTN',
+  'Bhutan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BVT',
-	'Bouvet Island',
-	'0'
+  'BVT',
+  'Bouvet Island',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'BWA',
-	'Botswana',
-	'0'
+  'BWA',
+  'Botswana',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CAF',
-	'Central African Republic',
-	'0'
+  'CAF',
+  'Central African Republic',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CAN',
-	'Canada',
-	'4'
+  'CAN',
+  'Canada',
+  '4'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CCK',
-	'Cocos (Keeling) Islands',
-	'0'
+  'CCK',
+  'Cocos (Keeling) Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CHE',
-	'Switzerland',
-	'0'
+  'CHE',
+  'Switzerland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CHL',
-	'Chile',
-	'0'
+  'CHL',
+  'Chile',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CHN',
-	'China',
-	'0'
+  'CHN',
+  'China',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CIV',
-	'Cote D''Ivoire',
-	'0'
+  'CIV',
+  'Cote D''Ivoire',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CMR',
-	'Cameroon',
-	'0'
+  'CMR',
+  'Cameroon',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'COG',
-	'Congo',
-	'0'
+  'COG',
+  'Congo',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'COK',
-	'Cook Islands',
-	'0'
+  'COK',
+  'Cook Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'COL',
-	'Colombia',
-	'0'
+  'COL',
+  'Colombia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'COM',
-	'Comoros',
-	'0'
+  'COM',
+  'Comoros',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CPV',
-	'Cape Verde',
-	'0'
+  'CPV',
+  'Cape Verde',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CRI',
-	'Costa Rica',
-	'0'
+  'CRI',
+  'Costa Rica',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CUB',
-	'Cuba',
-	'0'
+  'CUB',
+  'Cuba',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CXR',
-	'Christmas Island',
-	'0'
+  'CXR',
+  'Christmas Island',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CYM',
-	'Cayman Islands',
-	'0'
+  'CYM',
+  'Cayman Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CYP',
-	'Cyprus',
-	'0'
+  'CYP',
+  'Cyprus',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'CZE',
-	'Czech Republic',
-	'0'
+  'CZE',
+  'Czech Republic',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DEU',
-	'Germany',
-	'0'
+  'DEU',
+  'Germany',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DJI',
-	'Djibouti',
-	'0'
+  'DJI',
+  'Djibouti',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DMA',
-	'Dominica',
-	'0'
+  'DMA',
+  'Dominica',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DNK',
-	'Denmark',
-	'0'
+  'DNK',
+  'Denmark',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DOM',
-	'Dominican Republic',
-	'0'
+  'DOM',
+  'Dominican Republic',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'DZA',
-	'Algeria',
-	'0'
+  'DZA',
+  'Algeria',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ECU',
-	'Ecuador',
-	'0'
+  'ECU',
+  'Ecuador',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'EGY',
-	'Egypt',
-	'0'
+  'EGY',
+  'Egypt',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ERI',
-	'Eritrea',
-	'0'
+  'ERI',
+  'Eritrea',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ESH',
-	'Western Sahara',
-	'0'
+
+  'ESH',
+  'Western Sahara',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ESP',
-	'Spain',
-	'0'
+  'ESP',
+  'Spain',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'EST',
-	'Estonia',
-	'0'
+  'EST',
+  'Estonia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ETH',
-	'Ethiopia',
-	'0'
+  'ETH',
+  'Ethiopia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FIN',
-	'Finland',
-	'0'
+  'FIN',
+  'Finland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FJI',
-	'Fiji',
-	'0'
+  'FJI',
+  'Fiji',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FLK',
-	'Falkland Islands (Malvinas)',
-	'0'
+  'FLK',
+  'Falkland Islands (Malvinas)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FRA',
-	'France',
-	'0'
+  'FRA',
+  'France',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FRO',
-	'Faroe Islands',
-	'0'
+  'FRO',
+  'Faroe Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FSM',
-	'Micronesia',
-	'0'
+  'FSM',
+  'Micronesia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'FXX',
-	'France, Metropolitan',
-	'0'
+  'FXX',
+  'France, Metropolitan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GAB',
-	'Gabon',
-	'0'
+  'GAB',
+  'Gabon',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GBR',
-	'United Kingdom',
-	'3'
+  'GBR',
+  'United Kingdom',
+  '3'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GEO',
-	'Georgia',
-	'0'
+  'GEO',
+  'Georgia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GHA',
-	'Ghana',
-	'0'
+  'GHA',
+  'Ghana',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GIB',
-	'Gibraltar',
-	'0'
+  'GIB',
+  'Gibraltar',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GIN',
-	'Guinea',
-	'0'
+  'GIN',
+  'Guinea',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GLP',
-	'Guadeloupe',
-	'0'
+  'GLP',
+  'Guadeloupe',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GMB',
-	'Gambia',
-	'0'
+  'GMB',
+  'Gambia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GNB',
-	'Guinea-Bissau',
-	'0'
+  'GNB',
+  'Guinea-Bissau',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GNQ',
-	'Equatorial Guinea',
-	'0'
+  'GNQ',
+  'Equatorial Guinea',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GRC',
-	'Greece',
-	'0'
+  'GRC',
+  'Greece',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GRD',
-	'Grenada',
-	'0'
+  'GRD',
+  'Grenada',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GRL',
-	'Greenland',
-	'0'
+  'GRL',
+  'Greenland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GTM',
-	'Guatemala',
-	'0'
+  'GTM',
+  'Guatemala',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GUF',
-	'French Guiana',
-	'0'
+  'GUF',
+  'French Guiana',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GUM',
-	'Guam',
-	'0'
+  'GUM',
+  'Guam',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'GUY',
-	'Guyana',
-	'0'
+  'GUY',
+  'Guyana',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HKG',
-	'Hong Kong',
-	'0'
+  'HKG',
+  'Hong Kong',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HMD',
-	'Heard/McDonald Isls.',
-	'0'
+  'HMD',
+  'Heard/McDonald Isls.',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HND',
-	'Honduras',
-	'0'
+  'HND',
+  'Honduras',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HRV',
-	'Croatia (Hrvatska)',
-	'0'
+  'HRV',
+  'Croatia (Hrvatska)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HTI',
+  'HTI',
 
-	'Haiti',
-	'0'
+  'Haiti',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'HUN',
-	'Hungary',
-	'0'
+  'HUN',
+  'Hungary',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
+
 )
 VALUES
 (
-	'IDN',
-	'Indonesia',
-	'0'
+  'IDN',
+  'Indonesia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'IND',
-	'India',
-	'0'
+  'IND',
+  'India',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'IOT',
-	'British Indian Ocean Terr.',
-	'0'
+  'IOT',
+  'British Indian Ocean Terr.',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'IRL',
-	'Ireland',
-	'0'
+  'IRL',
+  'Ireland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'IRN',
-	'Iran',
-	'0'
+  'IRN',
+  'Iran',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'IRQ',
-	'Iraq',
-	'0'
+  'IRQ',
+  'Iraq',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ISL',
-	'Iceland',
-	'0'
+  'ISL',
+  'Iceland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ISR',
-	'Israel',
-	'0'
+  'ISR',
+  'Israel',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ITA',
-	'Italy',
-	'0'
+  'ITA',
+  'Italy',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'JAM',
-	'Jamaica',
-	'0'
-)
+  'JAM',
+  'Jamaica',
+  '0'
+);
 
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'JOR',
-	'Jordan',
-	'0'
+  'JOR',
+  'Jordan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'JPN',
-	'Japan',
-	'0'
+  'JPN',
+  'Japan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KAZ',
-	'Kazakhstan',
-	'0'
+  'KAZ',
+  'Kazakhstan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KEN',
-	'Kenya',
-	'0'
+  'KEN',
+  'Kenya',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KGZ',
-	'Kyrgyzstan',
-	'0'
+  'KGZ',
+  'Kyrgyzstan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KHM',
-	'Cambodia',
-	'0'
+  'KHM',
+  'Cambodia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KIR',
-	'Kiribati',
-	'0'
+  'KIR',
+  'Kiribati',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KNA',
-	'Saint Kitts and Nevis',
-	'0'
+  'KNA',
+  'Saint Kitts and Nevis',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KOR',
-	'Korea (South)',
-	'0'
+  'KOR',
+  'Korea (South)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'KWT',
-	'Kuwait',
-	'0'
+  'KWT',
+  'Kuwait',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LAO',
-	'Lao',
-	'0'
+  'LAO',
+  'Lao',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LBN',
-	'Lebanon',
-	'0'
+  'LBN',
+  'Lebanon',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LBR',
-	'Liberia',
-	'0'
+  'LBR',
+  'Liberia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LBY',
-	'Libyan Arab Jamahiriya',
-	'0'
+  'LBY',
+  'Libyan Arab Jamahiriya',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LCA',
-	'Saint Lucia',
-	'0'
+  'LCA',
+  'Saint Lucia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LIE',
-	'Liechtenstein',
-	'0'
+  'LIE',
+  'Liechtenstein',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LKA',
-	'Sri Lanka',
-	'0'
+  'LKA',
+  'Sri Lanka',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LSO',
-	'Lesotho',
-	'0'
+  'LSO',
+  'Lesotho',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LTU',
-	'Lithuania',
-	'0'
+  'LTU',
+  'Lithuania',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LUX',
-	'Luxembourg',
-	'0'
+  'LUX',
+  'Luxembourg',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'LVA',
-	'Latvia',
-	'0'
+  'LVA',
+  'Latvia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MAC',
-	'Macau',
-	'0'
+  'MAC',
+  'Macau',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MAR',
-	'Morocco',
-	'0'
+  'MAR',
+  'Morocco',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MCO',
-	'Monaco',
-	'0'
+  'MCO',
+  'Monaco',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MDA',
-	'Moldova',
-	'0'
+  'MDA',
+  'Moldova',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MDG',
-	'Madagascar',
-	'0'
+  'MDG',
+  'Madagascar',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MDV',
-	'Maldives',
-	'0'
+  'MDV',
+  'Maldives',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MEX',
-	'Mexico',
-	'0'
+  'MEX',
+  'Mexico',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MHL',
-	'Marshall Islands',
-	'0'
+  'MHL',
+  'Marshall Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MKD',
-	'Macedonia',
-	'0'
+  'MKD',
+  'Macedonia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MLI',
-	'Mali',
-	'0'
+  'MLI',
+  'Mali',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MLT',
-	'Malta',
-	'0'
+  'MLT',
+  'Malta',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MMR',
-	'Myanmar',
-	'0'
+  'MMR',
+  'Myanmar',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MNG',
-	'Mongolia',
-	'0'
+  'MNG',
+  'Mongolia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MNP',
-	'Northern Mariana Isls.',
-	'0'
+  'MNP',
+  'Northern Mariana Isls.',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MOZ',
-	'Mozambique',
-	'0'
+  'MOZ',
+  'Mozambique',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MRT',
-	'Mauritania',
-	'0'
+  'MRT',
+  'Mauritania',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MSR',
-	'Montserrat',
-	'0'
+  'MSR',
+  'Montserrat',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MTQ',
-	'Martinique',
-	'0'
+  'MTQ',
+  'Martinique',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MUS',
-	'Mauritius',
-	'0'
+  'MUS',
+  'Mauritius',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MWI',
-	'Malawi',
-	'0'
+  'MWI',
+  'Malawi',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MYS',
-	'Malaysia',
-	'0'
+  'MYS',
+  'Malaysia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'MYT',
-	'Mayotte',
-	'0'
+  'MYT',
+  'Mayotte',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NAM',
-	'Namibia',
-	'0'
+  'NAM',
+  'Namibia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NCL',
-	'New Caledonia',
-	'0'
+  'NCL',
+  'New Caledonia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NER',
-	'Niger',
-	'0'
+  'NER',
+  'Niger',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NFK',
-	'Norfolk Island',
-	'0'
+  'NFK',
+  'Norfolk Island',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NGA',
-	'Nigeria',
-	'0'
+  'NGA',
+  'Nigeria',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NIC',
-	'Nicaragua',
-	'0'
+  'NIC',
+  'Nicaragua',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NIU',
-	'Niue',
-	'0'
+  'NIU',
+  'Niue',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NLD',
-	'Netherlands',
-	'0'
+  'NLD',
+  'Netherlands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NOR',
-	'Norway',
-	'0'
+  'NOR',
+  'Norway',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NPL',
-	'Nepal',
-	'0'
+  'NPL',
+  'Nepal',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NRU',
-	'Nauru',
-	'0'
-)
+  'NRU',
+  'Nauru',
+  '0'
+);
 
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'NZL',
-	'New Zealand',
-	'0'
+  'NZL',
+  'New Zealand',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'OMN',
-	'Oman',
-	'0'
+  'OMN',
+  'Oman',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PAK',
-	'Pakistan',
-	'0'
+  'PAK',
+  'Pakistan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PAN',
-	'Panama',
-	'0'
+  'PAN',
+  'Panama',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PCN',
-	'Pitcairn',
-	'0'
+  'PCN',
+  'Pitcairn',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PER',
-	'Peru',
-	'0'
+  'PER',
+  'Peru',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PHL',
-	'Philippines',
-	'0'
+  'PHL',
+  'Philippines',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PLW',
-	'Palau',
-	'0'
+  'PLW',
+  'Palau',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PNG',
-	'Papua New Guinea',
-	'0'
+  'PNG',
+  'Papua New Guinea',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'POL',
-	'Poland',
-	'0'
+  'POL',
+  'Poland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PRI',
-	'Puerto Rico',
-	'0'
+  'PRI',
+  'Puerto Rico',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PRK',
-	'Korea (North)',
-	'0'
+  'PRK',
+  'Korea (North)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PRT',
-	'Portugal',
-	'0'
+  'PRT',
+  'Portugal',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PRY',
-	'Paraguay',
-	'0'
+  'PRY',
+  'Paraguay',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'PYF',
-	'French Polynesia',
-	'0'
+  'PYF',
+  'French Polynesia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'QAT',
-	'Qatar',
-	'0'
+  'QAT',
+  'Qatar',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'REU',
-	'Reunion',
-	'0'
+  'REU',
+  'Reunion',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ROM',
-	'Romania',
-	'0'
+  'ROM',
+  'Romania',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'RUS',
-	'Russian Federation',
-	'0'
+  'RUS',
+  'Russian Federation',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'RWA',
-	'Rwanda',
-	'0'
+  'RWA',
+  'Rwanda',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SAU',
-	'Saudi Arabia',
-	'0'
+  'SAU',
+  'Saudi Arabia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SDN',
-	'Sudan',
-	'0'
+  'SDN',
+  'Sudan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SEN',
-	'Senegal',
-	'0'
+  'SEN',
+  'Senegal',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SGP',
-	'Singapore',
-	'0'
+  'SGP',
+  'Singapore',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SGS',
-	'S Georgia/S Sandwich Isls.',
-	'0'
+  'SGS',
+  'S Georgia/S Sandwich Isls.',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SHN',
-	'St. Helena',
-	'0'
+  'SHN',
+  'St. Helena',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SJM',
-	'Svalbard/Jan Mayen Isls.',
-	'0'
+  'SJM',
+  'Svalbard/Jan Mayen Isls.',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SLB',
-	'Solomon Islands',
-	'0'
+  'SLB',
+  'Solomon Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SLE',
-	'Sierra Leone',
-	'0'
+  'SLE',
+  'Sierra Leone',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SLV',
-	'El Salvador',
-	'0'
+  'SLV',
+  'El Salvador',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SMR',
-	'San Marino',
-	'0'
+  'SMR',
+  'San Marino',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SOM',
-	'Somalia',
-	'0'
+  'SOM',
+  'Somalia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SPM',
-	'St. Pierre and Miquelon',
-	'0'
+  'SPM',
+  'St. Pierre and Miquelon',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'STP',
-	'Sao Tome and Principe',
-	'0'
+  'STP',
+  'Sao Tome and Principe',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SUR',
-	'Suri"Name"',
-	'0'
+  'SUR',
+  'Suri"Name"',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SVK',
-	'Slovak Republic',
-	'0'
+  'SVK',
+  'Slovak Republic',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SVN',
-	'Slovenia',
-	'0'
+  'SVN',
+  'Slovenia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SWE',
-	'Sweden',
-	'0'
+  'SWE',
+  'Sweden',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SWZ',
-	'Swaziland',
-	'0'
+  'SWZ',
+  'Swaziland',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SYC',
-	'Seychelles',
-	'0'
+  'SYC',
+  'Seychelles',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'SYR',
-	'Syrian Arab Republic',
-	'0'
+  'SYR',
+  'Syrian Arab Republic',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TCA',
-	'Turks and Caicos Islands',
-	'0'
+  'TCA',
+  'Turks and Caicos Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TCD',
-	'Chad',
-	'0'
+  'TCD',
+  'Chad',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TGO',
-	'Togo',
-	'0'
+  'TGO',
+  'Togo',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'THA',
-	'Thailand',
-	'0'
+  'THA',
+  'Thailand',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TJK',
-	'Tajikistan',
-	'0'
+  'TJK',
+  'Tajikistan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TKL',
-	'Tokelau',
-	'0'
+  'TKL',
+  'Tokelau',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TKM',
-	'Turkmenistan',
-	'0'
+  'TKM',
+  'Turkmenistan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TMP',
-	'East Timor',
-	'0'
+  'TMP',
+  'East Timor',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TON',
-	'Tonga',
-	'0'
+  'TON',
+  'Tonga',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TTO',
-	'Trinidad and Tobago',
-	'0'
+  'TTO',
+  'Trinidad and Tobago',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TUN',
-	'Tunisia',
-	'0'
+  'TUN',
+  'Tunisia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TUR',
-	'Turkey',
-	'0'
+  'TUR',
+  'Turkey',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TUV',
-	'Tuvalu',
-	'0'
+  'TUV',
+  'Tuvalu',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TWN',
-	'Taiwan',
-	'0'
+  'TWN',
+  'Taiwan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'TZA',
-	'Tanzania',
-	'0'
+  'TZA',
+  'Tanzania',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'UGA',
-	'Uganda',
-	'0'
+  'UGA',
+  'Uganda',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'UKR',
-	'Ukraine',
-	'0'
+  'UKR',
+  'Ukraine',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'UMI',
-	'US Minor Outlying Islands',
-	'0'
+  'UMI',
+  'US Minor Outlying Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'URY',
-	'Uruguay',
-	'0'
+  'URY',
+  'Uruguay',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'USA',
-	'United States of America',
-	'5'
+  'USA',
+  'United States of America',
+  '5'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'UZB',
-	'Uzbekistan',
-	'0'
+  'UZB',
+  'Uzbekistan',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VAT',
-	'Vatican City State',
-	'0'
+  'VAT',
+  'Vatican City State',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VCT',
-	'Saint Vincent/Grenadines',
-	'0'
+  'VCT',
+  'Saint Vincent/Grenadines',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VEN',
-	'Venezuela',
-	'0'
+  'VEN',
+  'Venezuela',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VGB',
-	'Virgin Islands (British)',
-	'0'
+  'VGB',
+  'Virgin Islands (British)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VIR',
-	'Virgin Islands (U.S.)',
-	'0'
+  'VIR',
+  'Virgin Islands (U.S.)',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VNM',
-	'Viet Nam',
-	'0'
+  'VNM',
+  'Viet Nam',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'VUT',
-	'Vanuatu',
-	'0'
+  'VUT',
+  'Vanuatu',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'WLF',
-	'Wallis and Futuna Islands',
-	'0'
+  'WLF',
+  'Wallis and Futuna Islands',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'WSM',
-	'Samoa',
-	'0'
+  'WSM',
+  'Samoa',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'YEM',
-	'Yemen',
-	'0'
+  'YEM',
+  'Yemen',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'YUG',
-	'Yugoslavia',
-	'0'
+  'YUG',
+  'Yugoslavia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ZAF',
-	'South Africa',
-	'0'
+  'ZAF',
+  'South Africa',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ZAR',
-	'Zaire',
-	'0'
+  'ZAR',
+  'Zaire',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ZMB',
-	'Zambia',
-	'0'
+  'ZMB',
+  'Zambia',
+  '0'
 );
 
 
 INSERT INTO `Country`
 (
-	abbreviation,
-	name,
-	sortOrder
+  abbreviation,
+  name,
+  sortOrder
 )
 VALUES
 (
-	'ZWE',
-	'Zimbabwe',
-	'0'
+  'ZWE',
+  'Zimbabwe',
+  '0'
 );
 
 

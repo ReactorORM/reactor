@@ -36,6 +36,7 @@
 		<cfset var relationships = XmlSearch(fromObject, "/object/hasMany[@name='#toObject.object.XmlAttributes.alias#']/relate/..|/object/hasOne[@name='#toObject.object.XmlAttributes.alias#']") />
 		<cfset var invert = false />
 		<cfset var relationship = ArrayNew(1) />
+		<cfset var x = 0 />
 				
 		<!--- check the from object for a relationship to the to object --->
 		<cfif NOT ArrayLen(relationships)>
@@ -84,7 +85,7 @@
 		<cfset var z = 0 />
 		
 		<!--- add/validate relationship aliases --->
-		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne") />
+		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne | /object/lookup") />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
 			
@@ -146,8 +147,6 @@
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfdump var="#Config#" /><cfabort>--->
-		
 		<cfreturn Config />
 	</cffunction>
 	
@@ -155,15 +154,28 @@
 		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="reactor.core.field" />
 		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="string" />
 		<cfset var xmlField = 0 />
-		<cfset var alias = XmlSearch(arguments.config, "/object/field[@name='#arguments.field.getName()#']") />
+		<cfset var fieldTags = XmlSearch(arguments.config, "/object/field") />
+		<cfset var fieldTag = 0 />
+		<cfset var x = 0 />
+
+		<!---
+			The next few lines of code loop over the provided xml config and look for a field with the same name as the field
+			we're working with.  I used to use XmlSearch, but that's case sensitive and I need it not to be.		
+		--->
+		<cfloop from="1" to="#ArrayLen(fieldTags)#" index="x">
+			<cfif fieldTags[x] .XmlAttributes.name IS arguments.field.getName()>
+				<cfset fieldTag = fieldTags[x] />
+				<cfbreak />
+			</cfif>
+		</cfloop>
 		
 		<!--- create the field node--->
 		<cfset xmlField = XMLElemNew(arguments.config, "field") />
 		
 		<!--- set the field's properties --->
 		<cfset xmlField.XmlAttributes["name"] = arguments.field.getName() />
-		<cfif ArrayLen(alias)>
-			<cfset xmlField.XmlAttributes["alias"] = alias[1].XmlAttributes.alias />
+		<cfif IsXML(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "alias") >
+			<cfset xmlField.XmlAttributes["alias"] = fieldTag.XmlAttributes.alias />
 		<cfelse>
 			<cfset xmlField.XmlAttributes["alias"] = arguments.field.getName() />
 		</cfif>
@@ -176,6 +188,11 @@
 		<cfset xmlField.XmlAttributes["length"] = arguments.field.getLength() />
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.getDefault() />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
+		<cfif IsXML(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >
+			<cfset xmlField.XmlAttributes["sequence"] = fieldTag.XmlAttributes.sequence />
+		<cfelse>
+			<cfset xmlField.XmlAttributes["sequence"] = "" />
+		</cfif>
 		
 		<!--- add the field node --->
 		<cfset ArrayAppend(arguments.config.Object.fields.XmlChildren, xmlField) />

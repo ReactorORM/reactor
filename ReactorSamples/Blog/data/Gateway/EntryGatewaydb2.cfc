@@ -16,7 +16,7 @@
 				e."views", c."categoryId", c."name" as "categoryName", 
 				u."firstName", u."lastName", e."disableComments",
 				
-				count(DISTINCT m."commentID") as "commentCount",
+				count(DISTINCT m."commentId") as "commentCount",
 				CASE 
 					WHEN e."timesRated" = 0 THEN 0
 					ELSE ROUND(e."totalRating"/e."timesRated", 0)
@@ -104,11 +104,11 @@
 		<cfset var qComments = 0 />
 		
 		<cfquery name="qComments" datasource="#_getConfig().getDsn()#">
-			SELECT e."entryId", e."title", count(c."commentID") as "comments"
+			SELECT e."entryId", e."title", count(c."commentId") as "comments"
 			FROM "NULLID"."Entry" as e JOIN "NULLID"."Comment" as c
 				ON e."entryId" = c."entryId"
 			GROUP BY e."entryId", e."title"
-			ORDER BY count(c."commentID") DESC
+			ORDER BY count(c."commentId") DESC
 			FETCH FIRST #limit# ROWS ONLY
 			OPTIMIZE FOR #limit# ROWS
 		</cfquery>

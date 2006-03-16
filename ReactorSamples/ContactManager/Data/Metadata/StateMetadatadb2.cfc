@@ -3,7 +3,7 @@
 	extends="StateMetadata">
 	<!--- Place custom code here, it will not be overwritten --->
 
-	<cfset variables.metadata.owner = "DOUG HUGHES" />
+	<cfset variables.metadata.owner = "NULLID" />
 	<cfset variables.metadata.dbms = "db2" />
 	
 </cfcomponent>

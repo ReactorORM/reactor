@@ -28,7 +28,7 @@
 				e."publicationDate" as publicationDateTime,
 				e."views", c."categoryId", c."name" as categoryName, 
 				u."firstName", u."lastName", e."disableComments",
-				count(DISTINCT m."commentID") as commentCount,		
+				count(DISTINCT m."commentId") as commentCount,		
 				count(e."entryId") as temp1,
 				
 				CASE
@@ -112,7 +112,7 @@
 		<cfset var qComments = 0 />
 		
 		<cfquery name="qComments" datasource="#_getConfig().getDsn()#">
-			SELECT e."entryId", e."title", count(c."commentID") as comments
+			SELECT e."entryId", e."title", count(c."commentId") as comments
 			FROM "Entry" as e JOIN "Comment" as c
 				ON e."entryId" = c."entryId"
 			GROUP BY e."entryId", e."title"

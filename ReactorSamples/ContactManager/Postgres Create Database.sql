@@ -1,10 +1,27 @@
+-- Postgres Create Database
+
+-- The tables below could be created using the default nextval('Category_categoryId')  data type.  However, 
+-- because reactorblog is supposed to work across multiple systems I run into
+-- a problem with Oracle support.  Specifically, oracle's sequences are limited to 
+-- shorter names than postgres'.  So, I've decided to just go ahead and specify my
+-- sequence names and use those as the defaults for the columns that would otherwise
+-- typically be default nextval('Category_categoryId') .
+
+-- Sequences 
+create sequence "contact_contactid";
+create sequence "country_countryid";
+create sequence "state_stateid";
+create sequence "address_addressid";
+create sequence "emailaddress_emailaddressid";
+create sequence "phonenumber_phonenumberid";
+
 
 -- -------------------------------------
 -- Tables
 
 
 CREATE TABLE "Contact" (
-	"contactId" serial NOT NULL  ,
+	"contactId" integer DEFAULT nextval('contact_contactid')  NOT NULL  ,
 	"firstName" varchar(50) NOT NULL ,
 	"lastName" varchar(50) NOT NULL ,
 	PRIMARY KEY  ("contactId")
@@ -12,7 +29,7 @@ CREATE TABLE "Contact" (
 
 
 CREATE TABLE "Country" (
-	"countryId" serial NOT NULL  ,
+	"countryId" integer DEFAULT nextval('country_countryid')  NOT NULL  ,
 	"abbreviation" varchar(10) NOT NULL ,
 	"name" varchar(50) NOT NULL ,
 	"sortOrder" integer NOT NULL ,
@@ -20,7 +37,7 @@ CREATE TABLE "Country" (
 );
 
 CREATE TABLE "State" (
-	"stateId" serial NOT NULL  ,
+	"stateId" integer DEFAULT nextval('state_stateid')  NOT NULL  ,
 	"abbreviation" varchar(5) NOT NULL ,
 	"name" varchar(50) NOT NULL ,
 	PRIMARY KEY  ("stateId")
@@ -28,7 +45,7 @@ CREATE TABLE "State" (
 
 
 CREATE TABLE "Address" (
-	"addressId" serial NOT NULL,
+	"addressId" integer DEFAULT nextval('address_addressid') NOT NULL,
 	"contactId" integer NOT NULL ,
 	"line1" varchar(50) NOT NULL ,
 	"line2" varchar(50) NULL ,
@@ -43,7 +60,7 @@ CREATE TABLE "Address" (
 );
 
 CREATE TABLE "EmailAddress" (
-	"emailAddressId" serial NOT NULL  ,
+	"emailAddressId" integer DEFAULT nextval('emailaddress_emailaddressid')  NOT NULL  ,
 	"contactId" int NOT NULL ,
 	"emailAddress" varchar(100) NOT NULL ,
 	PRIMARY KEY  ("emailAddressId"),
@@ -51,7 +68,7 @@ CREATE TABLE "EmailAddress" (
 );
 
 CREATE TABLE "PhoneNumber" (
-	"phoneNumberId" serial NOT NULL  ,
+	"phoneNumberId" integer DEFAULT nextval('phonenumber_phonenumberid')  NOT NULL  ,
 	"contactId" int NOT NULL ,
 	"phoneNumber" varchar(50) NOT NULL ,
 	PRIMARY KEY  ("phoneNumberId"),

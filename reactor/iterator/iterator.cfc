@@ -4,6 +4,8 @@
 	<cfset variables.name = 0 />
  	<cfset variables.Gateway = 0 />
 	<cfset variables.QueryObject = 0 />
+
+	<cfset variables.Dictionary = 0 />
 	
 	<cfset variables.query = 0/>
 	<cfset variables.array = 0 />
@@ -43,6 +45,15 @@
 		<cfset reset() />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- getDictionary --->
+	<cffunction name="getDictionary" access="public" hint="I return a dictionary for the type of object being iterated." output="false" returntype="reactor.dictionary.dictionary">
+		<cfif NOT IsObject(variables.Dictionary)>
+			<cfset variables.Dictionary = getReactorFactory().createDictionary(getName()) />
+		</cfif>
+		
+		<cfreturn variables.Dictionary />
 	</cffunction>
 	
 	<!--- hasMore --->

@@ -189,9 +189,9 @@
 			<errorMessage message="The Subscribe field is required but was not provided." name="notProvided"/>
 			<errorMessage message="The Subscribe field must be a numeric value." name="invalidType"/>
 		</field>
-		<field name="commentID">
-			<errorMessage message="The commentID field is required but was not provided." name="notProvided"/>
-			<errorMessage message="The commentID field must be a numeric value." name="invalidType"/>
+		<field name="commentId">
+			<errorMessage message="The commentId field is required but was not provided." name="notProvided"/>
+			<errorMessage message="The commentId field must be a numeric value." name="invalidType"/>
 		</field>
 		<field name="entryId">
 			<errorMessage message="The entryId field is required but was not provided." name="notProvided"/>
