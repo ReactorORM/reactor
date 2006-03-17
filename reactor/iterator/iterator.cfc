@@ -88,7 +88,7 @@
 		<cfset var querysubset = 0 />
 		
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.query = getGateway().getByQuery(getQueryObject()) />
+			<cfset variables.query = getGateway().getByQuery(getQueryObject(), false) />
 		</cfif>
 		
 		<!--- check to see if we're limiting the records that can be returned. --->
