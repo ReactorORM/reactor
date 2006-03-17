@@ -1,59 +1,16 @@
 <reactor>
 	<config>
 		<project value="ReactorBlog" />
-		<dsn value="ReactorBlogOracle" />
-		<type value="oracle" />
+		<dsn value="Scratch" />
+		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="always" />
+		<mode value="development" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
 	</config>
 
 	<objects>
-		<object name="Category">
-			<field name="categoryId" sequence="unique_seq" />
-		</object>
 		
-		<object name="User">
-			<field name="userId" alias="test" sequence="unique_seq" />
-		</object>
-		
-		<object name="Comment">
-			<field name="commentId" sequence="unique_seq" />
-		</object>
-		
-		<object name="Entry">
-			<field name="entryId" sequence="unique_seq" />
-			
-			<hasMany name="Category">
-				<link name="EntryCategory" />
-			</hasMany>
-			<hasMany name="Comment">
-				<relate from="entryId" to="entryId" />
-			</hasMany>
-			<hasOne name="User" alias="Author">
-				<relate from="postedByUserId" to="userId" />
-			</hasOne>
-		</object>
-		
-		<object name="EntryCategory">
-			<field name="entryCategoryId" sequence="unique_seq" />
-			
-			<hasOne name="Entry">
-				<relate from="entryId" to="entryId" />
-			</hasOne>
-			<hasOne name="Category">
-				<relate from="categoryId" to="categoryId" />
-			</hasOne>
-		</object>
-		
-		<object name="Category">
-			<field name="categoryId" sequence="unique_seq" />
-			
-			<hasMany name="Entry">
-				<link name="EntryCategory" />
-			</hasMany>
-		</object>
 	</objects>
 </reactor>

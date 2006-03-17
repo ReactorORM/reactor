@@ -29,7 +29,7 @@
 	</cffunction>
 	
 	<cffunction name="getFields" access="public" hint="I return an array of structures describing this object's fields" output="false" returntype="array">
-		<cfreturn getObjectMetadata().fields />
+		<cfreturn Duplicate(getObjectMetadata().fields) />
 	</cffunction>
 	
 	<cffunction name="getFieldQuery" access="public" hint="I return an Query of describing this object's fields" output="false" returntype="query">

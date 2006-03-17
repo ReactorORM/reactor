@@ -207,7 +207,7 @@
        <cfargument name="name" hint="I am the name of the object this iterator encapsulates" required="yes" type="string" />
        <cfset variables.name = arguments.name />
     </cffunction>
-    <cffunction name="getName" access="private" output="false" returntype="string">
+    <cffunction name="getName" access="public" output="false" returntype="string">
        <cfreturn variables.name />
     </cffunction>
 	

@@ -79,7 +79,22 @@
        <cfset variables.order = arguments.order />
     </cffunction>
     <cffunction name="getOrder" access="public" output="false" returntype="array">
-       <cfreturn variables.order />
+		<cfset var field = 0 />
+		
+		<cfset getQuery().verifyInitialized() />
+		
+		<cfloop from="1" to="#ArrayLen(variables.order)#" index="x">
+			
+			<cfif IsStruct(variables.order[x])>
+				<cfset field = getQuery().getField(variables.order[x].object, variables.order[x].alias) />
+				
+				<cfif StructKeyExists(field, "expression")>
+					<cfset variables.order[x].expression = field.expression />
+				</cfif>
+			</cfif>
+		</cfloop>
+				
+		<cfreturn variables.order />
     </cffunction>
 	
 </cfcomponent>

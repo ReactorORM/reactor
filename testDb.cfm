@@ -2,4 +2,8 @@
 <cfset reactor.init("/config/reactor.xml") />
 
 
-<cfset UserRecord = reactor.createRecord("User") />
+<cfset TestGateway = reactor.createGateway("Test") />
+
+
+
+<cfdump var="#TestGateway.getTest()#" /><cfabort>

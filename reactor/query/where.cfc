@@ -21,14 +21,14 @@
 		
 		<cfreturn this />
 	</cffunction>
-	
+
 	<!--- query --->
     <cffunction name="setQuery" access="private" output="false" returntype="void">
-       <cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query" />
-       <cfset variables.query = arguments.query />
+		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query" />
+		<cfset variables.query = arguments.query />
     </cffunction>
     <cffunction name="getQuery" access="private" output="false" returntype="reactor.query.query">
-       <cfreturn variables.query />
+		<cfreturn variables.query />
     </cffunction>
 	
 	<!--- validateField --->
@@ -40,6 +40,7 @@
 	</cffunction>
 
 	<cffunction name="dump" access="public" hint="I am a debugging method.  I dump the current where statement's data." output="false" returntype="void">
+		<cfset getQuery().verifyInitialized() />
 		<cfdump var="#getWhere()#" /><cfabort>
 	</cffunction>
 	
@@ -115,7 +116,11 @@
 		<cfargument name="expression" hint="I am the array of where expressions to append to" required="yes" type="array" />
 		<cfargument name="Where2" hint="I am the where to append" required="yes" type="reactor.query.where" />
 		<cfset var x = 0 />
-		<cfset var appendExpression = arguments.Where2.getWhere() />
+		<cfset var appendExpression = 0 />
+
+		<cfset getQuery().verifyInitialized() />
+		
+		<cfset appendExpression = arguments.Where2.getWhere() />
 		
 		<cfset ArrayAppend(arguments.expression, "(") />	
 		
@@ -358,6 +363,8 @@
     <cffunction name="setMode" access="public" output="false" returntype="reactor.query.where">
 		<cfargument name="mode" hint="I am the type of 'junction' mode to use when adding wheres" required="yes" type="string" />
 
+		<cfset getQuery().verifyInitialized() />
+		
 		<cfif NOT ListFindNoCase("Or,And", arguments.mode)>
 			<cfthrow message="Invalid Mode" detail="The 'mode' argument is invalid.  This must be one of: Or, And" />
 		</cfif>
@@ -373,11 +380,45 @@
 	
 	<!--- where --->
     <cffunction name="setWhere" access="public" output="false" returntype="void">
-       <cfargument name="where" hint="I am the where's array of statements." required="yes" type="array" />
-       <cfset variables.where = arguments.where />
+		<cfargument name="where" hint="I am the where's array of statements." required="yes" type="array" />
+		
+		<cfset getQuery().verifyInitialized() />
+		
+		<cfset variables.where = arguments.where />
     </cffunction>
     <cffunction name="getWhere" access="public" output="false" returntype="array">
-       <cfreturn variables.where />
+		<cfset var field = 0 />
+		
+		<cfset getQuery().verifyInitialized() />
+		
+		<cfloop from="1" to="#ArrayLen(variables.where)#" index="x">
+			
+			<cfif IsStruct(variables.where[x])>
+				<cfset field = getQuery().getField(variables.where[x].object, variables.where[x].alias) />
+				
+				<cfif StructKeyExists(field, "expression")>
+					<cfset variables.where[x].expression = field.expression />
+				</cfif>
+				
+				<!--- if there's a compareToField1 or compareToField2 then get their expressions too --->
+				<cfif StructKeyExists(variables.where[x], "compareToField1")>
+					<cfset field = getQuery().getField(variables.where[x].compareToObject1, variables.where[x].compareToField1) />
+					
+					<cfif StructKeyExists(field, "expression")>
+						<cfset variables.where[x].compareToExpression1 = field.expression />
+					</cfif>
+				</cfif>
+				<cfif StructKeyExists(variables.where[x], "compareToField2")>
+					<cfset field = getQuery().getField(variables.where[x].compareToObject2, variables.where[x].compareToField2) />
+					
+					<cfif StructKeyExists(field, "expression")>
+						<cfset variables.where[x].compareToExpression2 = field.expression />
+					</cfif>
+				</cfif>
+			</cfif>
+		</cfloop>
+		
+		<cfreturn variables.where />
     </cffunction>
 	
 </cfcomponent>

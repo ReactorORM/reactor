@@ -6,6 +6,8 @@
 	<!--- this is the object's alias --->
 	<cfset variables.alias = "" />
 	
+	<cfset variables.cachedFields = 0 />
+	
 	<!--- this is an array of objects this object is joined to --->
 	<cfset variables.joins = ArrayNew(1) />
 	
@@ -18,6 +20,29 @@
 		<cfset setAlias(arguments.alias) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- getField --->
+	<cffunction name="getField" access="public" hint="I return a structure of fields in this object." output="false" returntype="struct">
+		<cfargument name="alias" hint="I am the alias of the field to get." required="yes" type="string" />
+		<cfset var fields = getFields() />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfif fields[x].alias IS arguments.alias>
+				<cfreturn fields[x] />
+			</cfif>
+		</cfloop>
+		
+		<cfthrow message="Field Does Not Exist" detail="The field '#arguments.alias#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.query.object.FieldDoesNotExist" />
+	</cffunction>
+	
+	<!--- getFields --->
+	<cffunction name="getFields" access="public" hint="I return a structure of fields in this object." output="false" returntype="array">
+		<cfif NOT IsArray(variables.cachedFields)>
+			<cfset variables.cachedFields = getObjectMetadata().getFields() />
+		</cfif>
+				
+		<cfreturn variables.cachedFields />
 	</cffunction>
 	
 	<!--- getFromAsString --->
@@ -56,9 +81,10 @@
 		<cfset var field = "" />
 		<cfset var joinedFields = "" />
 		<cfset var x = 0 />
-		<cfset var fields = getObjectMetadata().getFields() />
+		<cfset var fields = getFields() />
 		<cfset var joins = getJoins() />
 		<cfset var allowedFieldList = getAllowedFields(arguments.returnFields) />
+		
 		
 		<!---
 			Sean 3/6/2006:
@@ -66,7 +92,14 @@
 			  it's a little faster / more efficient but no big improvements
 		--->
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) & " AS " />
+			<cfif StructKeyExists(fields[x], "expression") AND Len(fields[x].expression)>
+				<cfset field = fields[x].expression />
+			<cfelse>
+				<cfset field = arguments.Convention.formatFieldName(fields[x].name, getAlias()) />
+			</cfif>
+			
+			<!--- add an "as" --->
+			<cfset field = field & " AS " />
 			
 			<!--- add the field alias --->
 			<cfset field = field & arguments.Convention.formatFieldAlias(fields[x].alias, arguments.prefix) />
