@@ -327,7 +327,7 @@
        <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
     </cffunction>
-    <cffunction name="getObjectConfig" access="private" output="false" returntype="xml">
+    <cffunction name="getObjectConfig" access="private" output="false" returntype="string">
        <cfreturn variables.objectConfig />
     </cffunction>
 	
