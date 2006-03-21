@@ -187,6 +187,9 @@
 			</cfif>
 			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
 			
+			<cfif qFields.identity eq "YES">
+				<cfset Field.setSequenceName(Replace(ListGetAt(qFields.default,2,"'"),"public.","")) />
+			</cfif>
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
 		</cfloop>

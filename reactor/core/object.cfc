@@ -188,10 +188,15 @@
 		<cfset xmlField.XmlAttributes["length"] = arguments.field.getLength() />
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.getDefault() />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
+		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.getSequenceName() />
+		
+		<!--- use sequence name specfied in the reactor.xml file if provided, if it doesn't match the default sequence specified for a column then throw an error --->
 		<cfif IsXML(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >
-			<cfset xmlField.XmlAttributes["sequence"] = fieldTag.XmlAttributes.sequence />
-		<cfelse>
-			<cfset xmlField.XmlAttributes["sequence"] = "" />
+			<cfif len(arguments.field.getSequenceName()) eq 0>
+				<cfset xmlField.XmlAttributes["sequence"] = fieldTag.XmlAttributes.sequence />
+			<cfelseif arguments.field.getSequenceName() neq fieldTag.XmlAttributes.sequence>
+				<cfthrow message="Sequence names are not the same." detail="The database's default value for table: '#arguments.config.object.XmlAttributes.name#' column: '#arguments.field.getName()#' uses a sequence named '#arguments.field.getSequenceName()#' but the reactor.xml configuration file indicates that a sequence named '#fieldTag.XmlAttributes.sequence#' should be used." type="reactor.core.object.addXmlField.SequenceNameMismatch" />
+			</cfif>
 		</cfif>
 		
 		<!--- add the field node --->

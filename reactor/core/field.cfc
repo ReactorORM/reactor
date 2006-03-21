@@ -9,6 +9,7 @@
 	<cfset variables.cfCfDataType = "" />
 	<cfset variables.cfSqlType = "" />
 	<cfset variables.length = 0 />
+	<cfset variables.sequenceName = "" />
 	
 	<cfset variables.default = "" />
 	
@@ -119,5 +120,14 @@
     </cffunction>
     <cffunction name="getPrimaryKey" access="public" output="false" returntype="boolean">
        <cfreturn Iif(variables.primaryKey, DE('true'), DE('false')) />
+    </cffunction>
+
+	<!--- sequenceName --->
+    <cffunction name="setSequenceName" access="public" output="false" returntype="void">
+       <cfargument name="sequenceName" hint="I am the name of the sequence used to set identity values for this column" required="yes" type="string" />
+       <cfset variables.sequenceName = arguments.sequenceName />
+    </cffunction>
+    <cffunction name="getSequenceName" access="public" output="false" returntype="string">
+       <cfreturn variables.sequenceName />
     </cffunction>
 </cfcomponent>

@@ -61,25 +61,28 @@
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qCreate = 0 /&gt;
 		
-		<xsl:if test="//field[@sequence != '']">
-			&lt;cfif Convention.supportsSequences()&gt;
-				<xsl:for-each select="//field[@sequence != '']">
-					&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
-						#Convention.getNextSequenceSyntax("<xsl:value-of select="@sequence" />")#
-					&lt;/cfquery&gt;
-					&lt;cfset arguments.to.<xsl:value-of select="@alias" /> = qCreate.ID /&gt;
-				</xsl:for-each>
-			&lt;/cfif&gt;
-		</xsl:if>
 		
 		&lt;cftransaction&gt;
+			<xsl:if test="//field[@sequence != '']">
+				&lt;cfif Convention.supportsSequences()&gt;
+					<xsl:for-each select="//field[@sequence != '']">
+						<xsl:if test="not(@primaryKey = 'true' and @identity = 'true')">
+							&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
+								#Convention.getNextSequenceSyntax("<xsl:value-of select="@sequence" />")#
+							&lt;/cfquery&gt;
+							&lt;cfset arguments.to.<xsl:value-of select="@alias" /> = qCreate.ID /&gt;
+						</xsl:if>
+					</xsl:for-each>
+				&lt;/cfif&gt;
+			</xsl:if>
+		
 			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 				INSERT INTO #Convention.FormatObjectName(getObjectMetadata())#
 				(
 					<xsl:for-each select="object/fields/field">
 						
 						<xsl:if test="@identity = 'true' or @sequence != ''">
-							&lt;cfif NOT Convention.supportsIdentity()&gt;
+							&lt;cfif (NOT Convention.supportsIdentity()) OR (<xsl:if test="not(@sequence != '' and (@identity = 'false' or (@identity = 'true' and @primaryKey = 'false')))">false AND</xsl:if> Convention.supportsSequences())&gt;
 						</xsl:if>
 						
 						#Convention.formatInsertFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
@@ -93,7 +96,7 @@
 				) VALUES (
 					<xsl:for-each select="object/fields/field">
 						<xsl:if test="@identity = 'true' or @sequence != ''">
-							&lt;cfif NOT Convention.supportsIdentity()&gt;
+							&lt;cfif (NOT Convention.supportsIdentity()) OR (<xsl:if test="not(@sequence != '' and (@identity = 'false' or (@identity = 'true' and @primaryKey = 'false')))">false AND</xsl:if> Convention.supportsSequences())&gt;
 						</xsl:if>
 						
 						&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"

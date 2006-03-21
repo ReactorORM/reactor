@@ -11,14 +11,15 @@
 	<!--- lastInsertedIdSyntax won't work if the PostgreSQL table was explicitly set not to use oids when it was created --->
 	<cffunction name="lastInsertedIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
-		<!---<cfset var fields = ObjectMetadata.getFields() />
+		<cfset var fields = ObjectMetadata.getFields() />
 		<cfset var index = 0 />
 		<cfloop from="1" to="#ArrayLen(fields)#" step="1" index="index">
 			<cfif fields[index]["primaryKey"] eq "true" AND fields[index]["identity"] eq "true">
-				<cfreturn "SELECT max("&formatFieldName(fields[index]['name'], ObjectMetadata.getName())
-					&") as ID from "&FormatObjectName(ObjectMetadata, '')/>
+				<cfreturn "; SELECT currval('#fields[index]['sequence']#') as ID">
+				<!---><cfreturn "SELECT max("&formatFieldName(fields[index]['name'], ObjectMetadata.getName())
+					&") as ID from "&FormatObjectName(ObjectMetadata, '')/>--->
 			</cfif>
-		</cfloop>--->
+		</cfloop>
 		<cfthrow message="Identity Not Supported" detail="PostgreSQL does not support identity columns." type="reactor.convention.IdentityNotSupported" />
 	</cffunction>
 	
@@ -64,7 +65,7 @@
 	</cffunction>
 
 	<cffunction name="supportsIdentity" access="public" hint="I indicate if the DB support identity columns (and has a system for automaticaly getting the last value)." output="false" returntype="boolean">
-		<cfreturn false />
+		<cfreturn true />
 	</cffunction>
 
 	<cffunction name="supportsMultiStatementQueries" access="public" hint="I indicate if the DB support more than one statment in a query." output="false" returntype="boolean">
