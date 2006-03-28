@@ -78,6 +78,15 @@
 		<cfreturn Array[variables.index] />
 	</cffunction>
 	
+	<!--- getValueList --->
+	<cffunction name="getValueList" access="public" hint="I return a value list based on a specific field." output="false" returntype="string">
+		<cfargument name="field" hint="I am the name of the field to get the value list for" required="yes" type="string" />
+		<cfargument name="delimiter" hint="I am the delimiter to use for the list.  I default to ','." required="no" type="string" default="," />
+		<cfset var query = getQuery() />
+		<cfset var list = Evaluate("ValueList(query.#arguments.field#, arguments.delimiter)") />
+		<cfreturn list />
+	</cffunction>
+	
 	<!--- query --->
     <cffunction name="getQuery" access="public" output="false" returntype="query">
 		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="0" />
