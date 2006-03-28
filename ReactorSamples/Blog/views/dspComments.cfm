@@ -19,6 +19,11 @@
 				</p>
 			</div>
 		</cfoutput>
+		
+		<cfif x IS ArrayLen(CommentArray)>
+			<a href="##lastComment" id="lastComment"></a>
+		</cfif>
+		
 	</cfloop>
 <cfelse>
 	<p>Sorry, comments are disabled for this entry.</p>

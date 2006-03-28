@@ -6,7 +6,7 @@
 <cfif NOT EntryRecord.getDisableComments()>
 	<h3>Your Comments</h3>
 	
-	<cfform name="EntryForm" action="index.cfm?event=SubmitCommentForm##comments" method="post">
+	<cfform name="EntryForm" action="index.cfm?event=SubmitCommentForm" method="post">
 	
 		<cf_input label="Name:"
 			errors="#Errors#"
@@ -64,4 +64,18 @@
 			value="Add a Comment" />
 			
 	</cfform>
+	
+	<a href="##commentForm" id="commentForm"></a>
+	
 </cfif>
+
+<cfif viewstate.getValue("event") IS "SubmitCommentForm" AND IsObject(Errors) AND Errors.hasErrors()>
+	<script language="javascript">
+		document.getElementById("commentForm").scrollIntoView();
+	</script>
+<cfelseif viewstate.getValue("showLastComment", false)>
+	<script language="javascript">
+		document.getElementById("lastComment").scrollIntoView();
+	</script>
+</cfif>
+

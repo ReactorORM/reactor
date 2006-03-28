@@ -10,7 +10,7 @@
 	<!--- output various links --->
 	<cfif NOT EntryRecord.getDisableComments()>
 		<p>
-			<a href="##comments">#EntryRecord.getCommentCount()# Comments</a>
+			<a href="##comments" id="comments">#EntryRecord.getCommentCount()# Comments</a>
 		</p>
 	</cfif>
 	
