@@ -16,7 +16,7 @@
 
 		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT  object_type  as TABLE_TYPE,
-					owner          as table_owner
+					owner        as table_owner
 			FROM all_objects
 			where object_type in ('TABLE','VIEW')
 			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
@@ -39,27 +39,31 @@
 		<cfset var Field = 0 />
 
 		<cfquery name="qFields"  datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-			SELECT
-				col.COLUMN_NAME       as name,
-				CASE
-					WHEN colCon.CONSTRAINT_NAME IS NOT NULL THEN 'true'
-					ELSE 'false'
-				END                   as primaryKey,
-				/* Oracle has no equivalent to autoincrement or  identity */
-				'false'	  	          AS "IDENTITY",
-				col.NULLABLE,
-
-				col.DATA_TYPE         as dbDataType,
-				col.DATA_LENGTH       as length,
-				col.DATA_DEFAULT      as "DEFAULT"
-			FROM  all_tab_columns  col LEFT JOIN all_constraints  tabCon
-				ON col.TABLE_NAME          = tabCon.TABLE_NAME
-				AND tabCon.CONSTRAINT_TYPE = 'P'
-			LEFT JOIN all_cons_columns  colCon
-				ON  col.COLUMN_NAME        = colCon.COLUMN_NAME
-				AND col.TABLE_NAME         = colCon.TABLE_NAME
-				AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
-			WHERE col.TABLE_NAME =  <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+			 SELECT
+               	    col.COLUMN_NAME       as name,
+                    CASE
+                          WHEN primaryConstraints.column_name IS NULL THEN 0
+                          ELSE 1
+                    END                   as primaryKey,
+                    /* Oracle has no equivalent to autoincrement or  identity */
+                    'false'                     AS "IDENTITY",
+                    col.NULLABLE,
+                    col.DATA_TYPE         as dbDataType,
+                    col.DATA_LENGTH       as length,
+                    col.DATA_DEFAULT      as "DEFAULT"
+              FROM  all_tab_columns   col,
+                    ( select  colCon.column_name,
+                   			  colcon.table_name
+                    from    all_cons_columns  colCon,
+                           all_constraints   tabCon
+                    where tabCon.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+                         AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
+                         AND colCon.TABLE_NAME      = tabCon.TABLE_NAME
+                         AND 'P'                    = tabCon.CONSTRAINT_TYPE
+                   ) primaryConstraints
+              where col.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+              		and col.COLUMN_NAME        = primaryConstraints.COLUMN_NAME (+)
+                    AND col.TABLE_NAME         = primaryConstraints.TABLE_NAME (+)
 		</cfquery>
 
 		<cfloop query="qFields">
@@ -158,11 +162,7 @@
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
 			<!--- long types --->
-<!---   @@ToDo: Can't get to work
-        	<cfcase value="bfile">
-				<cfreturn "cf_sql_blob" />
-			</cfcase>
---->
+			<!---   @@Note: bfile  not supported --->
 			<cfcase value="blob">
 				<cfreturn "cf_sql_blob" />
 			</cfcase>
@@ -215,7 +215,7 @@
 			<cfcase value="timestamp(6)">
 				<cfreturn "date" />
 			</cfcase>
-         <!--- strings --->
+            <!--- strings --->
 			<cfcase value="char">
 				<cfreturn "string" />
 			</cfcase>
@@ -232,11 +232,7 @@
 				<cfreturn "string" />
 			</cfcase>
 			<!--- long --->
-<!---   @@ToDo: Can't get to work
-      	<cfcase value="bfile">
-				<cfreturn "blob" />
-			</cfcase>
---->
+			<!---   @@Note: bfile  not supported --->
 			<cfcase value="blob">
 				<cfreturn "binary" />
 			</cfcase>

@@ -19,8 +19,7 @@
 	<cffunction name="formatObjectName" access="public" hint="I format the object/table name" output="false" returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="reactor.base.abstractMetadata" />
 
-		<cfreturn '"#arguments.ObjectMetadata.getName()#"' />
-
+		<cfreturn '"#arguments.ObjectMetadata.getOwner()#"."#arguments.ObjectMetadata.getName()#"' />
 	</cffunction>
 
 	<cffunction name="formatFieldName" access="public" hint="I format the field name" output="false" returntype="string">
@@ -40,7 +39,7 @@
 
 	<cffunction name="formatUpdateFieldName" access="public" hint="I format the field name" output="false" returntype="string">
 		<cfargument name="fieldName" hint="I am the field name." required="yes" type="string" />
-		
+
 		<cfreturn '"#arguments.fieldName#"' />
 
 	</cffunction>
