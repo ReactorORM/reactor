@@ -47,6 +47,15 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<!--- getAt --->
+	<cffunction name="getAt" access="public" hint="I return a specific object from the iterator.  I do not impact the state of the object." output="false" returntype="reactor.base.abstractRecord">
+		<cfargument name="index" hint="I am the index of the record to get." required="yes" type="numeric" />
+		
+		<cfset var Array = getArray() />
+		
+		<cfreturn Array[arguments.index] />
+	</cffunction>
+	
 	<!--- getDictionary --->
 	<cffunction name="getDictionary" access="public" hint="I return a dictionary for the type of object being iterated." output="false" returntype="reactor.dictionary.dictionary">
 		<cfif NOT IsObject(variables.Dictionary)>

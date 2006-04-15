@@ -22,8 +22,8 @@
 				<cfif Len(getLine2())>
 					#getLine2()#<br>
 				</cfif>
-				#getCity()#, #getStateRecord().getAbbreviation()# #getPostalCode()#<br>
-				#getCountryRecord().getName()#
+				#getCity()#, #getState().getAbbreviation()# #getPostalCode()#<br>
+				#getCountry().getName()#
 			</cfsavecontent>
 		</cfoutput>
 		

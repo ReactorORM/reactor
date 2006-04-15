@@ -3,7 +3,7 @@
 
 <cfoutput>
 	<h1>#EntryRecord.getTitle()#</h1>
-	<small>Posted By: #EntryRecord.getAuthorRecord().getFirstName()# #EntryRecord.getAuthorRecord().getLastName()# on #DateFormat(EntryRecord.getPublicationDate(), "mmm. d, yyyy")# at #TimeFormat(EntryRecord.getPublicationDate(), "h:mm tt")#</small>
+	<small>Posted By: #EntryRecord.getAuthor().getFirstName()# #EntryRecord.getAuthor().getLastName()# on #DateFormat(EntryRecord.getPublicationDate(), "mmm. d, yyyy")# at #TimeFormat(EntryRecord.getPublicationDate(), "h:mm tt")#</small>
 	
 	#EntryRecord.getArticle()#
 	

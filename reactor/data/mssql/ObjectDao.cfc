@@ -216,6 +216,9 @@
 			<cfcase value="varchar">
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
+			<cfcase value="xml">
+				<cfreturn "cf_sql_varchar" />
+			</cfcase>
 		</cfswitch>
 		
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
@@ -295,6 +298,9 @@
 				<cfreturn "binary" />
 			</cfcase>
 			<cfcase value="varchar">
+				<cfreturn "string" />
+			</cfcase>
+			<cfcase value="xml">
 				<cfreturn "string" />
 			</cfcase>
 		</cfswitch>

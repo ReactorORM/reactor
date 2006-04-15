@@ -19,8 +19,8 @@
 	<cffunction name="getValue" access="public" hint="I get a value from the dictionary" output="false" returntype="string">
 		<cfargument name="element" hint="I am the path to the element to get from the dictionary.  IE: foo.bar to get dictionary/foo/bar" required="yes" type="string" />
 		<cfset var match = 0 />
-		<cfset arguments.element = "/dictionary/" & replace(arguments.element, ".", "/", "all") />		
-		<cfset match = XmlSearch(getDictionaryXml(), arguments.element) />
+		<cfset path = "/dictionary/" & replace(arguments.element, ".", "/", "all") />		
+		<cfset match = XmlSearch(getDictionaryXml(), path) />
 		
 		<cfif ArrayLen(match)>
 			<cfset match = match[1].xmlText />
@@ -36,7 +36,7 @@
 			<!--- return the value --->
 			<cfreturn match />
 		<cfelse>
-			<cfreturn "" />
+			<cfreturn arguments.element />
 		</cfif>
 	</cffunction>
 	
