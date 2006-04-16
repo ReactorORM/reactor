@@ -1,16 +1,33 @@
 <reactor>
 	<config>
-		<project value="ReactorBlog" />
+		<project value="Scratch" />
 		<dsn value="Scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="development" />
+		<mode value="always" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
 	</config>
 
-	<objects>
+	<objects>		
+		<object name="User">
+			<hasMany name="State">
+				<link name="UserState" />
+			</hasMany>
+			<hasOne name="Address">
+				<relate from="addressId" to="addressId" />
+			</hasOne>
+		</object>
+		
+		<object name="UserState">
+			<hasOne name="State">
+				<relate from="stateId" to="stateId" />
+			</hasOne>
+			<hasOne name="User">
+				<relate from="userId" to="userId" />
+			</hasOne>
+		</object>
 		
 	</objects>
 </reactor>

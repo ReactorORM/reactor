@@ -20,7 +20,7 @@
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
 		<cfset var objectXML = getObject().getXml() />
 		<cfset var pathToErrorFile = "" />
-		
+		<!---<cfdump var="#objectXML#" /><cfabort>--->
 		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file
 		<cfif arguments.type IS "Record">
 			<!--- I am the path to the error file --->

@@ -4,7 +4,10 @@
 	<cfset variables.Dao = 0 />
 	<cfset variables.ObjectFactory = 0 />
 	<cfset variables.Observers = StructNew() />
+	<!---<cfset variables.broadcasters = ArrayNew(1) />
+	<cfset variables.listeners = ArrayNew(1) />--->
 	<cfset variables.ValidationErrorCollection = 0 />
+	<cfset variables.hasOne = StructNew() />
 		
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
@@ -24,6 +27,25 @@
     <cffunction name="_getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
        <cfreturn _getReactorFactory().createMetadata(_getName()) />
     </cffunction>	
+	
+	<!--- addBroadcaster
+	<cffunction name="addBroadcaster" access="public" hint="I add a broadcaster to this object. As events occur they are broadcast to this record." output="false" returntype="void">
+		<cfargument name="Broadcaster" hint="I am the record that is listening for events from this record." required="yes" type="reactor.base.abstractRecord" />
+		
+	</cffunction> --->
+	
+	<!---<!--- addListener --->
+	<cffunction name="addListener" access="public" hint="I add a listener to this object.  As events occur they are broadcast to listeners." output="false" returntype="void">
+		<cfargument name="Listener" hint="I am the record that is listening for events from this record." required="yes" type="reactor.base.abstractRecord" />
+		
+		<!--- create a connection object which will connect the listner to this object --->
+		<cfset var Connection = CreateObject("Component", "reactor.event.connection").init(this, arguments.listener) />
+		
+		<!--- add the connection to both objects --->
+		<cfset addConnection(Connection) />
+		<cfset arguments.Listener.addConnection(Connection) />
+				
+	</cffunction>--->
 	
 	<!--- attachDelegate --->
 	<cffunction name="attachDelegate" access="public" hint="I attach a delegate which will listen for specific events.  Default events are: beforeValidate, afterValidate, beforeSave, afterSave, beforeLoad, afterLoad, beforeDelete, afterDelete" output="false" returntype="void">
@@ -121,6 +143,14 @@
     <cffunction name="getObservers" access="private" output="false" returntype="struct">
        <cfreturn variables.observers />
     </cffunction>
+	
+	<!--- genericEventHandler --->
+	<cffunction name="genericEventHandler" access="public" hint="I an a generic event handler.  I am used to automatically handle certian events." output="false" returntype="void">
+		<cfargument name="Event" hint="I am the event that is being handled." required="yes" type="string" />
+		
+		
+		
+	</cffunction>
 	
 	<cffunction name="createErrorCollection" access="public" hint="I return a new validationErrorCollection" output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfreturn CreateObject("Component", "reactor.util.ValidationErrorCollection").init() />
