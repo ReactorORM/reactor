@@ -21,6 +21,7 @@
 		&lt;cfset variables.metadata.hasOne[<xsl:value-of select="$hasOneIndex" />] = StructNew() /&gt;
 		&lt;cfset variables.metadata.hasOne[<xsl:value-of select="$hasOneIndex" />].name = "<xsl:value-of select="@name" />" /&gt;
 		&lt;cfset variables.metadata.hasOne[<xsl:value-of select="$hasOneIndex" />].alias = "<xsl:value-of select="@alias" />" /&gt;
+		&lt;cfset variables.metadata.hasOne[<xsl:value-of select="$hasOneIndex" />].type = "hasOne" /&gt;
 		&lt;cfset variables.metadata.hasOne[<xsl:value-of select="$hasOneIndex" />].relate = ArrayNew(1) /&gt;
 		
 		<xsl:for-each select="relate">
@@ -37,6 +38,7 @@
 		&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />] = StructNew() /&gt;
 		&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].name = "<xsl:value-of select="@name" />" /&gt;
 		&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].alias = "<xsl:value-of select="@alias" />" /&gt;
+		&lt;cfset variables.metadata.hasMany[<xsl:value-of select="$hasOneIndex" />].type = "hasMany" /&gt;
 		
 		<xsl:choose>
 			<xsl:when test="count(relate) &gt; 0">

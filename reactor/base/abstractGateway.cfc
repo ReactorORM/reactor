@@ -4,7 +4,7 @@
 	<cfset variables.queryPool = 0 />
 		
 	<!--- metadata --->
-    <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
+    <cffunction name="getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
        <cfreturn _getReactorFactory().createMetadata(_getName()) />
     </cffunction>	
 

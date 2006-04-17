@@ -25,11 +25,11 @@
 		&lt;cfset var Event = 0 /&gt;
 		&lt;cfset var ValidationErrorCollection = createErrorCollection() /&gt;
 		
-		&lt;!--- raise the beforeValidate event ---&gt;
+		&lt;!--- raise the beforeValidate event
 		&lt;cfset Event = newEvent("beforeValidate") /&gt;
 		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ExternalValidationErrorCollection) /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
+		&lt;cfset announceEvent(Event) /&gt; ---&gt;
 		
 		<xsl:for-each select="object/fields/field">
 			<xsl:choose>
@@ -121,11 +121,11 @@
 		&lt;!--- merge this object's collection with the provide collection (if any) ---&gt;
 		&lt;cfset arguments.ExternalValidationErrorCollection.merge(ValidationErrorCollection) /&gt;
 		
-		&lt;!--- raise the afterValidate event ---&gt;
+		&lt;!--- raise the afterValidate event
 		&lt;cfset Event = newEvent("afterValidate") /&gt;
 		&lt;cfset Event.setValue("ValidationErrorCollection", arguments.ExternalValidationErrorCollection) /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
+		&lt;cfset announceEvent(Event) /&gt; ---&gt;
 		
 		&lt;cfreturn arguments.ExternalValidationErrorCollection /&gt;
 	&lt;/cffunction&gt;
@@ -138,10 +138,11 @@
 			&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;			
 			
 			<xsl:if test="count(//hasOne/relate[@from = $alias]) &gt; 0">
-				&lt;!--- if an empty value is passed in then reset the address record ---&gt;
-				&lt;cfif NOT Len(arguments.<xsl:value-of select="@alias"/>)&gt;
+				&lt;!--- unless the value passed in is the same as the current value, reset the "child" record ---&gt;
+				&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
 					<xsl:for-each select="//hasOne/relate[@from = $alias]">
-						&lt;cfset variables.hasOne.<xsl:value-of select="../@alias" /> = 0 /&gt;
+						&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
+						&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
 					</xsl:for-each>
 				&lt;/cfif&gt;
 				
@@ -154,15 +155,104 @@
 		&lt;/cffunction&gt;	
 	</xsl:for-each>
 	
+	<xsl:for-each select="object/hasOne">
+	&lt;!--- Record For <xsl:value-of select="@alias"/> ---&gt;
+	&lt;cffunction name="set<xsl:value-of select="@alias"/>" access="public" output="false" returntype="void"&gt;
+	    &lt;cfargument name="<xsl:value-of select="@alias"/>" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
+		
+		&lt;!--- replace the cached version of this <xsl:value-of select="@alias"/> ---&gt;
+		&lt;cfset arguments.<xsl:value-of select="@alias"/>.setParent(this) /&gt;
+		&lt;cfset variables.children.<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
+		
+		&lt;!--- set this object's <xsl:value-of select="@alias"/> record to reflect the object's related values.  This is going directly to the TO to avoid reloading the object and to facilitate compound relationships ---&gt;
+		<xsl:for-each select="relate">
+			&lt;cfset _getTo().<xsl:value-of select="@from" /> = arguments.<xsl:value-of select="../@alias"/>.get<xsl:value-of select="@to" />()&gt;
+		</xsl:for-each>
+	&lt;/cffunction&gt;
+	
+	&lt;cffunction name="get<xsl:value-of select="@alias"/>" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
+		&lt;cfset <xsl:value-of select="@alias"/> = 0 /&gt;
+		
+		&lt;!--- load the initial <xsl:value-of select="@alias"/> record.  this will be empty ---&gt;
+		&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>") OR (
+				StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>")
+				AND NOT IsObject(variables.children.<xsl:value-of select="@alias"/>)
+		) &gt;
+			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@alias"/>") /&gt;
+			&lt;cfset <xsl:value-of select="@alias"/>.setParent(this) /&gt;
+			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = <xsl:value-of select="@alias"/> /&gt;
+		&lt;/cfif&gt;
+		
+		&lt;!--- if this object has an addressID and it's not the same as the address then load the correct address ---&gt;
+		&lt;cfif 
+			<xsl:for-each select="relate">
+				(Len(get<xsl:value-of select="@from" />()) AND get<xsl:value-of select="@from" />() IS NOT variables.children.Address.get<xsl:value-of select="@to" />())
+				<xsl:if test="position() != last()">OR</xsl:if>
+			</xsl:for-each>
+			&gt;
+			<xsl:for-each select="relate">
+				&lt;cfset variables.children.<xsl:value-of select="../@alias"/>.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
+			</xsl:for-each>
+			&lt;cfset variables.children.<xsl:value-of select="@alias"/>.load('<xsl:for-each select="relate"><xsl:value-of select="@to" />,</xsl:for-each>') /&gt; 
+		&lt;/cfif&gt;
+		
+		&lt;cfreturn variables.children.<xsl:value-of select="@alias"/> /&gt;
+	&lt;/cffunction&gt;
+	
+	&lt;cffunction name="remove<xsl:value-of select="@alias"/>" access="public" output="false" returntype="void"&gt;
+		<xsl:for-each select="relate">
+			&lt;cfset set<xsl:value-of select="@from" />("") /&gt;
+		</xsl:for-each>
+	&lt;/cffunction&gt;
+	</xsl:for-each>
+	
+	<xsl:for-each select="object/hasMany">
+		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
+		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
+			&lt;cfset var relationship = 0 /&gt;
+			&lt;cfset var <xsl:value-of select="@alias"/>Iterator = 0 /&gt;
+			
+			&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>Iterator")&gt;
+				&lt;cfset <xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>", 
+					"<xsl:for-each select="link">
+						<xsl:value-of select="@name"/>
+						<xsl:if test="position() != last()">,</xsl:if>
+					</xsl:for-each>") />
+				
+				<xsl:choose>
+					<xsl:when test="count(relate) &gt; 0">
+						<xsl:for-each select="relate">
+							&lt;cfset <xsl:value-of select="../@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="count(link) &gt; 0">
+						&lt;cfset relationship = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="/object/@alias"/>").relate /&gt;
+			
+						&lt;cfloop from="1" to="#ArrayLen(relationship)#" index="x"&gt;
+							&lt;cfset <xsl:value-of select="@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].from, evaluate("get#relationship[x].to#()")) /&gt;
+						&lt;/cfloop&gt;
+					</xsl:when>
+				</xsl:choose>
+				
+				&lt;!--- set parent/child relationships ---&gt;
+				&lt;cfset <xsl:value-of select="@alias"/>Iterator.setParent(this) /&gt;			
+				&lt;cfset variables.children.<xsl:value-of select="@alias"/>Iterator = <xsl:value-of select="@alias"/>Iterator />
+			&lt;/cfif&gt;
+			
+			
+			&lt;cfreturn variables.children.<xsl:value-of select="@alias"/>Iterator /&gt;
+		&lt;/cffunction&gt;
+	</xsl:for-each>	
+	
 	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record"&gt;
 		&lt;cfset var fieldList = StructKeyList(arguments) /&gt;
 		&lt;cfset var item = 0 /&gt;
 		&lt;cfset var func = 0 /&gt;
 		
-		&lt;!--- raise the beforeLoad event ---&gt;
+		&lt;!--- raise the beforeLoad event
 		&lt;cfset Event = newEvent("beforeLoad") /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
+		&lt;cfset announceEvent(Event) /&gt; ---&gt;
 		
 		&lt;cfif IsDefined("arguments") AND fieldList IS 1&gt;
 			&lt;cfset fieldList = arguments[1] /&gt;
@@ -177,125 +267,29 @@
 		
 		&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
 		
-		&lt;!--- raise the afterLoad event ---&gt;
+		&lt;!--- raise the afterLoad event 
 		&lt;cfset Event = newEvent("afterLoad") /&gt;
 		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
+		&lt;cfset announceEvent(Event) /&gt; ---&gt;
 		
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
-		&lt;!--- raise the beforeSave event ---&gt;
-		&lt;cfset Event = newEvent("beforeSave") /&gt;
-		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
-		
+		&lt;cfset beforeSave() /&gt;
+				
 		&lt;cfset _getDao().save(_getTo()) /&gt;	
 		
-		&lt;!--- raise the afterSave event ---&gt;
-		&lt;cfset Event = newEvent("afterSave") /&gt;
-		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;	
+		&lt;cfset afterSave() /&gt;	
 	&lt;/cffunction&gt;	
 	
 	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
-		&lt;!--- raise the beforeDelete event ---&gt;
-		&lt;cfset Event = newEvent("beforeDelete") /&gt;
-		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
-		
-		&lt;cfif IsDefined("arguments")&gt;
-			&lt;cfinvoke component="#this#" method="load" argumentcollection="#arguments#" /&gt;
-		&lt;/cfif&gt;
-	
+		&lt;cfset beforeDelete() /&gt;
+				
 		&lt;cfset _getDao().delete(_getTo()) /&gt;
 		
-		&lt;!--- reset the to ---&gt;
-		&lt;cfset _setTo(_getReactorFactory().createTo("<xsl:value-of select="object/@alias" />")) /&gt;
-		
-		&lt;!--- raise the afterDelete event ---&gt;
-		&lt;cfset Event = newEvent("afterDelete") /&gt;
-		&lt;cfset Event.setValue("SourceRecord", this) /&gt;
-		&lt;cfset announceEvent(Event) /&gt;
+		&lt;cfset afterDelete() /&gt;
 	&lt;/cffunction&gt;
-	
-	<xsl:for-each select="object/hasOne">
-	&lt;!--- Record For <xsl:value-of select="@alias"/> ---&gt;
-	&lt;cffunction name="set<xsl:value-of select="@alias"/>" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="<xsl:value-of select="@alias"/>" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
-		
-		&lt;!--- replace the cached version of this <xsl:value-of select="@alias"/> ---&gt;
-		&lt;cfset variables.hasOne.<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
-		
-		&lt;!--- set this object's <xsl:value-of select="@alias"/> record to reflect the object's related values.  This is going directly to the TO to avoid reloading the object and to facilitate compound relationships ---&gt;
-		<xsl:for-each select="relate">
-			&lt;cfset _getTo().<xsl:value-of select="@from" /> = arguments.<xsl:value-of select="../@alias"/>.get<xsl:value-of select="@to" />()&gt;
-		</xsl:for-each>
-	&lt;/cffunction&gt;
-	
-	&lt;cffunction name="get<xsl:value-of select="@alias"/>" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
-		&lt;!--- load the initial <xsl:value-of select="@alias"/> record.  this will be empty ---&gt;
-		&lt;cfif NOT StructKeyExists(variables.hasOne, "<xsl:value-of select="@alias"/>") OR (
-				StructKeyExists(variables.hasOne, "<xsl:value-of select="@alias"/>")
-				AND NOT IsObject(variables.hasOne.<xsl:value-of select="@alias"/>)
-		) &gt;
-			&lt;cfset variables.hasOne.<xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@alias"/>") /&gt;
-		&lt;/cfif&gt;
-		
-		&lt;!--- if this object has an addressID and it's not the same as the address then load the correct address ---&gt;
-		&lt;cfif 
-			<xsl:for-each select="relate">
-				(Len(get<xsl:value-of select="@from" />()) AND get<xsl:value-of select="@from" />() IS NOT variables.hasOne.Address.get<xsl:value-of select="@to" />())
-				<xsl:if test="position() != last()">OR</xsl:if>
-			</xsl:for-each>
-			&gt;
-			<xsl:for-each select="relate">
-				&lt;cfset variables.hasOne.<xsl:value-of select="../@alias"/>.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
-			</xsl:for-each>
-			&lt;cfset variables.hasOne.<xsl:value-of select="@alias"/>.load('<xsl:for-each select="relate"><xsl:value-of select="@to" />,</xsl:for-each>') /&gt; 
-		&lt;/cfif&gt;
-		
-		&lt;cfreturn variables.hasOne.<xsl:value-of select="@alias"/> /&gt;
-	&lt;/cffunction&gt;
-	
-	&lt;cffunction name="remove<xsl:value-of select="@alias"/>" access="public" output="false" returntype="void"&gt;
-		<xsl:for-each select="relate">
-			&lt;cfset set<xsl:value-of select="@from" />("") /&gt;
-		</xsl:for-each>
-	&lt;/cffunction&gt;
-	</xsl:for-each>
-	
-	<xsl:for-each select="object/hasMany">
-		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
-		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
-			&lt;cfset var relationship = 0 /&gt;
-			
-			&lt;cfset var <xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>", 
-				"<xsl:for-each select="link">
-					<xsl:value-of select="@name"/>
-					<xsl:if test="position() != last()">,</xsl:if>
-				</xsl:for-each>") />
-			
-			<xsl:choose>
-				<xsl:when test="count(relate) &gt; 0">
-					<xsl:for-each select="relate">
-						&lt;cfset <xsl:value-of select="../@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
-					</xsl:for-each>
-				</xsl:when>
-				<xsl:when test="count(link) &gt; 0">
-					&lt;cfset relationship = _getReactorFactory().createMetadata("<xsl:value-of select="link/@name"/>").getRelationship("<xsl:value-of select="/object/@alias"/>").relate /&gt;
-		
-					&lt;cfloop from="1" to="#ArrayLen(relationship)#" index="x"&gt;
-						&lt;cfset <xsl:value-of select="@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].from, evaluate("get#relationship[x].to#()")) /&gt;
-					&lt;/cfloop&gt;
-				</xsl:when>
-			</xsl:choose>
-				
-			
-			&lt;cfreturn <xsl:value-of select="@alias"/>Iterator /&gt;
-		&lt;/cffunction&gt;
-	</xsl:for-each>	
 	
 	<xsl:for-each select="object/hasOne[@lookup = 'true']">
 	&lt;!--- Lookup For <xsl:value-of select="@alias"/> ---&gt;
@@ -308,11 +302,20 @@
 	
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
-	    &lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
-	    &lt;cfset variables.to = arguments.to /&gt;
+		&lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
+		&lt;cfset variables.to = arguments.to /&gt;
 	&lt;/cffunction&gt;
 	&lt;cffunction name="_getTo" access="public" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To"&gt;
 		&lt;cfreturn variables.to /&gt;
+	&lt;/cffunction&gt;	
+	
+	&lt;!--- initialTo ---&gt;
+	&lt;cffunction name="_setInitialTo" access="private" output="false" returntype="void"&gt;
+		&lt;cfargument name="initialTo" hint="I am this record's initial transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
+		&lt;cfset variables.initialTo = arguments.initialTo /&gt;
+	&lt;/cffunction&gt;
+	&lt;cffunction name="_getInitialTo" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To"&gt;
+		&lt;cfreturn variables.initialTo /&gt;
 	&lt;/cffunction&gt;	
 	
 	&lt;!--- dao ---&gt;

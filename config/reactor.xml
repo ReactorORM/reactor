@@ -12,20 +12,20 @@
 
 	<objects>		
 		<object name="User">
-			<hasMany name="State">
-				<link name="UserState" />
+			<hasMany name="UserAddress">
+				<relate from="UserId" to="UserId" />
 			</hasMany>
-			<hasOne name="Address">
-				<relate from="addressId" to="addressId" />
-			</hasOne>
+			<hasMany name="Address">
+				<link name="UserAddress" />
+			</hasMany>
 		</object>
 		
-		<object name="UserState">
-			<hasOne name="State">
-				<relate from="stateId" to="stateId" />
-			</hasOne>
+		<object name="UserAddress">
 			<hasOne name="User">
 				<relate from="userId" to="userId" />
+			</hasOne>
+			<hasOne name="Address">
+				<relate from="addressId" to="addressId" />
 			</hasOne>
 		</object>
 		
