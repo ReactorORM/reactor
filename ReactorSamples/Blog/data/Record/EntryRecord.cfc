@@ -37,10 +37,12 @@
 		<cfset setCategoryIdList(valueList(categories.categoryId)) />
 	</cffunction>
 	
+
+	
 	<cffunction name="getDistinctCategoryQuery" access="public" hint="I get the distinct categories this entry is in" output="false" returntype="query">
 		<cfset var CategoryIterator = getCategoryIterator() />
-		<cfset CategoryIterator.setDistinct(true) />
-		<cfset CategoryIterator.getOrder().setAsc("Category", "name") />
+		<!---<cfset CategoryIterator.setDistinct(true) />
+		<cfset CategoryIterator.getOrder().setAsc("Category", "name") />--->
 		<cfreturn CategoryIterator.getQuery() />
 	</cffunction>
 	
