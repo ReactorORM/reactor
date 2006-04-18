@@ -140,7 +140,9 @@
 					&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
 					&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
 						<xsl:for-each select="//hasOne/relate[@from = $alias]">
-							&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
+							&lt;cfif variables.children.<xsl:value-of select="../@alias" /> IS NOT 0&gt;
+								&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
+							&lt;/cfif&gt;
 							&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
 						</xsl:for-each>
 						
@@ -154,7 +156,7 @@
 				<xsl:otherwise>
 					&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
 				</xsl:otherwise>
-			</xsl:if>
+			</xsl:choose>
 		&lt;/cffunction&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>" hint="I get the <xsl:value-of select="@alias"/> value." access="public" output="false" returntype="string"&gt;
 			&lt;cfreturn _getTo().<xsl:value-of select="@alias"/> /&gt;
@@ -184,7 +186,7 @@
 				StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>")
 				AND NOT IsObject(variables.children.<xsl:value-of select="@alias"/>)
 		) &gt;
-			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@alias"/>") /&gt;
+			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") /&gt;
 			&lt;cfset <xsl:value-of select="@alias"/>.setParent(this) /&gt;
 			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = <xsl:value-of select="@alias"/> /&gt;
 		&lt;/cfif&gt;
