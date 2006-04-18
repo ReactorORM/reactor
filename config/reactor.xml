@@ -4,7 +4,7 @@
 		<dsn value="Scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="always" />
+		<mode value="production" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
@@ -12,18 +12,6 @@
 
 	<objects>		
 		<object name="User">
-			<hasMany name="UserAddress">
-				<relate from="UserId" to="UserId" />
-			</hasMany>
-			<hasMany name="Address">
-				<link name="UserAddress" />
-			</hasMany>
-		</object>
-		
-		<object name="UserAddress">
-			<hasOne name="User">
-				<relate from="userId" to="userId" />
-			</hasOne>
 			<hasOne name="Address">
 				<relate from="addressId" to="addressId" />
 			</hasOne>

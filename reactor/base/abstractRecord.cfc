@@ -10,6 +10,7 @@
 	<cfset variables.ValidationErrorCollection = 0 />
 	<cfset variables.children = StructNew() />
 	<cfset variables.Parent = 0 />
+	<cfset variables.deleted = false />
 		
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
@@ -26,6 +27,10 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="dumpparent">
+		<cfdump var="#getParent()#"/><cfabort>
+	</cffunction>
+	
 	<!--- _getObjectMetadata --->
     <cffunction name="_getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
        <cfreturn _getReactorFactory().createMetadata(_getName()) />
@@ -40,34 +45,95 @@
 		<cfreturn NOT _getTo().isEqual(_getInitialTo()) />
 	</cffunction>
 	
+	<!--- beforeLoad --->
+	<cffunction name="beforeLoad" access="private" hint="I am code executed before loading the record." output="false" returntype="void">
+		<!--- something may go here some day --->
+	</cffunction>
+	
+	<!--- afterLoad --->
+	<cffunction name="afterLoad" access="private" hint="I am code executed after loading the record." output="false" returntype="void">
+		<!--- clean the object --->
+		<cfset clean() />
+	</cffunction>
+	
 	<!--- beforeDelete --->
 	<cffunction name="beforeDelete" access="private" hint="I am code executed before deleting the record." output="false" returntype="void">
 		<cfset var relationship = 0 />
 		<cfset var x = 0 />
+		<cfset var nullable = true />
+		<cfset var parentMetadata = 0 />
+		<cfset var linkMetadata = 0 />
+		<cfset var LinkedIterator = 0 />
 		<cfset var To = 0 />
 		
+		<!--- This record may have:
+			- no parent:
+				do nothing
+			- a record parent:
+				this is a result of a hasOne relationship.  if the parent has one of this record and that field can be null, null it.  
+				otherwise delete the parent. (I hope that's right!!!! - may add a cascade argument to the record's delete method)
+			- an iterator parent:
+				this is a result of a hasMany (not linking) relationship.  In this case do nothing.  The object will automatically
+				disappear from the iterator				
+		--->
+			
 		<!--- check to see if this object has a parent.  If so, get the relationship the parent has to this child. --->
 		<cfif hasParent() AND GetMetadata(getParent()).name IS NOT "reactor.iterator.iterator">
+
+			<!--- get the parent's metadata --->
+			<cfset parentMetadata = getParent()._getObjectMetadata() />
+						
 			<!--- get this object's relationship with its parent --->
-			<cfset relationship = getParent()._getObjectMetadata().getRelationship(_getObjectMetadata().getAlias()) />
+			<cfset relationship = parentMetadata.getRelationship(_getObjectMetadata().getAlias()) />
 			
-			<!--- remove this item from it's parent --->
+			<!--- check to see if the parent's relationships can be nulled --->
 			<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-				<cfinvoke component="#getParent()#" method="set#relationship.relate[x].from#">
-					<cfinvokeargument name="#relationship.relate[x].from#" value="" />
-				</cfinvoke>
+				<!--- check to see if the parent's field can be nulled --->
+				<cfif NOT parentMetadata.getField(relationship.relate[x].from).nullable>
+					<cfset nullable = false />
+					<cfbreak />
+				</cfif>
 			</cfloop>
 			
-		<cfelseif hasParent() AND GetMetadata(getParent()).name IS "reactor.iterator.iterator">
-			<!--- get this object's relationship with its parent --->
-			<cfset relationship = getParent().getParent()._getObjectMetadata().getRelationship(_getObjectMetadata().getAlias()) />
-			
-			<!--- Because this obejct is being deleted we need to remove it from the iterator.  To do so we'll pass this into the iterator's remove method. --->
-			<cfset getParent().remove(this) />
+			<cfif nullable>
+				<!--- null all relationships --->
+				<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
+					<cfinvoke component="#getParent()#" method="set#relationship.relate[x].from#">
+						<cfinvokeargument name="#relationship.relate[x].from#" value="" />
+					</cfinvoke>
+				</cfloop>
+				
+			<cfelse>
+				<!--- delete the parent.  (By running the next line of code you agree not to sue Doug if something goes horribly wrong.) --->
+				<cfset getParent().delete() />
+				
+			</cfif>
+		
 		</cfif>
 		
-		<cfif StructCount(arguments)>
-			<cfinvoke component="#this#" method="load" argumentcollection="#arguments#" />
+	</cffunction>
+	
+	<cffunction name="isInLinkedRelationship" access="private" hint="I indicate if this record is currently in a has many linked relationship." output="false" returntype="boolean">
+		<cfset var Parent = 0 />
+		
+		<!--- does this item have a parent? --->
+		<cfif hasParent()>
+			<cfset Parent = getParent() />
+		<cfelse>
+			<cfreturn false />
+		</cfif>
+		
+		<!--- does the parent have a parent? --->
+		<cfif getParent().hasParent()>
+			<cfset Parent = getParent().getParent() />
+		<cfelse>
+			<cfreturn false />
+		</cfif>
+		
+		<cfif GetMetadata(Parent).name IS "reactor.iterator.iterator">
+			<cfreturn true />
+		<cfelse>
+			<cfreturn false />
 		</cfif>
 	</cffunction>
 	
@@ -77,6 +143,8 @@
 		<cfset _setTo(_getReactorFactory().createTo(_getObjectMetadata().getAlias())) />
 		<!--- clean the object --->
 		<cfset clean() />
+		<!--- set the deleted status of this cfc --->
+		<cfset variables.deleted = true />
 	</cffunction>
 	
 	<!--- beforeSave --->
@@ -87,12 +155,16 @@
 		<cfset var value = 0 />
 		
 		<cfloop collection="#variables.children#" item="item">
-			<!--- check to see if this child is dirty --->
-			<cfif GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND variables.children[item].isDirty()>
-				<!--- save the child. the child will set it's key values into it's parent (this) --->
-				<cfinvoke component="#variables.children[item]#" method="save" returnvariable="value" />
+			<!--- check to see if this child is either a linking iteator a record --->
+			<cfif (GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
+				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" >
+			
+				<!--- save the child. --->
+				<cfset variables.children[item].save() />
+			
 			</cfif>
 		</cfloop>
+		
 	</cffunction>
 	
 	<!--- afterSave --->
@@ -100,20 +172,25 @@
 		<cfset var relationship = 0 />
 		<cfset var x = 0 />
 		<cfset var value = 0 />
-		
+				
 		<!--- check to see if this object has children in iterators.  If so, set the related fields in the child from this parent. --->
 		<cfloop collection="#variables.children#" item="item">
-			<!--- check to make sure this child is an iterator --->
-			<cfif GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator">
+			<!--- check to make sure this child is an iterator or record (links are skipped) --->
+			<cfif GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND NOT variables.children[item].isLinkedIterator()>
 				<cfset variables.children[item].relateTo(this) />
+				<!--- save any loaded and dirty records in the iterator --->
+				<cfset variables.children[item].save() />
+				
+			<cfelseif GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator">
+				<!--- save the changed record --->
+				<cfset variables.children[item].save() />
+				
 			</cfif>
-			<!--- save any loaded and dirty records in the iterator --->
-			<cfset variables.children[item].save() />
 		</cfloop>
 		
 		<!--- check to see if this object has a parent.  If so, set the related fields in the parent from this child. --->
 		<cfif hasParent() AND GetMetadata(getParent()).name IS NOT "reactor.iterator.iterator">
-		
+						
 			<cfset relationship = getParent()._getObjectMetadata().getRelationship(_getObjectMetadata().getAlias()) />
 			
 			<!--- check to see if there is a relationship and if it's a hasOne relationship --->
@@ -170,6 +247,11 @@
 	<cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary">
 	    <cfreturn _getReactorFactory().createDictionary(_getName()) />
 	</cffunction>
+	
+	<!--- isDeleted --->
+    <cffunction name="isDeleted" hint="I indicate if this record has been deleted.  If an object has been deleted access to any of its data through its properties will throw errors." access="public" output="false" returntype="boolean">
+       <cfreturn variables.deleted />
+    </cffunction>
 	
 	<!--- parent --->
     <cffunction name="setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
@@ -302,3 +384,51 @@
     <cffunction name="getObservers" access="private" output="false" returntype="struct">
        <cfreturn variables.observers />
     </cffunction> --->
+	
+	<!---
+	<!--- beforeDelete --->
+	<cffunction name="beforeDelete" access="private" hint="I am code executed before deleting the record." output="false" returntype="void">
+		<cfset var relationship = 0 />
+		<cfset var x = 0 />
+		<!---<cfset var To = 0 />
+ 		<cfset var linkName = 0 />
+		<cfset var LinkRoot = 0 />
+		<cfset var LinkIterator = 0 />--->
+		
+		<!---<cfif isInLinkedRelationship()>
+			<!---<cfset LinkRoot = getParent().getParent().getParent() />
+			
+			<cfset linkName = getParent().getParent().getAlias() />
+			<cfinvoke component="#LinkRoot#" method="get#linkName#Iterator" returnvariable="LinkIterator" />
+			<cfset LinkIterator.delete(getParent()) />
+			
+			<cfset linkName = _getObjectMetadata().getAlias() />
+			<cfinvoke component="#LinkRoot#" method="get#linkName#Iterator" returnvariable="LinkIterator" />
+			<cfset LinkIterator.remove(this) />--->
+			
+		<cfelse>--->
+		
+		<!--- check to see if this object has a parent.  If so, get the relationship the parent has to this child. --->
+		<cfif hasParent() AND GetMetadata(getParent()).name IS NOT "reactor.iterator.iterator">
+						
+			<!--- get this object's relationship with its parent --->
+			<cfset relationship = getParent()._getObjectMetadata().getRelationship(_getObjectMetadata().getAlias()) />
+			
+			<!--- remove this item from it's parent --->
+			<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
+				<cfinvoke component="#getParent()#" method="set#relationship.relate[x].from#">
+					<cfinvokeargument name="#relationship.relate[x].from#" value="" />
+				</cfinvoke>
+			</cfloop>
+			
+		<!---<cfelseif hasParent() AND GetMetadata(getParent()).name IS "reactor.iterator.iterator">
+			<!--- get this object's relationship with its parent --->
+			<cfset relationship = getParent().getParent()._getObjectMetadata().getRelationship(_getObjectMetadata().getAlias()) />
+			
+			<!--- Because this object is being deleted we need to remove it from the iterator.  To do so we'll pass this into the iterator's remove method. --->
+			<cfset getParent().remove(this) />--->
+		</cfif>
+			
+		<!---</cfif>--->
+		
+	</cffunction>--->

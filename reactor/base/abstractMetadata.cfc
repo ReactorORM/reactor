@@ -86,6 +86,32 @@
 		<cfreturn columList />
 	</cffunction>
 	
+	<!--- LinkRelationship --->
+	<cffunction name="hasLinkRelationship" access="public" hint="I indicate if this object has a to another where the named object is the link" output="false" returntype="boolean">
+		<cfargument name="link" hint="I am the name of an object that this object may use as a link to another object." required="yes" type="string" />
+		<cfset var relationships = getRelationships() />
+		
+		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+			<cfif StructKeyExists(relationships[x], "link") AND ArrayLen(relationships[x].link) IS 1 AND relationships[x].link[1] IS arguments.link>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+	
+	<!--- getLinkRelationship --->
+	<cffunction name="getLinkRelationship" access="public" hint="I return a structure representing the link between this object and another where the named object in the link" output="false" returntype="struct">
+		<cfargument name="link" hint="I am the name of an object that this object may use as a link to another object." required="yes" type="string" />
+		<cfset var relationships = getRelationships() />
+		
+		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+			<cfif StructKeyExists(relationships[x], "link") AND ArrayLen(relationships[x].link) IS 1 AND relationships[x].link[1] IS arguments.link>
+				<cfreturn relationships[x] />
+			</cfif>
+		</cfloop>
+	</cffunction>
+	
 	<!--- getRelationships --->
 	<cffunction name="getRelationships" access="public" hint="I get an array of all relationships" output="false" returntype="array">
 		<cfset var objectMetadata = getObjectMetadata() />

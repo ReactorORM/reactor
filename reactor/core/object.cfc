@@ -76,10 +76,9 @@
 		<cfset var linkFrom = 0 />
 		<cfset var linkTo = 0 />
 		<cfset var newRelationship = 0 />
-		<cfset var newRelationships = 0 />
-		<!---
-		<cfset var linkerRelationship = 0 />
-		<cfset var newHasMany = 0 />--->
+		<cfset var newRelate = 0 />
+		<cfset var linkedConfig = 0 />
+		<!--- <cfset var newHasMany = 0 />--->
 		<cfset var x = 0 />
 		<cfset var y = 0 />
 		<cfset var z = 0 />
@@ -114,6 +113,42 @@
 				</cfif>
 			</cfif>
 			
+			<!--- also!  if the relationship is a link and we don't have a relationship directly to the linking object
+			we need to get the linking object's relationship back to this object and invert it to create a non-linking
+			relationship.  (note, if the incomming relatonship is a hasOne and and is from it's pk columns then our outgoing
+			link is a hasOne too - this is not yet implemented) (Also: if this is a multi-step link we're not going to expand it) --->
+			<cfif ArrayLen(relationship.XmlChildren) IS 1 AND StructKeyExists(relationship, "link")>
+				<cfset linkedConfig = CreateObject("Component", "reactor.core.object").init(relationship.link.XmlAttributes.name, getConfig()).getXml() />
+				<cfset linkedConfig = XmlSearch(linkedConfig, "//*[@alias = '#getAlias()#']") />
+				
+				<cfif ArrayLen(linkedConfig)>
+					<cfset linkedConfig = linkedConfig[1] />
+					
+					<!--- create the new node --->
+					<cfif linkedConfig.XmlName IS "hasOne">
+						<!--- todo: deal with one-to-one cases --->
+						<cfset newRelationship = XmlElemNew(Config, "hasMany") />
+					<cfelse>
+						<cfset newRelationship = XmlElemNew(Config, "hasOne") />
+					</cfif>
+					
+					<cfset newRelationship.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
+					<cfset newRelationship.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
+					
+					<!--- invert the relationship --->
+					<cfloop from="1" to="#ArrayLen(linkedConfig.XmlChildren)#" index="y">
+						<cfset newRelate = XMLElemNew(Config, "relate") />
+						<cfset newRelate.XmlAttributes["from"] = linkedConfig.XmlChildren[y].XmlAttributes.to />
+						<cfset newRelate.XmlAttributes["to"] = linkedConfig.XmlChildren[y].XmlAttributes.from />
+					</cfloop>
+					
+					<!--- add the relate tag to the new relationship --->
+					<cfset ArrayAppend(newRelationship.XmlChildren, newRelate) />
+					
+					<!--- add this to the config object --->
+					<cfset ArrayAppend(Config.object.XmlChildren, newRelationship) />
+				</cfif>
+			</cfif>
 		</cfloop>
 		
 		<!--- add the fields to the config settings --->
@@ -146,6 +181,10 @@
 		
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
+		
+		<!---<cfif getAlias() is "user">
+			<cfdump var="#Config#" /><cfabort>
+		</cfif>--->
 		
 		<cfreturn Config />
 	</cffunction>
@@ -204,7 +243,7 @@
 		
 	</cffunction>
 	
-	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Skike's blog at http://www.spike.org.uk/blog/index.cfm?do=ReactorSamples.Blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
+	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Spike's blog at http://www.spike.org.uk/blog/index.cfm?do=ReactorSamples.Blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
 		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any">
 		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any">
 		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any">
@@ -327,7 +366,7 @@
        <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
     </cffunction>
-    <cffunction name="getObjectConfig" access="private" output="false" returntype="string">
+    <cffunction name="getObjectConfig" access="public" output="false" returntype="string">
        <cfreturn variables.objectConfig />
     </cffunction>
 	

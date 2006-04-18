@@ -3,10 +3,10 @@
 
 <cfset reactor.init("/config/reactor.xml") />
 
+<cfset Address = reactor.createRecord("Address").load(addressId=92) />
+<cfset User = reactor.createRecord("user").load(userId=121) />
 
-<cfset Address = reactor.createRecord("Address").load(addressId=64) />
-<cfset User = reactor.createRecord("User").load(userId=8) />
 
-<cfset User.getUserAddressIterator().add(Address) />
+<cfset User.setAddressId("") />
 
 <cfset User.save() />
