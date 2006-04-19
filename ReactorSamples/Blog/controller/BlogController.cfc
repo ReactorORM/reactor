@@ -279,6 +279,7 @@
 	<cffunction name="DoGetEntry" access="Public" returntype="void" output="false" hint="I get or create an entry.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var EntryRecord = variables.Reactor.createRecord("Entry") />
+		<cfset var categoryIdList = arguments.event.getValue("categoryIdList") />
 		
 		<cfset EntryRecord.setEntryId(arguments.event.getValue("entryId", 0)) />
 		<cfset EntryRecord.load() />
@@ -288,14 +289,32 @@
 		<cfset arguments.event.setValue("EntryRecord", EntryRecord) />		
 	</cffunction>
 	
-	<!--- DoGetComment --->
-	<cffunction name="DoGetComment" access="Public" returntype="void" output="false" hint="I get or create a comment.">
+	<!--- DoUpdateCateogies --->
+	<cffunction name="DoUpdateCateogies" access="Public" returntype="void" output="false" hint="I get or create an entry.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
-		<cfset var CommentRecord = variables.Reactor.createRecord("Comment").load(commentId=arguments.event.getValue("commentId", 0)) />
+		<cfset var EntryRecord = arguments.event.getValue("EntryRecord") />
+		<cfset var categoryIdList = arguments.event.getValue("categoryIdList") />
+		<cfset var categoryId = 0 />
+		<cfset var categories = 0 />
 		
-		<!--- update the entry --->
-		<cfset arguments.event.makeEventBean(CommentRecord) />
-		<cfset arguments.event.setValue("CommentRecord", CommentRecord) />	
+		<!--- update categories in the entry --->
+		<cfloop list="#categoryIdList#" index="categoryId">
+			<!--- check to see if this category already exists on this entry --->
+			<cfset categories = EntryRecord.getCategoryIterator().get(categoryId=categoryId) />
+			
+			<cfif NOT ArrayLen(categories)>
+				<!--- add the category --->
+				<cfset EntryRecord.getCategoryIterator().add(categoryId=categoryId) />
+			</cfif>
+		</cfloop>
+		
+		<!--- delete deselected category relationships (note, this will take action even if the entry isn't successfuly saved) --->
+		<cfloop list="#EntryRecord.getCategoryIterator().getValueList("categoryId")#" index="categoryId">
+			<cfif NOT ListFindNoCase(categoryIdList, categoryId)>
+				<!--- remove this removed category --->
+				<cfset EntryRecord.getCategoryIterator().delete(categoryId=categoryId) />
+			</cfif>
+		</cfloop>		
 	</cffunction>
 	
 	<!--- DoSaveEntry --->
@@ -306,6 +325,45 @@
 		<cfset EntryRecord.setPostedByUserId(arguments.event.getValue("UserRecord").getUserId()) />
 		
 		<cfset EntryRecord.save() />
+	</cffunction>
+	
+	<!--- DoCreateNewCategory --->
+	<cffunction name="DoCreateNewCategory" access="Public" returntype="void" output="false" hint="I create a new category, if needed.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var newCategoryList = arguments.event.getValue("newCategoryList") />
+		<cfset var categoryIdList = arguments.event.getValue("categoryIdList") />
+		<cfset var categoryName = 0 />
+		<cfset var Category = 0 />
+		
+		<cfloop list="#newCategoryList#" index="categoryName">
+			<!--- try to load a cateogry with the provided name --->
+			<cfset Category = variables.Reactor.createRecord("Category") />
+			<!--- set the category name --->
+			<cfset Category.setName(Trim(categoryName)) />
+			<!--- load the record --->
+			<cfset Category.load("name") />
+						
+			<!--- save the category (this actualy only saves if the record's  not dirty) --->
+			<cfset Category.save() />
+			
+			<!--- add the new category into the list of selected categories (if its id isn't in there already) --->
+			<cfif NOT ListFind(categoryIdList, Category.getCategoryId())>
+				<cfset categoryIdList = ListAppend(categoryIdList, Category.getCategoryId()) />
+			</cfif>
+		</cfloop>
+		
+		<!--- add the list of ids back into the event --->
+		<cfset arguments.event.setValue("categoryIdList", categoryIdList) />
+	</cffunction>
+	
+	<!--- DoGetComment --->
+	<cffunction name="DoGetComment" access="Public" returntype="void" output="false" hint="I get or create a comment.">
+		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
+		<cfset var CommentRecord = variables.Reactor.createRecord("Comment").load(commentId=arguments.event.getValue("commentId", 0)) />
+		
+		<!--- update the entry --->
+		<cfset arguments.event.makeEventBean(CommentRecord) />
+		<cfset arguments.event.setValue("CommentRecord", CommentRecord) />	
 	</cffunction>
 	
 	<!--- DoValidateEntry --->

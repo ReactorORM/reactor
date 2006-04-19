@@ -69,7 +69,7 @@
 	
 	<!-- This is the name of the verity collection that will be indexed / searched -->
 	<property name="blogSearchCollection">
-		<value>Scratch</value>
+		<value>ReactorBlog</value>
 	</property>
 	
 	<!-- This is a comma sepeated list of other collections to search when a search is executed -->

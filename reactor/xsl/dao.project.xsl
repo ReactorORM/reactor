@@ -141,7 +141,6 @@
 		</xsl:if>
 	&lt;/cffunction&gt;
 	
-	<xsl:if test="count(object/fields/field[@primaryKey = 'true'])">
 	&lt;cffunction name="read" access="public" hint="I read a  <xsl:value-of select="object/@alias" /> object." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfargument name="loadFieldList" hint="I am an optional list of fields to load the record based on.  If not provided I default to the primary key values." required="no" type="string" default="" /&gt;
@@ -181,6 +180,8 @@
 			</xsl:for-each>
 		&lt;cfelseif qRead.recordCount GT 1&gt;
 			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.AmbiguousRecord" /&gt;
+		&lt;cfelseif qRead.recordCount IS 0&gt;
+			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.NoMatchingRecord" /&gt;
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
 	
@@ -229,7 +230,7 @@
 			</xsl:for-each>
 		&lt;/cfquery&gt;
 	&lt;/cffunction&gt;
-	</xsl:if>
+	
 	&lt;cffunction name="delete" access="public" hint="I delete a record in the <xsl:value-of select="object/@alias" /> table." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be used to delete from the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfset var Convention = getConventions() /&gt;

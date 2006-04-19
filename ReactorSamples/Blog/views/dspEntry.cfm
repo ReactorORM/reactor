@@ -23,12 +23,12 @@
 	</cfif>
 		
 	<!--- output the categories --->
-	<cfset categoryQuery = EntryRecord.getDistinctCategoryQuery() />
+	<cfset categoryQuery = EntryRecord.getCategoryIterator().getQuery() />
 	<cfif categoryQuery.recordCount>
 		<p>
 			<strong>Categories:</strong>
 			<cfloop query="categoryQuery">
-				<a href="index.cfm?filter=category&categoryId=#categoryQuery.categoryId#">#categoryQuery.name#</a>
+				<a href="index.cfm?filter=category&categoryId=#categoryQuery.categoryId#">#categoryQuery.name#</a><cfif categoryQuery.currentRow IS NOT categoryQuery.recordCount>,</cfif>
 			</cfloop>
 			<br />
 		</p>

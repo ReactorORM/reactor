@@ -140,7 +140,7 @@
 					&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
 					&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
 						<xsl:for-each select="//hasOne/relate[@from = $alias]">
-							&lt;cfif variables.children.<xsl:value-of select="../@alias" /> IS NOT 0&gt;
+							&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND variables.children.<xsl:value-of select="../@alias" /> IS NOT 0&gt;
 								&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
 							&lt;/cfif&gt;
 							&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
@@ -149,7 +149,7 @@
 						&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
 						
 						&lt;!--- load the correct address record ---&gt;
-						&lt;cfset getAddress() /&gt;
+						&lt;cfset get<xsl:value-of select="@alias" />() /&gt;
 					&lt;/cfif&gt;
 					
 				</xsl:when>
@@ -207,10 +207,12 @@
 		&lt;cfreturn variables.children.<xsl:value-of select="@alias"/> /&gt;
 	&lt;/cffunction&gt;
 	
-	&lt;cffunction name="remove<xsl:value-of select="@alias"/>" access="public" output="false" returntype="void"&gt;
+	&lt;cffunction name="remove<xsl:value-of select="@alias"/>" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
+		&lt;cfset var oldRecord = get<xsl:value-of select="@alias"/>() /&gt;
 		<xsl:for-each select="relate">
 			&lt;cfset set<xsl:value-of select="@from" />("") /&gt;
 		</xsl:for-each>
+		&lt;cfreturn oldRecord /&gt;
 	&lt;/cffunction&gt;
 	</xsl:for-each>
 	
@@ -255,6 +257,7 @@
 		&lt;cfset var fieldList = StructKeyList(arguments) /&gt;
 		&lt;cfset var item = 0 /&gt;
 		&lt;cfset var func = 0 /&gt;
+		&lt;cfset var nothingLoaded = false /&gt;
 		
 		&lt;cfset beforeLoad() /&gt;
 		
@@ -269,8 +272,18 @@
 			
 		&lt;/cfif&gt;
 		
-		&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
+		&lt;cftry&gt;
+			&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
+			&lt;cfcatch type="Reactor.Record.NoMatchingRecord"&gt;
+				&lt;cfset nothingLoaded = true /&gt;
+			&lt;/cfcatch&gt;		
+		&lt;/cftry&gt;
 		
+		&lt;cfif NOT nothingLoaded&gt;
+			&lt;!--- clean the object ---&gt;
+			&lt;cfset clean() /&gt;
+		&lt;/cfif&gt;
+				
 		&lt;cfset afterLoad() /&gt;
 		
 		&lt;cfreturn this /&gt;

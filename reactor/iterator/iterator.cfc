@@ -155,11 +155,12 @@
 			<cfif isLinkedIterator()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
 				<cfset Record.getParent().delete() />
+			<cfelse>
+				<!--- delete the record --->
+				<cfset Record.delete() />			
 			</cfif>
 			
-			<!--- delete the record --->
-			<cfset Record.delete() />
-		
+			
 		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
 			<!--- an object was passed in --->
 			<!--- get the object passed in --->
@@ -186,10 +187,10 @@
 			<cfif isLinkedIterator()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
 				<cfset Record.getParent().delete() />
+			<cfelse>
+				<!--- delete the record --->
+				<cfset Record.delete() />	
 			</cfif>
-			
-			<!--- delete the record --->
-			<cfset Record.delete() />
 				
 		<cfelseif fieldList IS NOT 1>
 			<!--- name/value pairs were passed in --->
@@ -258,7 +259,7 @@
 		<cfargument name="delimiter" hint="I am the delimiter to use for the list.  I default to ','." required="no" type="string" default="," />
 		<cfset var query = getQuery() />
 		<cfset var list = Evaluate("ValueList(query.#arguments.field#, arguments.delimiter)") />
-		<cfthrow detail="I'm not returning the OBJECT's data!!!" />
+		
 		<cfreturn list />
 	</cffunction>
 	
@@ -268,7 +269,7 @@
 		
 		<!--- loop over all the records that have been loaded and changed and save them --->
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x]) AND variables.array[x].isDirty()>
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted() AND variables.array[x].isDirty()>
 				<cfset variables.array[x].save() />
 			</cfif>
 		</cfloop>
@@ -290,7 +291,7 @@
 			
 			<!--- loop over the array of loaded records and set the value --->
 			<cfloop from="1" to="#ArrayLen(variables.array)#" index="y">
-				<cfif IsObject(variables.array[y])>
+				<cfif IsObject(variables.array[y]) AND NOT variables.array[y].isDeleted()>
 					
 					<!--- set the value into the child objects --->
 					<cfinvoke component="#variables.array[y]#" method="set#relationship.relate[x].to#">
@@ -363,14 +364,19 @@
 	</cffunction>
 	
 	<!--- populate --->
-	<cffunction name="populate" access="public" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
-		<cfif NOT IsQuery(variables.query)>
+	<cffunction name="populate" access="private" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
+		<cfif NOT isPopulated()>
 			<cfset variables.query = getGateway().getByQuery(getQueryObject(), false) />
 
 			<cfif variables.query.recordCount GT 0>
 				<cfset ArraySet(variables.array, 1, variables.query.recordCount, "") />
 			</cfif>
 		</cfif>
+	</cffunction>
+	
+	<!--- isPopulated --->
+	<cffunction name="isPopulated" access="public" hint="I indicate if this iterator has been populated with data." output="false" returntype="boolean">
+		<cfreturn IsQuery(variables.query) />
 	</cffunction>
 	
 	<!--- cleanup --->

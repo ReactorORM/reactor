@@ -7,9 +7,9 @@
 
 <cfdump var="#User.getAddressIterator().getQuery()#" />
 
-<cfset User.getAddressIterator().getAt(1).setStreet("123 Foo") />
+<cfset User.getAddressIterator().delete(1) />
 
-<cfdump var="#User.getAddressIterator().isDirty()#" />
+<cfdump var="#User.getAddressIterator().getQuery()#" />
 
 
 <!---<cfset User.setAddressId("") />

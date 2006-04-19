@@ -3,7 +3,7 @@
 		<setting name="beanMappings" value="/ReactorSamples/Blog/config/beans/" />
 		<setting name="viewMappings" value="/ReactorSamples/Blog/views" />
 		<setting name="defaultEvent" value="Home" />
-		<setting name="reload" value="false" />
+		<setting name="reload" value="true" />
 		<setting name="debug" value="false " />
 		<!-- These are all optional as of 1.0	
 		<setting name="statebuilder" value="ModelGlue.Util.GenericCollection" />
@@ -23,6 +23,8 @@
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
 			<message-listener message="NeedEntries" function="DoGetEntries" />
 			<message-listener message="NeedEntry" function="DoGetEntry" />
+			<message-listener message="NeedToUpdateCateogies" function="DoUpdateCateogies" />
+			<message-listener message="NeedNewCategory" function="DoCreateNewCategory" />
 			<message-listener message="ValidateEntry" function="DoValidateEntry" />
 			<message-listener message="SaveEntry" function="DoSaveEntry" />
 			<message-listener message="DeleteEntry" function="DoDeleteEntry" />
@@ -436,6 +438,8 @@
 		
 		<event-handler name="SaveEntry" access="private">
 			<broadcasts>
+				<message name="NeedNewCategory" />
+				<message name="NeedToUpdateCateogies" />
 				<message name="SaveEntry" />
 				<message name="AnnounceNewEntry" />
 				<message name="UpdateSearch" />

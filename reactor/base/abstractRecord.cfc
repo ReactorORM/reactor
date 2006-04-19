@@ -52,8 +52,7 @@
 	
 	<!--- afterLoad --->
 	<cffunction name="afterLoad" access="private" hint="I am code executed after loading the record." output="false" returntype="void">
-		<!--- clean the object --->
-		<cfset clean() />
+		<!--- something may go here some day --->
 	</cffunction>
 	
 	<!--- beforeDelete --->
@@ -154,12 +153,14 @@
 		
 		<cfloop collection="#variables.children#" item="item">
 			<!--- check to see if this child is either a linking iteator a record --->
-			<cfif (GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
-				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" >
+			<cfif IsObject(variables.children[item]) AND (
+				(GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
+				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator"
+			)>
 			
 				<!--- save the child. --->
 				<cfset variables.children[item].save() />
-			
+				
 			</cfif>
 		</cfloop>
 		
@@ -181,7 +182,9 @@
 				
 			<cfelseif GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator">
 				<!--- save the changed record --->
-				<cfset variables.children[item].save() />
+				<cfif IsObject(variables.children[item])>
+					<cfset variables.children[item].save() />
+				</cfif>
 				
 			</cfif>
 		</cfloop>

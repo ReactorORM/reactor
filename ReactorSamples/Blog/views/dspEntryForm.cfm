@@ -47,7 +47,7 @@
 		required="no"
 		name="categoryIdList"
 		query="#Categories#"
-		selected="#EntryRecord.getCategoryIdList()#"
+		selected="#EntryRecord.getCategoryIterator().getValueList("categoryId")#"
 		display="name"
 		value="categoryId"
 		multiple="true"
@@ -60,7 +60,7 @@
 		required="no"
 		type="text"
 		name="newCategoryList"
-		value="#EntryRecord.getNewCategoryList()#"
+		value="#viewstate.getValue("newCategoryList")#"
 		size="40"
 		maxlength="100"
 		comment="Seperate new categories with commas." />

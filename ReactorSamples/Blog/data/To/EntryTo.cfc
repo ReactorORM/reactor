@@ -6,7 +6,7 @@
 	<cfset this.publicationDate = Now() />
 	<cfset this.categoryIdList = "0" />
 	<cfset this.disableComments = "0" />
-	<cfset this.newCategoryList = "" />
+	<!---<cfset this.newCategoryList = "" />--->
 	
 </cfcomponent>
 	
