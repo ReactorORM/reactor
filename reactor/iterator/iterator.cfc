@@ -123,6 +123,18 @@
 		<cfreturn indexArray />
 	</cffunction>
 	
+	<!--- isDirty --->
+	<cffunction name="isDirty" access="public" hint="I indicate if there are any records in this iterator that are dirty." output="false" returntype="boolean">
+		<!--- loop over all the records that have been loaded and changed and save them --->
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cfif IsObject(variables.array[x]) AND variables.array[x].isDirty()>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+	
 	<!--- delete --->
 	<cffunction name="delete" access="public" hint="I delete matching elements in the iterator. Pass either an index for a specific item, a name/value list for matching records or an instance of an object." output="false" returntype="any">
 		<cfset var fieldList = StructKeyList(arguments) />
@@ -139,6 +151,12 @@
 			<!--- get the record at the index --->
 			<cfset Record = getAt(arguments[1], 1) />
 			
+			<!--- check to see if we're a linking relationship --->
+			<cfif isLinkedIterator()>
+				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
+				<cfset Record.getParent().delete() />
+			</cfif>
+			
 			<!--- delete the record --->
 			<cfset Record.delete() />
 		
@@ -151,7 +169,7 @@
 			<cftry>
 				<cfif Record._getObjectMetadata().getAlias() IS NOT getAlias()>
 					<cfthrow message="Object Not Correct Record"
-						detail="The object passed into the delete method is not a #getAlias()# Record and ca't be deleted from this iterator."
+						detail="The object passed into the delete method is not a #getAlias()# Record and can't be deleted from this iterator."
 						type="reactor.iterator.delete.ObjectNotCorrectRecord" />
 				</cfif>
 				<cfcatch type="object">
@@ -164,8 +182,14 @@
 				</cfcatch>
 			</cftry>
 			
+			<!--- check to see if we're a linking relationship --->
+			<cfif isLinkedIterator()>
+				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
+				<cfset Record.getParent().delete() />
+			</cfif>
+			
 			<!--- delete the record --->
-			<cfset Record.delete() />			
+			<cfset Record.delete() />
 				
 		<cfelseif fieldList IS NOT 1>
 			<!--- name/value pairs were passed in --->
@@ -211,7 +235,7 @@
 	
 	<!--- getRecordCount --->
 	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="numeric">
-		<cfreturn getQuery().recordCount />
+		<cfreturn ArrayLen(variables.array) />
 	</cffunction>
 	
 	<!--- getNext --->
@@ -349,17 +373,8 @@
 		</cfif>
 	</cffunction>
 	
-	<!--- getArray --->
-	<cffunction name="getArray" access="public" hint="I return an array of objects in the iterator" output="false" returntype="array">
-		<cfargument name="from" hint="I am the first index to return." required="no" type="numeric" default="1" />
-		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
-		<cfset var x = 0 />
-		<cfset var returnArray = ArrayNew(1) />
-		
-		<!--- populate this object --->
-		<cfset populate() />
-		
-		<!--- remove/cleanup any deleted records --->
+	<!--- cleanup --->
+	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
 		<cfloop from="#ArrayLen(variables.array)#" to="1" step="-1" index="x">
 			<cfif IsObject(variables.array[x])
 				AND
@@ -375,7 +390,21 @@
 				<cfset ArrayDeleteAt(variables.array, x) />
 			</cfif>
 		</cfloop>
+	</cffunction>
+	
+	<!--- getArray --->
+	<cffunction name="getArray" access="public" hint="I return an array of objects in the iterator" output="false" returntype="array">
+		<cfargument name="from" hint="I am the first index to return." required="no" type="numeric" default="1" />
+		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
+		<cfset var x = 0 />
+		<cfset var returnArray = ArrayNew(1) />
 		
+		<!--- populate this object --->
+		<cfset populate() />
+		
+		<!--- remove/cleanup any deleted records --->
+		<cfset cleanup() />
+	
 		<!--- if arguments.count is -1 then we need to set the upper bounds of the loop.  We couldn't do this initially because we only now know for sure that data was loaded --->
 		<cfif arguments.count IS -1>
 			<cfset arguments.count = ArrayLen(variables.array) />
@@ -396,7 +425,7 @@
 	</cffunction>
 		
 	<!--- loadRecord --->
-	<cffunction name="loadRecord" access="public" hint="I load a specific record based on the query backing the iterator" output="false" returntype="reactor.base.abstractRecord">
+	<cffunction name="loadRecord" access="private" hint="I load a specific record based on the query backing the iterator" output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="index" hint="I am the index of the row in the query which we will use to load this object" required="yes" type="numeric" />
 		<cfset var Record = 0 />
 		<cfset var To = 0 />
@@ -593,11 +622,11 @@
 	</cffunction>
 	
 	<!--- gateway --->
-    <cffunction name="setGateway" access="public" output="false" returntype="void">
+    <cffunction name="setGateway" access="private" output="false" returntype="void">
        <cfargument name="gateway" hint="I am the gateway object used to query the DB." required="yes" type="reactor.base.abstractGateway" />
        <cfset variables.gateway = arguments.gateway />
     </cffunction>
-    <cffunction name="getGateway" access="public" output="false" returntype="reactor.base.abstractGateway">
+    <cffunction name="getGateway" access="private" output="false" returntype="reactor.base.abstractGateway">
        <cfreturn variables.gateway />
     </cffunction>
 	

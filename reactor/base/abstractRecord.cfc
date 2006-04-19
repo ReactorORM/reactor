@@ -58,7 +58,7 @@
 	
 	<!--- beforeDelete --->
 	<cffunction name="beforeDelete" access="private" hint="I am code executed before deleting the record." output="false" returntype="void">
-		<cfset var relationship = 0 />
+		<!--- <cfset var relationship = 0 />
 		<cfset var x = 0 />
 		<cfset var nullable = true />
 		<cfset var parentMetadata = 0 />
@@ -66,7 +66,7 @@
 		<cfset var LinkedIterator = 0 />
 		<cfset var To = 0 />
 		
-		<!--- This record may have:
+		This record may have:
 			- no parent:
 				do nothing
 			- a record parent:
@@ -75,8 +75,6 @@
 			- an iterator parent:
 				this is a result of a hasMany (not linking) relationship.  In this case do nothing.  The object will automatically
 				disappear from the iterator				
-		--->
-			
 		<!--- check to see if this object has a parent.  If so, get the relationship the parent has to this child. --->
 		<cfif hasParent() AND GetMetadata(getParent()).name IS NOT "reactor.iterator.iterator">
 
@@ -110,7 +108,17 @@
 			</cfif>
 		
 		</cfif>
-		
+		--->
+	</cffunction>
+	
+	<!--- afterDelete --->
+	<cffunction name="afterDelete" access="private" hint="I am code executed after deleting the record." output="false" returntype="void">
+		<!--- reset the to --->
+		<cfset _setTo(_getReactorFactory().createTo(_getObjectMetadata().getAlias())) />
+		<!--- clean the object --->
+		<cfset clean() />
+		<!--- set the deleted status of this cfc --->
+		<cfset variables.deleted = true />
 	</cffunction>
 	
 	<cffunction name="isInLinkedRelationship" access="private" hint="I indicate if this record is currently in a has many linked relationship." output="false" returntype="boolean">
@@ -135,16 +143,6 @@
 		<cfelse>
 			<cfreturn false />
 		</cfif>
-	</cffunction>
-	
-	<!--- afterDelete --->
-	<cffunction name="afterDelete" access="private" hint="I am code executed after deleting the record." output="false" returntype="void">
-		<!--- reset the to --->
-		<cfset _setTo(_getReactorFactory().createTo(_getObjectMetadata().getAlias())) />
-		<!--- clean the object --->
-		<cfset clean() />
-		<!--- set the deleted status of this cfc --->
-		<cfset variables.deleted = true />
 	</cffunction>
 	
 	<!--- beforeSave --->

@@ -3,10 +3,14 @@
 
 <cfset reactor.init("/config/reactor.xml") />
 
-<cfset Address = reactor.createRecord("Address").load(addressId=92) />
-<cfset User = reactor.createRecord("user").load(userId=121) />
+<cfset User = reactor.createRecord("user").load(userId=122) />
+
+<cfdump var="#User.getAddressIterator().getQuery()#" />
+
+<cfset User.getAddressIterator().getAt(1).setStreet("123 Foo") />
+
+<cfdump var="#User.getAddressIterator().isDirty()#" />
 
 
-<cfset User.setAddressId("") />
-
-<cfset User.save() />
+<!---<cfset User.setAddressId("") />
+<cfset User.save() />--->

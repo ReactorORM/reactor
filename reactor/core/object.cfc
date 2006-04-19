@@ -82,6 +82,7 @@
 		<cfset var x = 0 />
 		<cfset var y = 0 />
 		<cfset var z = 0 />
+		<cfset var exists = false />
 		
 		<!--- add/validate relationship aliases --->
 		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne | /object/lookup") />
@@ -119,35 +120,57 @@
 			link is a hasOne too - this is not yet implemented) (Also: if this is a multi-step link we're not going to expand it) --->
 			<cfif ArrayLen(relationship.XmlChildren) IS 1 AND StructKeyExists(relationship, "link")>
 				<cfset linkedConfig = CreateObject("Component", "reactor.core.object").init(relationship.link.XmlAttributes.name, getConfig()).getXml() />
-				<cfset linkedConfig = XmlSearch(linkedConfig, "//*[@alias = '#getAlias()#']") />
 				
-				<cfif ArrayLen(linkedConfig)>
-					<cfset linkedConfig = linkedConfig[1] />
-					
-					<!--- create the new node --->
-					<cfif linkedConfig.XmlName IS "hasOne">
-						<!--- todo: deal with one-to-one cases --->
-						<cfset newRelationship = XmlElemNew(Config, "hasMany") />
-					<cfelse>
-						<cfset newRelationship = XmlElemNew(Config, "hasOne") />
+				<!--- loop over the linked config and look for a matching link (stupid xpath!) --->
+				<cfloop from="1" to="#ArrayLen(linkedConfig.object.XmlChildren)#" index="y">
+					<cfif StructKeyExists(linkedConfig.object.XmlChildren[y].XmlAttributes, "alias") AND linkedConfig.object.XmlChildren[y].XmlAttributes.alias IS getAlias()>
+						<cfset linkedConfig = linkedConfig.object.XmlChildren[y] />
+						<cfset exists = false />
+						
+						<!--- make sure this config doesn't already have a has many to the link (xpath is case sensitive!) --->
+						<cfloop from="1" to="#ArrayLen(Config.object.XmlChildren)#" index="z">
+							<cfif StructKeyExists(Config.object.XmlChildren[z].XmlAttributes, "alias") AND
+								Config.object.XmlChildren[z].XmlName IS Iif(linkedConfig.XmlName IS "hasOne", De("hasMany"), De("hasOne"))
+								AND Config.object.XmlChildren[z].XmlAttributes.name IS relationship.link.XmlAttributes.name>
+								
+								<!--- this relationship already exists, exit the loop! --->
+								<cfset exists = true />
+								<cfbreak />
+							</cfif>
+						</cfloop>
+						
+						<!--- if the inverse relationship doesn't exist in this config object already, create it --->
+						<cfif NOT exists>
+							<!--- invert the relationship --->
+							<cfif linkedConfig.XmlName IS "hasOne">
+								<!--- todo: deal with one-to-one cases --->
+								<cfset newRelationship = XmlElemNew(Config, "hasMany") />
+							<cfelse>
+								<cfset newRelationship = XmlElemNew(Config, "hasOne") />
+							</cfif>
+							
+							<cfset newRelationship.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
+							<cfset newRelationship.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
+							
+							<!--- invert the relationship --->
+							<cfloop from="1" to="#ArrayLen(linkedConfig.XmlChildren)#" index="y">
+								<cfset newRelate = XMLElemNew(Config, "relate") />
+								<cfset newRelate.XmlAttributes["from"] = linkedConfig.XmlChildren[y].XmlAttributes.to />
+								<cfset newRelate.XmlAttributes["to"] = linkedConfig.XmlChildren[y].XmlAttributes.from />
+							</cfloop>
+							
+							<!--- add the relate tag to the new relationship --->
+							<cfset ArrayAppend(newRelationship.XmlChildren, newRelate) />
+							
+							<!--- add this to the config object --->
+							<cfset ArrayAppend(Config.object.XmlChildren, newRelationship) />
+						</cfif>
+						
+						<!--- exit the loop, please --->
+						<cfbreak />
 					</cfif>
-					
-					<cfset newRelationship.XmlAttributes["name"] = relationship.link.XmlAttributes.name />
-					<cfset newRelationship.XmlAttributes["alias"] = relationship.link.XmlAttributes.name />
-					
-					<!--- invert the relationship --->
-					<cfloop from="1" to="#ArrayLen(linkedConfig.XmlChildren)#" index="y">
-						<cfset newRelate = XMLElemNew(Config, "relate") />
-						<cfset newRelate.XmlAttributes["from"] = linkedConfig.XmlChildren[y].XmlAttributes.to />
-						<cfset newRelate.XmlAttributes["to"] = linkedConfig.XmlChildren[y].XmlAttributes.from />
-					</cfloop>
-					
-					<!--- add the relate tag to the new relationship --->
-					<cfset ArrayAppend(newRelationship.XmlChildren, newRelate) />
-					
-					<!--- add this to the config object --->
-					<cfset ArrayAppend(Config.object.XmlChildren, newRelationship) />
-				</cfif>
+				</cfloop>
+				
 			</cfif>
 		</cfloop>
 		
