@@ -140,7 +140,7 @@
 					&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
 					&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
 						<xsl:for-each select="//hasOne/relate[@from = $alias]">
-							&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND variables.children.<xsl:value-of select="../@alias" /> IS NOT 0&gt;
+							&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND IsObject(variables.children.<xsl:value-of select="../@alias" />)&gt;
 								&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
 							&lt;/cfif&gt;
 							&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;

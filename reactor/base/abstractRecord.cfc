@@ -198,7 +198,7 @@
 			<cfif relationship.type IS "hasOne">
 				<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
 					<!--- get the value for this relationship from the child --->
-					<cfinvoke component="#this#" method="get#relationship.relate[x].from#" returnvariable="value" />
+					<cfinvoke component="#this#" method="get#relationship.relate[x].to#" returnvariable="value" />
 					
 					<!--- set the value into the parent --->
 					<cfinvoke component="#getParent()#" method="set#relationship.relate[x].from#">
