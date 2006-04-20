@@ -236,6 +236,10 @@
 	
 	<!--- getRecordCount --->
 	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="numeric">
+		
+		<!--- populate this object --->
+		<cfset populate() />
+		
 		<cfreturn ArrayLen(variables.array) />
 	</cffunction>
 	

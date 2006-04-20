@@ -85,7 +85,7 @@
 		<cfset var exists = false />
 		
 		<!--- add/validate relationship aliases --->
-		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne | /object/lookup") />
+		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne") />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
 			

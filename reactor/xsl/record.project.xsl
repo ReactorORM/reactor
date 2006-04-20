@@ -311,15 +311,6 @@
 		&lt;cfset afterDelete() /&gt;
 	&lt;/cffunction&gt;
 	
-	<xsl:for-each select="object/hasOne[@lookup = 'true']">
-	&lt;!--- Lookup For <xsl:value-of select="@alias"/> ---&gt;
-	&lt;cffunction name="get<xsl:value-of select="@alias"/>Lookup" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
-		&lt;cfset var <xsl:value-of select="@alias"/>Lookup = _getReactorFactory().createIterator("<xsl:value-of select="@alias"/>") /&gt;
-		
-		&lt;cfreturn <xsl:value-of select="@alias"/>Lookup /&gt;
-	&lt;/cffunction&gt;
-	</xsl:for-each>
-	
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
