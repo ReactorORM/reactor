@@ -169,7 +169,7 @@
 	    &lt;cfargument name="<xsl:value-of select="@alias"/>" hint="I am the Record to set the <xsl:value-of select="@alias"/> value from." required="yes" type="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record" /&gt;
 		
 		&lt;!--- replace the cached version of this <xsl:value-of select="@alias"/> ---&gt;
-		&lt;cfset arguments.<xsl:value-of select="@alias"/>.setParent(this) /&gt;
+		&lt;cfset arguments.<xsl:value-of select="@alias"/>._setParent(this) /&gt;
 		&lt;cfset variables.children.<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
 		
 		&lt;!--- set this object's <xsl:value-of select="@alias"/> record to reflect the object's related values.  This is going directly to the TO to avoid reloading the object and to facilitate compound relationships ---&gt;
@@ -187,7 +187,7 @@
 				AND NOT IsObject(variables.children.<xsl:value-of select="@alias"/>)
 		) &gt;
 			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") /&gt;
-			&lt;cfset <xsl:value-of select="@alias"/>.setParent(this) /&gt;
+			&lt;cfset <xsl:value-of select="@alias"/>._setParent(this) /&gt;
 			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = <xsl:value-of select="@alias"/> /&gt;
 		&lt;/cfif&gt;
 		
@@ -245,7 +245,7 @@
 				</xsl:choose>
 				
 				&lt;!--- set parent/child relationships ---&gt;
-				&lt;cfset <xsl:value-of select="@alias"/>Iterator.setParent(this) /&gt;			
+				&lt;cfset <xsl:value-of select="@alias"/>Iterator._setParent(this) /&gt;			
 				&lt;cfset variables.children.<xsl:value-of select="@alias"/>Iterator = <xsl:value-of select="@alias"/>Iterator />
 			&lt;/cfif&gt;
 			

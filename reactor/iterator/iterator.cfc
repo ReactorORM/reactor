@@ -40,7 +40,9 @@
 		<cfif Len(arguments.joinList)>
 			<cfloop from="#ArrayLen(joins)#" to="1" index="x" step="-1">
 				<cfset joinTo = joins[x] />
+					
 				<cfset getQueryObject().join(joinFrom, joinTo) />
+				
 				<cfset joinFrom = joinTo />
 			</cfloop>
 		</cfif>
@@ -154,7 +156,7 @@
 			<!--- check to see if we're a linking relationship --->
 			<cfif isLinkedIterator()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
-				<cfset Record.getParent().delete() />
+				<cfset Record._getParent().delete() />
 			<cfelse>
 				<!--- delete the record --->
 				<cfset Record.delete() />			
@@ -185,7 +187,7 @@
 			<!--- check to see if we're a linking relationship --->
 			<cfif isLinkedIterator()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
-				<cfset Record.getParent().delete() />
+				<cfset Record._getParent().delete() />
 			<cfelse>
 				<!--- delete the record --->
 				<cfset Record.delete() />	
@@ -358,7 +360,7 @@
 
 		<cfelse>
 			<!--- set the parent of this record --->
-			<cfset Record.setParent(this) />
+			<cfset Record._setParent(this) />
 
 		</cfif>
 		
@@ -383,7 +385,9 @@
 		
 			<!--- add a "reactorRowDeleted" field to the query --->
 			<cfset deletedArray = ArrayNew(1) />
-			<cfset ArraySet(deletedArray, 1, variables.query.recordCount, 0) />
+			<cfif variables.query.recordCount>
+				<cfset ArraySet(deletedArray, 1, variables.query.recordCount, 0) />
+			</cfif>
 			<cfset QueryAddColumn(variables.query, "reactorRowDeleted", "Bit", deletedArray) />
 			
 			<cfif variables.query.recordCount GT 0>
@@ -408,7 +412,7 @@
 					(
 						isLinkedIterator()
 						AND
-						variables.array[x].getParent().isDeleted()
+						variables.array[x]._getParent().isDeleted()
 					)
 				)>
 				<cfset ArrayDeleteAt(variables.array, x) />
@@ -488,7 +492,7 @@
 			<cfset Record.clean() />
 			
 			<!--- set the parent of this record --->
-			<cfset Record.setParent(this) />
+			<cfset Record._setParent(this) />
 			<!---<cfset setRecordParent(Record, false) />--->
 		</cfif>
 						
@@ -598,7 +602,7 @@
 
 		</cfif>
 		
-		<cfinvoke component="#getParent()#" method="get#getJoinList()#Iterator" returnvariable="LinkIterator" />
+		<cfinvoke component="#_getParent()#" method="get#getJoinList()#Iterator" returnvariable="LinkIterator" />
 		
 		<cfreturn LinkIterator />
 	</cffunction>
@@ -719,11 +723,11 @@
     </cffunction>
 		
 	<!--- parent --->
-    <cffunction name="setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
+    <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
        <cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
        <cfset variables.parent = arguments.parent />
     </cffunction>
-    <cffunction name="getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
+    <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
        <cfreturn variables.parent />
     </cffunction>
 	<cffunction name="hasParent" access="public" hint="I indicate if this object has a parent." output="false" returntype="boolean">
@@ -733,195 +737,3 @@
 		<cfset variables.parent = 0 />
 	</cffunction>
 </cfcomponent>
-
-<!--- queryRecords
-	<cffunction name="queryRecords" access="private" hint="I translate a query to an array of records" output="false" returntype="array">
-		<cfargument name="query" hint="I am the query to translate." required="yes" type="query" />
-		<cfset var Array = ArrayNew(1) />
-		<cfset var Record = 0 />
-		<cfset var To = 0 />
-		<cfset var field = "" />
-		
-		<cfloop query="Query">
-			<cfset Record = getReactorFactory().createRecord(getAlias()) >
-			<cfset To = Record._getTo() />
-
-			<!--- populate the record's to --->
-			<cfloop list="#Query.columnList#" index="field">
-				<cfset To[field] = Query[field][Query.currentrow] >
-			</cfloop>
-			
-			<cfset Record._setTo(To) />
-			
-			<cfset Array[ArrayLen(Array) + 1] = Record >
-		</cfloop>
-		
-		<cfreturn Array />		
-	</cffunction> --->
-	
-<!--- remove
-	<cffunction name="remove" access="public" hint="I remove matching elements from the iterator.  I do not delete the removed records. Pass either an index for a specific item or a name/value list for matching records or an instance of an object.  This method is really just here for Reactor's own use." output="false" returntype="any">
-		<cfset var fieldList = StructKeyList(arguments) />
-		<cfset var Record = 0 />
-		<cfset var indexArray = 0 />
-		<cfset var Records = 0 />
-		
-		<cfset populate() />
-		
-		<cfif NOT StructCount(arguments)>
-			<!--- nothing was provided, throw an error --->
-			<cfthrow message="No Arguments" detail="No arguments were passed to the delete method. Pass either an index for a specific item or a name/value list for matching records." type="reactor.iterator.delete.NoArguments" />
-
-		<cfelseif fieldList IS 1 AND NOT IsObject(arguments[1])>
-			<!--- an index was passed --->
-			<!--- delete the index --->
-			<cfset ArrayDeleteAt(variables.array, arguments[1]) />
-		
-		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
-			<!--- an instance of a record was passed in! Find it's index --->
-			<cfset Records = getArray() />
-			
-			<cfloop from="1" to="#ArrayLen(Records)#" index="x">
-				<cfif Records[x]._getInstanceId() IS arguments[1]._getInstanceId() >
-					<!--- remove the record --->
-					<cfset remove(x) />
-					<cfbreak />
-				</cfif>
-			</cfloop>
-			
-		<cfelseif fieldList IS NOT 1>
-			<!--- a set of name/value pairs were passed in.  get the matching indexes --->
-			<cfinvoke component="#this#" method="findMatchingIndexes" argumentcollection="#arguments#" returnvariable="indexArray" />
-			
-			<!--- sort and reverse the array (so we don't get errors when deleting multiple items and the length of the array changes --->
-			<cfset ArraySort(indexArray, "Numeric", "desc") />
-			
-			<!--- get all the specified indexes and return them --->
-			<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
-				<!--- remove the record --->
-				<cfset remove(indexArray[x]) />
-			</cfloop>
-			
-		</cfif>
-	</cffunction> --->
-	
-	<!--- removeAll
-	<cffunction name="removeAll" access="public" hint="I remove all elements in this iterator but do not delete them." output="false" returntype="void">
-		<cfset var Array = getArray() />
-		<cfset var x = 0 />
-		
-		<cfloop from="#ArrayLen(Array)#" to="1" index="x" step="-1">
-			<cfset remove(x) />
-		</cfloop>
-	</cffunction> --->
-	
-	<!--- deleteAll --->
-	
-	<!--- setRecordParent
-	<cffunction name="setRecordParent" access="private" hint="I set the provided record's parent." output="false" returntype="void">
-		<cfargument name="Record" hint="I am the record to set the parent for." required="yes" type="reactor.base.abstractRecord" />
-		<cfargument name="new" hint="I indicate if this record is new or exists in the database" required="yes" type="boolean" />
-		
-		<!--- look up how this record is related to the iterator's parent --->
-		<cfset var relationship = getParent()._getObjectMetadata().getRelationship(getAlias()) />
-		<cfset var value = 0 />
-		<cfset var Link = 0 />
-		<cfset var LinkMetadata = 0 />
-		<cfset var parentRelationship = 0 />
-		<cfset var childRelationship = 0 />
-		<cfset var linkIterator = 0 />
-		<cfset var To = 0 />
-			
-		<cfif NOT StructKeyExists(relationship, "link")>		
-			<!--- the parent record hasMany of this iterator's objects --->
-			<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-				<!--- get this value from the parent for this relationship --->
-				<cfinvoke component="#getParent()#" method="get#relationship.relate[x].from#" returnvariable="value" />
-				
-				<!--- set this value into the new record --->
-				<cfinvoke component="#arguments.Record#" method="set#relationship.relate[x].to#">
-					<cfinvokeargument name="#relationship.relate[x].to#" value="#value#" />
-				</cfinvoke>
-			</cfloop>
-			
-			<!--- set this record's parent --->
-			<cfset arguments.Record.setParent(this) />
-		<cfelse>
-			<!--- the parent record hasMany of this iterator's objects via a linking relationship --->
-			
-			<!--- make sure this is a single-step link --->
-			<cfif ArrayLen(relationship.link) GT 1>
-				<cfthrow message="Can Not Add Items To a Multi-Step Iterator"
-					detail="You are attempting to add an object to an iterator which is the product of a multi-step
-						linking relationship. Reactor can not do this.  The iterator was created by a #getParent()._getObjectMetadata().getAlias()# object. 
-						If you look in the Reactor.xml config file you will see that the #getParent()._getObjectMetadata().getAlias()# object's
-						config has a hasMany tag with more than one link tag defined in it (#ArrayToList(relationship.link)#). 
-						Instead of adding the object to this iterator you should define single step linking or direct hasMany
-						relationships and add objects to the resulting hierarchy.  From there you can walk down the hierarchy as needed." 
-					type="reactor.iterator.add.CanNotAddItemsToAMultiStepIterator" />
-			</cfif>
-			
-			<!--- Create an object that will be the link between this and the parent --->
-			<cfset Link = getReactorFactory().createRecord(relationship.Link[1]) />
-			
-			<!--- get the relationships between the link and the parent and child objects --->
-			<cfset parentRelationship = getParent()._getObjectMetadata().getRelationship(Link._getObjectMetadata().getAlias()) />
-			<cfset childRelationship = Link._getObjectMetadata().getRelationship(getAlias()) />
-			
-			<cfif arguments.new>
-				<!--- populate the link based on the values in the parent --->
-				<cfloop from="1" to="#ArrayLen(parentRelationship.relate)#" index="x">
-					<!--- get this value from the parent for this relationship --->
-					<cfinvoke component="#getParent()#" method="get#parentRelationship.relate[x].from#" returnvariable="value" />
-				
-					<!--- set the value in the object --->
-					<cfinvoke component="#Link#" method="set#parentRelationship.relate[x].to#">
-						<cfinvokeargument name="#parentRelationship.relate[x].to#" value="#value#" />
-					</cfinvoke>
-				</cfloop>
-				
-				<!--- populate link based on the values in the child --->
-				<cfloop from="1" to="#ArrayLen(childRelationship.relate)#" index="x">
-					<!--- get this value from the child for this relationship --->
-					<cfinvoke component="#Record#" method="get#childRelationship.relate[x].to#" returnvariable="value" />
-				
-					<!--- set the value in the object --->
-					<cfinvoke component="#Link#" method="set#childRelationship.relate[x].from#">
-						<cfinvokeargument name="#childRelationship.relate[x].from#" value="#value#" />
-					</cfinvoke>
-				</cfloop>
-				
-				<!--- add the link to the parent --->
-				<cfinvoke component="#getParent()#" method="get#parentRelationship.alias#Iterator" returnvariable="linkIterator" />
-				
-				<!--- add the link to the iterator --->
-				<cfset linkIterator.add(Link) />
-				
-				<!--- the child is related from the link by a hasOne  --->
-				<cfinvoke component="#Link#" method="set#childRelationship.alias#">
-					<cfinvokeargument name="#childRelationship.alias#" value="#arguments.Record#" />
-				</cfinvoke>
-			<cfelse>
-				<!--- get the iterator object from the parent --->
-				<cfinvoke component="#getParent()#" method="get#parentRelationship.alias#Iterator" returnvariable="linkIterator" />
-				
-				<!--- get the TO from the Record --->
-				<cfset To = Record._getTo() />
-				
-				<!--- get the linking object from the iterator --->
-				<cfinvoke component="#linkIterator#" method="get" returnvariable="Link">
-					<cfloop from="1" to="#ArrayLen(childRelationship.relate)#" index="x">
-						<cfinvokeargument name="#childRelationship.relate[x].from#" value="#To[childRelationship.relate[x].to]#" />
-					</cfloop>
-				</cfinvoke>
-				
-				<!--- get the first item from the list --->
-				<cfset Link = Link[1] />
-				
-			</cfif>
-			
-			<!--- set this record's parent --->
-			<cfset arguments.Record.setParent(Link) />
-		</cfif>
-		
-	</cffunction> --->
