@@ -159,8 +159,7 @@
 				<!--- delete the record --->
 				<cfset Record.delete() />			
 			</cfif>
-			
-			
+						
 		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
 			<!--- an object was passed in --->
 			<!--- get the object passed in --->
@@ -312,7 +311,9 @@
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var Record = 0 />
 		<cfset var item = 0 />
-	
+		<cfset var column = 0 />
+		<cfset var To = 0 />
+		
 		<cfset populate() />
 		
 		<cfif NOT StructCount(arguments)>
@@ -364,14 +365,27 @@
 		<!--- add the new record to the array of records --->
 		<cfset ArrayAppend(variables.array, Record) />
 		
+		<!--- add a row to the query too --->
+		<cfset copyRecordToRow(Record) />
+		
 		<cfreturn Record />	
 	</cffunction>
 	
 	<!--- populate --->
 	<cffunction name="populate" access="private" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
+		<cfset var deletedArray = 0 />
+		
 		<cfif NOT isPopulated()>
 			<cfset variables.query = getGateway().getByQuery(getQueryObject(), false) />
-
+		
+			<!--- make note of the column names --->
+			<cfset variables.columnList = variables.query.columnList />
+		
+			<!--- add a "reactorRowDeleted" field to the query --->
+			<cfset deletedArray = ArrayNew(1) />
+			<cfset ArraySet(deletedArray, 1, variables.query.recordCount, 0) />
+			<cfset QueryAddColumn(variables.query, "reactorRowDeleted", "Bit", deletedArray) />
+			
 			<cfif variables.query.recordCount GT 0>
 				<cfset ArraySet(variables.array, 1, variables.query.recordCount, "") />
 			</cfif>
@@ -411,7 +425,7 @@
 		
 		<!--- populate this object --->
 		<cfset populate() />
-		
+	
 		<!--- remove/cleanup any deleted records --->
 		<cfset cleanup() />
 	
@@ -419,7 +433,7 @@
 		<cfif arguments.count IS -1>
 			<cfset arguments.count = ArrayLen(variables.array) />
 		</cfif>
-				
+			
 		<!--- make sure that all of the requested objects have been loaded --->
 		<cfloop from="#arguments.from#" to="#arguments.from + arguments.count - 1#" index="x">
 			<cfif NOT IsObject(variables.array[x])>
@@ -465,7 +479,9 @@
 			<!--- loop over the columns in the query and set all the values into the TO for this record--->
 			<cfloop list="#variables.query.columnList#" index="column">
 				<!--- set the value of this column into the record's to --->
-				<cfset To[column] = variables.query[column][arguments.index] />
+				<cfif column IS NOT "reactorRowDeleted">
+					<cfset To[column] = variables.query[column][arguments.index] />
+				</cfif>
 			</cfloop>
 			
 			<!--- because we manually set the state of the record we need to clean it so that isDirty doesn't return true --->
@@ -484,13 +500,13 @@
     <cffunction name="getQuery" access="public" output="false" returntype="query">
 		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="1" />
 		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
-		<cfset var array = getArray(arguments.from, arguments.count) />
+		<!--- <cfset var array = getArray(arguments.from, arguments.count) />
 		<cfset var query = QueryNew(variables.query.columnList) />
 		<cfset var x = 0 />
 		<cfset var column = 0 />
 		<cfset var To = 0 />
 		
-		<!--- loop over the objects and build the query --->
+		loop over the objects and build the query
 		<cfloop from="1" to="#ArrayLen(array)#" index="x">
 			<!--- get this record's To --->
 			<cfset To = array[x]._getTo() />
@@ -504,35 +520,61 @@
 				<cfset QuerySetCell(query, column, To[column]) />
 			</cfloop>
 			
-		</cfloop>
+		</cfloop> --->
+		<cfset var query = 0 />
+		<cfset var fields = 0 />
+		
+		<cfset populate() />
+		<cfset updateQuery() />
+		
+		<cfquery name="query" dbtype="query">
+			SELECT #variables.columnlist#
+			FROM variables.query
+			WHERE reactorRowDeleted = 0
+		</cfquery>
 		
 		<cfreturn query />		
     </cffunction>
 	
-	<!--- queryRecords --->
-	<cffunction name="queryRecords" access="private" hint="I translate a query to an array of records" output="false" returntype="array">
-		<cfargument name="query" hint="I am the query to translate." required="yes" type="query" />
-		<cfset var Array = ArrayNew(1) />
-		<cfset var Record = 0 />
-		<cfset var To = 0 />
-		<cfset var field = "" />
+	<!--- updateQuery --->
+	<cffunction name="updateQuery" access="private" hint="I update the query with data from dirty records and mark deleted records." output="false" returntype="void">
+		<cfset var x = 0 />
 		
-		<cfloop query="Query">
-			<cfset Record = getReactorFactory().createRecord(getAlias()) >
-			<cfset To = Record._getTo() />
-
-			<!--- populate the record's to --->
-			<cfloop list="#Query.columnList#" index="field">
-				<cfset To[field] = Query[field][Query.currentrow] >
-			</cfloop>
-			
-			<cfset Record._setTo(To) />
-			
-			<cfset Array[ArrayLen(Array) + 1] = Record >
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].IsDeleted()>
+				<!--- the record exists --->
+				<cfset copyRecordToRow(variables.array[x], x) />
+				
+			<cfelseif IsObject(variables.array[x]) AND variables.array[x].IsDeleted()>
+				<!--- the record was deleted --->
+				<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
+				
+			</cfif>
+		</cfloop>
+	</cffunction>
+	
+	<!--- copyRecordToRow --->
+	<cffunction name="copyRecordToRow" access="private" hint="I copy a record's to data to a specific row in the query" output="false" returntype="void">
+		<cfargument name="Record" hint="I am the record to copy." required="yes" type="reactor.base.abstractRecord" />
+		<cfargument name="index" hint="I am the index of the row to copy into.  If not provided a new row is appended." required="no" type="numeric" default="-1" />
+		<cfset var To = arguments.Record._getTo() />
+		<cfset var column = "" />
+		
+		<!--- add a row if needed --->
+		<cfif arguments.index IS -1>	
+			<cfset QueryAddRow(variables.query) />
+			<cfset arguments.index = variables.query.recordcount />
+		</cfif>
+		
+		<!--- set all the column values --->
+		<cfloop list="#variables.columnList#" index="column">
+			<cfset QuerySetCell(variables.query, column, To[column]) />
 		</cfloop>
 		
-		<cfreturn Array />		
-	</cffunction>
+		<!--- set the deleted column value --->
+		<cfset QuerySetCell(variables.query, "reactorRowDeleted", 0) />		
+	</cffunction>	
+	
 	
 	<!--- isLinkedIterator --->
 	<cffunction name="isLinkedIterator" access="public" hint="I indiate if this iterator is a product of a link relationship." output="false" returntype="boolean">
@@ -692,7 +734,31 @@
 	</cffunction>
 </cfcomponent>
 
+<!--- queryRecords
+	<cffunction name="queryRecords" access="private" hint="I translate a query to an array of records" output="false" returntype="array">
+		<cfargument name="query" hint="I am the query to translate." required="yes" type="query" />
+		<cfset var Array = ArrayNew(1) />
+		<cfset var Record = 0 />
+		<cfset var To = 0 />
+		<cfset var field = "" />
+		
+		<cfloop query="Query">
+			<cfset Record = getReactorFactory().createRecord(getAlias()) >
+			<cfset To = Record._getTo() />
 
+			<!--- populate the record's to --->
+			<cfloop list="#Query.columnList#" index="field">
+				<cfset To[field] = Query[field][Query.currentrow] >
+			</cfloop>
+			
+			<cfset Record._setTo(To) />
+			
+			<cfset Array[ArrayLen(Array) + 1] = Record >
+		</cfloop>
+		
+		<cfreturn Array />		
+	</cffunction> --->
+	
 <!--- remove
 	<cffunction name="remove" access="public" hint="I remove matching elements from the iterator.  I do not delete the removed records. Pass either an index for a specific item or a name/value list for matching records or an instance of an object.  This method is really just here for Reactor's own use." output="false" returntype="any">
 		<cfset var fieldList = StructKeyList(arguments) />

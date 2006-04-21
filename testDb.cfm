@@ -3,14 +3,19 @@
 
 <cfset reactor.init("/config/reactor.xml") />
 
-<cfset User = reactor.createRecord("user").load(userId=122) />
+<cfset states = reactor.createIterator("state") />
+<cfset State = states.add() />
+<cfset State.setAbbreviation("FB") />
+<cfset State.setCountryId(223) />
+<cfset State.setName("FooBar") />
+<cfset State.save() />
 
-<cfdump var="#User.getAddressIterator().getQuery()#" />
+<cfset tick = gettickcount()>
+<cfdump var="#states.getQuery()#" />
+<cfoutput>#getTickcount()-tick#</cfoutput>
 
-<cfset User.getAddressIterator().delete(1) />
+<cfset State.delete() />
 
-<cfdump var="#User.getAddressIterator().getQuery()#" />
-
-
-<!---<cfset User.setAddressId("") />
-<cfset User.save() />--->
+<cfset tick = gettickcount()>
+<cfdump var="#states.getQuery()#" />
+<cfoutput>#getTickcount()-tick#</cfoutput>

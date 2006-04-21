@@ -1,7 +1,7 @@
 <reactor>
 	<config>
 		<project value="Scratch" />
-		<dsn value="Scratch" />
+		<dsn value="getchecked" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
 		<mode value="production" />
