@@ -161,7 +161,7 @@
 				<!--- delete the record --->
 				<cfset Record.delete() />			
 			</cfif>
-						
+									
 		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
 			<!--- an object was passed in --->
 			<!--- get the object passed in --->
@@ -197,7 +197,7 @@
 			<!--- name/value pairs were passed in --->
 			<!--- a set of name/value pairs were passed in.  get the matching indexes --->
 			<cfinvoke component="#this#" method="findMatchingIndexes" argumentcollection="#arguments#" returnvariable="indexArray" />
-			
+						
 			<!--- sort and reverse the array (so we don't get errors when deleting multiple items and the length of the array changes --->
 			<cfset ArraySort(indexArray, "Numeric", "desc") />
 			
@@ -403,7 +403,7 @@
 	
 	<!--- cleanup --->
 	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
-		<cfloop from="#ArrayLen(variables.array)#" to="1" step="-1" index="x">
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
 			<cfif IsObject(variables.array[x])
 				AND
 				(
@@ -415,7 +415,11 @@
 						variables.array[x]._getParent().isDeleted()
 					)
 				)>
-				<cfset ArrayDeleteAt(variables.array, x) />
+				<!---<cfset ArrayDeleteAt(variables.array, x) />--->
+				<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
+			<cfelse>
+				<!--- the record exists --->
+				<cfset copyRecordToRow(variables.array[x], x) />
 			</cfif>
 		</cfloop>
 	</cffunction>
@@ -430,8 +434,8 @@
 		<!--- populate this object --->
 		<cfset populate() />
 	
-		<!--- remove/cleanup any deleted records --->
-		<cfset cleanup() />
+		<!--- remove/cleanup any deleted records
+		<cfset cleanup() /> --->
 	
 		<!--- if arguments.count is -1 then we need to set the upper bounds of the loop.  We couldn't do this initially because we only now know for sure that data was loaded --->
 		<cfif arguments.count IS -1>
@@ -444,8 +448,11 @@
 				<cfset variables.array[x] = loadRecord(x) />
 			</cfif>
 			
-			<!--- add this into the array we're returning --->
-			<cfset ArrayAppend(returnArray, variables.array[x]) />
+			<cfif NOT( variables.array[x].isDeleted() OR ( isLinkedIterator() AND variables.array[x]._getParent().isDeleted() ) ) >
+				<!--- add this into the array we're returning --->
+				<cfset ArrayAppend(returnArray, variables.array[x]) />
+				<!---<cfdump var="#variables.array[x]._getTo()#" />--->
+			</cfif>
 		</cfloop>
 		
 		<!--- return the requested array! --->
@@ -493,43 +500,44 @@
 			
 			<!--- set the parent of this record --->
 			<cfset Record._setParent(this) />
-			<!---<cfset setRecordParent(Record, false) />--->
 		</cfif>
 						
 		<!--- return this squeaky clean record --->
 		<cfreturn Record />
+	</cffunction>
+	
+	<cffunction name="dumpQuery">
+		<cfreturn variables.query />
+	</cffunction>
+	
+	<cffunction name="dumpArray">
+		<cfset var test = ArrayNew(1) />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cftry>
+				<cfset ArrayAppend(test, variables.array[x]._getTo()) />
+				<cfcatch>
+					<cfset ArrayAppend(test,"DELETED") />
+				</cfcatch>
+			</cftry>
+
+		</cfloop>
+		
+		<cfreturn test />
 	</cffunction>
 		
 	<!--- query --->
     <cffunction name="getQuery" access="public" output="false" returntype="query">
 		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="1" />
 		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
-		<!--- <cfset var array = getArray(arguments.from, arguments.count) />
-		<cfset var query = QueryNew(variables.query.columnList) />
-		<cfset var x = 0 />
-		<cfset var column = 0 />
-		<cfset var To = 0 />
-		
-		loop over the objects and build the query
-		<cfloop from="1" to="#ArrayLen(array)#" index="x">
-			<!--- get this record's To --->
-			<cfset To = array[x]._getTo() />
-			
-			<!--- add a row to the query --->
-			<cfset QueryAddRow(query) />
-			
-			<!--- set the cell values --->
-			<cfloop list="#query.columnList#" index="column">
-				<!--- set the value of this column into the record's to --->
-				<cfset QuerySetCell(query, column, To[column]) />
-			</cfloop>
-			
-		</cfloop> --->
 		<cfset var query = 0 />
 		<cfset var fields = 0 />
 		
 		<cfset populate() />
-		<cfset updateQuery() />
+		
+		<!--- mark any deleted records --->
+		<cfset cleanup() />
 		
 		<cfquery name="query" dbtype="query">
 			SELECT #variables.columnlist#
@@ -540,12 +548,19 @@
 		<cfreturn query />		
     </cffunction>
 	
-	<!--- updateQuery --->
+	<!--- updateQuery
 	<cffunction name="updateQuery" access="private" hint="I update the query with data from dirty records and mark deleted records." output="false" returntype="void">
+		<cfset var query = 0 />
 		<cfset var x = 0 />
 		
-		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].IsDeleted()>
+		<cfquery name="query" dbtype="query">
+			SELECT *
+			FROM variables.query
+			WHERE reactorRowDeleted = 0
+		</cfquery>
+		
+		<cfloop query="query">
+			<cfif IsObject(variables.array[query]) AND NOT variables.array[x].IsDeleted()>
 				<!--- the record exists --->
 				<cfset copyRecordToRow(variables.array[x], x) />
 				
@@ -555,7 +570,12 @@
 				
 			</cfif>
 		</cfloop>
-	</cffunction>
+		
+		
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			
+		</cfloop>
+	</cffunction> --->
 	
 	<!--- copyRecordToRow --->
 	<cffunction name="copyRecordToRow" access="private" hint="I copy a record's to data to a specific row in the query" output="false" returntype="void">
@@ -572,7 +592,7 @@
 		
 		<!--- set all the column values --->
 		<cfloop list="#variables.columnList#" index="column">
-			<cfset QuerySetCell(variables.query, column, To[column]) />
+			<cfset QuerySetCell(variables.query, column, To[column], arguments.index) />
 		</cfloop>
 		
 		<!--- set the deleted column value --->
