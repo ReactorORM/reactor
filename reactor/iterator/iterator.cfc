@@ -404,23 +404,20 @@
 	<!--- cleanup --->
 	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x])
-				AND
-				(
-					variables.array[x].isDeleted()
+			<cfif IsObject(variables.array[x])>
+				<cfif variables.array[x].isDeleted()
 					OR 
 					(
 						isLinkedIterator()
 						AND
 						variables.array[x]._getParent().isDeleted()
-					)
-				)>
-				<!---<cfset ArrayDeleteAt(variables.array, x) />--->
-				<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
-			<cfelse>
-				<!--- the record exists --->
-				<cfset copyRecordToRow(variables.array[x], x) />
-			</cfif>
+					)>
+					<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
+				<cfelse>
+					<!--- the record exists --->
+					<cfset copyRecordToRow(variables.array[x], x) />
+				</cfif>
+			</cfif>s
 		</cfloop>
 	</cffunction>
 	
