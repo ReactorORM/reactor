@@ -7,6 +7,7 @@
 
 	<cf_input label="First Name:"
 		errors="#Errors#"
+		alias="User"
 		required="yes"
 		type="text"
 		name="firstName"
@@ -16,6 +17,7 @@
 		
 	<cf_input label="Last Name:"
 		errors="#Errors#"
+		alias="User"
 		required="yes"
 		type="text"
 		name="lastName"
@@ -25,6 +27,7 @@
 		
 	<cf_input label="Email Address:"
 		errors="#Errors#"
+		alias="User"
 		required="yes"
 		type="text"
 		name="emailAddress"
@@ -34,6 +37,7 @@
 		
 	<cf_input label="User Name:"
 		errors="#Errors#"
+		alias="User"
 		required="yes"
 		type="text"
 		name="userName"
@@ -43,6 +47,7 @@
 		
 	<cf_input label="Password:"
 		errors="#Errors#"
+		alias="User"
 		required="yes"
 		type="password"
 		name="password"

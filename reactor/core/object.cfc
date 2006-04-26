@@ -236,7 +236,7 @@
 		
 		<!--- set the field's properties --->
 		<cfset xmlField.XmlAttributes["name"] = arguments.field.getName() />
-		<cfif IsXML(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "alias") >
+		<cfif NOT IsSimpleValue(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "alias") >
 			<cfset xmlField.XmlAttributes["alias"] = fieldTag.XmlAttributes.alias />
 		<cfelse>
 			<cfset xmlField.XmlAttributes["alias"] = arguments.field.getName() />
@@ -253,7 +253,7 @@
 		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.getSequenceName() />
 		
 		<!--- use sequence name specfied in the reactor.xml file if provided, if it doesn't match the default sequence specified for a column then throw an error --->
-		<cfif IsXML(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >
+		<cfif NOT IsSimpleValue(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >
 			<cfif len(arguments.field.getSequenceName()) eq 0>
 				<cfset xmlField.XmlAttributes["sequence"] = fieldTag.XmlAttributes.sequence />
 			<cfelseif arguments.field.getSequenceName() neq fieldTag.XmlAttributes.sequence>

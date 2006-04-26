@@ -127,9 +127,11 @@
 	
 	<!--- isDirty --->
 	<cffunction name="isDirty" access="public" hint="I indicate if there are any records in this iterator that are dirty." output="false" returntype="boolean">
+		<cfset var array = getArray() />
+		
 		<!--- loop over all the records that have been loaded and changed and save them --->
-		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x]) AND variables.array[x].isDirty()>
+		<cfloop from="1" to="#ArrayLen(array)#" index="x">
+			<cfif IsObject(array[x]) AND array[x].isDirty()>
 				<cfreturn true />
 			</cfif>
 		</cfloop>
@@ -169,7 +171,7 @@
 
 			<!--- make sure this object is of the correct type --->
 			<cftry>
-				<cfif Record._getObjectMetadata().getAlias() IS NOT getAlias()>
+				<cfif Record._getAlias() IS NOT getAlias()>
 					<cfthrow message="Object Not Correct Record"
 						detail="The object passed into the delete method is not a #getAlias()# Record and can't be deleted from this iterator."
 						type="reactor.iterator.delete.ObjectNotCorrectRecord" />
@@ -237,11 +239,7 @@
 	
 	<!--- getRecordCount --->
 	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="numeric">
-		
-		<!--- populate this object --->
-		<cfset populate() />
-		
-		<cfreturn ArrayLen(variables.array) />
+		<cfreturn getQuery().recordcount />
 	</cffunction>
 	
 	<!--- getNext --->
@@ -270,15 +268,45 @@
 	
 	<!--- save --->
 	<cffunction name="save" access="public" hint="I save any records in this iterator which are loaded and are dirty (have been changed)" output="false" returntype="void">
+		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="boolean" default="true" />
+		
+		<cfif arguments.useTransaction>
+			<cfset saveInTransaction() />
+		<cfelse>
+			<cfset executeSave() />
+		</cfif>
+		
+	</cffunction>
+	
+	<!--- saveInTransaction --->
+	<cffunction name="saveInTransaction" access="private" hint="I save the record in a transaction." output="false" returntype="void">
+		<cftransaction>
+			<cfset executeSave() />
+		</cftransaction>
+	</cffunction>
+	
+	<!--- executeSave --->
+	<cffunction name="executeSave" access="private" hint="I actually save the record." output="false" returntype="void">
 		<cfset var x = 0 />
 		
 		<!--- loop over all the records that have been loaded and changed and save them --->
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted() AND variables.array[x].isDirty()>
-				<cfset variables.array[x].save() />
+			<cfif IsObject(variables.array[x]) AND variables.array[x].isDirty()>
+				<cfset variables.array[x].save(false) />
 			</cfif>
 		</cfloop>
+	</cffunction>	
+	
+	<!--- validate --->
+	<cffunction name="validate" access="public" hint="I loop over all records in this iterator which are not deleted and call their validate method." output="false" returntype="void">
+		<cfset var x = 0 />
 		
+		<!--- loop over all the records that have been loaded and changed and save them --->
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted()>
+				<cfset variables.array[x].validate() />
+			</cfif>
+		</cfloop>
 	</cffunction>
 	
 	<!--- relateTo --->
@@ -328,7 +356,7 @@
 			
 			<!--- confirm that the record is the correct type --->
 			<cftry>
-				<cfif Record._getObjectMetadata().getAlias() IS NOT getAlias()>
+				<cfif Record._getAlias() IS NOT getAlias()>
 					<cfthrow message="Argument Is Not #getAlias()# Record" detail="The value passed to the add method is not a #getAlias()# record." type="reactor.iterator.add.ArgumentIsNotCorrectRecord" />
 				</cfif>
 				<cfcatch type="Object">
@@ -426,29 +454,34 @@
 		<cfargument name="from" hint="I am the first index to return." required="no" type="numeric" default="1" />
 		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
 		<cfset var x = 0 />
+		<cfset var sourceArray = ArrayNew(1) />
 		<cfset var returnArray = ArrayNew(1) />
 		
 		<!--- populate this object --->
 		<cfset populate() />
 	
-		<!--- remove/cleanup any deleted records
-		<cfset cleanup() /> --->
+		<!--- build the source array --->
+ 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<!--- if this item's not loaded, or is not deleted add it's index to the source array. --->
+			<cfif NOT IsObject(variables.array[x]) OR NOT( variables.array[x].isDeleted() OR ( isLinkedIterator() AND variables.array[x]._getParent().isDeleted() ) ) >
+				<cfset ArrayAppend(sourceArray, x) />
+			</cfif>
+		</cfloop>
 	
 		<!--- if arguments.count is -1 then we need to set the upper bounds of the loop.  We couldn't do this initially because we only now know for sure that data was loaded --->
 		<cfif arguments.count IS -1>
-			<cfset arguments.count = ArrayLen(variables.array) />
+			<cfset arguments.count = ArrayLen(sourceArray) />
 		</cfif>
-			
+		
 		<!--- make sure that all of the requested objects have been loaded --->
 		<cfloop from="#arguments.from#" to="#arguments.from + arguments.count - 1#" index="x">
-			<cfif NOT IsObject(variables.array[x])>
-				<cfset variables.array[x] = loadRecord(x) />
+			<cfif NOT IsObject(variables.array[sourceArray[x]])>
+				<cfset variables.array[sourceArray[x]] = loadRecord(sourceArray[x]) />
 			</cfif>
 			
-			<cfif NOT( variables.array[x].isDeleted() OR ( isLinkedIterator() AND variables.array[x]._getParent().isDeleted() ) ) >
+			<cfif NOT( variables.array[sourceArray[x]].isDeleted() OR ( isLinkedIterator() AND variables.array[sourceArray[x]]._getParent().isDeleted() ) ) >
 				<!--- add this into the array we're returning --->
-				<cfset ArrayAppend(returnArray, variables.array[x]) />
-				<!---<cfdump var="#variables.array[x]._getTo()#" />--->
+				<cfset ArrayAppend(returnArray, variables.array[sourceArray[x]]) />
 			</cfif>
 		</cfloop>
 		
@@ -503,7 +536,7 @@
 		<cfreturn Record />
 	</cffunction>
 	
-	<cffunction name="dumpQuery">
+	<!---<cffunction name="dumpQuery">
 		<cfreturn variables.query />
 	</cffunction>
 	
@@ -522,7 +555,7 @@
 		</cfloop>
 		
 		<cfreturn test />
-	</cffunction>
+	</cffunction>--->
 		
 	<!--- query --->
     <cffunction name="getQuery" access="public" output="false" returntype="query">
@@ -643,9 +676,14 @@
 	</cffunction>
 	
 	<!--- reset --->
-	<cffunction name="reset" access="public" hint="I reset the array and query that backs this iterator." output="false" returntype="void">
+	<cffunction name="reset" access="public" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
 		<cfset variables.query = 0 />
 		<cfset variables.array = ArrayNew(1) />
+		<cfset variables.index = 0 />
+	</cffunction>
+	
+	<!--- resetIndex --->
+	<cffunction name="resetIndex" hint="I reset the iterator's index." output="false" returntype="void">
 		<cfset variables.index = 0 />
 	</cffunction>
 	

@@ -17,7 +17,7 @@
 	</cffunction>
 	
 	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
 		<cfset var objectXML = getObject().getXml() />
 		<cfset var pathToErrorFile = "" />
 		
@@ -80,7 +80,8 @@
 	<!--- generateDictionary --->
 	<cffunction name="generateDictionary" access="public" hint="I generate the xml for a dictionary.xml file" output="false" returntype="void">
 		<cfargument name="dictionaryXmlPath" hint="I am the path to the dictionary xml file." required="yes" type="string" />
-		<cfset var dictionaryXml = "<dictionary />" />
+		<cfset var alias = getObject().getAlias() />
+		<cfset var dictionaryXml = "<#alias# />" />
 		<cfset var initialDictionaryXml = 0 />
 		<cfset var fields = Object.getFields() />
 		<cfset var field = 0 />
@@ -105,30 +106,30 @@
 			<cfset field = fields[x] />
 			
 			<!--- insure the field exists --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#") />
-			
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#") />
+				
 			<!--- insure a label exists --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/label", field.getName()) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/label", field.getName()) />
 			
 			<!--- insure a comment exists --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/comment", "") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/comment", "") />
 			
 			<!--- insure a maxLength exists --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/maxlength", field.getLength()) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/maxlength", field.getLength()) />
 			
 			<!--- required validation error message --->
 			<cfif NOT fields[x].getNullable()>
-				<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/notProvided", "The #field.getName()# field is required but was not provided.") />
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/notProvided", "The #field.getName()# field is required but was not provided.") />
 			</cfif>
 			
 			<!--- data type validation error message --->
-			<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/invalidType", "The #field.getName()# field does not contain valid data.  This field must be a #fields[x].getCfDataType()# value.") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/invalidType", "The #field.getName()# field does not contain valid data.  This field must be a #fields[x].getCfDataType()# value.") />
 					
 			<!--- size validataion error message --->
 			<cfif field.getLength()>
-				<cfset paramNode(dictionaryXml, "/dictionary/#field.getName()#/invalidLength", "The #field.getName()# field is too long.  This field must be no more than #field.getLength()# bytes long.") />
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/invalidLength", "The #field.getName()# field is too long.  This field must be no more than #field.getLength()# bytes long.") />
 			</cfif>			
-		</cfloop>	
+		</cfloop>
 		
 		<!--- if the initial xml and the new xml are different, format the xml and write it back to the dictionary xml file --->
 		<cfif dictionaryXml IS NOT initialDictionaryXml>
@@ -177,15 +178,15 @@
 	</cffunction>
 	
 	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To, Metadata, Validator" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfset var root = "" />
 		
-		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
+		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
 			<cfthrow type="reactor.InvalidArgument"
 				message="Invalid Type Argument"
-				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata" />
+				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata, Validator" />
 		</cfif>
 		<cfif NOT ListFind("Project,Base,Custom", arguments.class)>
 			<cfthrow type="reactor.InvalidArgument"

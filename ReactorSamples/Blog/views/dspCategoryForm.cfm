@@ -7,6 +7,7 @@
 
 	<cf_input label="Category Name:"
 		errors="#Errors#"
+		alias="Category"
 		required="yes"
 		type="text"
 		name="name"

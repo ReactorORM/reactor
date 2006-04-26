@@ -1,4 +1,3 @@
-<cfset Errors = viewstate.getValue("Errors") />
 <cfset submitted = viewstate.getValue("submit") />
 <cfset username = viewstate.getValue("username") />
 <cfset password = viewstate.getValue("password") />
@@ -11,8 +10,8 @@
 		<p>Login failed.  Please try again.</p>
 	</cfif>
 	
-	<cf_input label="Login Name:" errors="#Errors#" required="yes" type="text" name="username" value="#username#" size="20" maxlength="20" />
-	<cf_input label="Password:" errors="#Errors#" required="yes" type="password" name="password" value="" size="20" maxlength="20" />
+	<cf_input label="Login Name:" required="yes" type="text" name="username" value="#username#" size="20" maxlength="20" />
+	<cf_input label="Password:" required="yes" type="password" name="password" value="" size="20" maxlength="20" />
 	
 	<cf_input type="Submit" name="submit" value="Login" />
 		

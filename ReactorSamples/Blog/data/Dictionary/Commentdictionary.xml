@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<dictionary>
+	<Comment>
 		<commentId>
 			<label>commentId</label>
 			<comment/>
@@ -55,4 +55,7 @@
 			<invalidType>The entryId field does not contain valid data.  This field must be a numeric value.</invalidType>
 			<invalidLength>The entryId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
 		</entryId>
-	</dictionary>
+		<captcha>
+			<incorrect>Sorry, the code you entered was incorrect.  Please try again.</incorrect>
+		</captcha>
+	</Comment>

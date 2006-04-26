@@ -22,6 +22,11 @@
 		<cfreturn this />
 	</cffunction>
 
+	<!--- createWhere --->
+	<cffunction name="createWhere" access="public" hint="I return a new where to be used with complex queries." returntype="reactor.query.where">
+		<cfreturn CreateObject("Component", "reactor.query.where").init(getQuery()) />
+	</cffunction>
+
 	<!--- query --->
     <cffunction name="setQuery" access="private" output="false" returntype="void">
 		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="reactor.query.query" />
@@ -66,44 +71,21 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="andWhere" access="public" hint="I return an where which is the conjunction of two wheres (where1 AND where2)." output="false" returntype="reactor.query.where">
-		<cfargument name="Where1" hint="I am the first where" required="yes" type="reactor.query.where" />
-		<cfargument name="Where2" hint="I am the first where" required="yes" type="reactor.query.where" />
+	<cffunction name="addWhere" access="public" hint="I return an where which is the conjunction of the current where and the provided where. where AND/OR (where)." output="false" returntype="reactor.query.where">
+		<cfargument name="Where1" hint="I am the where to add " required="yes" type="reactor.query.where" />
 		<cfset var where = getWhere() />
-		<cfset var mode = getMode() />
 		
 		<cfif ArrayLen(where) GT 0>
 			<cfset ArrayAppend(where, mode) />
 		</cfif>
-			
+		
 		<cfset where = appendWhere(where, arguments.Where1) />
-		<cfset ArrayAppend(where, "and") />
-		<cfset where = appendWhere(where, arguments.Where2) />
 		
 		<cfset setWhere(where) />
 		
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="orWhere" access="public" hint="I return an where which is the disjunction of two wheres (where1 OR where2)." output="false" returntype="reactor.query.where">
-		<cfargument name="Where1" hint="I am the first where" required="yes" type="reactor.query.where" />
-		<cfargument name="Where2" hint="I am the second where" required="yes" type="reactor.query.where" />
-		<cfset var where = getWhere() />
-		<cfset var mode = getMode() />
-		
-		<cfif ArrayLen(where) GT 0>
-			<cfset ArrayAppend(where, mode) />
-		</cfif>
-			
-		<cfset where = appendWhere(where, arguments.Where1) />
-		<cfset ArrayAppend(where, "or") />
-		<cfset where = appendWhere(where, arguments.Where2) />
-		
-		<cfset setWhere(where) />
-		
-		<cfreturn this />
-	</cffunction>
-
 	<cffunction name="negateWhere" access="public" hint="I return the negation of an where." output="false" returntype="reactor.query.where">
 		<cfargument name="Where1" hint="I am the first where" required="yes" type="reactor.query.where" />
 		
@@ -422,3 +404,41 @@
     </cffunction>
 	
 </cfcomponent>
+
+<!---<cffunction name="andWhere" access="public" hint="I return an where which is the conjunction of two wheres (where1 AND where2)." output="false" returntype="reactor.query.where">
+		<cfargument name="Where1" hint="I am the first where" required="yes" type="reactor.query.where" />
+		<cfargument name="Where2" hint="I am the first where" required="yes" type="reactor.query.where" />
+		<cfset var where = getWhere() />
+		<cfset var mode = getMode() />
+		
+		<cfif ArrayLen(where) GT 0>
+			<cfset ArrayAppend(where, mode) />
+		</cfif>
+			
+		<cfset where = appendWhere(where, arguments.Where1) />
+		<cfset ArrayAppend(where, "and") />
+		<cfset where = appendWhere(where, arguments.Where2) />
+		
+		<cfset setWhere(where) />
+		
+		<cfreturn this />
+	</cffunction>--->
+	
+	<!---<cffunction name="orWhere" access="public" hint="I return an where which is the disjunction of two wheres (where1 OR where2)." output="false" returntype="reactor.query.where">
+		<cfargument name="Where1" hint="I am the first where" required="yes" type="reactor.query.where" />
+		<cfargument name="Where2" hint="I am the second where" required="yes" type="reactor.query.where" />
+		<cfset var where = getWhere() />
+		<cfset var mode = getMode() />
+		
+		<cfif ArrayLen(where) GT 0>
+			<cfset ArrayAppend(where, mode) />
+		</cfif>
+			
+		<cfset where = appendWhere(where, arguments.Where1) />
+		<cfset ArrayAppend(where, "or") />
+		<cfset where = appendWhere(where, arguments.Where2) />
+		
+		<cfset setWhere(where) />
+		
+		<cfreturn this />
+	</cffunction>--->

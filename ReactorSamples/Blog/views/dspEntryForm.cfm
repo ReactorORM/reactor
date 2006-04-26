@@ -8,6 +8,7 @@
 
 	<cf_input label="Title:"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		required="yes"
 		type="text"
 		name="title"
@@ -18,6 +19,7 @@
 	<cf_input
 		label="Body:"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		required="yes"
 		type="editor"
 		name="article"
@@ -32,6 +34,7 @@
 	<cf_input	
 		label="Publish At:"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		required="yes"
 		type="text"
 		name="publicationDate"
@@ -44,6 +47,7 @@
 	<cf_select
 		label="Select Categories:"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		required="no"
 		name="categoryIdList"
 		query="#Categories#"
@@ -57,6 +61,7 @@
 	<cf_input
 		label="New Categories:"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		required="no"
 		type="text"
 		name="newCategoryList"
@@ -68,6 +73,7 @@
 	<cf_input
 		label="Disable comments"
 		errors="#Errors#"
+		alias="#EntryRecord._getAlias()#"
 		type="checkbox"
 		name="disableComments"
 		value="#EntryRecord.getDisableComments()#" />

@@ -6,10 +6,11 @@
 <cfif NOT EntryRecord.getDisableComments()>
 	<h3>Your Comments</h3>
 	
-	<cfform name="EntryForm" action="index.cfm?event=SubmitCommentForm" method="post">
+	<cfform name="CommentForm" action="index.cfm?event=SubmitCommentForm" method="post">
 	
 		<cf_input label="Name:"
 			errors="#Errors#"
+			alias="Comment"
 			required="yes"
 			type="text"
 			name="name"
@@ -19,6 +20,7 @@
 			
 		<cf_input label="Email Address:"
 			errors="#Errors#"
+			alias="Comment"
 			required="no"
 			type="text"
 			name="emailAddress"
@@ -30,6 +32,7 @@
 		<cf_input
 			label="Comment:"
 			errors="#Errors#"
+			alias="Comment"
 			required="yes"
 			type="textarea"
 			name="comment"
@@ -39,6 +42,7 @@
 		<cf_input
 			label="Notify me when more comments are posted."
 			errors="#Errors#"
+			alias="Comment"
 			type="checkbox"
 			name="subscribe"
 			value="#CommentRecord.getSubscribe()#" />
@@ -47,6 +51,7 @@
 			<cf_input
 				label="Enter This Code Below:"
 				errors="#Errors#"
+				alias="Comment"
 				required="yes"
 				type="captcha"
 				name="captcha"
@@ -66,7 +71,6 @@
 	</cfform>
 	
 	<a href="##commentForm" id="commentForm"></a>
-	
 </cfif>
 
 <cfif viewstate.getValue("event") IS "SubmitCommentForm" AND IsObject(Errors) AND Errors.hasErrors()>
@@ -79,3 +83,4 @@
 	</script>
 </cfif>
 
+<cfdump var="#Errors.getErrors()#" />

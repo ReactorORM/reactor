@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<dictionary>
+	<Entry>
 		<entryId>
 			<label>entryId</label>
 			<comment/>
@@ -79,4 +79,4 @@
 			<invalidType>The views field does not contain valid data.  This field must be a numeric value.</invalidType>
 			<invalidLength>The views field is too long.  This field must be no more than 22 bytes long.</invalidLength>
 		</views>
-	</dictionary>
+	</Entry>

@@ -18,9 +18,10 @@
 	<cfset ContactRecord.setLastName(form.LastName) />
 	
 	<!--- validate the contact --->
-	<cfset ValidationErrorCollection = ContactRecord.validate() />
+	<cfset ContactRecord.validate() />
+	<cfset ErrorCollection = ContactRecord._getErrorCollection() />
 	
-	<cfif NOT ValidationErrorCollection.hasErrors()>
+	<cfif NOT ErrorCollection.hasErrors()>
 		<!--- save the contact and redirect to their view --->
 		<cfset ContactRecord.save() />
 		
@@ -29,8 +30,8 @@
 </cfif>
 
 <!--- if there were errors saving the contact then output them --->
-<cfif IsDefined("ValidationErrorCollection") AND ValidationErrorCollection.hasErrors()>
-	<cfset errors = ValidationErrorCollection.getAllErrors() />
+<cfif IsDefined("ErrorCollection") AND ErrorCollection.hasErrors()>
+	<cfset errors = ErrorCollection.getTranslatedErrors() />
 	<ul>
 	<cfloop from="1" to="#ArrayLen(errors)#" index="x">
 		<cfoutput>

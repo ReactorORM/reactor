@@ -3,7 +3,7 @@
 	extends="reactor.project.ReactorBlog.Record.EntryRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
-	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
+	<!---<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
 		<cfset var Dictionary = _getDictionary() />
 		<!--- strip all html and special characters to see if the user actually provided an article --->
@@ -17,24 +17,8 @@
 			<cfset arguments.ValidationErrorCollection.addError("article", Dictionary.getValue("Article.notProvided")) />
 		</cfif>
 		
-		<!--- insure that at least one category was selected/provided
-		<cfif NOT Len(getNewCategoryList()) AND NOT Len(getCategoryIdList())>
-			<cfset arguments.ValidationErrorCollection.addError("categoryIdList", Dictionary.getValue("CategoryIdList.NoCategorySelected")) />
-		</cfif> --->
-		
 		<!--- Add custom validation logic here, it will not be overwritten --->
 		<cfreturn arguments.ValidationErrorCollection />
-	</cffunction>
-	
-	<!---<cffunction name="load" access="public" hint="I load the Entry record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void">
-		<cfset var categories = 0 />
-		
-		<!--- load the entry --->
-		<cfset super.load() />
-		
-		<!--- get the category ids for this entry --->
-		<cfset categories = getCategoryIterator().getQuery() />
-		<cfset setCategoryIdList(valueList(categories.categoryId)) />
 	</cffunction>--->
 	
 	<!--- Iterator For Category --->
@@ -49,65 +33,7 @@
 		
 		<cfreturn CategoryIterator />
 	</cffunction>
-	
-	<!---<cffunction name="getDistinctCategoryQuery" access="public" hint="I get the distinct categories this entry is in" output="false" returntype="query">
-		<cfset var qDistinctCategories = 0 />
 		
-		<cfquery name="qDistinctCategories" datasource="#_getConfig().getDsn()#">
-		
-		
-		<!---<cfset var CategoryIterator = getCategoryIterator() />
-		<cfdump var="#CategoryIterator.getQuery()#" /><cfabort>
-		<!---<cfset CategoryIterator.setDistinct(true) />
-		<cfset CategoryIterator.getOrder().setAsc("Category", "name") />--->
-		<cfreturn CategoryIterator.getQuery() />--->
-		
-	</cffunction>--->
-	
-	<!---<cffunction name="save" access="public" hint="I save the Entry record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void">
-		<cfset var CategoryGateway = _getReactorFactory().createGateway("Category") />
-		<cfset var EntryCategoryGateway = _getReactorFactory().createGateway("EntryCategory") />
-		<cfset var EntryCategoryRecord = 0 />
-		<cfset var CategoryRecord = 0 />
-		<cfset var categoryIdList = getCategoryIdList() />
-		<cfset var newCategoryList = getNewCategoryList() /> 
-		<cfset var category = "" />
-		<cfset var categories = "" />
-		<cfset super.save() />
-		
-		<!--- create any new categories --->
-		<cfloop list="#newCategoryList#" index="category">
-			<!--- insure this category doesn't already exist --->
-			<cfset categories = CategoryGateway.getByFields(name=category) />
-			
-			<cfif NOT categories.recordcount>
-				<!--- the category does not exist - create it --->
-				<cfset CategoryRecord = _getReactorFactory().createRecord("Category") />
-				<cfset CategoryRecord.setName(Trim(category)) />
-				<cfset CategoryRecord.save() />
-				<cfset categoryIdList = ListAppend(categoryIdList, CategoryRecord.getCategoryId()) />
-			<cfelse>
-				<!--- the category exists, use it --->
-				<cfset categoryIdList = ListAppend(categoryIdList, categories.categoryId) />
-			</cfif>
-		</cfloop>
-		
-		<cfloop li
-		
-		
-		<!--- delete all categories associated with this entry --->
-		<cfset EntryCategoryGateway.deleteByEntryId(getEntryId()) />
-		
-		<!--- associate selected categories --->
-		<cfloop list="#categoryIdList#" index="category">	
-			<!--- the category does not exist - create it --->
-			<cfset EntryCategoryRecord = _getReactorFactory().createRecord("EntryCategory") />
-			<cfset EntryCategoryRecord.setEntryId(getEntryId()) />
-			<cfset EntryCategoryRecord.setCategoryId(category) />
-			<cfset EntryCategoryRecord.save() />
-		</cfloop>
-	</cffunction>--->	
-	
 	<cffunction name="delete" access="public" hint="I delete the Entry record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void">
 		<cfset var EntryCategoryGateway = _getReactorFactory().createGateway("EntryCategory") />
 		
@@ -213,22 +139,5 @@
 
 		<cfreturn rating />
 	</cffunction>
-	
-	<!---<cffunction name="setCategoryIdList" access="public" output="false" returntype="void">
-		<cfargument name="categoryIdList" hint="I am this record's categoryIdList value." required="yes" type="string" />
-		<cfset _getTo().categoryIdList = arguments.categoryIdList />
-	</cffunction>
-	<cffunction name="getCategoryIdList" access="public" output="false" returntype="string">
-		<cfreturn _getTo().categoryIdList />
-	</cffunction>	--->
-	
-	<!---<cffunction name="setNewCategoryList" access="public" output="false" returntype="void">
-		<cfargument name="newCategoryList" hint="I am a comma seperated list of new categories." required="yes" type="string" />
-		<cfset _getTo().newCategoryList = arguments.newCategoryList />
-	</cffunction>
-	<cffunction name="getNewCategoryList" access="public" output="false" returntype="string">
-		<cfreturn _getTo().newCategoryList />
-	</cffunction>--->
-	
 </cfcomponent>
 	

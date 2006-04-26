@@ -3,19 +3,10 @@
 
 <cfset reactor.init("/config/reactor.xml") />
 
-<cfset states = reactor.createIterator("state") />
-<cfset State = states.add() />
-<cfset State.setAbbreviation("FB") />
-<cfset State.setCountryId(223) />
-<cfset State.setName("FooBar") />
-<cfset State.save() />
+<cfset EntryGateway = reactor.createGateway("Entry") />
 
-<cfset tick = gettickcount()>
-<cfdump var="#states.getQuery()#" />
-<cfoutput>#getTickcount()-tick#</cfoutput>
+<cfset query = EntryGateway.createQuery() />
+<cfset where = query.getWhere() />
+<cfset where.setMode("or").addWhere(where.createWhere().isLte("Entry", "entryId", 2).setMode("or").isGte("Entry", "entryId", 174)).isLte("Entry", "views", 700) />
 
-<cfset State.delete() />
-
-<cfset tick = gettickcount()>
-<cfdump var="#states.getQuery()#" />
-<cfoutput>#getTickcount()-tick#</cfoutput>
+<cfdump var="#EntryGateway.getByQuery(query)#" /><cfabort>

@@ -16,17 +16,17 @@
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
 		<cfset var DbObject = 0 />
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
 		<cfset var objName = "" />
 		
-		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata", arguments.type)>
+		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
-				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata" />
+				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata, Validator" />
 		</cfif>
 		
 		<cftry>
@@ -59,7 +59,7 @@
 						<cfset objName = getObjectName(arguments.type, arguments.alias) />
 
 						<!--- get an instance of the object from cache or create it --->
-						<cfif listFind("Dao,Gateway,Metadata",arguments.type)>
+						<cfif listFind("Dao,Gateway,Metadata,Validator",arguments.type)>
 
 							<cfif variables.TimedCache.exists(objName)>
 								<cftry>
@@ -75,7 +75,7 @@
 
 						<cfelse>
 
-							<!--- we never cache Record or To objects --->
+							<!--- we never cache Record, To or iterator objects --->
 							<cfset GeneratedObject = CreateObject("Component", objName) />
 
 						</cfif>
@@ -155,7 +155,7 @@
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
 		</cftry>
-
+		
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />

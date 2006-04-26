@@ -46,12 +46,12 @@
 		
 	<!-- Show Captcha images in comment form? -->
 	<property name="useCaptcha">
-		<value>false</value>
+		<value>true</value>
 	</property>
 	
 	<!-- Alagad Captcha Component license key -->
 	<property name="captchaKey">
-		<value></value>
+		<value>sadfsdfsdafsdf</value>
 	</property>
 	
 	<!-- where to write the captcha images -->

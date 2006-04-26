@@ -44,7 +44,7 @@
 			<!--- verify the hash --->
 			<cfif NOT variables.Captcha.validate(captchaHash, arguments.event.getValue("captcha"))>
 				<!--- add an error --->
-				<cfset Errors.addError("Captcha", "Sorry, the code you entered was incorrect.  Please try again.") />
+				<cfset Errors.addError("Comment.Captcha.incorrect") />
 			</cfif>
 		</cfif>
 

@@ -13,9 +13,10 @@
 		<cfset NewEmailAddressRecord.setEmailAddress(form.EmailAddress) />
 		
 		<!--- validate the email address --->
-		<cfset EmailAddressVerificationErrorCollection = NewEmailAddressRecord.validate() />
+		<cfset NewEmailAddressRecord.validate() />
+		<cfset EmailAddressErrorCollection = NewEmailAddressRecord._getErrorCollection() />
 		
-		<cfif NOT EmailAddressVerificationErrorCollection.hasErrors()>
+		<cfif NOT EmailAddressErrorCollection.hasErrors()>
 			<cfset NewEmailAddressRecord.save() />
 			<!--- this is a cheap way to reset the form --->
 			<cflocation url="viewContact.cfm?contactId=#url.contactId#" />
@@ -33,9 +34,10 @@
 		<cfset NewAddressRecord.setCountryId(form.countryId) />
 		
 		<!--- validate the email address --->
-		<cfset AddressVerificationErrorCollection = NewAddressRecord.validate() />
+		<cfset NewAddressRecord.validate() />
+		<cfset AddressErrorCollection = NewAddressRecord._getErrorCollection() />
 		
-		<cfif NOT AddressVerificationErrorCollection.hasErrors()>
+		<cfif NOT AddressErrorCollection.hasErrors()>
 			<cfset NewAddressRecord.save() />
 			<!--- this is a cheap way to reset the form --->
 			<cflocation url="viewContact.cfm?contactId=#url.contactId#" />
@@ -48,9 +50,10 @@
 		<cfset NewPhoneNumberRecord.setPhoneNumber(form.phoneNumber) />
 		
 		<!--- validate the email address --->
-		<cfset PhoneNumberVerificationErrorCollection = NewPhoneNumberRecord.validate() />
+		<cfset NewPhoneNumberRecord.validate() />
+		<cfset PhoneNumberErrorCollection = NewPhoneNumberRecord._getErrorCollection() />
 		
-		<cfif NOT PhoneNumberVerificationErrorCollection.hasErrors()>
+		<cfif NOT PhoneNumberErrorCollection.hasErrors()>
 			<cfset NewPhoneNumberRecord.save() />
 			<!--- this is a cheap way to reset the form --->
 			<cflocation url="viewContact.cfm?contactId=#url.contactId#" />
@@ -106,8 +109,8 @@
 		
 <!--- this form is used to create a new email address for this contact --->
 <cfform name="newEmail" action="viewContact.cfm?contactId=#ContactRecord.getContactId()#">
-	<cfif IsDefined("EmailAddressVerificationErrorCollection") AND EmailAddressVerificationErrorCollection.hasErrors()>
-		<cfset errors = EmailAddressVerificationErrorCollection.getAllErrors() />
+	<cfif IsDefined("EmailAddressErrorCollection") AND EmailAddressErrorCollection.hasErrors()>
+		<cfset errors = EmailAddressErrorCollection.getTranslatedErrors() />
 		<ul>
 		<cfloop from="1" to="#ArrayLen(errors)#" index="x">
 			<cfoutput>
@@ -162,8 +165,8 @@
 
 <!--- this form is used to create a new address for this contact --->
 <cfform name="newAddress" action="viewContact.cfm?contactId=#ContactRecord.getContactId()#">
-	<cfif IsDefined("AddressVerificationErrorCollection") AND AddressVerificationErrorCollection.hasErrors()>
-		<cfset errors = AddressVerificationErrorCollection.getAllErrors() />
+	<cfif IsDefined("AddressErrorCollection") AND AddressErrorCollection.hasErrors()>
+		<cfset errors = AddressErrorCollection.getTranslatedErrors() />
 		<ul>
 		<cfloop from="1" to="#ArrayLen(errors)#" index="x">
 			<cfoutput>
@@ -253,8 +256,8 @@
 		
 <!--- this form is used to create a phone number for this contact --->
 <cfform name="newPhone" action="viewContact.cfm?contactId=#ContactRecord.getContactId()#">
-	<cfif IsDefined("PhoneNumberVerificationErrorCollection") AND PhoneNumberVerificationErrorCollection.hasErrors()>
-		<cfset errors = PhoneNumberVerificationErrorCollection.getAllErrors() />
+	<cfif IsDefined("PhoneNumberErrorCollection") AND PhoneNumberErrorCollection.hasErrors()>
+		<cfset errors = PhoneNumberErrorCollection.getTranslatedErrors() />
 		<ul>
 		<cfloop from="1" to="#ArrayLen(errors)#" index="x">
 			<cfoutput>

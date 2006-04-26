@@ -49,6 +49,11 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().createDictionary(arguments.objectAlias) />
 	</cffunction>
+
+	<cffunction name="createValidator" access="public" hint="I return a validator object." output="false" returntype="reactor.base.abstractValidator">
+		<cfargument name="objectAlias" hint="I am the alias of the object the validator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().create(arguments.objectAlias, "Validator") />
+	</cffunction>
 	
 	<!--- ObjectFactory --->
     <cffunction name="setObjectFactory" access="private" output="false" returntype="void">

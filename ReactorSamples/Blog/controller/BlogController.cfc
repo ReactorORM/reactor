@@ -79,7 +79,11 @@
 	<cffunction name="DoValidateUser" access="Public" returntype="void" output="false" hint="I validate a User.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var UserRecord = arguments.event.getValue("OtherUserRecord") />
-		<cfset var Errors = UserRecord.validate() />
+		<cfset var Errors = 0 />
+		
+		<cfset UserRecord.validate() />
+		
+		<cfset Errors = UserRecord._getErrorCollection() />
 		
 		<cfset arguments.event.setValue("Errors", Errors) />
 		<cfif Errors.hasErrors()>
@@ -123,7 +127,11 @@
 	<cffunction name="DoValidateCategory" access="Public" returntype="void" output="false" hint="I validate a category.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var CategoryRecord = arguments.event.getValue("CategoryRecord") />
-		<cfset var Errors = CategoryRecord.validate() />
+		<cfset var Errors = 0 />
+		
+		<cfset CategoryRecord.validate() />
+		
+		<cfset Errors = CategoryRecord._getErrorCollection() />
 		
 		<cfset arguments.event.setValue("Errors", Errors) />
 		<cfif Errors.hasErrors()>
@@ -212,7 +220,11 @@
 	<cffunction name="DoValidateComment" access="Public" returntype="void" output="false" hint="I validate a comment.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var CommentRecord = arguments.event.getValue("CommentRecord") />
-		<cfset var Errors = CommentRecord.validate() />
+		<cfset var Errors = 0 />
+		
+		<cfset CommentRecord.validate() />
+		
+		<cfset Errors = CommentRecord._getErrorCollection() />
 		
 		<cfset arguments.event.setValue("Errors", Errors) />
 		<cfif Errors.hasErrors()>
@@ -370,10 +382,11 @@
 	<cffunction name="DoValidateEntry" access="Public" returntype="void" output="false" hint="I validate an entry.">
 		<cfargument name="event" type="ModelGlue.Core.Event" required="true">
 		<cfset var EntryRecord = arguments.event.getValue("EntryRecord") />
-		<cfset var Errors = EntryRecord.validate() />
 		
-		<cfif Errors.hasErrors()>
-			<cfset arguments.event.setValue("Errors", Errors) />
+		<cfset EntryRecord.validate() />
+		
+		<cfif EntryRecord.hasErrors()>
+			<cfset arguments.event.setValue("Errors", EntryRecord._getErrorCollection()) />
 			<cfset arguments.event.addResult("invalid") />
 		<cfelse>
 			<cfset arguments.event.addResult("valid") />

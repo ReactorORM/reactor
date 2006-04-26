@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<dictionary>
+	<Address>
 		<addressId>
 			<label>addressId</label>
 			<comment/>
@@ -62,4 +62,4 @@
 			<invalidType>The countryId field does not contain valid data.  This field must be a numeric value.</invalidType>
 			<invalidLength>The countryId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
 		</countryId>
-	</dictionary>
+	</Address>

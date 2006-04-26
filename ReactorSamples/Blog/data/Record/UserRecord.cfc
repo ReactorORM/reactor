@@ -5,7 +5,7 @@
 	
 	<cfset variables.postLoginEvent = "Home" />
 	
-	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
+	<!---<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
 		<cfset var Dictionary = _getDictionary() />
 		<cfset var UserGateway = _getReactorFactory().createGateway("User") />
@@ -19,7 +19,7 @@
 		</cfif>
 		
 		<cfreturn arguments.ValidationErrorCollection />
-	</cffunction>
+	</cffunction>--->
 	
 	<cffunction name="validateLogon" access="public" hint="I validate that this object has the minimum information needed to logon." output="false" returntype="reactor.util.ValidationErrorCollection">
 		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />

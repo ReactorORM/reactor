@@ -3,16 +3,6 @@
 	extends="reactor.project.ReactorBlog.Record.CommentRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
 	
-	<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
-		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
-		<cfset var Dictionary = _getDictionary() />
-		<cfset super.validate(arguments.ValidationErrorCollection) />
-		
-		<!--- Add custom validation logic here, it will not be overwritten --->
-		
-		<cfreturn arguments.ValidationErrorCollection />
-	</cffunction>
-	
 	<cffunction name="formatComment" access="public" hint="I format the comment into html" output="false" returntype="string">
 		<cfset var comment = getComment() />
 		

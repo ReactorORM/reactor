@@ -8,16 +8,6 @@
 	extends="reactor.project.<xsl:value-of select="object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record" &gt;
 	&lt;!--- Place custom code here, it will not be overwritten ---&gt;
 	
-	&lt;cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection"&gt;
-		&lt;cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" /&gt;
-		&lt;cfset var Dictionary = _getDictionary() /&gt;
-		&lt;cfset super.validate(arguments.ValidationErrorCollection) /&gt;
-		
-		&lt;!--- Add custom validation logic here, it will not be overwritten ---&gt;
-		
-		&lt;cfreturn arguments.ValidationErrorCollection /&gt;
-	&lt;/cffunction&gt;
-	
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

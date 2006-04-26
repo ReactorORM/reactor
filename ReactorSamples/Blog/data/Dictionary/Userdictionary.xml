@@ -1,69 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<dictionary>
-		<USERID>
-			<label>USERID</label>
-			<comment/>
-			<maxlength>22</maxlength>
-			<notProvided>The USERID field is required but was not provided.</notProvided>
-			<invalidType>The USERID field does not contain valid data.  This field must be a numeric value.</invalidType>
-			<invalidLength>The USERID field is too long.  This field must be no more than 22 bytes long.</invalidLength>
-		</USERID>
-		<PASSWORD>
-			<label>PASSWORD</label>
-			<comment/>
-			<maxlength>20</maxlength>
-			<notProvided>The PASSWORD field is required but was not provided.</notProvided>
-			<invalidType>The PASSWORD field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The PASSWORD field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</PASSWORD>
-		<LASTNAME>
-			<label>LASTNAME</label>
-			<comment/>
-			<maxlength>20</maxlength>
-			<notProvided>The LASTNAME field is required but was not provided.</notProvided>
-			<invalidType>The LASTNAME field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The LASTNAME field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</LASTNAME>
-		<USERNAME>
-			<label>USERNAME</label>
-			<comment/>
-			<maxlength>20</maxlength>
-			<notProvided>The USERNAME field is required but was not provided.</notProvided>
-			<invalidType>The USERNAME field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The USERNAME field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</USERNAME>
-		<EMAILADDRESS>
-			<label>EMAILADDRESS</label>
-			<comment/>
-			<maxlength>50</maxlength>
-			<notProvided>The EMAILADDRESS field is required but was not provided.</notProvided>
-			<invalidType>The EMAILADDRESS field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The EMAILADDRESS field is too long.  This field must be no more than 50 bytes long.</invalidLength>
-		</EMAILADDRESS>
-		<FIRSTNAME>
-			<label>FIRSTNAME</label>
-			<comment/>
-			<maxlength>20</maxlength>
-			<notProvided>The FIRSTNAME field is required but was not provided.</notProvided>
-			<invalidType>The FIRSTNAME field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The FIRSTNAME field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</FIRSTNAME>
+	<User>
 		<userId>
 			<label>userId</label>
 			<comment/>
-			<maxlength>22</maxlength>
+			<maxlength>0</maxlength>
 			<notProvided>The userId field is required but was not provided.</notProvided>
 			<invalidType>The userId field does not contain valid data.  This field must be a numeric value.</invalidType>
-			<invalidLength>The userId field is too long.  This field must be no more than 22 bytes long.</invalidLength>
 		</userId>
-		<lastName>
-			<label>lastName</label>
+		<username>
+			<label>username</label>
 			<comment/>
 			<maxlength>20</maxlength>
-			<notProvided>The lastName field is required but was not provided.</notProvided>
-			<invalidType>The lastName field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The lastName field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</lastName>
+			<notProvided>The username field is required but was not provided.</notProvided>
+			<invalidType>The username field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The username field is too long.  This field must be no more than 20 bytes long.</invalidLength>
+			<duplicateName>The provided username has already been used.</duplicateName>
+		</username>
 		<password>
 			<label>password</label>
 			<comment/>
@@ -72,22 +24,6 @@
 			<invalidType>The password field does not contain valid data.  This field must be a string value.</invalidType>
 			<invalidLength>The password field is too long.  This field must be no more than 20 bytes long.</invalidLength>
 		</password>
-		<username>
-			<label>username</label>
-			<comment/>
-			<maxlength>20</maxlength>
-			<notProvided>The username field is required but was not provided.</notProvided>
-			<invalidType>The username field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The username field is too long.  This field must be no more than 20 bytes long.</invalidLength>
-		</username>
-		<emailAddress>
-			<label>emailAddress</label>
-			<comment/>
-			<maxlength>50</maxlength>
-			<notProvided>The emailAddress field is required but was not provided.</notProvided>
-			<invalidType>The emailAddress field does not contain valid data.  This field must be a string value.</invalidType>
-			<invalidLength>The emailAddress field is too long.  This field must be no more than 50 bytes long.</invalidLength>
-		</emailAddress>
 		<firstName>
 			<label>firstName</label>
 			<comment/>
@@ -96,4 +32,20 @@
 			<invalidType>The firstName field does not contain valid data.  This field must be a string value.</invalidType>
 			<invalidLength>The firstName field is too long.  This field must be no more than 20 bytes long.</invalidLength>
 		</firstName>
-	</dictionary>
+		<lastName>
+			<label>lastName</label>
+			<comment/>
+			<maxlength>20</maxlength>
+			<notProvided>The lastName field is required but was not provided.</notProvided>
+			<invalidType>The lastName field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The lastName field is too long.  This field must be no more than 20 bytes long.</invalidLength>
+		</lastName>
+		<emailAddress>
+			<label>emailAddress</label>
+			<comment/>
+			<maxlength>50</maxlength>
+			<notProvided>The emailAddress field is required but was not provided.</notProvided>
+			<invalidType>The emailAddress field does not contain valid data.  This field must be a string value.</invalidType>
+			<invalidLength>The emailAddress field is too long.  This field must be no more than 50 bytes long.</invalidLength>
+		</emailAddress>
+	</User>

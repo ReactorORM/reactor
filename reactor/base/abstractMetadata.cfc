@@ -156,7 +156,7 @@
 			<cfset relationships = objectMetadata.hasOne />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].name IS arguments.alias>
+				<cfif relationships[x].alias IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn Duplicate(relationships[x])/>
 				</cfif> 
@@ -168,7 +168,7 @@
 			<cfset relationships = objectMetadata.hasMany />
 			<!--- loop over the relationships and find a match by alias --->
 			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif relationships[x].name IS arguments.alias>
+				<cfif relationships[x].alias IS arguments.alias>
 					<!--- this is a match --->
 					<cfreturn Duplicate(relationships[x])/>
 				</cfif> 

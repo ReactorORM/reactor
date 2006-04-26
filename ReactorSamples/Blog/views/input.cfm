@@ -6,6 +6,7 @@
 
 <cfparam name="attributes.name" />
 <cfparam name="attributes.type" />
+<cfparam name="attributes.alias" default="" />
 <cfparam name="attributes.value" default="" />
 <cfparam name="attributes.style" default="" />
 <cfparam name="attributes.class" default="" />
@@ -23,8 +24,8 @@
 <!--- add an input field --->
 <cfif ThisTag.executionMode IS "Start">
 	
-	<cfif IsObject(attributes.errors) AND attributes.errors.hasErrors(attributes.name)>
-		<cfset errorsArray = attributes.errors.GetPropertyErrors(attributes.name) />
+	<cfif IsObject(attributes.errors) AND attributes.errors.hasErrors(attributes.alias & "." & attributes.name)>
+		<cfset errorsArray = attributes.errors.getTranslatedErrors(attributes.alias & "." & attributes.name) />
 		
 		<p class="errorMessage">
 			<cfloop from="1" to="#ArrayLen(errorsArray)#" index="x">

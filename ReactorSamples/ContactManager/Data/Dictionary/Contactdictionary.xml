@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<dictionary>
+	<Contact>
 		<contactId>
 			<label>contactId</label>
 			<comment/>
@@ -24,4 +24,4 @@
 			<invalidType>The firstName field does not contain valid data.  This field must be a string value.</invalidType>
 			<invalidLength>The firstName field is too long.  This field must be no more than 50 bytes long.</invalidLength>
 		</firstName>
-	</dictionary>
+	</Contact>
