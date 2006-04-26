@@ -16,6 +16,12 @@
 		<cfargument name="ObjectMetadata" hint="I am the metadata for the object being encapsulated" required="yes" type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am a required alias for this object." required="yes" type="string" />
 		
+		<!--- Reset state in case this instance comes from a pool --->
+		<cfset variables.ObjectMetadata = 0 />
+		<cfset variables.alias = "" />
+		<cfset variables.cachedFields = 0 />
+		<cfset variables.joins = arrayNew(1) />
+		
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />
 		<cfset setAlias(arguments.alias) />
 		
