@@ -44,10 +44,10 @@
 		<cfset getQuery().findObject(arguments.object).getObjectMetadata().getField(arguments.field) />
 	</cffunction>
 
-	<cffunction name="dump" access="public" hint="I am a debugging method.  I dump the current where statement's data." output="false" returntype="void">
+	<!---<cffunction name="dump" access="public" hint="I am a debugging method.  I dump the current where statement's data." output="false" returntype="void">
 		<cfset getQuery().verifyInitialized() />
 		<cfdump var="#getWhere()#" /><cfabort>
-	</cffunction>
+	</cffunction>--->
 	
 	<cffunction name="appendNode" access="private" hint="I append a node to the where expression" output="false" returntype="reactor.query.where">
 		<cfargument name="node" hint="I am the node to append" required="yes" type="struct" />

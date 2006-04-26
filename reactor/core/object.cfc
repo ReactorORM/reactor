@@ -114,6 +114,13 @@
 				</cfif>
 			</cfif>
 			
+			<!--- also, if the relationship is hasOne default sharedKey to false --->
+			<cfif relationship.XmlName IS "hasOne">
+				<cfif NOT structKeyExists(relationship.XmlAttributes, "sharedKey")>
+					<cfset relationship.XmlAttributes["sharedKey"] = "false" />
+				</cfif>
+			</cfif>
+			
 			<!--- also!  if the relationship is a link and we don't have a relationship directly to the linking object
 			we need to get the linking object's relationship back to this object and invert it to create a non-linking
 			relationship.  (note, if the incomming relatonship is a hasOne and and is from it's pk columns then our outgoing

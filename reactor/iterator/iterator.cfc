@@ -291,7 +291,7 @@
 		
 		<!--- loop over all the records that have been loaded and changed and save them --->
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cfif IsObject(variables.array[x]) AND variables.array[x].isDirty()>
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted() AND variables.array[x].isDirty()>
 				<cfset variables.array[x].save(false) />
 			</cfif>
 		</cfloop>
@@ -307,6 +307,34 @@
 				<cfset variables.array[x].validate() />
 			</cfif>
 		</cfloop>
+	</cffunction>
+	
+	<!--- validated --->
+	<cffunction name="validated" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they're validated.  If any one is not then this returns false.  Unloaded records are ignored." output="false" returntype="boolean">
+		<cfset var x = 0 />
+		
+		<!--- loop over all the records that have been loaded and changed and save them --->
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted() AND NOT variables.array[x].validated()>
+				<cfreturn false />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn true />
+	</cffunction>
+	
+	<!--- hasErrors --->
+	<cffunction name="hasErrors" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they have errors.  If any one has errors this returns true.  Unloaded records are ignored." output="false" returntype="boolean">
+		<cfset var x = 0 />
+		
+		<!--- loop over all the records that have been loaded and changed and save them --->
+		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			<cfif IsObject(variables.array[x]) AND NOT variables.array[x].isDeleted() AND variables.array[x].validated() AND variables.array[x].hasErrors()>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
 	</cffunction>
 	
 	<!--- relateTo --->
@@ -622,7 +650,12 @@
 		
 		<!--- set all the column values --->
 		<cfloop list="#variables.columnList#" index="column">
-			<cfset QuerySetCell(variables.query, column, To[column], arguments.index) />
+			<cftry>
+				<cfset QuerySetCell(variables.query, column, To[column], arguments.index) />
+				<cfcatch>
+					<!--- this catch is here incase the data simply can't be stuffed into the query --->
+				</cfcatch>
+			</cftry>
 		</cfloop>
 		
 		<!--- set the deleted column value --->
