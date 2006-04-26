@@ -15,7 +15,9 @@
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactor factory." required="yes" type="reactor.reactorFactory" />
-		<cfset super.configure(arguments.config, arguments.alias, arguments.ReactorFactory) />
+		<cfargument name="Convention" hint="I am the reactor factory." required="yes" type="reactor.data.abstractConvention" />
+
+		<cfset super.configure(arguments.config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		
 		<cfset _setTo(_getReactorFactory().createTo(arguments.alias)) />
 		<cfset _setInitialTo(_getReactorFactory().createTo(arguments.alias)) />

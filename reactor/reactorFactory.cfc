@@ -15,7 +15,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="reactor.base.abstractRecord">
+	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="any">
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfreturn getObjectFactory().create(arguments.objectAlias, "Record") />
 	</cffunction>

@@ -56,7 +56,7 @@
 		<cfset var x = 0 />
 		
 		<!--- if there's a join comming into this object then output the ON expression --->
-		<cfif IsDefined("arguments.Join")>
+		<cfif structKeyExists(arguments, "join")>
 			<cfset from = from & chr(13) & chr(10) />
 			<cfset from = from & " ON " & arguments.Join.getAsString(arguments.Convention, arguments.previousAlias, getAlias())  />
 		</cfif>
@@ -202,7 +202,7 @@
 		</cfif>	
 		
 		<!--- check to see if this is a linked table --->
-		<cfif IsDefined("relationshipStruct.link")>
+		<cfif structKeyExists(relationshipStruct, "link")>
 			<cfthrow message="Can Not Get Related Objects From HasMany Links" detail="Can't get relation from '#getObjectMetadata().getName()#' to '#arguments.alias#' via a hasMany relationship.  You need to explicity use the intermediary object, '#relationshipStruct.link#'." type="reactor.getRelatedObject.CanNotGetRelatedObjectsFromHasManyLinks" />
 		</cfif>
 		
@@ -242,7 +242,7 @@
        <cfargument name="alias" hint="I am the object's alias" required="yes" type="string" />
        <cfset variables.alias = arguments.alias />
     </cffunction>
-    <cffunction name="getAlias" access="package" output="false" returntype="string">
+    <cffunction name="getAlias" access="public" output="false" returntype="string">
        <cfreturn variables.alias />
     </cffunction>
 	

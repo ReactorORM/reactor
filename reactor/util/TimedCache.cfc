@@ -48,15 +48,15 @@
 
 	<cffunction name="Exists" access="public" returnType="boolean" output="false" hint="I state if a value exists.">
 		<cfargument name="name" type="string" required="true" hint="I am the name of the value.">
-		
+
 		<cfset GarbageCollect(arguments.name) />
+		
 		
 		<cfreturn structKeyExists(variables.members, arguments.name)>
 	</cffunction>
 
 	<cffunction name="GarbageCollect" access="private" returnType="void" output="false">
 		<cfargument name="name" type="string" required="true" hint="I am the name of the value.">
-		
 		<cfif structKeyExists(variables.members, arguments.name) AND now() * 1 gte variables.members[arguments.name].expires>
 			<cfset structDelete(variables.members, arguments.name) />
 		</cfif>

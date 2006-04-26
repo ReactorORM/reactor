@@ -6,8 +6,8 @@
     </cffunction>
 	
 	<cffunction name="getConventions" access="private" output="false" returntype="reactor.data.abstractConvention">
-       <cfreturn getObjectMetadata().getConventions() />
-    </cffunction>
+  	<cfreturn _getConvention() />
+  </cffunction>
 	
 	<cffunction name="create" access="public" hint="I create a row in the database." output="false" returntype="void">
 	

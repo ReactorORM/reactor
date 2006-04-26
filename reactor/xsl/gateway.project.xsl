@@ -24,7 +24,7 @@
 		&lt;cfset var x = 0 /&gt;
 		
 		<xsl:for-each select="//field">
-			&lt;cfif IsDefined('arguments.<xsl:value-of select="@alias" />')&gt;
+			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
 				&lt;cfset Where.isEqual(
 					<xsl:choose>
 						<xsl:when test="string-length(/object/@alias) &gt; 0">

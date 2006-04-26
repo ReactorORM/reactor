@@ -93,7 +93,7 @@
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
-			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
+			<cfif structKeyExists(relationship.XmlAttributes, "alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 			</cfif>
 		</cfloop>
@@ -102,7 +102,7 @@
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
-			<cfif NOT IsDefined("relationship.XmlAttributes.alias")>
+			<cfif NOT structKeyExists(relationship.XmlAttributes, "alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 				<!--- make sure this alias hasn't already been used --->
 				<cfif ListFindNoCase(aliasList, relationship.XmlAttributes["alias"])>
@@ -177,7 +177,7 @@
 		<!--- add the fields to the config settings --->
 		
 		<!--- check to see if a fields node already exists --->
-		<cfif NOT IsDefined("Config.Object.fields")>
+		<cfif NOT structKeyExists(Config.Object, "fields")>
 			<cfset Config.Object.fields = XMLElemNew(Config, "fields") />
 		</cfif>
 		

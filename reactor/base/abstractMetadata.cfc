@@ -1,9 +1,8 @@
 <cfcomponent hint="I am an abstract Metadata.  I am used to define an interface and return types." extends="reactor.base.abstractObject">
+	<cffunction name="getConventions" access="public" output="false" returntype="reactor.data.abstractConvention">
+		<cfreturn _getConvention() />
+  </cffunction>
 
-	<cffunction name="getConventions" access="public" hint="I return a conventions object specific for this database type." output="false" returntype="reactor.data.abstractConvention">
-		<cfreturn CreateObject("Component", "reactor.data.#getDbms()#.Convention") />
-	</cffunction>
-	
 	<cffunction name="getDatabase" access="public" hint="I return the name of the database this object is in." output="false" returntype="string">
 		<cfreturn getObjectMetadata().database />
 	</cffunction>
@@ -147,10 +146,6 @@
 		<cfset var relationships = 0 />
 		<cfset var x = 0 />
 		
-		<cfif IsDefined("request.foobar")>
-			<cfdump var="#objectMetadata#" /><cfabort>
-		</cfif>
-				
 		<!--- check the hasone relationships --->
 		<cfif ArrayLen(objectMetadata.hasOne)>
 			<cfset relationships = objectMetadata.hasOne />

@@ -4,7 +4,6 @@
 	<cfset variables.config = 0 />
 	<cfset variables.name = "" />
 	<cfset variables.ReactorFactory = 0 />
-	<cfset variables.instanceId = CreateUUID() />
 	
 	<!---
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
@@ -14,20 +13,23 @@
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
+		<cfargument name="convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
 		
 		<cfset _setConfig(arguments.config) />
 		<cfset _setName(arguments.name) />
 		<cfset _setReactorFactory(arguments.ReactorFactory) />
+		<cfset _setConvention(arguments.convention) />
 		
 		<cfreturn this />
 	</cffunction>
 	
+
 	<cffunction name="_getSignature" access="public" hint="I return this object's corrisponding DB signature." output="false" returntype="string">
 		<cfreturn variables.signature />
 	</cffunction>
 	
 	<!--- config --->
-    <cffunction name="_setConfig" access="private" output="false" returntype="void">
+    <cffunction name="_setConfig" access="public" output="false" returntype="void">
        <cfargument name="config" hint="I am the configuraion object to use." required="yes" type="reactor.config.config" />
        <cfset variables.config = arguments.config />
     </cffunction>
@@ -36,7 +38,7 @@
     </cffunction>
 	
 	<!--- name --->
-    <cffunction name="_setName" access="private" output="false" returntype="void">
+    <cffunction name="_setName" access="public" output="false" returntype="void">
        <cfargument name="name" hint="I am the object's name" required="yes" type="string" />
        <cfset variables.name = arguments.name />
     </cffunction>
@@ -45,7 +47,7 @@
     </cffunction>
 	
 	<!--- reactorFactory --->
-    <cffunction name="_setReactorFactory" access="private" output="false" returntype="void">
+    <cffunction name="_setReactorFactory" access="public" output="false" returntype="void">
        <cfargument name="reactorFactory" hint="I am the reactorFactory object" required="yes" type="reactor.reactorFactory" />
        <cfset variables.reactorFactory = arguments.reactorFactory />
     </cffunction>
@@ -53,8 +55,13 @@
        <cfreturn variables.reactorFactory />
     </cffunction>
 	
-	<!--- instanceId --->
-    <cffunction name="_getInstanceId" access="public" output="false" returntype="uuid">
-       <cfreturn variables.instanceId />
+	<!--- convention --->
+    <cffunction name="_setConvention" access="public" output="false" returntype="void">
+       <cfargument name="convention" hint="I am the Convention object to use." required="yes" type="reactor.data.abstractConvention" />
+       <cfset variables.convention = arguments.convention />
     </cffunction>
+    <cffunction name="_getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
+       <cfreturn variables.convention />
+    </cffunction>
+		
 </cfcomponent>

@@ -25,6 +25,8 @@
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="reactor.query.query">
 		<cfargument name="BaseObjectMetadata" hint="I am the Metadata for the base object being queried" required="yes" type="reactor.base.abstractMetadata">
+		<cfargument name="QueryObject" hint="I am the Object to act upon" required="false" type="reactor.query.object" />
+		
 		<cfset var Object = 0 />
 		
 		<!---
@@ -34,10 +36,11 @@
 			
 			that also means we must initialize all our instance data here
 		--->
-
+		
+		
 		<!--- the from object --->
 		<cfset variables.From = 0 />
-	
+
 		<!--- query parts --->
 		<cfset variables.maxRows = -1 />
 		<cfset variables.distinct = false />	
@@ -56,10 +59,13 @@
 		
 		<!--- convention --->
 		<cfset variables.convention = arguments.BaseObjectMetadata.getConventions() />
-
-		<cfset Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
 		
-		<cfset setFrom(Object) />
+		<cfif structKeyExists(arguments, "QueryObject")>
+			<cfset setFrom(arguments.QueryObject) />
+		<cfelse>
+			<cfset Object = CreateObject("Component", "reactor.query.object").init(arguments.BaseObjectMetadata, arguments.BaseObjectMetadata.getAlias()) />
+			<cfset setFrom(Object) />
+		</cfif>
 		
 		<cfreturn this />
 	</cffunction>
@@ -109,7 +115,7 @@
 		
 		<cfset fieldStruct["expression"] = arguments.expression />
 		
-		<cfif IsDefined("arguments.datatype")>
+		<cfif structKeyExists(arguments, "datatype")>
 			<cfset fieldStruct.cfsqltype = arguments.datatype />
 		</cfif>
 		

@@ -143,6 +143,64 @@
 		&lt;/cffunction&gt;
 	</xsl:for-each>	
 	
+	&lt;cffunction name="load" access="public" hint="I load the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record"&gt;
+		&lt;cfset var fieldList = StructKeyList(arguments) /&gt;
+		&lt;cfset var item = 0 /&gt;
+		&lt;cfset var func = 0 /&gt;
+		&lt;cfset var nothingLoaded = false /&gt;
+		
+		&lt;cfset beforeLoad() /&gt;
+		
+		&lt;cfif arrayLen(arguments) AND fieldList IS 1&gt;
+			&lt;cfset fieldList = arguments[1] /&gt;
+			
+		&lt;cfelseif arrayLen(arguments) AND fieldList IS NOT 1&gt;
+			&lt;cfloop collection="#arguments#" item="item"&gt;
+				&lt;cfset func = this["set#item#"] /&gt;
+				&lt;cfset func(arguments[item]) /&gt;
+			&lt;/cfloop&gt;
+			
+		&lt;/cfif&gt;
+		
+		&lt;cftry&gt;
+			&lt;cfset _getDao().read(_getTo(), fieldList) /&gt;
+			&lt;cfcatch type="Reactor.Record.NoMatchingRecord"&gt;
+				&lt;cfset nothingLoaded = true /&gt;
+			&lt;/cfcatch&gt;		
+		&lt;/cftry&gt;
+		
+		&lt;cfif NOT nothingLoaded&gt;
+			&lt;!--- clean the object ---&gt;
+			&lt;cfset clean() /&gt;
+		&lt;/cfif&gt;
+				
+		&lt;cfset afterLoad() /&gt;
+		
+		&lt;cfreturn this /&gt;
+	&lt;/cffunction&gt;	
+	
+	&lt;cffunction name="save" access="public" hint="I save the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key and required values must be provided and valid for this to work." output="false" returntype="void"&gt;
+		&lt;cfset beforeSave() /&gt;
+		
+		&lt;cfif isDirty()&gt;
+			&lt;cfset _getDao().save(_getTo()) /&gt;	
+		&lt;/cfif&gt;
+		
+		&lt;cfset afterSave() /&gt;	
+	&lt;/cffunction&gt;	
+	
+	&lt;cffunction name="delete" access="public" hint="I delete the <xsl:value-of select="object/@alias"/> record.  All of the Primary Key values must be provided for this to work." output="false" returntype="void"&gt;
+		&lt;cfset beforeDelete() /&gt;
+		
+		&lt;cfif StructCount(arguments)&gt;
+			&lt;cfinvoke component="#this#" method="load" argumentcollection="#arguments#" /&gt;
+		&lt;/cfif&gt;
+				
+		&lt;cfset _getDao().delete(_getTo()) /&gt;
+		
+		&lt;cfset afterDelete() /&gt;
+	&lt;/cffunction&gt;
+	
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;

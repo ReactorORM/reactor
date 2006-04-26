@@ -10,7 +10,8 @@
 		
 		<cfset setConfig(arguments.config) />
 		<cfset setReactorFactory(arguments.ReactorFactory) />
-		
+		<cfset setConvention(CreateObject("Component", "reactor.data.#arguments.config.getType()#.Convention")) />
+
 		<cfreturn this />
 	</cffunction>
 
@@ -55,7 +56,6 @@
 				</cfcase>
 				<cfcase value="production">
 					<cftry>
-
 						<cfset objName = getObjectName(arguments.type, arguments.alias) />
 
 						<!--- get an instance of the object from cache or create it --->
@@ -77,9 +77,8 @@
 
 							<!--- we never cache Record, To or iterator objects --->
 							<cfset GeneratedObject = CreateObject("Component", objName) />
-
+	
 						</cfif>
-
 						<cfcatch>
 							<!--- we only need the dbobject if it doesn't already exist --->
 							<cfset DbObject = getObject(arguments.alias) />
@@ -101,11 +100,11 @@
 			
 			<cfset ObjectTranslator.generateObject(arguments.type) />	
 			
-			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory()) />
+			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 
 		<cfelse>
 
-			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory()) />
+			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			
 		</cfif>
 		
@@ -172,7 +171,7 @@
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
 		<cfset var Object = 0 />
 		<cfset var ObjectDao = 0/>
-
+		
 		<!--- check for a cached version of the object --->
 		<cfif variables.TimedCache.exists(arguments.name)>
 			<cftry>
@@ -229,6 +228,15 @@
     </cffunction>
     <cffunction name="getReactorFactory" access="private" output="false" returntype="reactor.reactorFactory">
        <cfreturn variables.reactorFactory />
+    </cffunction>
+
+	<!--- convention --->
+    <cffunction name="setConvention" access="private" output="false" returntype="void">
+       <cfargument name="convention" hint="I am a convention object" required="yes" type="reactor.data.abstractConvention" />
+       <cfset variables.convention = arguments.convention/>
+    </cffunction>
+    <cffunction name="getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
+       <cfreturn variables.convention />
     </cffunction>
 	
 </cfcomponent>
