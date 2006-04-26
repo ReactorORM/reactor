@@ -93,7 +93,7 @@
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
 			
-			<cfif structKeyExists(relationship.XmlAttributes, "alias")>
+			<cfif NOT structKeyExists(relationship.XmlAttributes, "alias")>
 				<cfset relationship.XmlAttributes["alias"] = relationship.XmlAttributes.name />
 			</cfif>
 		</cfloop>
