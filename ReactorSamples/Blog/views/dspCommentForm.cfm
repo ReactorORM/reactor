@@ -83,4 +83,3 @@
 	</script>
 </cfif>
 
-<cfdump var="#Errors.getErrors()#" />
