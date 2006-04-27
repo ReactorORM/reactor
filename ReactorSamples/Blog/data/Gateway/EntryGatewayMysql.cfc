@@ -43,7 +43,7 @@
 					AND YEAR(e.publicationDate) = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.year#" />
 				</cfif>
 				<cfif NOT arguments.categoryId AND NOT arguments.month AND NOT arguments.year>
-					AND DateDiff(e.publicationDate, now()) <= <cfqueryparam cfsqltype="cf_sql_integer" value="#variables.recentEntryDays#" />
+					AND DateDiff(now(), e.publicationDate) <= <cfqueryparam cfsqltype="cf_sql_integer" value="#variables.recentEntryDays#" />
 				</cfif>
 			GROUP BY e.entryId, e.title, e.preview, 
 				DATE_FORMAT(e.publicationDate, '%m/%d/%Y'),
