@@ -185,7 +185,7 @@
 			<!--- check to see if this child is either a linking iteator a record.  If it's a record then the check to see if the child hasOne of the parent.  If so then don't save before. --->
 			<cfif IsObject(variables.children[item]) AND (
 				(GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
-				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND NOT _getObjectMetadata().getRelationship(variables.children[item]._getAlias()).sharedKey
+				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND NOT _getObjectMetadata().hasSharedkey(variables.children[item]._getAlias())
 			)>
 				
 				<!--- save the child. --->
@@ -212,58 +212,67 @@
 				<!--- save any loaded and dirty records in the iterator --->
 				<cfset variables.children[item].save(false) />
 				
-			<cfelseif GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator">
+			<cfelseif IsObject(variables.children[item]) AND GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND _getObjectMetadata().hasSharedkey(variables.children[item]._getAlias())>
 				<!--- save the changed record --->
-				<cfif IsObject(variables.children[item])>
-					<cfset relationship = _getObjectMetadata().getRelationship(variables.children[item]._getAlias()) />
-					
-					<cfif relationship.sharedKey>
-						<!--- this is a shared key one to one object we're trying to save. --->
-						<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-							<!--- get the value from the record  --->
-							<cfinvoke component="#this#" method="get#relationship.relate[x].from#" returnvariable="value" />
+				<cfset relationship = _getObjectMetadata().getRelationship(variables.children[item]._getAlias()) />
+				
+				<cfif relationship.sharedKey>
+					<!--- this is a shared key one to one object we're trying to save. --->
+					<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
+						<!--- get the value from the record  --->
+						<cfinvoke component="#this#" method="get#relationship.relate[x].from#" returnvariable="value" />
+						
+						<!--- set the value into the child object --->
+						<cfinvoke component="#variables.children[item]#" method="set#relationship.relate[x].to#">
+							<cfinvokeargument name="#relationship.relate[x].to#" value="#value#" />
+						</cfinvoke>
 							
-							<!--- set the value into the child object --->
-							<cfinvoke component="#variables.children[item]#" method="set#relationship.relate[x].to#">
-								<cfinvokeargument name="#relationship.relate[x].to#" value="#value#" />
-							</cfinvoke>
-								
-						</cfloop>
-												
-					</cfif>
-					
-					<!--- save the child --->
-					<cfset variables.children[item].save(false) />
+					</cfloop>
+											
 				</cfif>
+				
+				<!--- save the child --->
+				<cfset variables.children[item].save(false) />
 				
 			</cfif>
 		</cfloop>
 		
 		<!--- check to see if this object has a parent.  If so, set the related fields in the parent from this child. --->
 		<cfif hasParent() AND GetMetadata(_getParent()).name IS NOT "reactor.iterator.iterator">
-						
-			<!--- get all relationships --->
-			<cfset relationships = _getParent()._getObjectMetadata().getRelationships() />
-			
-			<!--- check each relationship's name to see if it matches the alias --->
-			<cfloop from="1" to="#ArrayLen(relationships)#" index="y">
-				<cfif relationships[y].name is _getAlias()>
-					<cfset relationship = relationships[y] />
+				
+			<!--- the following cfif is a stupid hack --->		
+			<cfif _getParent()._getObjectMetadata().hasRelationship(_getAlias(), _getRelationshipAlias())>
+				<cfset relationship = _getParent()._getObjectMetadata().getRelationship(_getAlias(), _getRelationshipAlias()) />
+				
+			<cfelse>
+
+					<cfset relationships = _getParent()._getObjectMetadata().getRelationships(_getAlias()) />
 					
-					<!--- check to see if there is a relationship and if it's a hasOne relationship --->
-					<cfif relationship.type IS "hasOne">
-						<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-							<!--- get the value for this relationship from the child --->
-							<cfinvoke component="#this#" method="get#relationship.relate[x].to#" returnvariable="value" />
-							
-							<!--- set the value into the parent --->
-							<cfinvoke component="#_getParent()#" method="set#relationship.relate[x].from#">
-								<cfinvokeargument name="#relationship.relate[x].from#" value="#value#" />
-							</cfinvoke>
-						</cfloop>			
+					<cfif ArrayLen(relationships) GT 2>
+						If you see this message this is some code that doug left in reactor... he wasn't quite sure what to do about it!  
+						
+						Please note your relationships and provide some simple code to doug that he can use to disect this.
+						
+						Thanks!
+						<cfdump var="#relationship#" /><cfabort>
 					</cfif>
-				</cfif>
-			</cfloop>
+					
+					<cfset relationship = relationships[1] />
+					
+			</cfif>
+			
+			<!--- check to see if there is a relationship and if it's a hasOne relationship --->
+			<cfif relationship.type IS "hasOne">
+				<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
+					<!--- get the value for this relationship from the child --->
+					<cfinvoke component="#this#" method="get#relationship.relate[x].to#" returnvariable="value" />
+					
+					<!--- set the value into the parent --->
+					<cfinvoke component="#_getParent()#" method="set#relationship.relate[x].from#">
+						<cfinvokeargument name="#relationship.relate[x].from#" value="#value#" />
+					</cfinvoke>
+				</cfloop>			
+			</cfif>
 		</cfif>
 		
 		<!--- clean the object --->
@@ -348,8 +357,12 @@
 	
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
-       <cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
-       <cfset variables.parent = arguments.parent />
+		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
+		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="string" default="" />
+		<cfset variables.parent = arguments.parent />
+		<cfif StructKeyExists(arguments, "relationshipAlias")>
+			<cfset _setRelationshipAlias(arguments.relationshipAlias) />
+		</cfif>
     </cffunction>
     <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
        <cfreturn variables.parent />
@@ -360,4 +373,13 @@
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
 		<cfset variables.parent = 0 />
 	</cffunction>
+	
+	<!--- relationshipAlias --->
+    <cffunction name="_setRelationshipAlias" access="private" output="false" returntype="void">
+       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="string" />
+       <cfset variables.relationshipAlias = arguments.relationshipAlias />
+    </cffunction>
+    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="string">
+       <cfreturn variables.relationshipAlias />
+    </cffunction>
 </cfcomponent>

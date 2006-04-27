@@ -13,19 +13,21 @@
 	<!--- relationships --->
 	<cfset variables.relationships = ArrayNew(1) />
 	
+	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the join" output="false" returntype="reactor.query.join">
 		<cfargument name="FromObject" hint="I am the object being joined from." required="yes" type="reactor.query.object" />
 		<cfargument name="ToObject" hint="I am the object being joined to." required="yes" type="reactor.query.object" />
 		<cfargument name="prefix" hint="I am a prefix prepended to columns retured from this join" required="yes" type="string" default="" />
 		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="inner" />
+		<cfargument name="relationAlias" hint="I am the alias of the relationship from the fromobject to the toobject" required="no" type="string" default="" />
 		
 		<cfset setFromObject(arguments.FromObject) />
 		<cfset setToObject(arguments.ToObject) />	
 		<cfset setPrefix(arguments.prefix) />
 		<cfset setType(arguments.type) />
 		
-		<cfset addRelationships() />
+		<cfset addRelationships(arguments.relationAlias) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -54,20 +56,20 @@
 	
 	<!--- addRelationships --->
 	<cffunction name="addRelationships" access="public" hint="I add a relationship to this join." output="false" returntype="void">
+		<cfargument name="relationAlias" hint="I am the alias of the relationship from the fromobject to the toobject" required="no" type="string" default="" />
 		<cfset var FromObjectMetadata = getFromObject().getObjectMetadata() />
 		<cfset var ToObjectMetadata = getToObject().getObjectMetadata() />
 		<cfset var relationships = 0 />
-		<cfset var Relationship = 0 />
 		<cfset var fromField = 0 />
 		<cfset var toField = 0 />
 		<cfset var x = 0 />
 		<cfset var temp = 0 />
 		
-		<cfif FromObjectMetadata.hasRelationship(ToObjectMetadata.getAlias()) >
-			<cfset relationships = FromObjectMetadata.getRelationship(ToObjectMetadata.getAlias()) />
-		
-		<cfelseif ToObjectMetadata.hasRelationship(FromObjectMetadata.getAlias())>
-			<cfset relationships = ToObjectMetadata.getRelationship(FromObjectMetadata.getAlias()) />
+		<cfif FromObjectMetadata.hasRelationship(ToObjectMetadata.getAlias(), arguments.relationAlias) >
+			<cfset relationships = FromObjectMetadata.getRelationship(ToObjectMetadata.getAlias(), arguments.relationAlias) />
+			
+		<cfelseif ToObjectMetadata.hasRelationship(FromObjectMetadata.getAlias(), arguments.relationAlias)>
+			<cfset relationships = ToObjectMetadata.getRelationship(FromObjectMetadata.getAlias(), arguments.relationAlias) />
 			
 			<!--- invert the relationship --->
 			<cfset relationships.alias = ToObjectMetadata.getAlias() />

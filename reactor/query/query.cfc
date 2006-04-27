@@ -165,8 +165,35 @@
 		<cfargument name="toPrefix" hint="I am an optional prefix appended to all fields in the to Object which are returned in this query." required="no" type="string" default="" />
 		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="inner" />
 		<cfset var FromObject = findObject(arguments.from) />
-		<cfset var ToObject = FromObject.getRelatedObject(arguments.to) />
+		<cfset var ToObject = 0 />
+		
+		<cftry>
+			<cfset ToObject = FromObject.getRelatedObject(arguments.to) />
+			<cfcatch type="reactor.getRelationship.AmbigiousRelationship">
+				<cfthrow message="Ambigious Relationship"
+					detail="The object '#arguments.from#' has more than one relationship to the '#arguments.to#' object.  Please use the joinViaAlias method and specifiy the alias of the relationship to use for this join."
+					type="reactor.join.AmbigiousRelationship" />
+			</cfcatch>
+			<cfcatch>
+				<cfrethrow />
+			</cfcatch>
+		</cftry>
 		<cfset FromObject.join(ToObject, arguments.toPrefix, arguments.type) />
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- joinViaAlias --->
+	<cffunction name="joinViaAlias" access="public" hint="I join one object to another via a specific alias on the from object." output="false" returntype="reactor.query.query">
+		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
+		<cfargument name="relationAlias" hint="I am the alias of a relationship on the object being joined from." required="yes" type="string" />
+		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
+		<cfargument name="toPrefix" hint="I am an optional prefix appended to all fields in the to Object which are returned in this query." required="no" type="string" default="" />
+		<cfargument name="type" hint="I am the type of join. Options are: left, right, full" required="no" type="string" default="inner" />
+		<cfset var FromObject = findObject(arguments.from) />
+		<cfset var ToObject = FromObject.getRelatedObject(arguments.to, arguments.relationAlias) />
+		
+		<cfset FromObject.join(ToObject, arguments.toPrefix, arguments.type, arguments.relationAlias) />
 		
 		<cfreturn this />
 	</cffunction>

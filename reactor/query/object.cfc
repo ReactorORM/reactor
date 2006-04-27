@@ -182,6 +182,7 @@
 	<!--- getRelatedObject --->
 	<cffunction name="getRelatedObject" access="public" hint="I return a related object." output="false" returntype="reactor.query.object">
 		<cfargument name="alias" hint="I am the alias of a related object to get." required="yes" type="string" />
+		<cfargument name="relationAlias" hint="I am the alias of the relationship on that object that is neded." required="no" type="string" default="" />
 		<cfset var ToObjectMetadata = getObjectMetadata().getRelationshipMetadata(arguments.alias) />
 		<cfset var relationshipStruct = 0 />
 		<cfset var RelatedObjectMetadata = 0 />
@@ -189,11 +190,13 @@
 		<cfset var x = 0 />
 		<cfset var temp = 0 />
 		
-		<cfif getObjectMetadata().hasRelationship(arguments.alias) >
-			<cfset relationshipStruct = getObjectMetadata().getRelationship(arguments.alias) />
+		<!--- does user have a relationship to relatedUser named user2? --->
+		<cfif getObjectMetadata().hasRelationship(arguments.alias, arguments.relationAlias) >
+			<cfset relationshipStruct = getObjectMetadata().getRelationship(arguments.alias, arguments.relationAlias) />
 		
-		<cfelseif ToObjectMetadata.hasRelationship(getObjectMetadata().getAlias())>
-			<cfset relationshipStruct = ToObjectMetadata.getRelationship(getObjectMetadata().getAlias()) />
+		<!--- does relatedUser have a relatonship to user named user2? --->
+		<cfelseif ToObjectMetadata.hasRelationship(getObjectMetadata().getAlias(), arguments.relationAlias)>
+			<cfset relationshipStruct = ToObjectMetadata.getRelationship(getObjectMetadata().getAlias(), arguments.relationAlias) />
 			
 			<!--- invert the relationship --->
 			<cfset relationshipStruct.alias = ToObjectMetadata.getAlias() />
@@ -204,6 +207,10 @@
 				<cfset relationshipStruct.relate[x].from = relationshipStruct.relate[x].to />
 				<cfset relationshipStruct.relate[x].to = temp />
 			</cfloop>
+		
+		<cfelse>
+			<!--- no relationships either way! --->
+			<cfthrow message="Objects Not Related" detail="Can't get relation from '#getObjectMetadata().getName()#' to '#arguments.alias#'.  No such relationship exist." type="reactor.getRelatedObject.ObjectsNotRelated" />
 		
 		</cfif>	
 		
@@ -216,7 +223,7 @@
 		<cfset RelatedObjectMetadata = getObjectMetadata().getRelationshipMetadata(arguments.alias) />
 		
 		<!--- create the related object --->
-		<cfset RelatedObject = CreateObject("Component", "reactor.query.object").init(RelatedObjectMetadata, arguments.alias) />
+		<cfset RelatedObject = CreateObject("Component", "reactor.query.object").init(RelatedObjectMetadata, arguments.alias, arguments.relationAlias) />
 		
 		<!--- return the related object --->
 		<cfreturn RelatedObject />
@@ -227,8 +234,9 @@
 		<cfargument name="ToObject" hint="I am the query object being joined to" required="yes" type="reactor.query.object" />
 		<cfargument name="toPrefix" hint="I am the prefix appended to all fields in the ToObject." required="yes" type="string" />
 		<cfargument name="type" hint="I am the type of join." required="yes" type="string" />
+		<cfargument name="relationAlias" hint="I am the alias of the relationship on the object that is needed." required="no" type="string" default="" />
 		<cfset var joins = getJoins() />
-		<cfset var Join = CreateObject("Component", "reactor.query.join").init(this, arguments.ToObject, arguments.toPrefix, arguments.type) />
+		<cfset var Join = CreateObject("Component", "reactor.query.join").init(this, arguments.ToObject, arguments.toPrefix, arguments.type, arguments.relationAlias) />
  						
 		<cfset ArrayAppend(joins, join) />
 		<cfset setJoins(joins) />

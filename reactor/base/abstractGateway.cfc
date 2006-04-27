@@ -348,8 +348,8 @@
 					</cfloop>
 				</cfif>		
 				
-				<!---<cfif getMetadata(this).name IS "Data.Gateway.ConsumerGatewaymssql">
-				<cfabort>	
+				<!---<cfif trim(arguments.Query.getFromAsString()) IS not "[user] AS [user]">
+					<cfabort>
 				</cfif>--->
 			</cfquery>
 		</cfif>

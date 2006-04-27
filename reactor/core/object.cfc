@@ -128,9 +128,24 @@
 			<cfif ArrayLen(relationship.XmlChildren) IS 1 AND StructKeyExists(relationship, "link")>
 				<cfset linkedConfig = CreateObject("Component", "reactor.core.object").init(relationship.link.XmlAttributes.name, getConfig()).getXml() />
 				
+				<!--- make sure that all of the links have aliases that they're using. --->
+				<cfloop from="1" to="#ArrayLen(relationship.XmlChildren)#" index="y">
+					
+					<!--- check to see if this link has an alias --->
+					<cfif NOT StructKeyExists(relationship.XmlChildren[y].XmlAttributes, "alias")>
+						<!--- nope, no alias.  We'll just use the first relationship's alias --->
+						<cfloop from="1" to="#ArrayLen(linkedConfig.object.XmlChildren)#" index="z">
+							<cfif StructKeyExists(linkedConfig.object.XmlChildren[z].XmlAttributes, "name") AND linkedConfig.object.XmlChildren[z].XmlAttributes.name IS getAlias()>
+								<cfset relationship.XmlChildren[y].XmlAttributes["alias"] = relationship.XmlAttributes.alias />
+								<cfbreak />
+							</cfif>
+						</cfloop>
+					</cfif>
+				</cfloop>
+				
 				<!--- loop over the linked config and look for a matching link (stupid xpath!) --->
 				<cfloop from="1" to="#ArrayLen(linkedConfig.object.XmlChildren)#" index="y">
-					<cfif StructKeyExists(linkedConfig.object.XmlChildren[y].XmlAttributes, "alias") AND linkedConfig.object.XmlChildren[y].XmlAttributes.alias IS getAlias()>
+					<cfif StructKeyExists(linkedConfig.object.XmlChildren[y].XmlAttributes, "name") AND linkedConfig.object.XmlChildren[y].XmlAttributes.name IS getAlias()>
 						<cfset linkedConfig = linkedConfig.object.XmlChildren[y] />
 						<cfset exists = false />
 						
@@ -212,7 +227,7 @@
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfif getAlias() is "user">
+		<!---<cfif getAlias() is "group">
 			<cfdump var="#Config#" /><cfabort>
 		</cfif>--->
 		

@@ -3,10 +3,12 @@
 
 <cfset reactor.init("/config/reactor.xml") />
 
-<cfset EntryGateway = reactor.createGateway("Entry") />
 
-<cfset query = EntryGateway.createQuery() />
-<cfset where = query.getWhere() />
-<cfset where.setMode("or").addWhere(where.createWhere().isLte("Entry", "entryId", 2).setMode("or").isGte("Entry", "entryId", 174)).isLte("Entry", "views", 700) />
+<cfset Doug = reactor.createRecord("user").load(userId=4) />
+<cfset Mike = reactor.createRecord("user").load(userId=14) />
 
-<cfdump var="#EntryGateway.getByQuery(query)#" /><cfabort>
+<cfset Doug.getRelationIterator().add(Mike) />
+
+<cfdump var="#Doug.getRelationIterator().getQuery()#" />
+
+<cfset Doug.save() />

@@ -1,44 +1,33 @@
 <reactor>
 	<config>
 		<project value="Scratch" />
-		<dsn value="www.DougHughes.net" />
+		<dsn value="scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="always" />
+		<mode value="production" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
 	</config>
 
 	<objects>
-		<object name="Entry">
-			<hasMany name="Category">
-				<link name="EntryCategory" />
+		<object name="user">
+			<hasMany name="user" alias="relation">
+				<link name="relatedUser" alias="user2" />
 			</hasMany>
-			<hasMany name="Comment">
-				<relate from="entryId" to="entryId" />
-			</hasMany>
-			<hasMany name="Rating">
-				<relate from="entryId" to="entryId" />
-			</hasMany>
-			<hasOne name="User" alias="Author">
-				<relate from="postedByUserId" to="userId" />
+		</object>
+		
+		<object name="relatedUser">
+			<hasOne name="user" alias="user1">
+				<relate from="userId1" to="userId" />
+			</hasOne>
+			<hasOne name="user" alias="user2">
+				<relate from="userId2" to="userId" />
+			</hasOne>
+			<hasOne name="foo">
+				<relate from="fooId" to="fooId" />
 			</hasOne>
 		</object>
 		
-		<object name="EntryCategory">
-			<hasOne name="Entry">
-				<relate from="entryId" to="entryId" />
-			</hasOne>
-			<hasOne name="Category">
-				<relate from="categoryId" to="categoryId" />
-			</hasOne>
-		</object>
-		
-		<object name="Category">
-			<hasMany name="Entry">
-				<link name="EntryCategory" />
-			</hasMany>
-		</object>
 	</objects>
 </reactor>

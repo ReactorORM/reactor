@@ -18,10 +18,13 @@
 		<cfargument name="ReactorFactory" hint="I am the reactor factor." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="alias" hint="I am the alias of the type of data being iterated." required="yes" type="string" />
 		<cfargument name="joinList" hint="I am comma delimited list of optional object to join." required="no" default="" type="string" />
+		<cfargument name="relationAlias" hint="I am the alias of the related user." required="no" default="" type="string" />
 		<cfset var joinTo = 0 />
 		<cfset var joinFrom = 0 />
 		<cfset var joins = 0 />
 		<cfset var x = 0 />
+		
+		<cfset setRelationAlias(arguments.relationAlias) />
 		
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setAlias(arguments.alias) />
@@ -40,8 +43,12 @@
 		<cfif Len(arguments.joinList)>
 			<cfloop from="#ArrayLen(joins)#" to="1" index="x" step="-1">
 				<cfset joinTo = joins[x] />
-					
-				<cfset getQueryObject().join(joinFrom, joinTo) />
+				
+				<cfif Len(arguments.relationAlias)>
+					<cfset getQueryObject().joinViaAlias(joinFrom, arguments.relationAlias, joinTo) />
+				<cfelse>
+					<cfset getQueryObject().join(joinFrom, joinTo) />
+				</cfif>
 				
 				<cfset joinFrom = joinTo />
 			</cfloop>
@@ -340,10 +347,21 @@
 	<!--- relateTo --->
 	<cffunction name="relateTo" access="public" hint="This is for Reactor use only.  I recieve a record object and use the metadata in that object to populate the values of any loaded records that are dirty." output="false" returntype="void">
 		<cfargument name="Record" hint="I am the record to relate to." required="yes" type="reactor.base.abstractRecord" />
-		<cfset var relationship = arguments.Record._getObjectMetadata().getRelationship(getAlias()) />
+		<cfset var relationships = 0 />
+		<cfset var relationship = 0 />
 		<cfset var value = 0 />
 		<cfset var x = 0 />
 		<cfset var y = 0 />
+		
+		<!--- the record provided has many of the items in this iterator via a hasMany relationship without a link --->
+		<cfset relationships = arguments.Record._getObjectMetadata().getRelationships(getAlias()) />
+		
+		<!--- find the first hasmany non linked relationship --->
+		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+			<cfif relationships[x].type IS "hasMany" and relationships[x].name IS getAlias()>
+				<cfset relationship = relationships[x] />
+			</cfif>
+		</cfloop> 
 		
 		<!--- this is a standard relationship --->	
 		<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
@@ -410,13 +428,13 @@
 		<!--- if this is a linked iterator then add a new object of the type that links this object to the parent to the linkIterator --->
 		<cfif isLinkedIterator()>
 			<!--- create a new object to link the new record to the linked object --->
-			<cfinvoke component="#getLinkIterator().add()#" method="set#getAlias()#">
-				<cfinvokeargument name="#getAlias()#" value="#Record#" />
+			<cfinvoke component="#getLinkIterator().add()#" method="set#getSetAlias()#">
+				<cfinvokeargument name="#getSetAlias()#" value="#Record#" />
 			</cfinvoke>
 
 		<cfelse>
 			<!--- set the parent of this record --->
-			<cfset Record._setParent(this) />
+			<cfset Record._setParent(this, getRelationAlias()) />
 
 		</cfif>
 		
@@ -427,6 +445,15 @@
 		<cfset copyRecordToRow(Record) />
 		
 		<cfreturn Record />	
+	</cffunction>
+	
+	<!--- getIteratorSetMethod --->
+	<cffunction name="getSetAlias" access="public" hint="I return the set method in link iterators" output="false" returntype="string">
+		<cfif Len(getRelationAlias())>
+			<cfreturn getRelationAlias() />
+		<cfelse>
+			<cfreturn getAlias() />
+		</cfif>
 	</cffunction>
 	
 	<!--- populate --->
@@ -557,7 +584,7 @@
 			<cfset Record.clean() />
 			
 			<!--- set the parent of this record --->
-			<cfset Record._setParent(this) />
+			<cfset Record._setParent(this, getRelationAlias()) />
 		</cfif>
 						
 		<!--- return this squeaky clean record --->
@@ -598,7 +625,7 @@
 		<cfset cleanup() />
 		
 		<cfquery name="query" dbtype="query">
-			SELECT #variables.columnlist#
+			SELECT <cfloop list="#variables.columnlist#" index="columnName">[#columnName#]<cfif columnName neq listLast(variables.columnList)>,</cfif></cfloop>
 			FROM variables.query
 			WHERE reactorRowDeleted = 0
 		</cfquery>
@@ -813,7 +840,9 @@
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
        <cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
+       <!---<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="yes" type="string" />--->
        <cfset variables.parent = arguments.parent />
+       <!---<cfset _setRelationshipAlias(arguments.relationshipAlias) />--->
     </cffunction>
     <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
        <cfreturn variables.parent />
@@ -824,4 +853,13 @@
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
 		<cfset variables.parent = 0 />
 	</cffunction>
+	
+	<!--- relationAlias --->
+    <cffunction name="setRelationAlias" access="public" output="false" returntype="void">
+       <cfargument name="relationAlias" hint="I am the alias of the relationship that joins linked objects." required="yes" type="string" />
+       <cfset variables.relationAlias = arguments.relationAlias />
+    </cffunction>
+    <cffunction name="getRelationAlias" access="public" output="false" returntype="string">
+       <cfreturn variables.relationAlias />
+    </cffunction>
 </cfcomponent>
