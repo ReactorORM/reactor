@@ -103,256 +103,249 @@
 		<cfset var orderNode = 0 />
 		<cfset var x = 0 />
 		
-		<cfif structKeyExists(url, "static")>
-			<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
-				SELECT [Category].[categoryId] AS [categoryId] , [Category].[name] AS [name] FROM [Category] AS [Category] WHERE [Category].[categoryId] = 0
-			</cfquery>
-		<cfelse>		
-			<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
-				SELECT
-				
-				<!--- distinct --->
-				<cfif arguments.Query.getDistinct()>
-					DISTINCT
-				</cfif>
-				
-				<!--- collumns --->
-				#arguments.Query.getSelectAsString()#
-				
-				FROM
-							
-				#arguments.Query.getFromAsString()#
-				
-				<cfif ArrayLen(where)>
-					WHERE
-							
-					<!--- loop over all of the expressions and render them out --->
-					<cfloop from="1" to="#ArrayLen(where)#" index="x">
-						<!--- get the arguments for this expression --->
-						<cfset whereNode = where[x] />
+	
+		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
+			SELECT
+			
+			<!--- distinct --->
+			<cfif arguments.Query.getDistinct()>
+				DISTINCT
+			</cfif>
+			
+			<!--- collumns --->
+			#arguments.Query.getSelectAsString()#
+			
+			FROM
 						
-						<!--- if the node is a structure output it accordingly.  otherwise, just output it. --->	
-						<cfif IsStruct(whereNode)>
-							<!--- render the expression --->
-							<cfswitch expression="#whereNode.comparison#">
-								<!--- isBetween --->
-								<cfcase value="isBetween">
-									#getFieldExpression(whereNode, Convention)#
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											BETWEEN <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.value1#" />
-											AND <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.value2#" />
-										<cfelse>
-											BETWEEN <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.value1#" />
-											AND <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.value2#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isBetweenFields --->
-								<cfcase value="isBetweenFields">
-									#getFieldExpression(whereNode, Convention)#
-										BETWEEN #getFieldExpression(whereNode, Convention, 1)#
-										AND #getFieldExpression(whereNode, Convention, 2)#
-								</cfcase>
-								
-								<!--- isEqual --->
-								<cfcase value="isEqual">
-									#getFieldExpression(whereNode, Convention)# = 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.alias).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.alias).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.alias).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.alias).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isEqualField --->
-								<cfcase value="isEqualField">
-									#getFieldExpression(whereNode, Convention)# = #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isNotEqual --->
-								<cfcase value="isNotEqual">
-									#getFieldExpression(whereNode, Convention)# != 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isNotEqualField --->
-								<cfcase value="isNotEqualField">
-									#getFieldExpression(whereNode, Convention)# != #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isGte --->
-								<cfcase value="isGte">
-									#getFieldExpression(whereNode, Convention)# >= 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isGteField --->
-								<cfcase value="isGteField">
-									#getFieldExpression(whereNode, Convention)# >= #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isGt --->
-								<cfcase value="isGt">
-									#getFieldExpression(whereNode, Convention)# > 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isGtField --->
-								<cfcase value="isGtField">
-									#getFieldExpression(whereNode, Convention)# > #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isLte --->
-								<cfcase value="isLte">
-									#getFieldExpression(whereNode, Convention)# <= 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isLteField --->
-								<cfcase value="isLteField">
-									#getFieldExpression(whereNode, Convention)# <= #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isLt --->
-								<cfcase value="isLt">
-									#getFieldExpression(whereNode, Convention)# < 
-										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										<cfelse>
-											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-										</cfif>
-								</cfcase>
-								
-								<!--- isLtField --->
-								<cfcase value="isLtField">
-									#getFieldExpression(whereNode, Convention)# < #getFieldExpression(whereNode, Convention, 1)#
-								</cfcase>
-								
-								<!--- isLike --->
-								<cfcase value="isLike">
-									#getFieldExpression(whereNode, Convention)# LIKE								
-										<cfswitch expression="#whereNode.mode#">
-											<cfcase value="Anywhere">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
-											</cfcase>
-											<cfcase value="Left">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
-											</cfcase>
-											<cfcase value="Right">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-											</cfcase>
-											<cfcase value="All">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-											</cfcase>
-										</cfswitch>
-								</cfcase>
-								
-								<!--- isNotLike --->
-								<cfcase value="isNotLike">
-									#getFieldExpression(whereNode, Convention)# NOT LIKE
-										<cfswitch expression="#whereNode.mode#">
-											<cfcase value="Anywhere">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
-											</cfcase>
-											<cfcase value="Left">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
-											</cfcase>
-											<cfcase value="Right">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-											</cfcase>
-											<cfcase value="All">
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
-											</cfcase>
-										</cfswitch>
-								</cfcase>
-								
-								<!--- isIn --->
-								<cfcase value="isIn">
-									#getFieldExpression(whereNode, Convention)# IN ( 
-										<cfif Len(Trim(whereNode.values))>
-											<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.values#" list="yes" />
-											<cfelse>
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.values#" list="yes" />
-											</cfif>
-										<cfelse>
-											<cfqueryparam null="yes" />
-										</cfif>
-									)
-								</cfcase>
-								
-								<!--- isNotIn --->
-								<cfcase value="isNotIn">
-									#getFieldExpression(whereNode, Convention)# NOT IN ( 
-										<cfif Len(Trim(whereNode.values))>
-											<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.values#" list="yes" />
-											<cfelse>
-												<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.values#" list="yes" />
-											</cfif>
-										<cfelse>
-											<cfqueryparam null="yes" />
-										</cfif>
-									)
-								</cfcase>
-								
-								<!--- isNull --->
-								<cfcase value="isNull">
-									#getFieldExpression(whereNode, Convention)# IS NULL
-								</cfcase>
-								
-								<!--- isNotNull --->
-								<cfcase value="isNotNull">
-									#getFieldExpression(whereNode, Convention)# IS NOT NULL
-								</cfcase>	
-								
-							</cfswitch>	
-						<cfelse>
-							<!--- just output it --->
-							#UCASE(whereNode)#
-						</cfif>
+			#arguments.Query.getFromAsString()#
+			
+			<cfif ArrayLen(where)>
+				WHERE
 						
-					</cfloop>
-				</cfif>
-				
-				<cfif ArrayLen(order)>
-					ORDER BY 
+				<!--- loop over all of the expressions and render them out --->
+				<cfloop from="1" to="#ArrayLen(where)#" index="x">
+					<!--- get the arguments for this expression --->
+					<cfset whereNode = where[x] />
 					
-					<!--- loop over all of the order-bys and render them out --->
-					<cfloop from="1" to="#ArrayLen(order)#" index="x">
-						<!--- get the arguments for this expression --->
-						<cfset orderNode = order[x] />
-						
-						<!---#Convention.formatFieldName(orderNode.field, orderNode.object)#--->
-						#getFieldExpression(orderNode, Convention)# #UCASE(orderNode.direction)#
-						
-						<cfif x IS NOT ArrayLen(order)>
-							,
-						</cfif>
-					</cfloop>
-				</cfif>		
+					<!--- if the node is a structure output it accordingly.  otherwise, just output it. --->	
+					<cfif IsStruct(whereNode)>
+						<!--- render the expression --->
+						<cfswitch expression="#whereNode.comparison#">
+							<!--- isBetween --->
+							<cfcase value="isBetween">
+								#getFieldExpression(whereNode, Convention)#
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										BETWEEN <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.value1#" />
+										AND <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.value2#" />
+									<cfelse>
+										BETWEEN <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.value1#" />
+										AND <cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.value2#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isBetweenFields --->
+							<cfcase value="isBetweenFields">
+								#getFieldExpression(whereNode, Convention)#
+									BETWEEN #getFieldExpression(whereNode, Convention, 1)#
+									AND #getFieldExpression(whereNode, Convention, 2)#
+							</cfcase>
+							
+							<!--- isEqual --->
+							<cfcase value="isEqual">
+								#getFieldExpression(whereNode, Convention)# = 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.alias).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.alias).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.alias).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.alias).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isEqualField --->
+							<cfcase value="isEqualField">
+								#getFieldExpression(whereNode, Convention)# = #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isNotEqual --->
+							<cfcase value="isNotEqual">
+								#getFieldExpression(whereNode, Convention)# != 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isNotEqualField --->
+							<cfcase value="isNotEqualField">
+								#getFieldExpression(whereNode, Convention)# != #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isGte --->
+							<cfcase value="isGte">
+								#getFieldExpression(whereNode, Convention)# >= 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isGteField --->
+							<cfcase value="isGteField">
+								#getFieldExpression(whereNode, Convention)# >= #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isGt --->
+							<cfcase value="isGt">
+								#getFieldExpression(whereNode, Convention)# > 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isGtField --->
+							<cfcase value="isGtField">
+								#getFieldExpression(whereNode, Convention)# > #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isLte --->
+							<cfcase value="isLte">
+								#getFieldExpression(whereNode, Convention)# <= 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isLteField --->
+							<cfcase value="isLteField">
+								#getFieldExpression(whereNode, Convention)# <= #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isLt --->
+							<cfcase value="isLt">
+								#getFieldExpression(whereNode, Convention)# < 
+									<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									<cfelse>
+										<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+									</cfif>
+							</cfcase>
+							
+							<!--- isLtField --->
+							<cfcase value="isLtField">
+								#getFieldExpression(whereNode, Convention)# < #getFieldExpression(whereNode, Convention, 1)#
+							</cfcase>
+							
+							<!--- isLike --->
+							<cfcase value="isLike">
+								#getFieldExpression(whereNode, Convention)# LIKE								
+									<cfswitch expression="#whereNode.mode#">
+										<cfcase value="Anywhere">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
+										</cfcase>
+										<cfcase value="Left">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
+										</cfcase>
+										<cfcase value="Right">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+										</cfcase>
+										<cfcase value="All">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+										</cfcase>
+									</cfswitch>
+							</cfcase>
+							
+							<!--- isNotLike --->
+							<cfcase value="isNotLike">
+								#getFieldExpression(whereNode, Convention)# NOT LIKE
+									<cfswitch expression="#whereNode.mode#">
+										<cfcase value="Anywhere">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
+										</cfcase>
+										<cfcase value="Left">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#%" />
+										</cfcase>
+										<cfcase value="Right">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="%#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+										</cfcase>
+										<cfcase value="All">
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#Convention.formatValue(whereNode.value, arguments.Query.getField(whereNode.object, whereNode.field).dbDataType)#" />
+										</cfcase>
+									</cfswitch>
+							</cfcase>
+							
+							<!--- isIn --->
+							<cfcase value="isIn">
+								#getFieldExpression(whereNode, Convention)# IN ( 
+									<cfif Len(Trim(whereNode.values))>
+										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.values#" list="yes" />
+										<cfelse>
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.values#" list="yes" />
+										</cfif>
+									<cfelse>
+										<cfqueryparam null="yes" />
+									</cfif>
+								)
+							</cfcase>
+							
+							<!--- isNotIn --->
+							<cfcase value="isNotIn">
+								#getFieldExpression(whereNode, Convention)# NOT IN ( 
+									<cfif Len(Trim(whereNode.values))>
+										<cfif NOT arguments.Query.getField(whereNode.object, whereNode.alias).length>
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" value="#whereNode.values#" list="yes" />
+										<cfelse>
+											<cfqueryparam cfsqltype="#arguments.Query.getField(whereNode.object, whereNode.field).cfSqlType#" maxlength="#arguments.Query.getField(whereNode.object, whereNode.alias).length#" value="#whereNode.values#" list="yes" />
+										</cfif>
+									<cfelse>
+										<cfqueryparam null="yes" />
+									</cfif>
+								)
+							</cfcase>
+							
+							<!--- isNull --->
+							<cfcase value="isNull">
+								#getFieldExpression(whereNode, Convention)# IS NULL
+							</cfcase>
+							
+							<!--- isNotNull --->
+							<cfcase value="isNotNull">
+								#getFieldExpression(whereNode, Convention)# IS NOT NULL
+							</cfcase>	
+							
+						</cfswitch>	
+					<cfelse>
+						<!--- just output it --->
+						#UCASE(whereNode)#
+					</cfif>
+					
+				</cfloop>
+			</cfif>
+			
+			<cfif ArrayLen(order)>
+				ORDER BY 
 				
-				<!---<cfif trim(arguments.Query.getFromAsString()) IS not "[user] AS [user]">
-					<cfabort>
-				</cfif>--->
-			</cfquery>
-		</cfif>
+				<!--- loop over all of the order-bys and render them out --->
+				<cfloop from="1" to="#ArrayLen(order)#" index="x">
+					<!--- get the arguments for this expression --->
+					<cfset orderNode = order[x] />
+					
+					<!---#Convention.formatFieldName(orderNode.field, orderNode.object)#--->
+					#getFieldExpression(orderNode, Convention)# #UCASE(orderNode.direction)#
+					
+					<cfif x IS NOT ArrayLen(order)>
+						,
+					</cfif>
+				</cfloop>
+			</cfif>		
+				
+		</cfquery>
+			
 		
 		<cfif arguments.releaseQuery>
 			<cfset releaseQueryObject(arguments.Query.getFrom()) />

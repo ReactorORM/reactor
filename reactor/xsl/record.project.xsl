@@ -69,7 +69,7 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="get<xsl:value-of select="@alias"/>" access="public" output="false" returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
-		&lt;cfset <xsl:value-of select="@alias"/> = 0 /&gt;
+		&lt;cfset var <xsl:value-of select="@alias"/> = 0 /&gt;
 		
 		&lt;!--- load the initial <xsl:value-of select="@alias"/> record.  this will be empty ---&gt;
 		&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>") OR (
