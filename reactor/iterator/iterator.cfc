@@ -792,7 +792,7 @@
 			<cfset getQueryObject().join(arguments.from, arguments.to) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
-				detail="Calls to join are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.join.CanNotAddJoin" />
 		</cfif>
 	</cffunction>
@@ -808,7 +808,7 @@
 			<cfset getQueryObject().joinViaAlias(arguments.from, arguments.relationAlias, arguments.to) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
-				detail="Calls to join are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  This includes calling the getRecordCount, getValueList, getQuery, and getArray meth  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.joinViaAlias.CanNotAddJoin" />
 		</cfif>
 	</cffunction>
@@ -819,7 +819,7 @@
 			<cfreturn getQueryObject().getWhere() />
 		<cfelse>
 			<cfthrow message="Can Not Get Where"
-				detail="Calls to getWhere are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to getWhere are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.getWhere.CanNotGetWhere" />
 		</cfif>
 	</cffunction>
@@ -831,7 +831,7 @@
 			<cfreturn getQueryObject().setDistinct(arguments.distinct) />
 		<cfelse>
 			<cfthrow message="Can Not Set Distinct"
-				detail="Calls to setDistinct are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to setDistinct are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.setDistinct.CanNotSetDistinct" />
 		</cfif>
 	</cffunction>
@@ -842,7 +842,7 @@
 			<cfreturn getQueryObject().getOrder() />
 		<cfelse>
 			<cfthrow message="Can Not Get Order"
-				detail="Calls to getOrder are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to getOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.getOrder.CanNotGetOrder" />
 		</cfif>
 	</cffunction>
@@ -853,7 +853,7 @@
 			<cfset getQueryObject().resetOrder() />
 		<cfelse>
 			<cfthrow message="Can Not Reset Order"
-				detail="Calls to resetOrder are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				detail="Calls to resetOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.resetOrder.CanNotResetOrder" />
 		</cfif>
 	</cffunction>
