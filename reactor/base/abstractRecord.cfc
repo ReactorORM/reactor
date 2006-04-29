@@ -1,37 +1,37 @@
 <cfcomponent hint="I am an abstract record.  I am used primarly to allow type definitions for return values.  I also loosely define an interface for a record objects and some core methods." extends="reactor.base.abstractObject">
 	
-	<cfset variables.To = 0 />
+	<!---<cfset variables.To = 0 />
 	<cfset variables.InitialTo = 0 />
 	<cfset variables.Dao = 0 />
 	<cfset variables.ObjectFactory = 0 />
-	<cfset variables.Observers = StructNew() />
+	<cfset variables.Observers = StructNew() />--->
 	<cfset variables.ErrorCollection = 0 />
 	<cfset variables.children = StructNew() />
 	<cfset variables.Parent = 0 />
 	<cfset variables.deleted = false />
 	<cfset variables.alias = "" />
 		
-	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
+	<!--- configure --->
+	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
-		<cfargument name="ReactorFactory" hint="I am the reactor factory." required="yes" type="reactor.reactorFactory" />
-		<cfargument name="Convention" hint="I am the reactor factory." required="yes" type="reactor.data.abstractConvention" />
-
-		<cfset super.configure(arguments.config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
+		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
 		
-		<cfset _setTo(_getReactorFactory().createTo(arguments.alias)) />
-		<cfset _setInitialTo(_getReactorFactory().createTo(arguments.alias)) />
-		<cfset _setDao(_getReactorFactory().createDao(arguments.alias)) />
-		<cfset _setAlias(arguments.alias) />
-		
-		<cfset clean() />
+		<cfset super.configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
+		<cfset _setObjectMetadata(arguments.ObjectMetadata) />
 		
 		<cfreturn this />
 	</cffunction>
-		
-	<!--- _getObjectMetadata --->
+	
+	<!--- objectMetadata --->
+    <cffunction name="_setObjectMetadata" access="private" output="false" returntype="void">
+       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="reactor.base.abstractMetadata" />
+       <cfset variables.objectMetadata = arguments.objectMetadata />
+    </cffunction>
     <cffunction name="_getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
-       <cfreturn _getReactorFactory().createMetadata(_getName()) />
+       <cfreturn variables.objectMetadata />
     </cffunction>
 	
 	<cffunction name="clean" access="public" hint="I copy the current to into the initial to.  Assuming the TOs dont have any complex objects this should cause isDirty to return false." output="false" returntype="void">
@@ -303,15 +303,6 @@
 		</cfif>
 	</cffunction>
 		
-	<!--- alias --->
-    <cffunction name="_setAlias" access="private" output="false" returntype="void">
-       <cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
-       <cfset variables.alias = arguments.alias />
-    </cffunction>
-    <cffunction name="_getAlias" access="public" output="false" returntype="string">
-       <cfreturn variables.alias />
-    </cffunction>
-	
 	<!--- ErrorCollection --->
     <cffunction name="_setErrorCollection" access="private" output="false" returntype="void">
        <cfargument name="ErrorCollection" hint="I am this object's ErrorCollection" required="yes" type="reactor.util.ErrorCollection" />
@@ -347,7 +338,12 @@
 	
 	<!--- getDictionary --->
 	<cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary">
-		<cfreturn _getReactorFactory().createDictionary(_getName()) />
+		
+		<cfif NOT StructKeyExists(variables, "Dictionary")>
+			<cfset variables.Dictionary = _getReactorFactory().createDictionary(_getAlias()) />
+		</cfif>
+		
+		<cfreturn variables.Dictionary />
 	</cffunction>
 	
 	<!--- isDeleted --->

@@ -4,10 +4,27 @@
 	<cfset variables.queryPool = 0 />
 	<cfset variables.queryObjectPool = 0 />
 	
+	<!--- configure --->
+	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractGateway">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
+		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
 		
-	<!--- metadata --->
-    <cffunction name="getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
-       <cfreturn _getReactorFactory().createMetadata(_getName()) />
+		<cfset super.configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
+		<cfset setObjectMetadata(arguments.ObjectMetadata) />>
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- objectMetadata --->
+    <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
+       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="reactor.base.abstractMetadata" />
+       <cfset variables.objectMetadata = arguments.objectMetadata />
+    </cffunction>
+    <cffunction name="getObjectMetadata" access="private" output="false" returntype="reactor.base.abstractMetadata">
+       <cfreturn variables.objectMetadata />
     </cffunction>	
 
 	<!---
@@ -19,7 +36,7 @@
 	<cffunction name="getQueryInstance" access="private" output="false" returntype="reactor.query.query">
 		<cfset var query = 0 />
 		<cfif isStruct(variables.queryPool)>
-			<cflock name="reactor_gateway_#_getName()#_pool" timeout="10" type="exclusive">
+			<cflock name="reactor_gateway_#_getAlias()#_pool" timeout="10" type="exclusive">
 				<cfif isStruct(variables.queryPool)>
 					<cfset query = variables.queryPool.head />
 					<cfset variables.queryPool = variables.queryPool.next />
@@ -39,7 +56,7 @@
 		<cfset var link = structNew() />
 		<cfset arguments.query.setInitialized(false) />
 		<cfset link.head = arguments.query />
-		<cflock name="reactor_gateway_#_getName()#_pool" timeout="10" type="exclusive">
+		<cflock name="reactor_gateway_#_getAlias()#_pool" timeout="10" type="exclusive">
 			<cfset link.next = variables.queryPool />
 			<cfset variables.queryPool = link />
 		</cflock>
@@ -53,7 +70,7 @@
 	<cffunction name="getQueryObject" access="private" output="false" returntype="reactor.query.object">
 		<cfset var object = 0 />
 		<cfif isStruct(variables.queryObjectPool)>
-			<cflock name="reactor_gateway_#_getName()#_objectpool" timeout="10" type="exclusive">
+			<cflock name="reactor_gateway_#_getAlias()#_objectpool" timeout="10" type="exclusive">
 				<cfif isStruct(variables.queryObjectPool)>
 					<cfset object = variables.queryObjectPool.head />
 					<cfset variables.queryObjectPool = variables.queryObjectPool.next />
@@ -72,7 +89,7 @@
 		<cfargument name="object" required="true" />
 		<cfset var link = structNew() />
 		<cfset link.head = arguments.object />
-		<cflock name="reactor_gateway_#_getName()#_objectpool" timeout="10" type="exclusive">
+		<cflock name="reactor_gateway_#_getAlias()#_objectpool" timeout="10" type="exclusive">
 			<cfset link.next = variables.queryObjectPool />
 			<cfset variables.queryObjectPool = link />
 		</cflock>
@@ -96,7 +113,7 @@
 		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="reactor.query.query" />
 		<cfargument name="releaseQuery" hint="I indicate whether to return the Query to the resource pool after use." type="boolean" default="true" />
 		<cfset var qGet = 0 />
-		<cfset var Convention = getObjectMetadata().getConventions() />
+		<cfset var Convention = _getConvention() />
 		<cfset var where = arguments.Query.getWhere().getWhere() />
 		<cfset var order = arguments.Query.getOrder().getOrder() />
 		<cfset var whereNode = 0 />

@@ -88,6 +88,11 @@
 		<cfset var relationships = XmlSearch(Config, "/object/hasMany | /object/hasOne") />
 		<cfset var relationship = 0 />
 		<cfset var aliasList = "" />
+		
+		<cfset var fromRelationship = 0 />
+		<cfset var toRelationship = 0 />
+		<cfset var relationshipNode = 0 />
+		<cfset var linkExpandNode = 0 />
 			
 		<!--- insure aliases are set --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
@@ -128,20 +133,71 @@
 			<cfif ArrayLen(relationship.XmlChildren) IS 1 AND StructKeyExists(relationship, "link")>
 				<cfset linkedConfig = CreateObject("Component", "reactor.core.object").init(relationship.link.XmlAttributes.name, getConfig()).getXml() />
 				
-				<!--- make sure that all of the links have aliases that they're using. --->
+				<!--- make sure that all of the links have froms and tos that they're using. --->
 				<cfloop from="1" to="#ArrayLen(relationship.XmlChildren)#" index="y">
-					
-					<!--- check to see if this link has an alias --->
-					<cfif NOT StructKeyExists(relationship.XmlChildren[y].XmlAttributes, "alias")>
-						<!--- nope, no alias.  We'll just use the first relationship's alias --->
-						<cfloop from="1" to="#ArrayLen(linkedConfig.object.XmlChildren)#" index="z">
-							<cfif StructKeyExists(linkedConfig.object.XmlChildren[z].XmlAttributes, "name") AND linkedConfig.object.XmlChildren[z].XmlAttributes.name IS getAlias()>
-								<cfset relationship.XmlChildren[y].XmlAttributes["alias"] = relationship.XmlAttributes.alias />
+					<!--- if this link doesn't indicate the "from" relationship on the linking object try to figure it out --->
+					<cfif NOT StructKeyExists(relationship.XmlChildren[y].XmlAttributes, "from")>
+						<!--- look for a hasOne relationship on the linking object with this object's alias as its name (god I wish I could use xpath, but it's case sensitive) --->
+						<cfloop from="1" to="#ArrayLen(linkedConfig.object.xmlChildren)#" index="z">
+							<!--- if this is a hasOne, check to see if it's name is this object's alias --->
+							<cfif linkedConfig.object.xmlChildren[z].XmlName IS "hasOne" AND linkedConfig.object.xmlChildren[z].XmlAttributes.name IS getAlias()>
+								<cfset relationship.XmlChildren[y].XmlAttributes["from"] = linkedConfig.object.xmlChildren[z].XmlAttributes.alias />
 								<cfbreak />
 							</cfif>
 						</cfloop>
 					</cfif>
+					
+					<!--- if this link doesn't indicate the "to" relationship on the linking object try to figure out out --->
+					<cfif NOT StructKeyExists(relationship.XmlChildren[y].XmlAttributes, "to")>
+						<!--- look for a hasOne relationship on the linking object with this relationship's name as its alias  --->
+						<cfloop from="1" to="#ArrayLen(linkedConfig.object.xmlChildren)#" index="z">
+							<!--- if this is a hasOne, check to see if it's name is this object's alias --->
+							<cfif linkedConfig.object.xmlChildren[z].XmlName IS "hasOne" AND linkedConfig.object.xmlChildren[z].XmlAttributes.name IS relationship.XmlAttributes.name>
+								<cfset relationship.XmlChildren[y].XmlAttributes["to"] = linkedConfig.object.xmlChildren[z].XmlAttributes.alias />
+								<cfbreak />
+							</cfif>
+						</cfloop>
+					</cfif>
+					
+					<cfset fromRelationship = getRelationship(linkedConfig, relationship.XmlChildren[y].XmlAttributes.from) />
+					<cfset toRelationship = getRelationship(linkedConfig, relationship.XmlChildren[y].XmlAttributes.to) />
+						
+					<!--- get info on the from relationship --->
+					<cfset linkExpandNode = XMLElemNew(Config, "relation") />
+					<cfset linkExpandNode.XmlAttributes["name"] = relationship.XmlChildren[y].XmlAttributes.from />
+					
+					<cfloop from="1" to="#ArrayLen(fromRelationship)#" index="z">
+						<cfset relationshipNode = XMLElemNew(Config, "relate") />
+						<cfset ArrayAppend(linkExpandNode.XmlChildren, relationshipNode) />
+						
+						<!--- oh my god! doug discovers XMLChildPos!  --->
+						<cfset relationshipNode = linkExpandNode.XmlChildren[XMLChildPos(linkExpandNode,  "relate", z)] />
+
+						<cfset relationshipNode.XmlAttributes["from"] = fromRelationship[z].XmlAttributes.from />
+						<cfset relationshipNode.XmlAttributes["to"] = fromRelationship[z].XmlAttributes.to />
+					</cfloop>
+					
+					<cfset ArrayAppend(relationship.XmlChildren[y].XmlChildren, linkExpandNode) />
+					
+					<!--- get info on the from relationship --->
+					<cfset linkExpandNode = XMLElemNew(Config, "relation") />
+					<cfset linkExpandNode.XmlAttributes["name"] = relationship.XmlChildren[y].XmlAttributes.to />
+					
+					<cfloop from="1" to="#ArrayLen(toRelationship)#" index="z">
+						<cfset relationshipNode = XMLElemNew(Config, "relate") />
+						<cfset ArrayAppend(linkExpandNode.XmlChildren, relationshipNode) />
+						
+						<!--- oh my god! doug discovers XMLChildPos!  --->
+						<cfset relationshipNode = linkExpandNode.XmlChildren[XMLChildPos(linkExpandNode,  "relate", z)] />
+
+						<cfset relationshipNode.XmlAttributes["from"] = toRelationship[z].XmlAttributes.from />
+						<cfset relationshipNode.XmlAttributes["to"] = toRelationship[z].XmlAttributes.to />
+					</cfloop>
+					
+					<cfset ArrayAppend(relationship.XmlChildren[y].XmlChildren, linkExpandNode) />
+					
 				</cfloop>
+					
 				
 				<!--- loop over the linked config and look for a matching link (stupid xpath!) --->
 				<cfloop from="1" to="#ArrayLen(linkedConfig.object.XmlChildren)#" index="y">
@@ -227,11 +283,23 @@
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfif getAlias() is "group">
+		<!---<cfif getAlias() is "daisy">
 			<cfdump var="#Config#" /><cfabort>
 		</cfif>--->
 		
 		<cfreturn Config />
+	</cffunction>
+	
+	<cffunction name="getRelationship" access="public" hint="I return the named relationship's data for the specified xml node in the provided document" output="false" returntype="any">
+		<cfargument name="xmlDoc" hint="I am the document to get the node from" required="yes" type="any">
+		<cfargument name="alias" hint="I am the alias of the relationship to get" required="yes" type="string" />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(arguments.xmlDoc.object.xmlChildren)#" index="x">
+			<cfif arguments.xmlDoc.object.xmlChildren[x].XmlName IS "hasOne" AND arguments.xmlDoc.object.xmlChildren[x].XmlAttributes.alias IS arguments.alias>
+				<cfreturn arguments.xmlDoc.object.xmlChildren[x].XmlChildren />
+			</cfif>
+		</cfloop>		
 	</cffunction>
 	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">

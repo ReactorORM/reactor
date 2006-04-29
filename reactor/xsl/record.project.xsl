@@ -110,39 +110,41 @@
 		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
 			&lt;cfset var relationship = 0 /&gt;
-			&lt;cfset var <xsl:value-of select="@alias"/>Iterator = 0 /&gt;
+			<xsl:variable name="alias" select="@alias" />
+			&lt;cfset var <xsl:value-of select="$alias"/>Iterator = 0 /&gt;
 			&lt;cfset var value = 0 /&gt;
 			
-			&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>Iterator")&gt;
-				&lt;cfset <xsl:value-of select="@alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>", 
-					"<xsl:for-each select="link">
-						<xsl:value-of select="@name"/>
-						<xsl:if test="position() != last()">,</xsl:if>
-					</xsl:for-each>", "<xsl:value-of select="link/@alias"/>") />
+			&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="$alias"/>Iterator")&gt;
+				&lt;cfset <xsl:value-of select="$alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>") />
 				
 				<xsl:choose>
 					<xsl:when test="count(relate) &gt; 0">
 						<xsl:for-each select="relate">
-							&lt;cfset <xsl:value-of select="../@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
+							&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="../@name"/>", "<xsl:value-of select="@to"/>", get<xsl:value-of select="@from"/>()) /&gt;
 						</xsl:for-each>
 					</xsl:when>
 					<xsl:when test="count(link) &gt; 0">
-						&lt;cfset relationship = _getReactorFactory().createMetadata("<xsl:value-of select="/object/@alias"/>").getRelationship("<xsl:value-of select="link/@name"/>").relate /&gt;
-
-						&lt;cfloop from="1" to="#ArrayLen(relationship)#" index="x"&gt;
-							&lt;cfinvoke component="#this#" method="get#relationship[x].from#" returnvariable="value" /&gt;
+						
+						<xsl:for-each select="link">
+ 							<xsl:variable name="from" select="@from" />
+ 							<xsl:variable name="name" select="@name" />
+							&lt;cfset <xsl:value-of select="$alias"/>Iterator.joinViaAlias("<xsl:value-of select="../@name"/>", "<xsl:value-of select="$name" />", "<xsl:value-of select="@to" />") /&gt;
 							
-							&lt;cfset <xsl:value-of select="@alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="link/@name"/>", relationship[x].to, value) /&gt;
-						&lt;/cfloop&gt;
+							<xsl:for-each select="relation[@name = $from]/relate">
+								&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="$name" />", "<xsl:value-of select="@from" />", get<xsl:value-of select="@to" />()) /&gt;
+							</xsl:for-each>
+							
+						</xsl:for-each>
+					
 					</xsl:when>
 				</xsl:choose>
 				
 				&lt;!--- set parent/child relationships ---&gt;
-				&lt;cfset <xsl:value-of select="@alias"/>Iterator._setParent(this) /&gt;			
-				&lt;cfset variables.children.<xsl:value-of select="@alias"/>Iterator = <xsl:value-of select="@alias"/>Iterator />
+				&lt;cfset <xsl:value-of select="$alias"/>Iterator._setParent(this) /&gt;			
+				&lt;cfset variables.children.<xsl:value-of select="$alias"/>Iterator = <xsl:value-of select="$alias"/>Iterator />
 			&lt;/cfif&gt;
 			
-			&lt;cfreturn variables.children.<xsl:value-of select="@alias"/>Iterator /&gt;
+			&lt;cfreturn variables.children.<xsl:value-of select="$alias"/>Iterator /&gt;
 		&lt;/cffunction&gt;
 	</xsl:for-each>	
 	
@@ -162,6 +164,11 @@
 				detail="The record you're using has been deleted.  There are some properties which will continue to function after a record has been deleted, but not all of them.  Please create a new record and go from there."
 				type="reactor.record.RecordDeleted" /&gt;
 		&lt;/cfif&gt;
+		
+		&lt;cfif NOT StructKeyExists(variables, "to") &gt;
+			&lt;cfset variables.to = _getReactorFactory().createTo(_getAlias()) &gt;
+		&lt;/cfif&gt;
+		
 		&lt;cfreturn variables.to /&gt;
 	&lt;/cffunction&gt;	
 	
@@ -171,6 +178,11 @@
 		&lt;cfset variables.initialTo = arguments.initialTo /&gt;
 	&lt;/cffunction&gt;
 	&lt;cffunction name="_getInitialTo" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To"&gt;
+		
+		&lt;cfif NOT StructKeyExists(variables, "initialTo") &gt;
+			&lt;cfset variables.initialTo = _getReactorFactory().createTo(_getAlias()) &gt;
+		&lt;/cfif&gt;
+		
 		&lt;cfreturn variables.initialTo /&gt;
 	&lt;/cffunction&gt;	
 	
@@ -180,6 +192,11 @@
 	    &lt;cfset variables.dao = arguments.dao /&gt;
 	&lt;/cffunction&gt;
 	&lt;cffunction name="_getDao" access="private" output="false" returntype="reactor.project.<xsl:value-of select="object/@project"/>.Dao.<xsl:value-of select="object/@alias"/>Dao"&gt;
+	   
+	    &lt;cfif NOT StructKeyExists(variables, "dao") &gt;
+			&lt;cfset variables.dao = _getReactorFactory().createDao(_getAlias()) &gt;
+		&lt;/cfif&gt;
+		
 	    &lt;cfreturn variables.dao /&gt;
 	&lt;/cffunction&gt;
 	

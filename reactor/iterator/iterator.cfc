@@ -12,19 +12,20 @@
 	<cfset variables.index = 0 />
 	
 	<cfset variables.parent = 0 />
+	<cfset variables.joinList = "" />
 	
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="Iterator">
 		<cfargument name="ReactorFactory" hint="I am the reactor factor." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="alias" hint="I am the alias of the type of data being iterated." required="yes" type="string" />
-		<cfargument name="joinList" hint="I am comma delimited list of optional object to join." required="no" default="" type="string" />
-		<cfargument name="relationAlias" hint="I am the alias of the related user." required="no" default="" type="string" />
-		<cfset var joinTo = 0 />
+		<!--- <cfargument name="joinList" hint="I am comma delimited list of optional object to join." required="no" default="" type="string" />
+		<cfargument name="relationAlias" hint="I am a comma delimited list of aliases to use as relationships between the object and objects in the joinlist." required="no" default="" type="string" /> --->
+		<!---<cfset var joinTo = 0 />
 		<cfset var joinFrom = 0 />
 		<cfset var joins = 0 />
-		<cfset var x = 0 />
+		<cfset var x = 0 />--->
 		
-		<cfset setRelationAlias(arguments.relationAlias) />
+		<!---<cfset setRelationAlias(arguments.relationAlias) />--->
 		
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setAlias(arguments.alias) />
@@ -35,7 +36,7 @@
 		<cfset setQueryObject(getGateway().createQuery()) />
 		<!--- filter to only this object's fields --->
 		<cfset getQueryObject().returnObjectFields(getAlias()) />
-		<cfset setJoinList(arguments.joinList) />
+		<!---<cfset setJoinList(arguments.joinList) />
 		
 		<cfset joins = ListToArray(joinList) />
 		<cfset joinFrom = getAlias() />
@@ -52,7 +53,7 @@
 				
 				<cfset joinFrom = joinTo />
 			</cfloop>
-		</cfif>
+		</cfif>--->
 		
 		<cfreturn this />
 	</cffunction>
@@ -428,8 +429,8 @@
 		<!--- if this is a linked iterator then add a new object of the type that links this object to the parent to the linkIterator --->
 		<cfif isLinkedIterator()>
 			<!--- create a new object to link the new record to the linked object --->
-			<cfinvoke component="#getLinkIterator().add()#" method="set#getSetAlias()#">
-				<cfinvokeargument name="#getSetAlias()#" value="#Record#" />
+			<cfinvoke component="#getLinkIterator().add()#" method="set#getAlias()#">
+				<cfinvokeargument name="#getAlias()#" value="#Record#" />
 			</cfinvoke>
 
 		<cfelse>
@@ -447,14 +448,14 @@
 		<cfreturn Record />	
 	</cffunction>
 	
-	<!--- getIteratorSetMethod --->
+	<!--- getIteratorSetMethod
 	<cffunction name="getSetAlias" access="public" hint="I return the set method in link iterators" output="false" returntype="string">
 		<cfif Len(getRelationAlias())>
 			<cfreturn getRelationAlias() />
 		<cfelse>
 			<cfreturn getAlias() />
 		</cfif>
-	</cffunction>
+	</cffunction> --->
 	
 	<!--- populate --->
 	<cffunction name="populate" access="private" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
@@ -747,6 +748,47 @@
 		<cfset variables.index = 0 />
 	</cffunction>
 	
+	<!--- joinList --->
+    <cffunction name="getJoinList" access="private" output="false" returntype="string">
+       <cfreturn variables.joinList />
+    </cffunction>
+	
+	<!--- relationAlias --->
+    <cffunction name="getRelationAlias" access="public" output="false" returntype="string">
+       <cfreturn ListFirst(variables.joinList) />
+    </cffunction>
+	
+	<!--- join --->
+	<cffunction name="join" access="public" hint="I join one object to another." output="false" returntype="void">
+		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
+		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.to) />
+			<cfset getQueryObject().join(arguments.from, arguments.to) />
+		<cfelse>
+			<cfthrow message="Can Not Add Join"
+				detail="Calls to join are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.join.CanNotAddJoin" />
+		</cfif>
+	</cffunction>
+	
+	<!--- joinViaAlias --->
+	<cffunction name="joinViaAlias" access="public" hint="I join one object to another via a specific alias on the from object." output="false" returntype="void">
+		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
+		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
+		<cfargument name="relationAlias" hint="I am the alias of a relationship on the object being joined from." required="yes" type="string" />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.to) />
+			<cfset getQueryObject().joinViaAlias(arguments.from, arguments.relationAlias, arguments.to) />
+		<cfelse>
+			<cfthrow message="Can Not Add Join"
+				detail="Calls to join are not allowed after getting an iterators query or array data.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.joinViaAlias.CanNotAddJoin" />
+		</cfif>
+	</cffunction>
+	
 	<!--- getWhere --->
 	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator" output="false" returntype="reactor.query.where">
 		<cfif NOT IsQuery(variables.query)>
@@ -827,15 +869,6 @@
     <cffunction name="getReactorFactory" access="private" output="false" returntype="reactor.ReactorFactory">
        <cfreturn variables.reactorFactory />
     </cffunction>
-	
-	<!--- joinList --->
-    <cffunction name="setJoinList" access="private" output="false" returntype="void">
-       <cfargument name="joinList" hint="I am the joinlist used to join the query that backs the iteratror to various tables." required="yes" type="string" />
-       <cfset variables.joinList = arguments.joinList />
-    </cffunction>
-    <cffunction name="getJoinList" access="private" output="false" returntype="string">
-       <cfreturn variables.joinList />
-    </cffunction>
 		
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
@@ -853,13 +886,4 @@
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
 		<cfset variables.parent = 0 />
 	</cffunction>
-	
-	<!--- relationAlias --->
-    <cffunction name="setRelationAlias" access="public" output="false" returntype="void">
-       <cfargument name="relationAlias" hint="I am the alias of the relationship that joins linked objects." required="yes" type="string" />
-       <cfset variables.relationAlias = arguments.relationAlias />
-    </cffunction>
-    <cffunction name="getRelationAlias" access="public" output="false" returntype="string">
-       <cfreturn variables.relationAlias />
-    </cffunction>
 </cfcomponent>

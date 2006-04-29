@@ -17,42 +17,90 @@
 	
 	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="any">
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "Record") />
+		<cfset var Record = 0 />
+		
+		<cftimer label="Create Record #arguments.objectAlias#">
+			<cfset Record = getObjectFactory().create(arguments.objectAlias, "Record") />
+		</cftimer>
+		
+		<cfreturn Record />
 	</cffunction>
 	
 	<cffunction name="createDao" access="public" hint="I return a Dao object." output="false" returntype="reactor.base.abstractDao">
 		<cfargument name="objectAlias" hint="I am the alias of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "Dao") />
+		<cfset var Dao = 0 />
+		
+		<cftimer label="Create Dao #arguments.objectAlias#">
+			<cfset Dao = getObjectFactory().create(arguments.objectAlias, "Dao") />
+		</cftimer>
+		
+		<cfreturn Dao />
 	</cffunction>
 	
 	<cffunction name="createTo" access="public" hint="I return a To object." output="false" returntype="reactor.base.abstractTo">
 		<cfargument name="objectAlias" hint="I am the alias of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "To") />
+		<cfset var To = 0 />
+		
+		<cftimer label="Create To #arguments.objectAlias#">
+			<cfset To = getObjectFactory().create(arguments.objectAlias, "To") />
+		</cftimer>
+		
+		<cfreturn To />
 	</cffunction>
 	
 	<cffunction name="createGateway" access="public" hint="I return a gateway object." output="false" returntype="reactor.base.abstractGateway">
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "Gateway") />
+		<cfset var Gateway = 0 />
+		
+		<cftimer label="Create Gateway #arguments.objectAlias#">
+			<cfset Gateway = getObjectFactory().create(arguments.objectAlias, "Gateway") />
+		</cftimer>
+		
+		<cfreturn Gateway />
 	</cffunction>
 
 	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="reactor.base.abstractMetadata">
 		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "Metadata") />
+		<cfset var Metadata = 0 />
+		
+		<cftimer label="Create Metadata #arguments.objectAlias#">
+			<cfset Metadata = getObjectFactory().create(arguments.objectAlias, "Metadata") />
+		</cftimer>
+		
+		<cfreturn Metadata />
 	</cffunction>
 
 	<cffunction name="createIterator" access="public" hint="I return an iterator object." output="false" returntype="reactor.iterator.iterator">
 		<cfargument name="objectAlias" hint="I am the alias of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
+		<cfset var Iterator = 0 />
+		
+		<cftimer label="Create Iterator #arguments.objectAlias#">
+			<cfset Iterator = createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
+		</cftimer>
+		
+		<cfreturn Iterator />
 	</cffunction>
 
 	<cffunction name="createDictionary" access="public" hint="I return a dictionary object." output="false" returntype="reactor.dictionary.dictionary">
 		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().createDictionary(arguments.objectAlias) />
+		<cfset var Dictionary = 0 />
+		
+		<cftimer label="Create Dictionary #arguments.objectAlias#">
+			<cfset Dictionary = getObjectFactory().createDictionary(arguments.objectAlias) />
+		</cftimer>
+		
+		<cfreturn Dictionary />
 	</cffunction>
 
 	<cffunction name="createValidator" access="public" hint="I return a validator object." output="false" returntype="reactor.base.abstractValidator">
 		<cfargument name="objectAlias" hint="I am the alias of the object the validator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfreturn getObjectFactory().create(arguments.objectAlias, "Validator") />
+		<cfset var Validator = 0 />
+		
+		<cftimer label="Create Validator #arguments.objectAlias#">
+			<cfset Validator = getObjectFactory().create(arguments.objectAlias, "Validator") />
+		</cftimer>
+		
+		<cfreturn Validator />
 	</cffunction>
 	
 	<!--- ObjectFactory --->

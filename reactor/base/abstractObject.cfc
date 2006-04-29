@@ -11,19 +11,18 @@
 	---->
 	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
-		<cfargument name="name" hint="I am the name of this object." required="yes" type="string" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
-		<cfargument name="convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
 		
 		<cfset _setConfig(arguments.config) />
-		<cfset _setName(arguments.name) />
+		<cfset _setAlias(arguments.alias) />
 		<cfset _setReactorFactory(arguments.ReactorFactory) />
-		<cfset _setConvention(arguments.convention) />
+		<cfset _setConvention(arguments.Convention) />
 		
 		<cfreturn this />
 	</cffunction>
 	
-
 	<cffunction name="_getSignature" access="public" hint="I return this object's corrisponding DB signature." output="false" returntype="string">
 		<cfreturn variables.signature />
 	</cffunction>
@@ -62,6 +61,16 @@
     </cffunction>
     <cffunction name="_getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
        <cfreturn variables.convention />
+    </cffunction>
+	
+	
+	<!--- alias --->
+    <cffunction name="_setAlias" access="private" output="false" returntype="void">
+       <cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
+       <cfset variables.alias = arguments.alias />
+    </cffunction>
+    <cffunction name="_getAlias" access="public" output="false" returntype="string">
+       <cfreturn variables.alias />
     </cffunction>
 		
 </cfcomponent>

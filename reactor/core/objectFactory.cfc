@@ -2,7 +2,12 @@
 	
 	<cfset variables.config = "" />
 	<cfset variables.ReactorFactory = "" />
-	<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 5)) />
+	<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 10)) />
+	<cfset variables.Cache = StructNew() />
+	<cfset variables.Cache.Dao = StructNew() />
+	<cfset variables.Cache.Gateway = StructNew() />
+	<cfset variables.Cache.Metadata = StructNew() />
+	<cfset variables.Cache.Validator = StructNew() />
 	
 	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="reactor.core.objectFactory">
 		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
@@ -22,7 +27,7 @@
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
-		<cfset var objName = "" />
+		<cfset var metadata = 0 />
 		
 		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
@@ -56,27 +61,21 @@
 				</cfcase>
 				<cfcase value="production">
 					<cftry>
-						<cfset objName = getObjectName(arguments.type, arguments.alias) />
-
+						
 						<!--- get an instance of the object from cache or create it --->
-						<cfif listFind("Dao,Gateway,Metadata,Validator",arguments.type)>
+						<cfif ListFind("Dao,Gateway,Metadata,Validator", arguments.type)>
 
-							<cfif variables.TimedCache.exists(objName)>
-								<cftry>
-									<cfset GeneratedObject = variables.TimedCache.getValue(objName) />
-									<cfcatch/>
-								</cftry>
-							</cfif>
-
-							<cfif not isObject(GeneratedObject)>
-								<cfset GeneratedObject = CreateObject("Component", objName) />
-								<cfset variables.TimedCache.setValue(objName, GeneratedObject) />
+							<cfif StructKeyExists(variables.Cache[arguments.type], arguments.alias)>
+								<cfset GeneratedObject = variables.Cache[arguments.type][arguments.alias] />
+							<cfelse>
+								<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
+								<cfset variables.Cache[arguments.type][arguments.alias] = GeneratedObject />
 							</cfif>
 
 						<cfelse>
 
 							<!--- we never cache Record, To or iterator objects --->
-							<cfset GeneratedObject = CreateObject("Component", objName) />
+							<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
 	
 						</cfif>
 						<cfcatch>
@@ -95,17 +94,36 @@
 
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
-
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
 			
 			<cfset ObjectTranslator.generateObject(arguments.type) />	
 			
-			<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+			<cfif ListFind("Dao,Gateway,Record", arguments.type)>
+				<!--- check to see if a metadata object of this type exists.  If not, create it --->
+				<cfif StructKeyExists(variables.Cache.metadata, arguments.alias)>
+					<cfset metadata = variables.Cache.metadata[arguments.alias] />
+				<cfelse> 
+					<cfset metadata = create(arguments.alias, "Metadata") />
+				</cfif>
+				
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+			<cfelse>
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+			</cfif>
 
 		<cfelse>
-
-			<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
-			
+			<cfif ListFind("Dao,Gateway,Record", arguments.type)>
+				<!--- check to see if a metadata object of this type exists.  If not, create it --->
+				<cfif StructKeyExists(variables.Cache.metadata, arguments.alias)>
+					<cfset metadata = variables.Cache.metadata[arguments.alias] />
+				<cfelse> 
+					<cfset metadata = create(arguments.alias, "Metadata") />
+				</cfif>
+				
+				<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+			<cfelse>
+				<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+			</cfif>
 		</cfif>
 		
 		<cfreturn GeneratedObject />
@@ -124,16 +142,11 @@
 				<cfcase value="production">
 					<cftry>
 						<!--- get an instance of the object from cache or create it --->
-						<cfif variables.TimedCache.exists(dictionaryXmlPath)>
-							<cftry>
-								<cfset DictionaryObject = variables.TimedCache.getValue(dictionaryXmlPath) />
-								<cfcatch/>
-							</cftry>
-						</cfif>
-
-						<cfif not isObject(DictionaryObject)>
+						<cfif StructKeyExists(variables.Cache["Dictionary"], arguments.alias)>
+							<cfset DictionaryObject = variables.TimedCache.getValue(dictionaryXmlPath) />
+						<cfelse>
 							<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
-							<cfset variables.TimedCache.setValue(dictionaryXmlPath, DictionaryObject) />
+							<cfset variables.Cache["Dictionary"][arguments.alias] = DictionaryObject />
 						</cfif>
 
 						<cfcatch>
