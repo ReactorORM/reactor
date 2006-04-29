@@ -20,14 +20,19 @@
 		<cfargument name="body" hint="I am the body of the item being indexed." required="yes" type="string" />
 		<cfset arguments.body = ReReplace(arguments.body, "<[^<]+?>", "", "all") />
 		
-		<!--- index the data --->
-		<cfindex action="update"
-			key="#arguments.url#"
-			type="custom"
-			URLpath="#arguments.url#"
-			title="#arguments.title#"
-			body="#arguments.body#"
-			collection="#getPrimaryCollection()#" />
+		<!--- the index silently fails if the server is off or there are other issues --->
+		<cftry>
+			<!--- index the data --->
+			<cfindex action="update"
+				key="#arguments.url#"
+				type="custom"
+				URLpath="#arguments.url#"
+				title="#arguments.title#"
+				body="#arguments.body#"
+				collection="#getPrimaryCollection()#" />
+			<cfcatch>
+			</cfcatch>
+		</cftry>
 		
 	</cffunction>
 	

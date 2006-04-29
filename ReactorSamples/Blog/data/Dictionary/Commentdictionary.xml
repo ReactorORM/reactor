@@ -58,4 +58,11 @@
 		<captcha>
 			<incorrect>Sorry, the code you entered was incorrect.  Please try again.</incorrect>
 		</captcha>
+		<commentID>
+			<label>commentID</label>
+			<comment/>
+			<maxlength>0</maxlength>
+			<notProvided>The commentID field is required but was not provided.</notProvided>
+			<invalidType>The commentID field does not contain valid data.  This field must be a numeric value.</invalidType>
+		</commentID>
 	</Comment>

@@ -2,6 +2,6 @@
 <cfset reactor.init("/config/reactor.xml") />
 	
 	
-<cfset Doug = reactor.createRecord("user").load(userId=14) />
+<cfset user = reactor.createIterator("user") />
 
-<cfdump var="#Doug.getForwardUserIterator().getQuery()#" />
+<cfdump var="#user.getQuery(count=5)#" />

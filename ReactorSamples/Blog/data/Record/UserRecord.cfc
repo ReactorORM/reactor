@@ -28,7 +28,7 @@
 	</cffunction>
 		
 	<cffunction name="login" access="public" hint="I log this user into the site" output="false" returntype="boolean">
-		<cfset var UserGateway = _getReactorFactory().createGateway(_getName()) />
+		<cfset var UserGateway = _getReactorFactory().createGateway(_getAlias()) />
 		<cfset var User = UserGateway.getByFields(username=getUserName(), password=getPassword()) />
 		
 		<cfif User.RecordCount IS 1>

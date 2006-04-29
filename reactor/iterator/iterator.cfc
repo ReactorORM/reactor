@@ -618,6 +618,7 @@
 		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="1" />
 		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="numeric" default="-1" />
 		<cfset var query = 0 />
+		<cfset var filterIndex = ArrayNew(1) />
 		<cfset var fields = 0 />
 		
 		<cfset populate() />
@@ -630,6 +631,29 @@
 			FROM variables.query
 			WHERE reactorRowDeleted = 0
 		</cfquery>
+		
+		<!--- if we're filtering the rows then filter them --->
+		<cfif NOT (arguments.from IS 1 AND arguments.count IS -1)>
+			
+			<!--- create an index row with rownumbers stored in the index --->
+			<cfset ArrayResize(filterIndex, query.recordcount) />
+			
+			<cfloop from="1" to="#query.recordcount#" index="x">
+				<cfset filterIndex[x] = x />
+			</cfloop>
+			
+			<cfset QueryAddColumn(query, "reactorRowIndex", filterIndex) />
+			
+			<!--- filter the query --->
+			<cfquery name="query" dbtype="query">
+				SELECT <cfloop list="#variables.columnlist#" index="columnName">[#columnName#]<cfif columnName neq listLast(variables.columnList)>,</cfif></cfloop>
+				FROM query
+				WHERE reactorRowIndex >= #arguments.from#
+					<cfif arguments.count IS NOT -1>
+						AND reactorRowIndex < #arguments.from + arguments.count#
+					</cfif>
+			</cfquery>
+		</cfif>
 		
 		<cfreturn query />		
     </cffunction>
