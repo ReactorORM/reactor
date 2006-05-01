@@ -154,7 +154,10 @@
 	
 	<!--- beforeLoad --->
 	<cffunction name="beforeLoad" access="private" hint="I am code executed before loading the record." output="false" returntype="void">
-		<!--- something may go here some day --->
+		<!--- reset the children --->
+		<cfset variables.children = StructNew() />
+		<!--- remove the error collection --->
+		<cfset variables.ErrorCollection = 0 />
 	</cffunction>
 	
 	<!--- afterLoad --->
@@ -175,6 +178,10 @@
 		<cfset clean() />
 		<!--- set the deleted status of this cfc --->
 		<cfset variables.deleted = true />
+		<!--- remove children --->
+		<cfset variables.children = StructNew() />
+		<!--- remove the error collection --->
+		<cfset variables.ErrorCollection = 0 />
 	</cffunction>
 	
 	<!--- beforeSave --->
