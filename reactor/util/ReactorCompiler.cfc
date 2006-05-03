@@ -63,6 +63,8 @@
 				<cfset rf.createTo(obj)>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DAO object...<br><cfflush />
 				<cfset rf.createDao(obj)>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Validator object...<br><cfflush />
+				<cfset rf.createValidator(obj)>
 				&nbsp;&nbsp;&nbsp;&nbsp;Object #obj# done!<br><br><cfflush />
 			</cfloop>
 			Finished generating #arrayLen(objects)# Reactor object sets for project #projName# in #(getTickCount()-ticStart)/1000# seconds.<br><br>

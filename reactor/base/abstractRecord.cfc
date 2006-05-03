@@ -1,10 +1,5 @@
 <cfcomponent hint="I am an abstract record.  I am used primarly to allow type definitions for return values.  I also loosely define an interface for a record objects and some core methods." extends="reactor.base.abstractObject">
-	
-	<!---<cfset variables.To = 0 />
-	<cfset variables.InitialTo = 0 />
-	<cfset variables.Dao = 0 />
-	<cfset variables.ObjectFactory = 0 />
-	<cfset variables.Observers = StructNew() />--->
+
 	<cfset variables.ErrorCollection = 0 />
 	<cfset variables.children = StructNew() />
 	<cfset variables.Parent = 0 />
