@@ -35,7 +35,7 @@
 			&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 			&lt;cfset validate<xsl:value-of select="@alias" />Datatype(arguments.<xsl:value-of select="../../@alias" />Record, arguments.ErrorCollection)&gt;
 			
-			<xsl:if test="@cfDataType = 'binary' or @cfDataType = 'string'">
+			<xsl:if test="(@cfDataType = 'binary' or @cfDataType = 'string') and @dbDataType != 'uniqueidentifier'">
 				&lt;!--- validate <xsl:value-of select="@alias" /> length ---&gt;
 				&lt;cfset validate<xsl:value-of select="@alias" />Length(arguments.<xsl:value-of select="../../@alias" />Record, arguments.ErrorCollection)&gt;
 			</xsl:if>
@@ -94,6 +94,12 @@
 						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
+				<xsl:when test="@dbDataType = 'uniqueidentifier'">
+					&lt;!--- validate <xsl:value-of select="@alias" /> is a CF uuid ---&gt;
+					&lt;cfif NOT ReFindNoCase("[A-F0-9]{8,8}-[A-F0-9]{4,4}-[A-F0-9]{4,4}-[A-F0-9]{16,16}", arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
+						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
+					&lt;/cfif&gt;	
+				</xsl:when>
 				<xsl:when test="@cfDataType = 'string'">
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
 					&lt;cfif NOT IsSimpleValue(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
@@ -111,7 +117,7 @@
 	
 	<!-- validate length -->
 	<xsl:for-each select="object/fields/field">
-		<xsl:if test="@cfDataType = 'binary' or @cfDataType = 'string'">
+		<xsl:if test="(@cfDataType = 'binary' or @cfDataType = 'string') and @dbDataType != 'uniqueidentifier'">
 			&lt;!--- validate<xsl:value-of select="@alias" />Length ---&gt;
 			&lt;cffunction name="validate<xsl:value-of select="@alias" />Length" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field length." output="false" returntype="reactor.util.ErrorCollection"&gt;
 				&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="reactor.project.<xsl:value-of select="../../@project"/>.Record.<xsl:value-of select="../../@alias"/>Record" /&gt;

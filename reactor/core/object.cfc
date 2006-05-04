@@ -283,7 +283,7 @@
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfif getAlias() is "daisy">
+		<!---<cfif getAlias() is "case">
 			<cfdump var="#Config#" /><cfabort>
 		</cfif>--->
 		
