@@ -189,7 +189,6 @@
 				(GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
 				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND NOT _getObjectMetadata().hasSharedkey(variables.children[item]._getAlias())
 			)>
-				
 				<!--- save the child. --->
 				<cfset variables.children[item].save(false) />
 				
@@ -205,7 +204,7 @@
 		<cfset var x = 0 />
 		<cfset var y = 0 />
 		<cfset var value = 0 />
-				
+		
 		<!--- check to see if this object has children in iterators.  If so, set the related fields in the child from this parent. --->
 		<cfloop collection="#variables.children#" item="item">
 			<!--- check to make sure this child is an iterator or record (links are skipped) --->
@@ -238,10 +237,10 @@
 				
 			</cfif>
 		</cfloop>
-		
+				
 		<!--- check to see if this object has a parent.  If so, set the related fields in the parent from this child. --->
 		<cfif hasParent() AND GetMetadata(_getParent()).name IS NOT "reactor.iterator.iterator">
-				
+			
 			<!--- the following cfif is a stupid hack --->		
 			<cfif _getParent()._getObjectMetadata().hasRelationship(_getAlias(), _getRelationshipAlias())>
 				<cfset relationship = _getParent()._getObjectMetadata().getRelationship(_getAlias(), _getRelationshipAlias()) />
@@ -263,17 +262,15 @@
 					
 			</cfif>
 			
+			
 			<!--- check to see if there is a relationship and if it's a hasOne relationship --->
 			<cfif relationship.type IS "hasOne">
-				<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-					<!--- get the value for this relationship from the child --->
-					<cfinvoke component="#this#" method="get#relationship.relate[x].to#" returnvariable="value" />
-					
-					<!--- set the value into the parent --->
-					<cfinvoke component="#_getParent()#" method="set#relationship.relate[x].from#">
-						<cfinvokeargument name="#relationship.relate[x].from#" value="#value#" />
-					</cfinvoke>
-				</cfloop>			
+				
+				<!--- set the value into the parent --->
+				<cfinvoke component="#_getParent()#" method="set#relationship.alias#">
+					<cfinvokeargument name="#relationship.alias#" value="#this#" />
+				</cfinvoke>	
+				
 			</cfif>
 		</cfif>
 		

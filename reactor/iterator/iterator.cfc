@@ -501,7 +501,7 @@
 					<!--- the record exists --->
 					<cfset copyRecordToRow(variables.array[x], x) />
 				</cfif>
-			</cfif>s
+			</cfif>
 		</cfloop>
 	</cffunction>
 	
