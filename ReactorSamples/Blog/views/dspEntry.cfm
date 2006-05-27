@@ -14,7 +14,7 @@
 		</p>
 	</cfif>
 	
-	<cfif UserRecord.isLoggedIn()>
+	<cfif IsObject(UserRecord) AND UserRecord.isLoggedIn()>
 		<p>
 			<a href="index.cfm?event=EntryForm&entryId=#EntryRecord.getEntryId()#">Edit</a>
 			|

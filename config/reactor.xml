@@ -4,7 +4,7 @@
 		<dsn value="scratch" />
 		<type value="mssql" />
 		<mapping value="/reactorData" />
-		<mode value="production" />
+		<mode value="always" />
 		<!-- These config values are not required -->
 		<!-- <username value="" />
 		<password value="" /> -->
@@ -12,29 +12,17 @@
 
 	<objects>
 		<object name="user">
-			<hasMany name="user" alias="forwardUser">
-				<link name="relatedUser" from="forwardUser" to="forwardRelation" />
-			</hasMany>
-			<hasMany name="user" alias="relatedTo">
-				<link name="relatedUser" from="backwardUser" to="backwardRelation" />
+			<hasMany name="user">
+				<link name="relatedUser" from="parent" to="child" />
 			</hasMany>
 		</object>
 		
 		<object name="relatedUser">
-			<!-- forward -->
-			<hasOne name="user" alias="forwardUser">
+			<hasOne name="user" alias="parent">
 				<relate from="userId1" to="userId" />
 			</hasOne>
-			<hasOne name="user" alias="forwardRelation">
+			<hasOne name="user" alias="child">
 				<relate from="userId2" to="userId" />
-			</hasOne>
-			
-			<!-- backward -->
-			<hasOne name="user" alias="backwardUser">
-				<relate from="userId2" to="userId" />
-			</hasOne>
-			<hasOne name="user" alias="backwardRelation">
-				<relate from="userId1" to="userId" />
 			</hasOne>
 		</object>
 		

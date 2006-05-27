@@ -12,7 +12,7 @@
 				<p>
 					Posted By #CommentArray[x].getName()# on #DateFormat(CommentArray[x].getPosted(), "mmm. d, yyyy")# 
 					at #TimeFormat(CommentArray[x].getPosted(), "h:mm tt")#
-					<cfif UserRecord.isLoggedIn()>
+					<cfif IsObject(UserRecord) AND UserRecord.isLoggedIn()>
 						|
 						<a href="index.cfm?event=DeleteComment&entryId=#CommentArray[x].getEntryId()#&commentId=#CommentArray[x].getCommentId()###comments" onclick="return confirm('Are your sure you want to delete this comment?');">Delete</a>
 					</cfif>

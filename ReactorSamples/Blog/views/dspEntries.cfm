@@ -38,7 +38,7 @@
 						|
 						<a href="index.cfm?event=viewEntry&entryId=#entries.entryId###comments">#entries.commentCount# Comments</a>
 					</cfif>
-					<cfif UserRecord.isLoggedIn()>
+					<cfif IsObject(UserRecord) AND UserRecord.isLoggedIn()>
 						|
 						<a href="index.cfm?event=EntryForm&entryId=#entries.entryId#">Edit</a>
 						|

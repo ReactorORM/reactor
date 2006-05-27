@@ -63,12 +63,12 @@
 		</controller>
 		<controller name="userController" type="ReactorSamples.Blog.controller.UserController">
 			<message-listener message="OnRequestStart" function="OnRequestStart" />
-			<message-listener message="OnRequestStart" function="TrackUser" />
 			<message-listener message="ValidateLogin" function="DoValidateLogin" />
 			<message-listener message="Logout" function="DoLogout" />
 			<message-listener message="CheckIfLoggedIn" function="DoCheckIfLoggedIn" />
 			<message-listener message="SaveEventValues" function="DoSaveEventValues" />
 			<message-listener message="RestoreEventValues" function="DoRestoreEventValues" />
+			<message-listener message="ParamUserRecord" function="DoParamUserRecord" />
 		</controller>
 		<controller name="fortuneController" type="ReactorSamples.Blog.controller.FortuneController">
 			<message-listener message="NeedFortune" function="GetFortune" />
@@ -485,6 +485,7 @@
 		
 		<event-handler name="SubmitLoginForm">
 			<broadcasts>
+				<message name="ParamUserRecord" />
 				<message name="ValidateLogin" />
 			</broadcasts>
 			<views />

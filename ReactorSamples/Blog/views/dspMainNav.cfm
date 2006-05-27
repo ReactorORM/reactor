@@ -5,7 +5,7 @@
 <ul class="mainNav">
 	<li><span style="float: right;"><a href="index.cfm?event=rss" class="rss">RSS</a></span><a href="index.cfm">Blog</a></li>
 	<li><a href="index.cfm?event=stats">Best of the Blog</a></li>
-	<cfif UserRecord.isLoggedIn()>
+	<cfif IsObject(UserRecord) AND UserRecord.isLoggedIn()>
 		<li><a href="index.cfm?event=EntryForm">Add New Entry</a></li>
 		<li><a href="index.cfm?event=ListCategories">Manage Categories</a></li>
 		<li><a href="index.cfm?event=ListUsers">Manage Users</a></li>
