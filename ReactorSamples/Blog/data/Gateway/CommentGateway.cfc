@@ -18,7 +18,7 @@
 		<cfset query.getWhere().isNotEqual("Comment", "emailAddress", arguments.authorEmail) />
 		<cfset query.getWhere().isEqual("Comment", "subscribe", 1) />
 		
-		<cfset query.returnField("Comment", "emailAddress").returnField("Comment", "name") />
+		<cfset query.returnObjectField("Comment", "emailAddress").returnObjectField("Comment", "name") />
 		
 		<cfset participants = getByQuery(query) />
 		

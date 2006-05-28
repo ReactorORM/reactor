@@ -109,10 +109,9 @@
 	<xsl:for-each select="object/hasMany">
 		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="reactor.iterator.iterator"&gt;
-			&lt;cfset var relationship = 0 /&gt;
 			<xsl:variable name="alias" select="@alias" />
+			<xsl:variable name="name" select="@name" />
 			&lt;cfset var <xsl:value-of select="$alias"/>Iterator = 0 /&gt;
-			&lt;cfset var value = 0 /&gt;
 			
 			&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="$alias"/>Iterator")&gt;
 				&lt;cfset <xsl:value-of select="$alias"/>Iterator = CreateObject("Component", "reactor.iterator.iterator").init(_getReactorFactory(), "<xsl:value-of select="@name"/>") />
@@ -126,12 +125,14 @@
 					<xsl:when test="count(link) &gt; 0">
 						
 						<xsl:for-each select="link">
- 							<xsl:variable name="from" select="@from" />
- 							<xsl:variable name="name" select="@name" />
-							&lt;cfset <xsl:value-of select="$alias"/>Iterator.joinViaAlias("<xsl:value-of select="../@name"/>", "<xsl:value-of select="$name" />", "<xsl:value-of select="@to" />") /&gt;
+ 							<xsl:variable name="fromRelationshipAlias" select="@from" />
+ 							<xsl:variable name="toRelationshipAlias" select="@to" />
+ 							<xsl:variable name="toObjectAlias" select="@name" />
 							
-							<xsl:for-each select="relation[@name = $from]/relate">
-								&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="$name" />", "<xsl:value-of select="@from" />", get<xsl:value-of select="@to" />()) /&gt;
+							&lt;cfset <xsl:value-of select="$alias"/>Iterator.join("<xsl:value-of select="$name" />", "<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="$toRelationshipAlias" />") /&gt;		
+							
+							<xsl:for-each select="relation[@name = $fromRelationshipAlias]/relate">
+								&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="@from" />", get<xsl:value-of select="@to" />()) /&gt;
 							</xsl:for-each>
 							
 						</xsl:for-each>

@@ -782,7 +782,7 @@
        <cfreturn ListFirst(variables.joinList) />
     </cffunction>
 	
-	<!--- join --->
+	<!--- join
 	<cffunction name="join" access="public" hint="I join one object to another." output="false" returntype="void">
 		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
 		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
@@ -795,22 +795,95 @@
 				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.join.CanNotAddJoin" />
 		</cfif>
+	</cffunction> --->
+	
+	<!--- join --->
+	<cffunction name="join" access="public" hint="I am a convenience method which simply calls innerJoin." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
+		
+		<cfset innerJoin(joinFromObjectAlias=arguments.joinFromObjectAlias, joinToObjectAlias=arguments.joinToObjectAlias, relationshipAlias=arguments.relationshipAlias, alias=arguments.alias) />
+		
+		<cfreturn this />
 	</cffunction>
 	
-	<!--- joinViaAlias --->
-	<cffunction name="joinViaAlias" access="public" hint="I join one object to another via a specific alias on the from object." output="false" returntype="void">
-		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
-		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
-		<cfargument name="relationAlias" hint="I am the alias of a relationship on the object being joined from." required="yes" type="string" />
+	<!--- innerJoin --->
+	<cffunction name="innerJoin" access="public" hint="I create an iuner join from this object to another object via the specified relationship which can be on either object." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
 		
+		<!---<cfset findObject(arguments.joinFromObjectAlias).addJoin(joinToObjectAlias=arguments.joinToObjectAlias, relationshipAlias=arguments.relationshipAlias, alias=arguments.alias, joinType="inner") />--->
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.to) />
-			<cfset getQueryObject().joinViaAlias(arguments.from, arguments.relationAlias, arguments.to) />
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
+			<cfset getQueryObject().innerJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
-				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  This includes calling the getRecordCount, getValueList, getQuery, and getArray meth  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.joinViaAlias.CanNotAddJoin" />
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.join.CanNotAddJoin" />
 		</cfif>
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- leftJoin --->
+	<cffunction name="leftJoin" access="public" hint="I create a left join from this object to another object via the specified relationship which can be on either object." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
+			<cfset getQueryObject().leftJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
+		<cfelse>
+			<cfthrow message="Can Not Add Join"
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.join.CanNotAddJoin" />
+		</cfif>
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- rightJoin --->
+	<cffunction name="rightJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
+			<cfset getQueryObject().rightJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
+		<cfelse>
+			<cfthrow message="Can Not Add Join"
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.join.CanNotAddJoin" />
+		</cfif>
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<!--- fullJoin --->
+	<cffunction name="fullJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
+		
+		<cfif NOT IsQuery(variables.query)>
+			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
+			<cfset getQueryObject().fullJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
+		<cfelse>
+			<cfthrow message="Can Not Add Join"
+				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.join.CanNotAddJoin" />
+		</cfif>
+		
+		<cfreturn this />
 	</cffunction>
 	
 	<!--- getWhere --->

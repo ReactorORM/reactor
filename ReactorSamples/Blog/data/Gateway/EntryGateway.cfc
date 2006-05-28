@@ -25,7 +25,7 @@
 		<cfargument name="count" hint="I am the number of recent entries to return" required="yes" type="numeric" />
 		<cfset var EntryQuery = createQuery() />
 		<cfset EntryQuery.setMaxRows(arguments.count) />
-		<cfset EntryQuery.returnField("Entry", "entryId").returnField("Entry", "title") />
+		<cfset EntryQuery.returnObjectField("Entry", "entryId").returnObjectField("Entry", "title") />
 		<cfset EntryQuery.getOrder().setDesc("Entry", "publicationDate") />
 		<cfreturn getByQuery(EntryQuery) />
 	</cffunction>
