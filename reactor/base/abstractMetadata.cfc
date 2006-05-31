@@ -84,6 +84,82 @@
 		
 		<cfreturn columList />
 	</cffunction>
+		
+	<!--- hasSharedkey --->
+	<cffunction name="hasSharedkey" access="public" hint="I indicate if any of this object's relationships to the object with the specified alias use shared keys." output="false" returntype="boolean">
+		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
+		<cfset var relationships = getRelationships(arguments.alias) />
+		
+		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+			<cfif StructKeyExists(relationships[x], "sharedKey") AND relationships[x].sharedKey IS true>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+	
+	<!--- getRelationship --->
+	<cffunction name="getRelationship" access="public" hint="I get a relationship by alias." output="false" returntype="struct">
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="string" />
+		<cfset var x = 0 />
+				
+		<!--- check hasManys first --->
+		<cfloop from="1" to="#ArrayLen(variables.metadata.hasMany)#" index="x">
+			<cfif variables.metadata.hasMany[x].alias IS arguments.relationshipAlias>
+				<cfreturn Duplicate(variables.metadata.hasMany[x]) />
+			</cfif>
+		</cfloop>
+		
+		<!--- check hasOnes next --->
+		<cfloop from="1" to="#ArrayLen(variables.metadata.hasOne)#" index="x">
+			<cfif variables.metadata.hasOne[x].alias IS arguments.relationshipAlias>
+				<cfreturn Duplicate(variables.metadata.hasOne[x]) />
+			</cfif>
+		</cfloop>
+		
+		<!--- throw an error! --->
+		<cfthrow message="Relationship Does Not Exist" detail="The #getAlias()# object does not have a relationship with an alias of #arguments.relationshipAlias#" type="reactor.getRelationship.RelationshipDoesNotExist" />
+		
+	</cffunction>
+	
+	<!--- hasRelationship --->
+	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="boolean">
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="string" />
+		<cfset var x = 0 />
+				
+		<!--- check hasManys first --->
+		<cfloop from="1" to="#ArrayLen(variables.metadata.hasMany)#" index="x">
+			<cfif variables.metadata.hasMany[x].alias IS arguments.relationshipAlias>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<!--- check hasOnes next --->
+		<cfloop from="1" to="#ArrayLen(variables.metadata.hasOne)#" index="x">
+			<cfif variables.metadata.hasOne[x].alias IS arguments.relationshipAlias>
+				<cfreturn true />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+		
+	
+	
+	<!--- metadata --->
+    <cffunction name="getObjectMetadata" access="public" output="false" returntype="struct">
+       <cfreturn variables.metadata />
+    </cffunction>
+		
+</cfcomponent>
+
+
+	<!---<cffunction name="dumpVariables">
+		<cfdump var="#variables#" />
+		<cfabort />
+	</cffunction>--->
+
 	
 	<!--- commented out in an attempt to clean up the api - can uncomment if needed --->
 	<!--- LinkRelationship
@@ -110,6 +186,19 @@
 				<cfreturn relationships[x] />
 			</cfif>
 		</cfloop>
+	</cffunction>
+	
+	
+	
+	
+	
+	<!---- getRelationshipMetadata --->
+	<cffunction name="getRelationshipMetadata" access="public" hint="I return a related object's metadata based on the provided alias" output="false" returntype="reactor.base.abstractMetadata">
+		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
+		<!---<cfset var relationship = getRelationship(arguments.alias) />
+		<cfset var RelationshipMetadata = _getReactorFactory().createMetadata(relationship.name) />--->
+		
+		<cfreturn _getReactorFactory().createMetadata(arguments.alias) />
 	</cffunction>
 	
 	<!--- getRelationships --->
@@ -144,87 +233,4 @@
 		
 		<cfreturn Duplicate(allRelationships) />
 	</cffunction>
-	
-	<!--- hasSharedkey --->
-	<cffunction name="hasSharedkey" access="public" hint="I indicate if any of this object's relationships to the object with the specified alias use shared keys." output="false" returntype="boolean">
-		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
-		<cfset var relationships = getRelationships(arguments.alias) />
-		
-		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-			<cfif StructKeyExists(relationships[x], "sharedKey") AND relationships[x].sharedKey IS true>
-				<cfreturn true />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn false />
-	</cffunction>
-	
-	<!---- getRelationshipMetadata --->
-	<cffunction name="getRelationshipMetadata" access="public" hint="I return a related object's metadata based on the provided alias" output="false" returntype="reactor.base.abstractMetadata">
-		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
-		<!---<cfset var relationship = getRelationship(arguments.alias) />
-		<cfset var RelationshipMetadata = _getReactorFactory().createMetadata(relationship.name) />--->
-		
-		<cfreturn _getReactorFactory().createMetadata(arguments.alias) />
-	</cffunction>--->
-	
-	<!--- getRelationship --->
-	<cffunction name="getRelationship" access="public" hint="I get a relationship by alias." output="false" returntype="struct">
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="string" />
-		<cfset var x = 0 />
-				
-		<!--- check hasManys first --->
-		<cfloop from="1" to="#ArrayLen(variables.metadata.hasMany)#" index="x">
-			<cfif variables.metadata.hasMany[x].alias IS arguments.relationshipAlias>
-				<cfreturn Duplicate(variables.metadata.hasMany[x]) />
-			</cfif>
-		</cfloop>
-		
-		<!--- check hasOnes next --->
-		<cfloop from="1" to="#ArrayLen(variables.metadata.hasOne)#" index="x">
-			<cfif variables.metadata.hasOne[x].alias IS arguments.relationshipAlias>
-				<cfreturn Duplicate(variables.metadata.hasOne[x]) />
-			</cfif>
-		</cfloop>
-		
-		<!--- throw an error! --->
-		<cfthrow message="Relationship Does Not Exist" detail="The #getAlias()# object does not have a relationship with an alias of #arguments.relationshipAlias#" type="reactor.getRelationship.RelationshipDoesNotExist" />
-		
-	</cffunction>
-	
-	
-	<!--- hasRelationship --->
-	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="boolean">
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="string" />
-		<cfset var x = 0 />
-				
-		<!--- check hasManys first --->
-		<cfloop from="1" to="#ArrayLen(variables.metadata.hasMany)#" index="x">
-			<cfif variables.metadata.hasMany[x].alias IS arguments.relationshipAlias>
-				<cfreturn true />
-			</cfif>
-		</cfloop>
-		
-		<!--- check hasOnes next --->
-		<cfloop from="1" to="#ArrayLen(variables.metadata.hasOne)#" index="x">
-			<cfif variables.metadata.hasOne[x].alias IS arguments.relationshipAlias>
-				<cfreturn true />
-			</cfif>
-		</cfloop>
-		
-		<cfreturn false />
-	</cffunction>
-		
-	
-	
-	<!--- metadata --->
-    <cffunction name="getObjectMetadata" access="public" output="false" returntype="struct">
-       <cfreturn variables.metadata />
-    </cffunction>
-		
-	<!---<cffunction name="dumpVariables">
-		<cfdump var="#variables#" />
-		<cfabort />
-	</cffunction>--->
-
-</cfcomponent>
+	--->

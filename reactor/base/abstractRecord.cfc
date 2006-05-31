@@ -3,6 +3,7 @@
 	<cfset variables.ErrorCollection = 0 />
 	<cfset variables.children = StructNew() />
 	<cfset variables.Parent = 0 />
+	<cfset variables.relationshipAlias = "" />
 	<cfset variables.deleted = false />
 	<cfset variables.alias = "" />
 		
@@ -186,7 +187,7 @@
 		<cfloop collection="#variables.children#" item="item">
 			<!--- check to see if this child is either a linking iteator a record.  If it's a record then the check to see if the child hasOne of the parent.  If so then don't save before. --->
 			<cfif IsObject(variables.children[item]) AND (
-				(GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].isLinkedIterator()) 
+				(GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND variables.children[item].getLinked()) 
 				OR GetMetadata(variables.children[item]).name IS NOT "reactor.iterator.iterator" AND NOT _getObjectMetadata().hasSharedkey(variables.children[item]._getAlias())
 			)>
 				<!--- save the child. --->
@@ -208,7 +209,7 @@
 		<!--- check to see if this object has children in iterators.  If so, set the related fields in the child from this parent. --->
 		<cfloop collection="#variables.children#" item="item">
 			<!--- check to make sure this child is an iterator or record (links are skipped) --->
-			<cfif GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND NOT variables.children[item].isLinkedIterator()>
+			<cfif GetMetadata(variables.children[item]).name IS "reactor.iterator.iterator" AND NOT variables.children[item].getLinked()>
 				<cfset variables.children[item].relateTo(this) />
 				<!--- save any loaded and dirty records in the iterator --->
 				<cfset variables.children[item].save(false) />
@@ -246,20 +247,9 @@
 				<cfset relationship = _getParent()._getObjectMetadata().getRelationship(_getAlias(), _getRelationshipAlias()) />
 				
 			<cfelse>
-
-					<cfset relationships = _getParent()._getObjectMetadata().getRelationships(_getAlias()) />
-					
-					<cfif ArrayLen(relationships) GT 2>
-						If you see this message this is some code that doug left in reactor... he wasn't quite sure what to do about it!  
-						
-						Please note your relationships and provide some simple code to doug that he can use to disect this.
-						
-						Thanks!
-						<cfdump var="#relationship#" /><cfabort>
-					</cfif>
-					
-					<cfset relationship = relationships[1] />
-					
+				
+				<cfset relationship = _getParent()._getObjectMetadata().getRelationship(_getRelationshipAlias()) />
+				
 			</cfif>
 			
 			
@@ -353,8 +343,15 @@
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
 		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="string" default="" />
+		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="string" />
 		<cfset variables.parent = arguments.parent />
+		
+		<!--- if variables.parent is not an iterator then the relationship alias is required! --->
+		<cfif GetMetadata(arguments.parent).name IS NOT "reactor.iterator.iterator" AND NOT StructKeyExists(arguments, "relationshipAlias")>
+			<cfthrow message="No Relationship Alias Provided" detail="Because the parent object is a record the relationshipAlias argument is required." type="reactor.setParent.NoRelationshipAliasProvided" />
+		</cfif>
+		
+		<!--- set the relationship --->
 		<cfif StructKeyExists(arguments, "relationshipAlias")>
 			<cfset _setRelationshipAlias(arguments.relationshipAlias) />
 		</cfif>

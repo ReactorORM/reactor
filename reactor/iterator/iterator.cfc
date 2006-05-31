@@ -12,21 +12,15 @@
 	<cfset variables.index = 0 />
 	
 	<cfset variables.parent = 0 />
-	<cfset variables.joinList = "" />
-	
+	<cfset variables.relationshipAlias = "" />
+	<cfset variables.linked = 0 />
+	<cfset variables.linkedThrough = 0 />
+		
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="Iterator">
 		<cfargument name="ReactorFactory" hint="I am the reactor factor." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="alias" hint="I am the alias of the type of data being iterated." required="yes" type="string" />
-		<!--- <cfargument name="joinList" hint="I am comma delimited list of optional object to join." required="no" default="" type="string" />
-		<cfargument name="relationAlias" hint="I am a comma delimited list of aliases to use as relationships between the object and objects in the joinlist." required="no" default="" type="string" /> --->
-		<!---<cfset var joinTo = 0 />
-		<cfset var joinFrom = 0 />
-		<cfset var joins = 0 />
-		<cfset var x = 0 />--->
-		
-		<!---<cfset setRelationAlias(arguments.relationAlias) />--->
-		
+				
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setAlias(arguments.alias) />
 		<!--- create and set the gateway we'll use to execute queries --->		
@@ -36,24 +30,6 @@
 		<cfset setQueryObject(getGateway().createQuery()) />
 		<!--- filter to only this object's fields --->
 		<cfset getQueryObject().returnObjectFields(getAlias()) />
-		<!---<cfset setJoinList(arguments.joinList) />
-		
-		<cfset joins = ListToArray(joinList) />
-		<cfset joinFrom = getAlias() />
-		
-		<cfif Len(arguments.joinList)>
-			<cfloop from="#ArrayLen(joins)#" to="1" index="x" step="-1">
-				<cfset joinTo = joins[x] />
-				
-				<cfif Len(arguments.relationAlias)>
-					<cfset getQueryObject().joinViaAlias(joinFrom, arguments.relationAlias, joinTo) />
-				<cfelse>
-					<cfset getQueryObject().join(joinFrom, joinTo) />
-				</cfif>
-				
-				<cfset joinFrom = joinTo />
-			</cfloop>
-		</cfif>--->
 		
 		<cfreturn this />
 	</cffunction>
@@ -164,7 +140,7 @@
 			<cfset Record = getAt(arguments[1], 1) />
 			
 			<!--- check to see if we're a linking relationship --->
-			<cfif isLinkedIterator()>
+			<cfif getLinked()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
 				<cfset Record._getParent().delete() />
 			<cfelse>
@@ -195,7 +171,7 @@
 			</cftry>
 			
 			<!--- check to see if we're a linking relationship --->
-			<cfif isLinkedIterator()>
+			<cfif getLinked()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
 				<cfset Record._getParent().delete() />
 			<cfelse>
@@ -348,21 +324,14 @@
 	<!--- relateTo --->
 	<cffunction name="relateTo" access="public" hint="This is for Reactor use only.  I recieve a record object and use the metadata in that object to populate the values of any loaded records that are dirty." output="false" returntype="void">
 		<cfargument name="Record" hint="I am the record to relate to." required="yes" type="reactor.base.abstractRecord" />
-		<cfset var relationships = 0 />
 		<cfset var relationship = 0 />
 		<cfset var value = 0 />
 		<cfset var x = 0 />
 		<cfset var y = 0 />
 		
 		<!--- the record provided has many of the items in this iterator via a hasMany relationship without a link --->
-		<cfset relationships = arguments.Record._getObjectMetadata().getRelationships(getAlias()) />
+		<cfset relationship = arguments.Record._getObjectMetadata().getRelationship(_getRelationshipAlias()) />
 		
-		<!--- find the first hasmany non linked relationship --->
-		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-			<cfif relationships[x].type IS "hasMany" and relationships[x].name IS getAlias()>
-				<cfset relationship = relationships[x] />
-			</cfif>
-		</cfloop> 
 		
 		<!--- this is a standard relationship --->	
 		<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
@@ -427,7 +396,7 @@
 		</cfif>
 		
 		<!--- if this is a linked iterator then add a new object of the type that links this object to the parent to the linkIterator --->
-		<cfif isLinkedIterator()>
+		<cfif getLinked()>
 			<!--- create a new object to link the new record to the linked object --->
 			<cfinvoke component="#getLinkIterator().add()#" method="set#getAlias()#">
 				<cfinvokeargument name="#getAlias()#" value="#Record#" />
@@ -435,7 +404,7 @@
 
 		<cfelse>
 			<!--- set the parent of this record --->
-			<cfset Record._setParent(this, getRelationAlias()) />
+			<cfset Record._setParent(this) />
 
 		</cfif>
 		
@@ -447,16 +416,7 @@
 		
 		<cfreturn Record />	
 	</cffunction>
-	
-	<!--- getIteratorSetMethod
-	<cffunction name="getSetAlias" access="public" hint="I return the set method in link iterators" output="false" returntype="string">
-		<cfif Len(getRelationAlias())>
-			<cfreturn getRelationAlias() />
-		<cfelse>
-			<cfreturn getAlias() />
-		</cfif>
-	</cffunction> --->
-	
+		
 	<!--- populate --->
 	<cffunction name="populate" access="private" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
 		<cfset var deletedArray = 0 />
@@ -492,7 +452,7 @@
 				<cfif variables.array[x].isDeleted()
 					OR 
 					(
-						isLinkedIterator()
+						getLinked()
 						AND
 						variables.array[x]._getParent().isDeleted()
 					)>
@@ -519,11 +479,11 @@
 		<!--- build the source array --->
  		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
 			<!--- if this item's not loaded, or is not deleted add it's index to the source array. --->
-			<cfif NOT IsObject(variables.array[x]) OR NOT( variables.array[x].isDeleted() OR ( isLinkedIterator() AND variables.array[x]._getParent().isDeleted() ) ) >
+			<cfif NOT IsObject(variables.array[x]) OR NOT( variables.array[x].isDeleted() OR ( getLinked() AND variables.array[x]._getParent().isDeleted() ) ) >
 				<cfset ArrayAppend(sourceArray, x) />
 			</cfif>
 		</cfloop>
-	
+		
 		<!--- if arguments.count is -1 then we need to set the upper bounds of the loop.  We couldn't do this initially because we only now know for sure that data was loaded --->
 		<cfif arguments.count IS -1>
 			<cfset arguments.count = ArrayLen(sourceArray) />
@@ -535,7 +495,7 @@
 				<cfset variables.array[sourceArray[x]] = loadRecord(sourceArray[x]) />
 			</cfif>
 			
-			<cfif NOT( variables.array[sourceArray[x]].isDeleted() OR ( isLinkedIterator() AND variables.array[sourceArray[x]]._getParent().isDeleted() ) ) >
+			<cfif NOT( variables.array[sourceArray[x]].isDeleted() OR ( getLinked() AND variables.array[sourceArray[x]]._getParent().isDeleted() ) ) >
 				<!--- add this into the array we're returning --->
 				<cfset ArrayAppend(returnArray, variables.array[sourceArray[x]]) />
 			</cfif>
@@ -554,7 +514,7 @@
 		<cfset var linkRelationship = 0 />
 		<cfset var Link = 0 />
 		
-		<cfif isLinkedIterator()>
+		<cfif getLinked()>
  			<cfset linkRelationship = getLinkRelationshipMetadata() />
 			
 			<!--- get the specific linked object from the linked Iterator --->
@@ -565,7 +525,7 @@
 			</cfinvoke>
 			
 			<!--- get the record from the link --->
-			<cfinvoke component="#Link[1]#" method="get#getAlias()#" returnvariable="Record" />
+			<cfinvoke component="#Link[1]#" method="get#linkRelationship.alias#" returnvariable="Record" />
 		<cfelse>
 			<!--- create a new record --->
 			<cfset Record = getReactorFactory().createRecord(getAlias()) /> />
@@ -585,7 +545,7 @@
 			<cfset Record.clean() />
 			
 			<!--- set the parent of this record --->
-			<cfset Record._setParent(this, getRelationAlias()) />
+			<cfset Record._setParent(this) />
 		</cfif>
 						
 		<!--- return this squeaky clean record --->
@@ -713,51 +673,13 @@
 		<!--- set the deleted column value --->
 		<cfset QuerySetCell(variables.query, "reactorRowDeleted", 0) />		
 	</cffunction>	
-	
-	
-	<!--- isLinkedIterator --->
-	<cffunction name="isLinkedIterator" access="public" hint="I indiate if this iterator is a product of a link relationship." output="false" returntype="boolean">
-		<cfreturn ListLen(getJoinList()) GT 0 /> 
-	</cffunction>
-	
-	<!--- getLinkIterator --->
-	<cffunction name="getLinkIterator" access="public" hint="If this object is a linking iterator this method is used to get the iterator for the linking object from the parent." output="false" returntype="reactor.iterator.iterator">
-		<!--- if this is a single step linking object then we can get the iterator for the object which acts as the link between this iterator's object and it's parent. --->
-		<cfset var LinkIterator = 0 />
 		
-		<cfif ListLen(getJoinList()) IS 0>
-			<cfthrow message="Can't Get Link Iterator for Unlinked Iterator"
-				detail="This iterator is not the product of a link relationship so there is no link iterator on the parent object to get."
-				type="reactor.iterator.getLinkIterator.CantGetLinkIteratorForUnlinkedIterator" />
-
-		<cfelseif ListLen(getJoinList()) GT 1>
-			<cfthrow message="Can't Get Link Iterator for Multi-Step Iterator"
-				detail="This iterator is the product of a multi-step link relationship so there is no link on the parent object that links to this object."
-				type="reactor.iterator.getLinkIterator.CantGetLinkIteratorForMultiStepIterator" />
-
-		</cfif>
-		
-		<cfinvoke component="#_getParent()#" method="get#getJoinList()#Iterator" returnvariable="LinkIterator" />
-		
-		<cfreturn LinkIterator />
-	</cffunction>
-	
 	<!--- getLinkRelationshipMetadata --->
-	<cffunction name="getLinkRelationshipMetadata" access="public" hint="If this object is a linking iterator this method is returns the metadata structure describing the relationship between the link and this object." output="false" returntype="struct">
+	<cffunction name="getLinkRelationshipMetadata" access="private" hint="If this object is a linking iterator this method is returns the metadata structure describing the relationship between the link and this object." output="false" returntype="struct">
 		
-		<cfif ListLen(getJoinList()) IS 0>
-			<cfthrow message="Can't Get Link Metadata for Unlinked Iterator"
-				detail="This iterator is not the product of a link relationship so there is no link iterator on the parent object to get."
-				type="reactor.iterator.getLinkIterator.CantGetLinkMetadataForUnlinkedIterator" />
-
-		<cfelseif ListLen(getJoinList()) GT 1>
-			<cfthrow message="Can't Get Link Metadata for Multi-Step Iterator"
-				detail="This iterator is the product of a multi-step link relationship so there is no link on the parent object that links to this object."
-				type="reactor.iterator.getLinkIterator.CantGetLinkMetadataForMultiStepIterator" />
-
-		</cfif>
+		<!--- get the relationship to this object from the linking object --->
 		
-		<cfreturn getReactorFactory().createMetadata(getJoinList()).getRelationship(getAlias()) />
+		<cfreturn getReactorFactory().createMetadata( getLinkIterator().getAlias() ).getRelationship( getLinkRelationshipAlias() ) />
 	</cffunction>
 	
 	<!--- reset --->
@@ -771,32 +693,7 @@
 	<cffunction name="resetIndex" hint="I reset the iterator's index." output="false" returntype="void">
 		<cfset variables.index = 0 />
 	</cffunction>
-	
-	<!--- joinList --->
-    <cffunction name="getJoinList" access="private" output="false" returntype="string">
-       <cfreturn variables.joinList />
-    </cffunction>
-	
-	<!--- relationAlias --->
-    <cffunction name="getRelationAlias" access="public" output="false" returntype="string">
-       <cfreturn ListFirst(variables.joinList) />
-    </cffunction>
-	
-	<!--- join
-	<cffunction name="join" access="public" hint="I join one object to another." output="false" returntype="void">
-		<cfargument name="from" hint="I am the alias of a object being joined from." required="yes" type="string" />
-		<cfargument name="to" hint="I am the alias of an object being joined to." required="yes" type="string" />
-		
-		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.to) />
-			<cfset getQueryObject().join(arguments.from, arguments.to) />
-		<cfelse>
-			<cfthrow message="Can Not Add Join"
-				detail="Calls to join are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.join.CanNotAddJoin" />
-		</cfif>
-	</cffunction> --->
-	
+			
 	<!--- join --->
 	<cffunction name="join" access="public" hint="I am a convenience method which simply calls innerJoin." output="false" returntype="reactor.iterator.iterator">
 		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="string" />
@@ -818,7 +715,6 @@
 		
 		<!---<cfset findObject(arguments.joinFromObjectAlias).addJoin(joinToObjectAlias=arguments.joinToObjectAlias, relationshipAlias=arguments.relationshipAlias, alias=arguments.alias, joinType="inner") />--->
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
 			<cfset getQueryObject().innerJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
@@ -837,7 +733,6 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
 			<cfset getQueryObject().leftJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
@@ -856,7 +751,6 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
 			<cfset getQueryObject().rightJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
@@ -875,7 +769,6 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfif NOT IsQuery(variables.query)>
-			<cfset variables.joinList = ListAppend(variables.joinList, arguments.joinToObjectAlias) />
 			<cfset getQueryObject().fullJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
 		<cfelse>
 			<cfthrow message="Can Not Add Join"
@@ -969,10 +862,20 @@
 		
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
-       <cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
-       <!---<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="yes" type="string" />--->
-       <cfset variables.parent = arguments.parent />
-       <!---<cfset _setRelationshipAlias(arguments.relationshipAlias) />--->
+		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
+		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="string" />
+
+		<cfset variables.parent = arguments.parent />
+		
+		<!--- if variables.parent is not an iterator then the relationship alias is required! --->
+		<cfif GetMetadata(arguments.parent).name IS NOT "reactor.iterator.iterator" AND NOT StructKeyExists(arguments, "relationshipAlias")>
+			<cfthrow message="No Relationship Alias Provided" detail="Because the parent object is a record the relationshipAlias argument is required." type="reactor.setParent.NoRelationshipAliasProvided" />
+		</cfif>
+		
+		<!--- set the relationship --->
+		<cfif StructKeyExists(arguments, "relationshipAlias")>
+			<cfset _setRelationshipAlias(arguments.relationshipAlias) />
+		</cfif>
     </cffunction>
     <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
        <cfreturn variables.parent />
@@ -983,4 +886,49 @@
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
 		<cfset variables.parent = 0 />
 	</cffunction>
+	
+	<!--- relationshipAlias --->
+    <cffunction name="_setRelationshipAlias" access="private" output="false" returntype="void">
+       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="string" />
+       <cfset variables.relationshipAlias = arguments.relationshipAlias />
+    </cffunction>
+    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="string">
+       <cfreturn variables.relationshipAlias />
+    </cffunction>
+	
+	<!--- setLink --->
+    <cffunction name="setLink" access="public" output="false" returntype="void">
+       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="reactor.iterator.iterator" />
+	   <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship from the linkIterator to this iterator" required="yes" type="string" />
+       <cfset setLinked(true) />
+	   <cfset setLinkIterator(arguments.linkIterator) />
+	   <cfset setLinkRelationshipAlias(arguments.linkRelationshipAlias) />
+    </cffunction>
+	
+	<!--- linkRelationshipAlias --->
+    <cffunction name="setLinkRelationshipAlias" access="private" output="false" returntype="void">
+       <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship on the link iterator" required="yes" type="string" />
+       <cfset variables.linkRelationshipAlias = arguments.linkRelationshipAlias />
+    </cffunction>
+    <cffunction name="getLinkRelationshipAlias" access="private" output="false" returntype="string">
+       <cfreturn variables.linkRelationshipAlias />
+    </cffunction>
+	
+	<!--- linkIterator --->
+    <cffunction name="setLinkIterator" access="private" output="false" returntype="void">
+       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="reactor.iterator.iterator" />
+       <cfset variables.linkIterator = arguments.linkIterator />
+    </cffunction>
+    <cffunction name="getLinkIterator" access="private" output="false" returntype="reactor.iterator.iterator">
+       <cfreturn variables.linkIterator />
+    </cffunction>
+	
+	<!--- linked --->
+    <cffunction name="setLinked" access="private" output="false" returntype="void">
+       <cfargument name="linked" hint="I indicate if this is a linked iterator" required="yes" type="boolean" />
+       <cfset variables.linked = arguments.linked />
+    </cffunction>
+    <cffunction name="getLinked" access="public" output="false" returntype="boolean">
+       <cfreturn variables.linked />
+    </cffunction>
 </cfcomponent>

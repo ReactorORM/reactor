@@ -77,7 +77,7 @@
 				AND NOT IsObject(variables.children.<xsl:value-of select="@alias"/>)
 		) &gt;
 			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") /&gt;
-			&lt;cfset <xsl:value-of select="@alias"/>._setParent(this) /&gt;
+			&lt;cfset <xsl:value-of select="@alias"/>._setParent(this, "<xsl:value-of select="@alias"/>") /&gt;
 			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = <xsl:value-of select="@alias"/> /&gt;
 		&lt;/cfif&gt;
 		
@@ -124,24 +124,25 @@
 					</xsl:when>
 					<xsl:when test="count(link) &gt; 0">
 						
-						<xsl:for-each select="link">
- 							<xsl:variable name="fromRelationshipAlias" select="@from" />
- 							<xsl:variable name="toRelationshipAlias" select="@to" />
- 							<xsl:variable name="toObjectAlias" select="@name" />
-							
-							&lt;cfset <xsl:value-of select="$alias"/>Iterator.join("<xsl:value-of select="$name" />", "<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="$toRelationshipAlias" />") /&gt;		
-							
-							<xsl:for-each select="relation[@name = $fromRelationshipAlias]/relate">
-								&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="@from" />", get<xsl:value-of select="@to" />()) /&gt;
-							</xsl:for-each>
-							
+						
+						<xsl:variable name="fromRelationshipAlias" select="link/@from" />
+						<xsl:variable name="toRelationshipAlias" select="link/@to" />
+						<xsl:variable name="toObjectAlias" select="link/@name" />
+						
+						&lt;cfset <xsl:value-of select="$alias"/>Iterator.join("<xsl:value-of select="$name" />", "<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="$toRelationshipAlias" />") /&gt;		
+						
+						<xsl:for-each select="link/relation[@name = $fromRelationshipAlias]/relate">
+							&lt;cfset <xsl:value-of select="$alias"/>Iterator.getWhere().isEqual("<xsl:value-of select="$toObjectAlias" />", "<xsl:value-of select="@from" />", get<xsl:value-of select="@to" />()) /&gt;
 						</xsl:for-each>
+						
+						&lt;!--- indicate the link details ---&gt;
+						&lt;cfset <xsl:value-of select="$alias"/>Iterator.setLink(get<xsl:value-of select="$toObjectAlias" />Iterator(), "<xsl:value-of select="$toRelationshipAlias" />") /&gt;	
 					
 					</xsl:when>
 				</xsl:choose>
 				
 				&lt;!--- set parent/child relationships ---&gt;
-				&lt;cfset <xsl:value-of select="$alias"/>Iterator._setParent(this) /&gt;			
+				&lt;cfset <xsl:value-of select="$alias"/>Iterator._setParent(this, "<xsl:value-of select="@alias"/>") /&gt;			
 				&lt;cfset variables.children.<xsl:value-of select="$alias"/>Iterator = <xsl:value-of select="$alias"/>Iterator />
 			&lt;/cfif&gt;
 			
