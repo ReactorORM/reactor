@@ -29,7 +29,12 @@
 		
 		<cfreturn this />
 	</cffunction>
-		
+	
+	<!--- hasJoins --->
+	<cffunction name="hasJoins" access="public" hint="I indicate if this object is joined to any others." output="false" returntype="boolean">
+		<cfreturn ArrayLen(variables.Joins) GT 0 />
+	</cffunction>
+	
 	<!--- getField --->
 	<cffunction name="getField" access="public" hint="I return a field in this object." output="false" returntype="struct">
 		<cfargument name="fieldAlias" hint="I am the alias of the field to get." required="yes" type="string" />

@@ -45,6 +45,33 @@
 		&lt;cfreturn getByQuery(Query,true) /&gt;
 	&lt;/cffunction&gt;
 	
+	&lt;!--- deleteByFields --->
+	&lt;cffunction name="deleteByFields" access="public" hint="I delete all matching rows from the object." output="false" returntype="void">
+		<xsl:for-each select="//field">
+			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="string" /&gt;
+		</xsl:for-each>
+		&lt;cfset var Query = createQuery() />
+		&lt;cfset var Where = Query.getWhere() />
+		&lt;cfset var x = 0 />
+		
+		<xsl:for-each select="//field">
+			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
+				&lt;cfset Where.isEqual(
+					<xsl:choose>
+						<xsl:when test="string-length(/object/@alias) &gt; 0">
+							"<xsl:value-of select="/object/@alias" />"
+						</xsl:when>
+						<xsl:otherwise>
+							"<xsl:value-of select="/object/@name" />"
+						</xsl:otherwise>
+					</xsl:choose>
+				, "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
+			&lt;/cfif&gt;
+		</xsl:for-each>
+		
+		&lt;cfreturn deleteByQuery(Query,true) /&gt;
+	&lt;/cffunction&gt;
+	
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

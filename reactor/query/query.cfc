@@ -10,7 +10,7 @@
 		<cfargument name="ReactorFactory" hint="I am the ReactorFactory" required="yes" type="reactor.reactorFactory" />
 		
 		<!--- this is the base object being queried --->
-		<cfset setObject(CreateObject("Component", "reactor.query.query").init(arguments.ReactorFactory.createMetadata(arguments.objectAlias), arguments.queryAlias, arguments.ReactorFactory)) />
+		<cfset setObject(CreateObject("Component", "reactor.query.object").init(arguments.ReactorFactory.createMetadata(arguments.objectAlias), arguments.queryAlias, arguments.ReactorFactory)) />
 		<!--- by default we want to return all fields --->
 		<cfset variables.instance.returnFields = ArrayNew(1) />
 		
@@ -67,6 +67,11 @@
 		<cfinvoke component="#Object#" method="setFieldExpression" argumentcollection="#arguments#" />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- hasJoins --->
+	<cffunction name="hasJoins" access="public" hint="I indicate if this object is joined to any others." output="false" returntype="boolean">
+		<cfreturn getObject().hasJoins() />
 	</cffunction>
 	
 	<!--- join --->
@@ -143,6 +148,14 @@
 		
 		<cfset from = from & getObject().getJoinsAsString(arguments.Convention) />
 
+		<cfreturn from />
+	</cffunction>
+	
+	<!--- getDeleteAsString --->
+	<cffunction name="getDeleteAsString" access="public" hint="I return a from statement for a delete statement." output="false" returntype="string">
+		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
+		<cfset var from = arguments.Convention.formatObjectName(getObject().getObjectMetadata()) />
+		
 		<cfreturn from />
 	</cffunction>
 	
