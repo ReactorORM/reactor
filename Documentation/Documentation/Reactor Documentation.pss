@@ -1,0 +1,92 @@
+[MAS SUPPORT]
+SupportMas_Prj=1
+[Target:WebHelp]
+SupportMas_Prj=1
+ResultFileName=!SSL!\WebHelp\Reactor_Documentation.htm
+SSLayoutType=2
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+Enable Result Dialog=1
+ActionID For Generation=1001
+Remove Folder with prompt=1
+ViewFileName=!SSL!\WebHelp\Reactor_Documentation.htm
+ResultStatus=0
+BuildTimeHi=29787938
+BuildTimeLow=-234930444
+[Target:WebHelp Pro]
+SupportMas_Prj=1
+ResultFileName=!SSL!\WebHelp_Pro\Reactor_Documentation.htm
+SSLayoutType=32
+ServerProjectName=Reactor Documentation
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+[Target:Microsoft HTML Help]
+ResultFileName=!SSL!\Microsoft_HTML_Help\Reactor_Documentation.chm
+SSLayoutType=1
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+ActionID For Generation=1001
+Remove Folder with prompt=1
+ViewFileName=!SSL!\Microsoft_HTML_Help\Reactor_Documentation.chm
+ResultStatus=0
+BuildTimeHi=29787939
+BuildTimeLow=-1058335240
+[Target:FlashHelp]
+ResultFileName=!SSL!\FlashHelp\Reactor_Documentation.htm
+SSLayoutType=2
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+ActionID For Generation=1001
+Remove Folder with prompt=1
+ViewFileName=!SSL!\FlashHelp\Reactor_Documentation.htm
+ResultStatus=0
+BuildTimeHi=29787939
+BuildTimeLow=1785225806
+[Target:Printed Documentation]
+ResultFileName=!SSL!\Printed_Documentation\Printed_Documentation.doc
+SSLayoutType=7
+ActionID For Generation=1003
+Remove Folder with prompt=1
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+ViewFileName=!SSL!\Printed_Documentation\Printed_Documentation.doc
+ResultStatus=0
+BuildTimeHi=29787940
+BuildTimeLow=554789760
+[Target:XML Output]
+ResultFileName=!SSL!\XML_Output\Reactor_Documentation.xml
+SSLayoutType=8192
+ActionID For Generation=1001
+Remove Folder with prompt=1
+CreateProjectTime=
+CreateProjectUser=
+SupportMas_MPJ=1
+ViewFileName=!SSL!\XML_Output\Reactor_Documentation.xml
+ResultStatus=0
+BuildTimeHi=29787940
+BuildTimeLow=118852260
+[PreSingleSource]
+Html Help Project=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.hhp
+Table Of Content=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.hhc
+Index=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation_merged$.hhk
+See Also Index=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.hha
+Browse Sequence=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.brs
+Topic Properties=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.trs
+Active Folders=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.trf
+Baggage Files=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.trb
+Skin List=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.trk
+OriginalHhk=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.hhk
+Active Layout Names=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.trl
+Default Topic=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Introduction.htm
+Build Tags0=25996;Print | Online
+Build Tags=
+Build Expression=
+Language ID=1033
+Language Name=English
+Language=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\RoboHHRE.lng
+Stop List=C:\Inetpub\Reactor For ColdFusion\Documentation\Documentation\Reactor Documentation.stp

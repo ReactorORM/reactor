@@ -1,0 +1,100 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<!-- saved from url=(0026)http://www.macromedia.com/ -->
+<html>
+
+<head>
+<title>Drawbacks to the New Fangled Way</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script  type="text/javascript" language="javascript1.2">
+    <!--
+    var linkedScrollbarStyle = "<link rel='stylesheet' href='wf_topics.css'>";
+    if( (!isTopicOnly()) &&(parent.gbFHPureHtml == null) )
+    {
+        document.write(linkedScrollbarStyle);
+    }
+    //-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.addTocInfo)
+{
+addTocInfo("Background Information\nDrawbacks to the New Fangled Way");
+
+  addShowButton();
+}
+if (window.setRelStartPage)
+{
+setRelStartPage("Reactor_Documentation.htm");
+
+	sendTopicLoaded();
+	autoSync(1);
+	sendSyncInfo();
+	sendAveInfo();
+	sendBgColorInfo();
+}
+//-->
+</script>
+<h1>Drawbacks to the New Fangled Way</h1>
+
+<p>This way of abstracting database access is very powerful but it does 
+ have its drawbacks. &nbsp;For 
+ example:</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>It’s Time Consuming</B></span> - Where 
+ you may have written a query in a few minutes using the old fashioned 
+ way, it can take quite a bit of time to write all the needed objects to 
+ properly abstract your database access. </p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>It’s Verbose</B></span> - A typical query 
+ is only a few lines. &nbsp;However, 
+ when you’re writing components to manage those queries there is a lot 
+ of extra code which needs to be written.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>It’s Repetitive (and therefore bug-prone)</B></span> 
+ - Almost all of the objects of a particular type end up being very similar 
+ when you’re abstracting your database access. &nbsp;For 
+ instance, the only major differences between an Address DAO and a Car 
+ DAO would be the name of the table and the columns. &nbsp;This 
+ level of repetitive coding leads to a copy-paste-and-edit approach which 
+ is likely to manifest subtle bugs in your application. &nbsp;Even 
+ if each object is manually typed out there’s a good chance that bugs will 
+ slip through.</p>
+
+</body>
+</html>

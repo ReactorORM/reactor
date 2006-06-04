@@ -1,0 +1,55 @@
+<html>
+<!-- Sitemap 1.0 -->
+<object type="text/site properties">
+  <param name="FrameName" value="bsscright">
+  <param name="SiteType" value="toc">
+  <param name="Image Width" value="16">
+</object>
+<ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Introduction">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Conventions Used In This Document">
+    <param name="Local" value="Conventions_Used_In_This_Document.htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="About Reactor">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="What Reactor Is">
+      <param name="Local" value="What_Reactor_Is.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="What Reactor Isn't">
+      <param name="Local" value="What_Reactor_Isn_t.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Background Information">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="The Old-Fashioned Way of Doing Things">
+      <param name="Local" value="The_Old-Fashioned_Way_of_Doing_Things.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="The New Fangled Way of Doing Thing">
+      <param name="Local" value="The_New_Fangled_Way_of_Doing_Thing.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Drawbacks to the New Fangled Way">
+      <param name="Local" value="Drawbacks_to_the_New_Fangled_Way.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Database Abstraction Generators">
+      <param name="Local" value="Database_Abstraction_Generators.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Reactor Resources">
+    <param name="Local" value="Reactor_Resources.htm">
+  </object>
+</ul>
+</html>

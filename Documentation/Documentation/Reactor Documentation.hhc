@@ -1,0 +1,127 @@
+<html>
+<!-- Sitemap 1.0 -->
+<object type="text/site properties">
+  <param name="SiteType" value="toc">
+  <param name="Image Width" value="16">
+  <param name="Window Styles" value="0x800002">
+  <param name="ExWindow Styles" value="0x100">
+</object>
+<ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Introduction">
+    <param name="Local" value="Introduction.htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Conventions Used In This Document">
+    <param name="Local" value="Conventions_Used_In_This_Document.htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="About Reactor">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="What Reactor Is">
+      <param name="Local" value="What_Reactor_Is.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="What Reactor Isn't">
+      <param name="Local" value="What_Reactor_Isn_t.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Background Information">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="The Old-Fashioned Way of Doing Things">
+      <param name="Local" value="The_Old-Fashioned_Way_of_Doing_Things.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="The New Fangled Way of Doing Thing">
+      <param name="Local" value="The_New_Fangled_Way_of_Doing_Thing.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Drawbacks to the New Fangled Way">
+      <param name="Local" value="Drawbacks_to_the_New_Fangled_Way.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Database Abstraction Generators">
+      <param name="Local" value="Database_Abstraction_Generators.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Reactor Resources">
+    <param name="Local" value="Reactor_Resources.htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Getting Started With Reactor">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Downloading Reactor">
+      <param name="Local" value="Downloading_Reactor.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Configuring Mappings">
+      <param name="Local" value="Configuring_Mappings.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Configuring an Application">
+      <param name="Local" value="Configuring_an_Application.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Supported Database Management Systems (DBMS)">
+    <param name="Local" value="Supported_Database_Management_Systems_(DBMS).htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Sample Applications">
+    <param name="Local" value="Sample_Applications.htm">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Reactor Crash Course">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Overview">
+      <param name="Local" value="Overview.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Getting Started">
+      <param name="Local" value="Get_Started.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Database Tables">
+      <param name="Local" value="Database_Tables.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Configuring Reactor">
+      <param name="Local" value="Configuring_Reactor.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Creating Objects with Reactor">
+      <param name="Local" value="Creating_Objects_with_Reactor.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="The Reactor Generated Files">
+      <param name="Local" value="The_Reactor_Generated_Files.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Record Objects">
+      <param name="Local" value="Record_Objects.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Read a Record">
+      <param name="Local" value="Read_a_Record.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Save Changes to a Record">
+      <param name="Local" value="Save_Changes_to_a_Record.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Delete a Record">
+      <param name="Local" value="Delete_a_Record.htm">
+    </object>
+    </ul>
+</ul>
+</html>

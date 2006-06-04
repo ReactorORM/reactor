@@ -1,0 +1,133 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Creating Objects with Reactor</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=891>
+<meta name=layout-width content=1153>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>Creating Objects with Reactor</h1>
+
+<p>To create objects you will use the ReactorFactory object. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ ReactorFactory requires that you pass the path to the config file via 
+ it's <span class=function>init()</span> method when you instantiate it. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Here's 
+ an example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>You will now have an instance of the ReactorFactory. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ object provides several methods to create objects, including the following: 
+ </p>
+
+<p>&nbsp;</p>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">createRecord()</span> 
+ – Creates Record Objects which represent one row in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">createGateway()</span> 
+ – Creates Table Data Gateway Objects (Gateways) which are used to act 
+ on multiple rows in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">createDao()</span> 
+ – Creates Data Access Objects (DAOs) which are not typically used directly 
+ by developers, but provide methods for loading, saving and deleting single 
+ rows in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">createTo()</span> 
+ – Creates Transfer Objects (TOs) which are not typically used directly 
+ by developers, but are used behind the scenes to move data around.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">createMetadata()</span> 
+ - Creates Metadata Objects which are not typically used directly by developers, 
+ but are used to describe the database structure and configuration programmatically.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>The first thing I think that most people will want to do is simply list 
+ data from their database. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->We 
+ added a record to the User table above, let's go ahead and list it out 
+ now.</p>
+
+<p>&nbsp;</p>
+
+<p>To do this, we'll need to create a gateway object using the ReactorFactory 
+ we created above.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create a userGateway ---&gt;<br>
+&lt;cfset UserGateway = Reactor.createGateway(&quot;User&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Gateway Objects provide a <span class=function>getAll()</span> method 
+ (among others) which returns all the records in the table. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ following code gets all of the records in the User table and dumps it 
+ out.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- get all records ---&gt;<br>
+&lt;cfset qUsers = UserGateway.getAll() /&gt;<br>
+&lt;!--- dump the results ---&gt;<br>
+&lt;cfdump var=&quot;#qUsers#&quot; /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Here are the results:</p>
+
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--><img 
+ src="image4.gif"
+	style="border: none;
+			width: 505px;
+			height: 74px;"
+	width=505
+	height=74
+	border=0></p>
+
+<p>For a complete list of Gateway methods, see the Gateway Objects section.</p>
+
+</body>
+
+</html>

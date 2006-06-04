@@ -1,0 +1,126 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Database Abstraction Generators</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Background Information\nDatabase Abstraction Generators");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Database Abstraction Generators</h1>
+
+<p>There are workarounds for the drawbacks presented above. &nbsp;Many 
+ developers end up creating code generators which are used to generate 
+ the database abstraction objects. &nbsp;These 
+ work by using database-specific queries to inspect the database and generate 
+ the needed objects. &nbsp;Many 
+ of these code generators work by running a separate executable application 
+ which is used to manually generate the objects when needed.</p>
+
+<p>&nbsp;</p>
+
+<p>Reactor is a similar concept. &nbsp;Reactor 
+ is an “Inline Dynamic Database Abstraction&quot; API. &nbsp;This 
+ means that rather than running a separate executable tool to generate 
+ your code you would simply access the Reactor API directly in your code. 
+ &nbsp;Based on 
+ Reactor’s configuration, Reactor will generate objects on an as-needed 
+ basis. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>For example, if you wanted a Gateway object for your Address table you 
+ could simply ask Reactor to create one. &nbsp;Reactor 
+ will generate this gateway as needed. &nbsp;In 
+ fact, Reactor will only generate an object when the object does not already 
+ exist and your database or configuration has changed (unless you tell 
+ it otherwise). &nbsp;In 
+ other words, if you have already generated the Address gateway and your 
+ database has not changed, Reactor will simply instantiate and return the 
+ object.</p>
+
+<p>&nbsp;</p>
+
+<p>Ignoring how Reactor is configured, what follows in an example of all 
+ the code involved in creating an Address gateway:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfset reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;/config/reactor.xml&quot;)) 
+ /&gt;<br>
+&lt;cfset AddressGateway = reactor.createGateway(&quot;Address&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>That’s all. &nbsp;You 
+ now have an Address Gateway which provides methods which return queries. 
+ &nbsp;These methods 
+ are documented further on in this document.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

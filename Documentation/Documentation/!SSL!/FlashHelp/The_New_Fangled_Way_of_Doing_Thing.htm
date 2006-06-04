@@ -1,0 +1,131 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<!-- saved from url=(0026)http://www.macromedia.com/ -->
+<html>
+
+<head>
+<title>The New Fangled Way of Doing Thing</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script  type="text/javascript" language="javascript1.2">
+    <!--
+    var linkedScrollbarStyle = "<link rel='stylesheet' href='wf_topics.css'>";
+    if( (!isTopicOnly()) &&(parent.gbFHPureHtml == null) )
+    {
+        document.write(linkedScrollbarStyle);
+    }
+    //-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.addTocInfo)
+{
+addTocInfo("Background Information\nThe New Fangled Way of Doing Thing");
+
+  addShowButton();
+}
+if (window.setRelStartPage)
+{
+setRelStartPage("Reactor_Documentation.htm");
+
+	sendTopicLoaded();
+	autoSync(1);
+	sendSyncInfo();
+	sendAveInfo();
+	sendBgColorInfo();
+}
+//-->
+</script>
+<h1>The New Fangled Way of Doing Thing</h1>
+
+<p>Over the past few years there has been a move within the ColdFusion 
+ community towards structured and/or object oriented approaches to application 
+ development. &nbsp;Using 
+ modern techniques you can separate your applications into “tiers”. &nbsp;For 
+ instance, you might create a set of components which are responsible for 
+ your application’s database access, another set for the application’s 
+ business logic and yet another to display output.</p>
+
+<p>&nbsp;</p>
+
+<p>These techniques have given birth to multiple frameworks which aid development. 
+ &nbsp;Examples 
+ of these for ColdFusion are <a href="http://www.Model-Glue.com">Model-Glue</a>, 
+ <a href="http://www.mach-ii.com/">Mach-II</a> and <a href="http://www.fusebox.org/">Fusebox</a>.</p>
+
+<p>&nbsp;</p>
+
+<p>However, as the industry moves towards an object oriented approach to 
+ database access; many developers find that simply moving queries into 
+ components does not provide the flexibility and power they expected. </p>
+
+<p>&nbsp;</p>
+
+<p>For this reason several design patterns have evolved which can help 
+ programmers find consistent and flexible solutions to these problems. 
+ &nbsp;These design 
+ patterns include:</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Data Access Objects</B></span> – Data Access 
+ Objects (commonly called DAOs) are objects which provide methods for creating, 
+ reading, updating and deleting a single record in a database. &nbsp;These 
+ are generically known as “CRUD” methods.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Table Data Gateways</B></span> – Table 
+ Data Gateway objects (commonly known as Gateway Objects) are used to interact 
+ with multiple rows in a database. &nbsp;Most 
+ methods in these objects return record sets (queries) and perform select 
+ statements.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Active Records</B></span> – The Active 
+ Record design pattern is new to many developers but has become familiar 
+ due to well recognized and respected implementations including the Ruby 
+ on Rails framework. &nbsp;There 
+ are many flavors of this design pattern. &nbsp;Most 
+ implementations are of one object which represents one row in a database. 
+ &nbsp;The object 
+ has assessors and mutators (methods for getting and setting values) as 
+ well as methods for reading a record, saving it, and deleting it. &nbsp;There 
+ are also frequently methods for accessing related objects in the database.</p>
+
+<p>&nbsp;</p>
+
+<p>Frequently, other common types of objects are also used which serve 
+ the purposes of moving data around, validating data and more. &nbsp;</p>
+
+</body>
+</html>

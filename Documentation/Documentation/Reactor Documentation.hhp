@@ -1,0 +1,46 @@
+[OPTIONS]
+Compiled File=Reactor Documentation.chm
+Title=Reactor Documentation
+Contents File=Reactor Documentation.hhc
+Index File=Reactor Documentation.hhk
+Default topic=Introduction.htm
+Default Window=
+Error log file=
+Display compile progress=No
+Display compile notes=No
+Full-text search=Yes
+Binary Index=Yes
+Auto Index=No
+Enhanced decompilation=No
+Binary TOC=No
+Flat=No
+
+[WINDOWS]
+
+[FILES]
+Reactor_Trac_Site.htm
+Reactor_Resources.htm
+Database_Abstraction_Generators.htm
+Drawbacks_to_the_New_Fangled_Way.htm
+The_New_Fangled_Way_of_Doing_Thing.htm
+The_Old-Fashioned_Way_of_Doing_Things.htm
+What_Reactor_Isn_t.htm
+What_Reactor_Is.htm
+About_Reactor.htm
+Conventions_Used_In_This_Document.htm
+Introduction.htm
+eHelp.xml
+RoboHHRE.lng
+
+Reactor Documentation.glo
+Reactor Documentation.brs
+[ALIAS]
+#include Reactor Documentation.ali
+
+[MAP]
+#include BSSCDefault.h
+
+[TEXT POPUPS]
+BSSCDefault.h
+
+

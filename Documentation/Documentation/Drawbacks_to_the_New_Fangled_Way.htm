@@ -1,0 +1,73 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Drawbacks to the New Fangled Way</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=953>
+<meta name=layout-width content=1153>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>Drawbacks to the New Fangled Way</h1>
+
+<p>This way of abstracting database access is very powerful but it does 
+ have its drawbacks. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example:</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;">It’s Time Consuming</span> - Where 
+ you may have written a query in a few minutes using the old fashioned 
+ way, it can take quite a bit of time to write all the needed objects to 
+ properly abstract your database access. </p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;">It’s Verbose</span> - A typical query 
+ is only a few lines. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->However, 
+ when you’re writing components to manage those queries there is a lot 
+ of extra code which needs to be written.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;">It’s Repetitive (and therefore bug-prone)</span> 
+ - Almost all of the objects of a particular type end up being very similar 
+ when you’re abstracting your database access. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ instance, the only major differences between an Address DAO and a Car 
+ DAO would be the name of the table and the columns. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ level of repetitive coding leads to a copy-paste-and-edit approach which 
+ is likely to manifest subtle bugs in your application. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Even 
+ if each object is manually typed out there’s a good chance that bugs will 
+ slip through.</p>
+
+</body>
+
+</html>

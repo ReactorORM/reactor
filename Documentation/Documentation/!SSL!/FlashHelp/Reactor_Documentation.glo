@@ -1,0 +1,34 @@
+NAME=Active Record
+The Active Record design pattern is new to many developers but has become familiar due to well recognized and respected implementations including the Ruby on Rails framework.  There are many flavors of this design pattern.  Most implementations are of one object which represents one row in a database.  The object has assessors and mutators (methods for getting and setting values) as well as methods for reading a record, saving it, and deleting it.  There are also frequently methods for accessing related objects in the database.
+NAME=API
+
+NAME=CFC
+
+NAME=ColdFusion
+
+NAME=CRUD
+CRUD stands for Create, Read, Update and Delete.  These are the four actions provided by Data Access Objects.
+NAME=DAO
+See Data Access Object
+NAME=Data Access Object
+Data Access Objects (commonly called DAOs) are objects which provide methods for creating, reading, updating and deleting a single record in a database.  These are generically known as “CRUD” methods.
+NAME=design pattern
+
+NAME=framework
+
+NAME=Gateway
+See Table Data Gateway
+NAME=Object Oriented Programming
+
+NAME=ORM
+
+NAME=Procedural Programming
+
+NAME=Reactor for ColdFusion
+
+NAME=record set
+
+NAME=Ruby On Rails
+
+NAME=Table Data Gateway
+See GatewayTable Data Gateway objects (commonly known as Gateway Objects) are used to interact with multiple rows in a database.  Most methods in these objects return record sets (queries) and perform select statements.

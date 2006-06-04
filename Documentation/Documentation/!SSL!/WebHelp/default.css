@@ -1,0 +1,110 @@
+BODY { 
+      font-family:Verdana, Arial, Helvetica, sans-serif; 
+      background-color:#ffffff;  }
+H1 { 
+    font-weight:bold; 
+    font-size:24.0pt;  }
+LI.kadov-H1 { 
+             font-weight:bold; 
+             font-size:24.0pt;  }
+H2 { 
+    font-weight:bold; 
+    font-size:18.0pt;  }
+LI.kadov-H2 { 
+             font-weight:bold; 
+             font-size:18.0pt;  }
+H3 { 
+    font-weight:bold; 
+    font-size:14.0pt;  }
+LI.kadov-H3 { 
+             font-weight:bold; 
+             font-size:14.0pt;  }
+H4 { 
+    font-weight:bold; 
+    font-size:12.0pt;  }
+LI.kadov-H4 { 
+             font-weight:bold; 
+             font-size:12.0pt;  }
+H5 { 
+    font-weight:bold; 
+    font-size:10.0pt;  }
+LI.kadov-H5 { 
+             font-weight:bold; 
+             font-size:10.0pt;  }
+H6 { 
+    font-weight:bold; 
+    font-size:8.0pt;  }
+LI.kadov-H6 { 
+             font-weight:bold; 
+             font-size:8.0pt;  }
+P { 
+   font-size:12.0pt; 
+   margin-top:0pt; 
+   margin-bottom:0pt;  }
+LI.kadov-P { 
+            font-size:12.0pt;  }
+A.expandspot { 
+              color:#008000; 
+              cursor:hand; 
+              font-style:italic; 
+              x-text-underline:off; 
+              x-text-overline:off; 
+              x-text-line-through:off; 
+              text-decoration:none none none;  }
+SPAN.expandtext { 
+                 font-style:italic; 
+                 font-weight:normal; 
+                 color:#ff0000;  }
+A.dropspot { 
+            cursor:hand; 
+            color:#008000; 
+            font-style:italic; 
+            x-text-underline:off; 
+            x-text-overline:off; 
+            x-text-line-through:off; 
+            text-decoration:none none none;  }
+A.glossterm { 
+             color:#800000; 
+             cursor:hand; 
+             font-style:italic; 
+             x-text-underline:off; 
+             x-text-overline:off; 
+             x-text-line-through:off; 
+             text-decoration:none none none;  }
+SPAN.glosstext { 
+                font-style:italic; 
+                font-weight:normal; 
+                color:#0000ff;  }
+OL { 
+    margin-top:0px; 
+    margin-bottom:0px;  }
+UL { 
+    margin-top:0px; 
+    margin-bottom:0px;  }
+SPAN.function { 
+               color:#0000ff;  }
+P.code { 
+        padding:4.5pt; 
+        background-color:#FFFFE6; 
+        border-left-style:Solid; 
+        border-left-width:1px; 
+        border-right-style:Solid; 
+        border-right-width:1px; 
+        border-top-style:Solid; 
+        border-top-width:1px; 
+        border-bottom-style:Solid; 
+        border-bottom-width:1px; 
+        font-family:"Courier New" , monospace; 
+        color:#606000; 
+        font-weight:bold;  }
+LI.kadov-P-Ccode { 
+                  font-family:"Courier New" , monospace; 
+                  color:#606000; 
+                  font-weight:bold;  }
+P.note { 
+        font-style:italic; 
+        font-weight:normal; 
+        background-color:#ecf5ff;  }
+LI.kadov-P-Cnote { 
+                  font-style:italic; 
+                  font-weight:normal;  }

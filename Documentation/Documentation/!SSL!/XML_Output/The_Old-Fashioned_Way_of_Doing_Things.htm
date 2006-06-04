@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+  <title>The Old-Fashioned Way of Doing Things</title><!--(Meta)==========================================================-->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com" />
+  <meta name="generator-major-version" content="0.1" />
+  <meta name="generator-minor-version" content="1" />
+  <meta name="filetype" content="kadov" />
+  <meta name="filetype-version" content="1" />
+  <meta name="page-count" content="1" />
+  <meta name="layout-height" content="953" />
+  <meta name="layout-width" content="1153" /><!--(Links)=========================================================-->
+  <link rel="StyleSheet" href="default.css" />
+</head><!--(Body)==========================================================-->
+
+<body>
+  <h1>The Old-Fashioned Way of Doing Things</h1>
+
+  <p>In traditional procedural programming an application’s logic is intermixed with the code that displays an application’s data. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->For example, it is not uncommon to see code which looks like this:</p>
+
+  <p> </p>
+
+  <p class="code">&lt;cfquery name="getUsers" datasource="myDSN"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->    <!--kadov_tag{{</spaces>}}-->SELECT *<br />
+  <!--kadov_tag{{<spaces>}}-->    <!--kadov_tag{{</spaces>}}-->FROM Users<br />
+  &lt;/cfquery&gt;<br />
+  <br />
+  &lt;cfoutput query="getUsers"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->    <!--kadov_tag{{</spaces>}}-->&lt;p&gt;#firstName# #lastName#&lt;/p&gt;<br />
+  &lt;/cfoutput&gt;</p>
+
+  <p> </p>
+
+  <p>There are a number of things in this example which limit this code’s reusability and maintainability. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->For example, consider the following questions:</p>
+
+  <p> </p>
+
+  <p>What happens if the data source changes?</p>
+
+  <p> </p>
+
+  <p>Answer: You need to find and replace all instances of myDSN. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->A typical solution to this problem is to store the DSN in a variable and to simply change the variable as needed.</p>
+
+  <p> </p>
+
+  <p>What if you have another page which runs the exact same query?</p>
+
+  <p> </p>
+
+  <p>Answer: <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->The query is duplicated in both locations. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->If you have several locations where this query is used you have several locations to maintain. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->This is problematic. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->As an example, what if you needed to modify the query? <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->You may need to update this query in all the locations where it was used.</p>
+</body>
+</html>

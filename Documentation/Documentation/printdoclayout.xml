@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--Printed Documentation Layout-->
+<printdoclayout version="2">
+  <temphistory/>
+ <stylemapping>
+   <templatefile type="msword" filename=""/>
+  <maps>
+    <item org="a.dropspot" new="\0"/>
+    <item org="a.expandspot" new="\0"/>
+    <item org="a.glossterm" new="\0"/>
+    <item org="a.popupspot" new="\0"/>
+    <item org="a:link" new="\0"/>
+    <item org="div" new="\0"/>
+    <item org="div.droptext" new="\0"/>
+    <item org="p" new="\0"/>
+    <item org="p.code" new="\0"/>
+    <item org="p.note" new="\0"/>
+    <item org="span.expandtext" new="\0"/>
+    <item org="span.function" new="\0"/>
+    <item org="span.glosstext" new="\0"/>
+  </maps>
+ </stylemapping>
+ <tocstructure>
+   <page name="Conventions Used In This Document" topic="Conventions_Used_In_This_Document.htm" flags="0" topicid="-1"/>
+  <chapter name="About Reactor">
+    <page name="What Reactor Is" topic="What_Reactor_Is.htm" flags="0" topicid="-1"/>
+    <page name="What Reactor Isn't" topic="What_Reactor_Isn_t.htm" flags="0" topicid="-1"/>
+  </chapter>
+  <chapter name="Background Information">
+    <page name="The Old-Fashioned Way of Doing Things" topic="The_Old-Fashioned_Way_of_Doing_Things.htm" flags="0" topicid="-1"/>
+    <page name="The New Fangled Way of Doing Thing" topic="The_New_Fangled_Way_of_Doing_Thing.htm" flags="0" topicid="-1"/>
+    <page name="Drawbacks to the New Fangled Way" topic="Drawbacks_to_the_New_Fangled_Way.htm" flags="0" topicid="-1"/>
+    <page name="Database Abstraction Generators" topic="Database_Abstraction_Generators.htm" flags="0" topicid="-1"/>
+  </chapter>
+   <page name="Reactor Resources" topic="Reactor_Resources.htm" flags="0" topicid="-1"/>
+ </tocstructure>
+  <sectionhistory/>
+ <sectionlist>
+   <section type="defaulttitlepage" name="&lt;Default Title Page&gt;" url="" flags="0" topicid="-1"/>
+   <section type="toc" name="TOC" url="" flags="0" topicid="-1"/>
+   <section type="topics" name="Chapter Layout" url="" flags="0" topicid="-1"/>
+   <section type="glossary" name="Glossary" url="" flags="0" topicid="-1"/>
+   <section type="index" name="Index" url="" flags="0" topicid="-1"/>
+ </sectionlist>
+  <robopdfgeneratorsettings data="DefaultSaveDir=C:\Documents and Settings\Doug Hughes\Application Data\1-Step RoboPDF&amp;ExecCmdLine=C:\WINDOWS\System32\spool\DRIVERS\W32X86\2\RoboPDF.exe -nav=&quot;%s&quot; -docname=&quot;%s&quot; -hwnd=%d&amp;DefaultSaveFilename=tmp.pdf&amp;resIndex=3&amp;jpegImageQuality=75&amp;imageDPI=96&amp;quiet=0&amp;installTime=04/10/03 15:20:37&amp;LicensedToUser=Doug Hughes&amp;LicensedToCompany=Alagad Inc.&amp;LicenseServerPortNumber=34357&amp;Quality=3&amp;customResolution=300&amp;customImageDPI=96&amp;customJpegImageQuality=75&amp;pdfTemplateEnable=0&amp;pdfTemplateOnTop=0&amp;watermarkFontSize=48&amp;watermarkStyle=0&amp;watermarkColor=90&amp;pdfTemplate=&amp;watermarkText=&amp;watermarkFontName=Arial&amp;sd_permissionFlags=-64&amp;sd_enabled=0&amp;sd_keyLen=16&amp;sd_op=&amp;sd_up=&amp;InstallationDirectory=C:\WINDOWS\System32\spool\DRIVERS\W32X86\2\&amp;NoProgressDlg=0&amp;launcherProgressMessage=Generating PDF...&amp;PrinterData4=1&amp;lastfile=C:\Documents and Settings\Doug Hughes\Application Data\1-Step RoboPDF\tmp1.pdf&amp;DocName=Java Printing&amp;NextAction=2&amp;xpos=104&amp;ypos=164&amp;cx=660&amp;cy=495&amp;windowState=1&amp;ConfigFile=C:\WINDOWS\system32\RoboPDF\RoboPDF.lks&amp;WordConversionStyles=Heading 1=1,Heading 2=2,Heading 3=3,Subtitle=2,Title=1&amp;DocInfoCreator=Microsoft Word&amp;DocInfoAuthor=Doug Hughes&amp;DocInfoCreationDate=D:20060525120100&amp;resolution=96&amp;watermark=&amp;"/>
+</printdoclayout>

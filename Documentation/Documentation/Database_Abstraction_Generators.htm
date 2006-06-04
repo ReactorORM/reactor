@@ -1,0 +1,91 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Database Abstraction Generators</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=953>
+<meta name=layout-width content=1153>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>Database Abstraction Generators</h1>
+
+<p>There are workarounds for the drawbacks presented above. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Many 
+ developers end up creating code generators which are used to generate 
+ the database abstraction objects. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->These 
+ work by using database-specific queries to inspect the database and generate 
+ the needed objects. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Many 
+ of these code generators work by running a separate executable application 
+ which is used to manually generate the objects when needed.</p>
+
+<p>&nbsp;</p>
+
+<p>Reactor is a similar concept. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Reactor 
+ is an “Inline Dynamic Database Abstraction&quot; API. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ means that rather than running a separate executable tool to generate 
+ your code you would simply access the Reactor API directly in your code. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Based on 
+ Reactor’s configuration, Reactor will generate objects on an as-needed 
+ basis. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--></p>
+
+<p>&nbsp;</p>
+
+<p>For example, if you wanted a Gateway object for your Address table you 
+ could simply ask Reactor to create one. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Reactor 
+ will generate this gateway as needed. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->In 
+ fact, Reactor will only generate an object when the object does not already 
+ exist and your database or configuration has changed (unless you tell 
+ it otherwise). <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->In 
+ other words, if you have already generated the Address gateway and your 
+ database has not changed, Reactor will simply instantiate and return the 
+ object.</p>
+
+<p>&nbsp;</p>
+
+<p>Ignoring how Reactor is configured, what follows in an example of all 
+ the code involved in creating an Address gateway:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfset reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;/config/reactor.xml&quot;)) 
+ /&gt;<br>
+&lt;cfset AddressGateway = reactor.createGateway(&quot;Address&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>That’s all. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->You 
+ now have an Address Gateway which provides methods which return queries. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->These methods 
+ are documented further on in this document.</p>
+
+</body>
+
+</html>
