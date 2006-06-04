@@ -27,42 +27,6 @@
        <cfreturn variables.objectMetadata />
     </cffunction>	
 
-	<!---
-		Sean 3/7/2006: add pool management for query objects
-		pool management: queryPool is a linked-list with 0 as the terminator
-	
-	
-	<!--- get a query object from the pool (thread-safe) --->
-	<cffunction name="getQueryInstance" access="private" output="false" returntype="reactor.query.query">
-		<cfset var query = 0 />
-		<cfif isStruct(variables.queryPool)>
-			<cflock name="reactor_gateway_#_getAlias()#_pool" timeout="10" type="exclusive">
-				<cfif isStruct(variables.queryPool)>
-					<cfset query = variables.queryPool.head />
-					<cfset variables.queryPool = variables.queryPool.next />
-				</cfif>
-			</cflock>
-		</cfif>
-		<!--- create a new object if the pool was empty --->
-		<cfif not isObject(query)>
-			<cfset query = createObject("component","reactor.query.query") />
-		</cfif>
-		<cfreturn query />
-	</cffunction>	
-	
-	<!--- return a query object to the pool (thread-safe) --->
-	<cffunction name="releaseQueryInstance" access="private" output="false" returntype="void">
-		<cfargument name="query" required="true" />
-		<cfset var link = structNew() />
-		<!---<cfset arguments.query.setInitialized(false) />--->
-		<cfset link.head = arguments.query />
-		
-		<cflock name="reactor_gateway_#_getAlias()#_pool" timeout="10" type="exclusive">
-			<cfset link.next = variables.queryPool />
-			<cfset variables.queryPool = link />
-		</cflock>
-	</cffunction>--->
-
 	<!--- createQuery --->
 	<cffunction name="createQuery" access="public" hint="I return a query object which can be used to compose and execute complex queries on this gateway." output="false" return="reactor.query.criteria">
 		<!---<cfset var query = getQueryInstance().init(_getAlias(), _getAlias(), _getReactorFactory()) />--->

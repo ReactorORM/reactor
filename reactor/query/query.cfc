@@ -10,7 +10,7 @@
 		<cfargument name="ReactorFactory" hint="I am the ReactorFactory" required="yes" type="reactor.reactorFactory" />
 		
 		<!--- this is the base object being queried --->
-		<cfset setObject(CreateObject("Component", "object").init(arguments.ReactorFactory.createMetadata(arguments.objectAlias), arguments.queryAlias, arguments.ReactorFactory)) />
+		<cfset setObject(CreateObject("Component", "reactor.query.query").init(arguments.ReactorFactory.createMetadata(arguments.objectAlias), arguments.queryAlias, arguments.ReactorFactory)) />
 		<!--- by default we want to return all fields --->
 		<cfset variables.instance.returnFields = ArrayNew(1) />
 		
@@ -217,5 +217,4 @@
 	<cffunction name="resetOrder" access="public" output="false" returntype="void">
 		<cfset variables.instance.order = CreateObject("Component", "reactor.query.order").init(this) />
 	</cffunction>
-		
 </cfcomponent>
