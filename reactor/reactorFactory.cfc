@@ -19,9 +19,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Record = 0 />
 		
-		<cftimer label="Create Record #arguments.objectAlias#">
-			<cfset Record = getObjectFactory().create(arguments.objectAlias, "Record") />
-		</cftimer>
+		<cfset Record = getObjectFactory().create(arguments.objectAlias, "Record") />
 		
 		<cfreturn Record />
 	</cffunction>
@@ -30,9 +28,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Dao = 0 />
 		
-		<cftimer label="Create Dao #arguments.objectAlias#">
-			<cfset Dao = getObjectFactory().create(arguments.objectAlias, "Dao") />
-		</cftimer>
+		<cfset Dao = getObjectFactory().create(arguments.objectAlias, "Dao") />
 		
 		<cfreturn Dao />
 	</cffunction>
@@ -41,9 +37,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var To = 0 />
 		
-		<cftimer label="Create To #arguments.objectAlias#">
-			<cfset To = getObjectFactory().create(arguments.objectAlias, "To") />
-		</cftimer>
+		<cfset To = getObjectFactory().create(arguments.objectAlias, "To") />
 		
 		<cfreturn To />
 	</cffunction>
@@ -52,9 +46,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Gateway = 0 />
 		
-		<cftimer label="Create Gateway #arguments.objectAlias#">
-			<cfset Gateway = getObjectFactory().create(arguments.objectAlias, "Gateway") />
-		</cftimer>
+		<cfset Gateway = getObjectFactory().create(arguments.objectAlias, "Gateway") />
 		
 		<cfreturn Gateway />
 	</cffunction>
@@ -63,9 +55,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Metadata = 0 />
 		
-		<cftimer label="Create Metadata #arguments.objectAlias#">
-			<cfset Metadata = getObjectFactory().create(arguments.objectAlias, "Metadata") />
-		</cftimer>
+		<cfset Metadata = getObjectFactory().create(arguments.objectAlias, "Metadata") />
 		
 		<cfreturn Metadata />
 	</cffunction>
@@ -74,9 +64,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Iterator = 0 />
 		
-		<cftimer label="Create Iterator #arguments.objectAlias#">
-			<cfset Iterator = createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
-		</cftimer>
+		<cfset Iterator = createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
 		
 		<cfreturn Iterator />
 	</cffunction>
@@ -85,9 +73,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Dictionary = 0 />
 		
-		<cftimer label="Create Dictionary #arguments.objectAlias#">
-			<cfset Dictionary = getObjectFactory().createDictionary(arguments.objectAlias) />
-		</cftimer>
+		<cfset Dictionary = getObjectFactory().createDictionary(arguments.objectAlias) />
 		
 		<cfreturn Dictionary />
 	</cffunction>
@@ -96,11 +82,24 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object the validator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Validator = 0 />
 		
-		<cftimer label="Create Validator #arguments.objectAlias#">
-			<cfset Validator = getObjectFactory().create(arguments.objectAlias, "Validator") />
-		</cftimer>
+		<cfset Validator = getObjectFactory().create(arguments.objectAlias, "Validator") />
 		
 		<cfreturn Validator />
+	</cffunction>
+
+	<cffunction name="getXml" access="public" hint="I return the raw XML for a database object.  I combine the configuration and the database metadata." output="false" returntype="string">
+		<cfargument name="objectAlias" hint="I am the alias of the object the xml describes.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfreturn getObjectFactory().getObject(arguments.objectAlias).getXml() />
+	</cffunction>
+
+	<cffunction name="createPlugin" access="public" hint="I return a plugin object of the specified type." output="false" returntype="reactor.base.abstractObject">
+		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+		<cfargument name="plugin" hint="I am the name of the plugin to use." required="yes" type="string" />
+		<cfset var Object = 0 />
+		
+		<cfset Object = getObjectFactory().create(arguments.objectAlias, arguments.plugin, true) />
+		
+		<cfreturn Object />
 	</cffunction>
 	
 	<!--- ObjectFactory --->

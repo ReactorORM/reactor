@@ -18,38 +18,29 @@
 	
 	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
+		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
 		<cfset var objectXML = getObject().getXml() />
 		<cfset var pathToErrorFile = "" />
-		
-		<!--- if this is a Record object we're genereating then we need to generate/populate the ErrorMessages.xml file
-		<cfif arguments.type IS "Record">
-			<!--- I am the path to the error file --->
-			<cfset pathToErrorFile = expandPath(getConfig().getMapping() & "/ErrorMessages.xml" ) />
-			<!--- if the file doesn't exist insure the path to the file exists --->
-			<cfset insurePathExists(pathToErrorFile) />
-			<!--- generate the error messages --->
-			<cfset generateErrorMessages(pathToErrorFile) />
-		</cfif> --->
 		
 		<!--- write the project object --->
 		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.project.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Project"),
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.project.xsl",
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Project", arguments.plugin),
 			true) />
 		
 		<!--- write the base object --->
 		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.base.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Base"),
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.base.xsl",
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Base", arguments.plugin),
 			false) />
 		
 		<!--- generate the custom object --->
 		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../xsl/#lcase(arguments.type)#.custom.xsl",
-			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Custom"),
+			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.custom.xsl",
+			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Custom", arguments.plugin),
 			false) />
 			
 	</cffunction>
@@ -181,30 +172,19 @@
 		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To, Metadata, Validator" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
+		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
 		<cfset var root = "" />
 		
-		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
-			<cfthrow type="reactor.InvalidArgument"
-				message="Invalid Type Argument"
-				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata, Validator" />
-		</cfif>
-		<cfif NOT ListFind("Project,Base,Custom", arguments.class)>
-			<cfthrow type="reactor.InvalidArgument"
-				message="Invalid Class Argument"
-				detail="The class argument must be one of: Project, Base, Custom" />
-		</cfif>
-	
 		<cfif arguments.class IS "Project">
-			<!--- removed & getConfig().getType() & "/" from the following line of code --->
-			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/" & arguments.type & "/" />
+			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" />
 			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Base">
-			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
+			<cfset root = expandPath(getConfig().getMapping() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
 			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Custom">
-			<cfset root = expandPath(getConfig().getMapping() & "/" & arguments.type & "/" ) />
+			<cfset root = expandPath(getConfig().getMapping() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
 			<cfreturn root & arguments.name & arguments.type & getConfig().getType() & ".cfc" />
 		
 		</cfif>

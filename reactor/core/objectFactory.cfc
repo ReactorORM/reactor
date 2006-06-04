@@ -12,27 +12,48 @@
 	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="reactor.core.objectFactory">
 		<cfargument name="config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
+		<cfset var pluginQuery = 0 />
+		<cfset var pluginList = "" />
 		
 		<cfset setConfig(arguments.config) />
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setConvention(CreateObject("Component", "reactor.data.#arguments.config.getType()#.Convention")) />
+
+		<!--- load plugins --->
+		<cfdirectory action="list" directory="#expandPath("/reactor/plugins")#" name="pluginQuery" />
+		
+		<!--- parse out the avaliable plugins --->
+		<cfloop query="pluginQuery">
+			<cfif NOT ListFindNoCase(pluginList, ListFirst(pluginQuery.name, "."))>
+				<cfset pluginList = ListAppend(pluginList, ListFirst(pluginQuery.name, ".")) />
+			</cfif>
+		</cfloop>
+		
+		<!--- set the avaliable plugins --->
+		<cfset setPluginList(pluginList) />
 
 		<cfreturn this />
 	</cffunction>
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator unless this is a plugin." required="yes" type="string" />
+		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="no" type="boolean" default="false" />
 		<cfset var DbObject = 0 />
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
 		<cfset var objectTranslator = 0 />
 		<cfset var metadata = 0 />
 		
-		<cfif NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
+		<cfif NOT arguments.plugin AND NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
 			<cfthrow type="reactor.InvalidObjectType"
 				message="Invalid Object Type"
 				detail="The type argument must be one of: Record, Dao, Gateway, To, Metadata, Validator" />
+				
+		<cfelseif arguments.plugin AND NOT ListFindNoCase(getPluginList(), arguments.type)>
+			<cfthrow type="reactor.InvalidPluginType"
+				message="Invalid Plugin Type"
+				detail="The plugin type must be one of: #replace(getPluginList(), ",", ", ", "all")#" />
 		</cfif>
 		
 		<cftry>
@@ -47,7 +68,7 @@
 					<cfset DbObject = getObject(arguments.alias) />
 					<cftry>
 						<!--- create an instance of the object and check its signature --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
+						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
 						<cfcatch>
 							<cfset generate = true />
 						</cfcatch>
@@ -68,14 +89,14 @@
 							<cfif StructKeyExists(variables.Cache[arguments.type], arguments.alias)>
 								<cfset GeneratedObject = variables.Cache[arguments.type][arguments.alias] />
 							<cfelse>
-								<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
+								<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
 								<cfset variables.Cache[arguments.type][arguments.alias] = GeneratedObject />
 							</cfif>
 
 						<cfelse>
 
 							<!--- we never cache Record, To or iterator objects --->
-							<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)) />
+							<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
 	
 						</cfif>
 						<cfcatch>
@@ -96,9 +117,9 @@
 		<cfif generate>
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
 			
-			<cfset ObjectTranslator.generateObject(arguments.type) />	
+			<cfset ObjectTranslator.generateObject(arguments.type, arguments.plugin) />	
 			
-			<cfif ListFind("Dao,Gateway,Record", arguments.type)>
+			<cfif ListFind("Dao,Gateway,Record", arguments.type) OR arguments.plugin>
 				<!--- check to see if a metadata object of this type exists.  If not, create it --->
 				<cfif StructKeyExists(variables.Cache.metadata, arguments.alias)>
 					<cfset metadata = variables.Cache.metadata[arguments.alias] />
@@ -106,9 +127,9 @@
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 				
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			</cfif>
 
 		<cfelse>
@@ -180,7 +201,7 @@
 		<cfreturn DictionaryObject />
 	</cffunction>
 	
-	<cffunction name="getObject" access="private" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">
+	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
 		<cfset var Object = 0 />
 		<cfset var ObjectDao = 0/>
@@ -213,6 +234,7 @@
 	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="string">
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
+		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="boolean" />
 		<cfset var creationPath = "" />
 		
 		<!--- if the user doesn't have a leading slash on their mapping then add one --->
@@ -222,7 +244,7 @@
 		
 		<cfset creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
 				
-		<cfreturn creationPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
+		<cfreturn creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
 	</cffunction>
 	
 	<!--- config --->
@@ -250,6 +272,15 @@
     </cffunction>
     <cffunction name="getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
        <cfreturn variables.convention />
+    </cffunction>
+	
+	<!--- pluginList --->
+    <cffunction name="setPluginList" access="private" output="false" returntype="void">
+       <cfargument name="pluginList" hint="I am a list of avaliable plugins" required="yes" type="string" />
+       <cfset variables.pluginList = arguments.pluginList />
+    </cffunction>
+    <cffunction name="getPluginList" access="private" output="false" returntype="string">
+       <cfreturn variables.pluginList />
     </cffunction>
 	
 </cfcomponent>

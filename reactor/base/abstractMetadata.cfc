@@ -123,6 +123,39 @@
 		
 	</cffunction>
 	
+	<!--- getRelationships --->
+	<cffunction name="getRelationships" access="public" hint="I get an array of relationships.  I passed an alias I filter the relationships to only those that relate to the alias." output="false" returntype="array">
+		<cfargument name="alias" hint="I am the alias of the related object." required="no" type="string" default="" />
+		<cfset var objectMetadata = getObjectMetadata() />
+		<cfset var allRelationships = ArrayNew(1) />
+		<cfset var relationships = 0 />
+		<cfset var x = 0 />
+		
+		<!--- check the hasone relationships --->
+		<cfif ArrayLen(objectMetadata.hasOne)>
+			<cfset relationships = objectMetadata.hasOne />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif NOT Len(arguments.alias) OR relationships[x].name IS arguments.alias>
+					<cfset ArrayAppend(allRelationships, relationships[x]) />
+				</cfif>
+			</cfloop>
+		</cfif>
+		
+		<!--- check the hasMany relationships --->
+		<cfif ArrayLen(objectMetadata.hasMany)>
+			<cfset relationships = objectMetadata.hasMany />
+			<!--- loop over the relationships and find a match by alias --->
+			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
+				<cfif NOT Len(arguments.alias) OR relationships[x].name IS arguments.alias>
+					<cfset ArrayAppend(allRelationships, relationships[x]) />
+				</cfif>
+			</cfloop>
+		</cfif>
+		
+		<cfreturn Duplicate(allRelationships) />
+	</cffunction>
+	
 	<!--- hasRelationship --->
 	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="boolean">
 		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="string" />
@@ -201,36 +234,5 @@
 		<cfreturn _getReactorFactory().createMetadata(arguments.alias) />
 	</cffunction>
 	
-	<!--- getRelationships --->
-	<cffunction name="getRelationships" access="public" hint="I get an array of relationships.  I passed an alias I filter the relationships to only those that relate to the alias." output="false" returntype="array">
-		<cfargument name="alias" hint="I am the alias of the related object." required="no" type="string" default="" />
-		<cfset var objectMetadata = getObjectMetadata() />
-		<cfset var allRelationships = ArrayNew(1) />
-		<cfset var relationships = 0 />
-		<cfset var x = 0 />
-		
-		<!--- check the hasone relationships --->
-		<cfif ArrayLen(objectMetadata.hasOne)>
-			<cfset relationships = objectMetadata.hasOne />
-			<!--- loop over the relationships and find a match by alias --->
-			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif NOT Len(arguments.alias) OR relationships[x].name IS arguments.alias>
-					<cfset ArrayAppend(allRelationships, relationships[x]) />
-				</cfif>
-			</cfloop>
-		</cfif>
-		
-		<!--- check the hasMany relationships --->
-		<cfif ArrayLen(objectMetadata.hasMany)>
-			<cfset relationships = objectMetadata.hasMany />
-			<!--- loop over the relationships and find a match by alias --->
-			<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
-				<cfif NOT Len(arguments.alias) OR relationships[x].name IS arguments.alias>
-					<cfset ArrayAppend(allRelationships, relationships[x]) />
-				</cfif>
-			</cfloop>
-		</cfif>
-		
-		<cfreturn Duplicate(allRelationships) />
-	</cffunction>
+	
 	--->

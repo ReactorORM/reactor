@@ -683,7 +683,7 @@
 	</cffunction>
 	
 	<!--- reset --->
-	<cffunction name="reset" access="public" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
+	<cffunction name="reset" access="private" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
 		<cfset variables.query = 0 />
 		<cfset variables.array = ArrayNew(1) />
 		<cfset variables.index = 0 />
@@ -780,48 +780,64 @@
 	</cffunction>
 	
 	<!--- getWhere --->
-	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator" output="false" returntype="reactor.query.where">
-		<cfif NOT IsQuery(variables.query)>
-			<cfreturn getQueryObject().getWhere() />
-		<cfelse>
+	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="reactor.query.where">
+		<!---<cfif NOT IsQuery(variables.query)>--->
+		<cfset reset() />
+		<cfreturn getQueryObject().getWhere() />
+		<!---<cfelse>
 			<cfthrow message="Can Not Get Where"
 				detail="Calls to getWhere are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.getWhere.CanNotGetWhere" />
-		</cfif>
+		</cfif>--->
 	</cffunction>
 	
 	<!--- setDistinct --->
-	<cffunction name="setDistinct" access="public" hint="I filter the query that backs this iterator to return only distinct values." output="false" returntype="void">
+	<cffunction name="setDistinct" access="public" hint="I filter the query that backs this iterator to return only distinct values.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
 		<cfargument name="distinct" hint="I indicate if the query should only return distinct matches" required="yes" type="boolean" />
-		<cfif NOT IsQuery(variables.query)>
-			<cfreturn getQueryObject().setDistinct(arguments.distinct) />
-		<cfelse>
+		<!---<cfif NOT IsQuery(variables.query)>--->
+		<cfset reset() />
+		<cfreturn getQueryObject().setDistinct(arguments.distinct) />
+		<!---<cfelse>
 			<cfthrow message="Can Not Set Distinct"
 				detail="Calls to setDistinct are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.setDistinct.CanNotSetDistinct" />
-		</cfif>
+		</cfif>--->
 	</cffunction>
 		
 	<!--- getOrder --->
-	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator" output="false" returntype="reactor.query.order">
-		<cfif NOT IsQuery(variables.query)>
-			<cfreturn getQueryObject().getOrder() />
-		<cfelse>
+	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="reactor.query.order">
+		<!---<cfif NOT IsQuery(variables.query)>--->
+		<cfset reset() />
+		<cfreturn getQueryObject().getOrder() />
+		<!---<cfelse>
 			<cfthrow message="Can Not Get Order"
 				detail="Calls to getOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.getOrder.CanNotGetOrder" />
-		</cfif>
+		</cfif>--->
 	</cffunction>
 	
 	<!--- resetOrder --->
-	<cffunction name="resetOrder" access="public" hint="I reset the order object that sorts the query that backs this iterator" output="false" returntype="void">
-		<cfif NOT IsQuery(variables.query)>
-			<cfset getQueryObject().resetOrder() />
-		<cfelse>
+	<cffunction name="resetOrder" access="public" hint="I reset the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
+		<!---<cfif NOT IsQuery(variables.query)>--->
+		<cfset reset() />
+		<cfset getQueryObject().resetOrder() />
+		<!---<cfelse>
 			<cfthrow message="Can Not Reset Order"
 				detail="Calls to resetOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
 				type="reactor.iterator.resetOrder.CanNotResetOrder" />
-		</cfif>
+		</cfif>--->
+	</cffunction>
+	
+	<!--- resetWhere --->
+	<cffunction name="resetWhere" access="public" hint="I reset the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
+		<!---<cfif NOT IsQuery(variables.query)>--->
+		<cfset reset() />
+		<cfset getQueryObject().resetWhere() />
+		<!---<cfelse>
+			<cfthrow message="Can Not Reset Order"
+				detail="Calls to resetOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
+				type="reactor.iterator.resetOrder.CanNotResetOrder" />
+		</cfif>--->
 	</cffunction>
 	
 	<!--- gateway --->
