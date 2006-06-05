@@ -56,7 +56,7 @@
 			FROM SYSIBM.SYSCOLUMNS AS CO LEFT JOIN SYSIBM.SQLPRIMARYKEYS AS KC
 				ON CO."TBNAME" = KC."TABLE_NAME"
 				AND CO."NAME" = KC."COLUMN_NAME"
-			WHERE CO."TBNAME" = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+			WHERE CO."TBNAME" = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
 		</cfquery>
 		
 		<cfloop query="qFields">

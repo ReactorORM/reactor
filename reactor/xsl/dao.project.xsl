@@ -99,7 +99,7 @@
 					
 					&lt;cfqueryparam cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
-						scale="<xsl:value-of select="@length" />"
+						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
@@ -194,7 +194,7 @@
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
-						scale="<xsl:value-of select="@length" />"
+						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
@@ -212,7 +212,7 @@
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
-						scale="<xsl:value-of select="@length" />"
+						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
@@ -240,7 +240,7 @@
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
-						scale="<xsl:value-of select="@length" />"
+						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>

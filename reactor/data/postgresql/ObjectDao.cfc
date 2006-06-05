@@ -166,7 +166,7 @@
 				) 
 			)
 			AND
-			c.relname = <cfqueryparam cfsqltype="cf_sql_varchar" scale="63" value="#arguments.Object.getName()#" />
+			c.relname = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="63" value="#arguments.Object.getName()#" />
 			order by a.attnum
 		</cfquery>
 		

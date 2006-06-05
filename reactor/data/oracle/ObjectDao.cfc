@@ -56,12 +56,12 @@
                    			  colcon.table_name
                     from    all_cons_columns  colCon,
                            all_constraints   tabCon
-                    where tabCon.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+                    where tabCon.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
                          AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
                          AND colCon.TABLE_NAME      = tabCon.TABLE_NAME
                          AND 'P'                    = tabCon.CONSTRAINT_TYPE
                    ) primaryConstraints
-              where col.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+              where col.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
               		and col.COLUMN_NAME        = primaryConstraints.COLUMN_NAME (+)
                     AND col.TABLE_NAME         = primaryConstraints.TABLE_NAME (+)
 		</cfquery>

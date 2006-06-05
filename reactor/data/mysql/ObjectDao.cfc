@@ -53,7 +53,7 @@
 			END as length,
 			COLUMN_DEFAULT as 'default'
 			FROM information_schema.COLUMNS
-			WHERE TABLE_SCHEMA = Database() AND TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" scale="128" value="#arguments.Object.getName()#" />
+			WHERE TABLE_SCHEMA = Database() AND TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
 		</cfquery>
 		
 		
