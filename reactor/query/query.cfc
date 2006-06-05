@@ -34,9 +34,18 @@
 	</cffunction>
 	
 	<!--- returnObjectFields --->
-	<cffunction name="returnObjectFields" access="public" hint="I specify a particular object from which all fields should be returned. When this or returnObjectField() is first called they cause only the specified column(s) to be returned.  Additional columns can be added with multiple calls to these functions." output="false" returntype="reactor.query.query">
+	<cffunction name="returnObjectFields" access="public" hint="I specify a particular object from which all fields (or the spcified list of fields) should be returned. When this or returnObjectField() is first called they cause only the specified column(s) to be returned.  Additional columns can be added with multiple calls to these functions." output="false" returntype="reactor.query.query">
 		<cfargument name="objectAlias" hint="I am the object alias that is being searched for." required="yes" type="string" />
-		<cfset ArrayAppend(variables.instance.returnFields, arguments.objectAlias) />
+		<cfargument name="fieldAliasList" hint="I am an optiona list of specific field aliass to return." required="no" type="string" default="" />
+		<cfset var fieldAlias = "" />
+		
+		<cfif NOT Len(arguments.fieldAliasList)>
+			<cfset ArrayAppend(variables.instance.returnFields, arguments.objectAlias) />
+		<cfelse>
+			<cfloop list="#arguments.fieldAliasList#" index="fieldAlias">
+				<cfset returnObjectField(arguments.objectAlias, fieldAlias) />
+			</cfloop>
+		</cfif>
 		
 		<cfreturn this />
 	</cffunction>
