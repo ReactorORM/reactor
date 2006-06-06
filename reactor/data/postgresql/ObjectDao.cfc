@@ -200,10 +200,10 @@
 		<cfargument name="typeName" hint="I am the cf type name to get a default value for." required="yes" type="string" />
 		<cfargument name="nullable" hint="I indicate if the column is nullable." required="yes" type="boolean" />
 		
-		<!--- strip out parens --->
+		<!--- strip out parens
 		<cfif Len(arguments.sqlDefaultValue)>
 			<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2 )/>
-		</cfif>
+		</cfif> --->
 		
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="numeric">

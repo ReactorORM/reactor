@@ -947,4 +947,9 @@
     <cffunction name="getLinked" access="public" output="false" returntype="boolean">
        <cfreturn variables.linked />
     </cffunction>
+	
+	<!--- getLastExecutedQuery --->
+	<cffunction name="getLastExecutedQuery" access="public" output="false" returntype="struct">
+     	<cfreturn getGateway().getLastExecutedQuery() />
+    </cffunction>
 </cfcomponent>
