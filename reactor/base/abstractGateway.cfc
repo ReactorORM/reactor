@@ -534,10 +534,10 @@
 										<cfif Len(Trim(whereNode.values))>
 											<cfif NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length>
 												<cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="#whereNode.values#" list="yes" />
-												<cfset ArrayAppend(queryData.params, Convention.formatValue(whereNode.value, whereNode.values)) />
+												<cfset ArrayAppend(queryData.params, whereNode.values) />
 											<cfelse>
 												<cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="#whereNode.values#" list="yes" />
-												<cfset ArrayAppend(queryData.params, Convention.formatValue(whereNode.value, whereNode.values)) />
+												<cfset ArrayAppend(queryData.params, whereNode.values) />
 											</cfif>
 										<cfelse>
 											<cfqueryparam null="yes" />
@@ -552,10 +552,10 @@
 										<cfif Len(Trim(whereNode.values))>
 											<cfif NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length>
 												<cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="#whereNode.values#" list="yes" />
-												<cfset ArrayAppend(queryData.params, Convention.formatValue(whereNode.value, whereNode.values)) />
+												<cfset ArrayAppend(queryData.params, whereNode.values) />
 											<cfelse>
 												<cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="#whereNode.values#" list="yes" />
-												<cfset ArrayAppend(queryData.params, Convention.formatValue(whereNode.value, whereNode.values)) />
+												<cfset ArrayAppend(queryData.params, whereNode.values) />
 											</cfif>
 										<cfelse>
 											<cfqueryparam null="yes" />
