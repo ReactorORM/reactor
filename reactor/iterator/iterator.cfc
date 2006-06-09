@@ -683,7 +683,7 @@
 	</cffunction>
 	
 	<!--- reset --->
-	<cffunction name="reset" access="private" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
+	<cffunction name="reset" access="public" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
 		<cfset variables.query = 0 />
 		<cfset variables.array = ArrayNew(1) />
 		<cfset variables.index = 0 />
