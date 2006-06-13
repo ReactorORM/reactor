@@ -209,9 +209,10 @@
 	</cffunction>
 	
 	<!--- findObject --->
-	<cffunction name="findObject" access="public" hint="I look for an object which is this object or joined to by this object or other joined objects." output="false" returntype="reactor.query.object">
+	<cffunction name="findObject" access="public" hint="I look for an object which is this object or joined to by this object or other joined objects." output="false" returntype="any">
 		<cfargument name="objectAlias" hint="I am the alias of the object being searched for." required="yes" type="string" />
 		<cfset var x = 0 />
+		<cfset var Object = 0 />
 		
 		<!--- is this object the one specified by the alias? --->
 		<cfif getAlias() is arguments.objectAlias>
@@ -219,15 +220,18 @@
 			<cfreturn this />
 			
 		<cfelse>
+			
 			<!--- look for it in the joined objects --->
 			<cfloop from="1" to="#ArrayLen(variables.Joins)#" index="x">
-				<cfreturn variables.Joins[x].getObject().findObject(arguments.objectAlias) />
+				<cfset Object = variables.Joins[x].getObject().findObject(arguments.objectAlias) />
+				<cfif IsObject(Object) AND Object.getAlias() IS arguments.objectAlias>
+					<cfreturn Object />
+				</cfif>
 			</cfloop>
 			
+			<cfreturn "" />
 		</cfif>
 		
-		<!--- if it wasn't an object then throw an error, we couldn't find the requested object --->
-		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.objectAlias#' as an object within the query." type="reactor.findObject.CanNotFindObject" />
 	</cffunction>
 	
 	<!--- alias --->

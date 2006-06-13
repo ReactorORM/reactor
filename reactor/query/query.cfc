@@ -180,8 +180,10 @@
 		<cfif IsObject(Object)>
 			<cfreturn Object />
 		</cfif>
+	
+		<!--- if it wasn't an object then throw an error, we couldn't find the requested object --->
+		<cfthrow message="Can Not Find Object" detail="Can not find the object '#arguments.objectAlias#' as an object within the query." type="reactor.findObject.CanNotFindObject" />
 
-		
 	</cffunction>
 	
 	<!--- reset --->
