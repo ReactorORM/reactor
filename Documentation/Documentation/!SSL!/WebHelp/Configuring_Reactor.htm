@@ -1,0 +1,169 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Configuring Reactor</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nConfiguring Reactor");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Configuring Reactor</h1>
+
+<p>We're almost to the point where we can write some code. &nbsp;However, 
+ before we can do this, we'll need to create a Reactor.xml configuration 
+ file.</p>
+
+<p>&nbsp;</p>
+
+<p>The configuration provides Reactor with quite a bit of information. 
+ &nbsp;In particular, 
+ all of the information you setup in the <a href="Get_Started.htm">Getting 
+ Started</a> section. &nbsp;The 
+ configuration file is also used to inform Reactor of relationships between 
+ tables and views in the database (herein known generically as objects).</p>
+
+<p>&nbsp;</p>
+
+<p>My configuration file looks like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/ScratchData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;development&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;/config&gt;<br>
+<br>
+ &nbsp;&nbsp;&lt;objects/&gt;<br>
+&lt;/reactor&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>The tags, which are explained in detail the Reactor.xml Configuration 
+ File section, serve the following purposes:</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Project</B></span> – This is a unique name 
+ given to your application. &nbsp;Reactor 
+ uses this to generate certain core files. &nbsp;Once 
+ you pick this name for an application changing it will cause errors.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Dsn</B></span> – This tells Reactor which 
+ datasource to use. &nbsp;Because 
+ I named my data source Scratch, that's what I provided.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Type</B></span> – This is the type of database 
+ that Reactor is connecting to. &nbsp;My 
+ database is a Microsoft SQL database so I've provided &quot;mssql&quot;. 
+ All of the available options are outlined in the Reactor.xml Configuration 
+ File section.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Mapping</B></span> – This is the mapping 
+ to the directory where Reactor will write generated files. &nbsp;This 
+ must be a mapping or located the root of your website. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: Reactor does not require any mappings! &nbsp;Don't 
+ listen to people who tell you otherwise.</p>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold;"><B>Mode</B></span> – Without getting into 
+ detail, when you're developing applications you'll probably want to keep 
+ the mode set to “development”. &nbsp;This 
+ will cause Reactor to recreate objects as their structure changes in the 
+ database or as their configured relationships change. &nbsp;Other 
+ options are defined in the Reactor.xml Configuration File section.</p>
+
+<p>&nbsp;</p>
+
+<p>The Objects tag is empty right now because we haven't defined any relationships.</p>
+
+<p>&nbsp;</p>
+
+<p>Now that we have a configuration file we can get started <a href="Creating_Objects_with_Reactor.htm">Creating 
+ Objects with Reactor</a>.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

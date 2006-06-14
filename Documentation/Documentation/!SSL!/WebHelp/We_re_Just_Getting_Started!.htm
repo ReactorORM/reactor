@@ -1,0 +1,317 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>We're Just Getting Started!</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { x-text-underline:normal; text-decoration:underline; }
+table.whs2 { width:100%; border-spacing:0px; }
+th.whs3 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+td.whs4 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nWe're Just Getting Started");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>We're Just Getting Started!</h1>
+
+<p>Reactor has a host of powerful features. &nbsp;Many 
+ of which you will want to use on a day to day basis. &nbsp;Let's 
+ take a look at how we can configure relationships between objects and 
+ what sort of power that can give us.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's say that, for the sake of argument, our Users can purchase something 
+ on this website we're building. &nbsp;We 
+ will want to be able to ship whatever they purchased to them. &nbsp;To 
+ facilitate that our users will need to have addresses associated with 
+ their account.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's create a new table called Customer and an Address table. &nbsp;The 
+ customer table will have all the same columns as our User table did, but 
+ we'll also give it an additional addressId column which will be a foreign 
+ key to our Address table. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Here's what the tables look like:</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Customer 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs3">Type</th>
+<th scope="col" class="whs3">Nullable</th>
+<th scope="col" class="whs3">Default</th>
+<th scope="col" class="whs3">Other</th></tr>
+
+<tr>
+<td class="whs4">customerId</td>
+<td class="whs4">Int</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">PK / Identity</td></tr>
+
+<tr>
+<td class="whs4">username</td>
+<td class="whs4">Varchar(50)</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">password</td>
+<td class="whs4">Varchar(50)</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">firstName</td>
+<td class="whs4">Varchar(50)</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">lastName</td>
+<td class="whs4">Varchar(50)</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>dateCreated</td>
+<td class="whs4">
+<p>DateTime</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>getDate()</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td colspan="1" rowspan="1" class="whs4">
+<p>addressId</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>Int</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>No</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>FK to Address.addressId</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Address 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs3">Type</th>
+<th scope="col" class="whs3">Nullable</th>
+<th scope="col" class="whs3">Default</th>
+<th scope="col" class="whs3">Other</th></tr>
+
+<tr>
+<td class="whs4">
+<p>addressId</td>
+<td class="whs4">
+<p>Int</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td class="whs4">
+<p>street1</td>
+<td class="whs4">
+<p>Varchar(50)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>street2</td>
+<td class="whs4">
+<p>Varchar(50)</td>
+<td class="whs4">
+<p>Yes</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>city</td>
+<td class="whs4">
+<p>Varchar(50)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>state</td>
+<td class="whs4">
+<p>Varchar(50)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>zip</td>
+<td class="whs4">
+<p>Varchar(10)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>In Reactor terminology, the Customer &quot;has one&quot; Address.</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: The address table isn't as normalized as it could be. 
+ &nbsp;This is 
+ only an example.</p>
+
+<p>&nbsp;</p>
+
+<p>Wouldn't it be cool if you could somehow find the customer's address 
+ from a CustomerRecord? &nbsp;Well, 
+ you can.</p>
+
+<p>&nbsp;</p>
+
+<p>Firstly, let's create a CustomerRecord object:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a customerRecord ---&gt;<br>
+&lt;cfset CustomerRecord = Reactor.createRecord(&quot;Customer&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>If you dump that object you'll see a nice set of methods on it. &nbsp;In 
+ particular, and like the UserRecord, it has getters and setters for every 
+ field in the database and the <span class=function>load()</span>, <span 
+ class=function>save()</span> and <span class=function>delete()</span> 
+ methods.</p>
+
+<p>&nbsp;</p>
+
+<p>Aside from <span class=function>getAddressId()</span> and <span class=function>setAddressId()</span> 
+ there's nothing dealing with addresses though. &nbsp;Let's 
+ do something about that. &nbsp;</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

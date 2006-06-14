@@ -1,0 +1,286 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<!-- saved from url=(0026)http://www.macromedia.com/ -->
+<html>
+
+<head>
+<title>Save Changes to a Record</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script  type="text/javascript" language="javascript1.2">
+    <!--
+    var linkedScrollbarStyle = "<link rel='stylesheet' href='wf_topics.css'>";
+    if( (!isTopicOnly()) &&(parent.gbFHPureHtml == null) )
+    {
+        document.write(linkedScrollbarStyle);
+    }
+    //-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.addTocInfo)
+{
+addTocInfo("Reactor Crash Course\nSave Changes to a Record");
+
+  addShowButton();
+}
+if (window.setRelStartPage)
+{
+setRelStartPage("Reactor_Documentation.htm");
+
+	sendTopicLoaded();
+	autoSync(1);
+	sendSyncInfo();
+	sendAveInfo();
+	sendBgColorInfo();
+}
+//-->
+</script>
+<h1>Save Changes to a Record</h1>
+
+<p>Saving changes to a Record is extremely simple. &nbsp;For 
+ instance, let's say I wanted to change the password on this record. &nbsp;I 
+ could simply call the <span class=function>setPassword()</span> method 
+ and pass in the new password like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- let's change the password ---&gt;<br>
+&lt;cfset UserRecord.setPassword(&quot;Foobar123&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>If you were to call <span class=function>getPassword()</span> you would 
+ see that the object now reports the password as being &quot;Foobar123&quot;. 
+ &nbsp;However, 
+ if you look in the database you'll see that it hasn't yet been updated. 
+ &nbsp;Committing 
+ this change to the database is as simple as this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- time to save the update ---&gt;<br>
+&lt;cfset UserRecord.save() /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Now, if you look in the database, you'll see that the password field 
+ has been updated!</p>
+
+<p>&nbsp;</p>
+
+<p>Creating records works the same way as updating them. &nbsp;Let's 
+ review another quick example to demonstrate this. &nbsp;We'll 
+ pull a few things together:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a userRecord ---&gt;<br>
+&lt;cfset UserRecord = Reactor.createRecord(&quot;User&quot;) /&gt;<br>
+<br>
+&lt;!--- populate the new record ---&gt;<br>
+&lt;cfset UserRecord.setUsername(&quot;jschmoe&quot;) /&gt;<br>
+&lt;cfset UserRecord.setPassword(&quot;foobar&quot;) /&gt;<br>
+&lt;cfset UserRecord.setFirstName(&quot;Joe&quot;) /&gt;<br>
+&lt;cfset UserRecord.setLastName(&quot;Schmoe&quot;) /&gt;<br>
+<br>
+&lt;!--- save the record ---&gt;<br>
+&lt;cfset UserRecord.save() /&gt;<br>
+<br>
+&lt;!--- now, let's list all the records in the database ---&gt;<br>
+&lt;cfset UserGateway = Reactor.createGateway(&quot;User&quot;) /&gt;<br>
+<br>
+&lt;!--- dump all of the users ---&gt;<br>
+&lt;cfdump var=&quot;#UserGateway.getAll()#&quot; /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>The result of running this code would be:</p>
+
+<p>&nbsp;</p>
+
+<p>We now have two rows in our database, just as we would have expected.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's stop here for a second. &nbsp;I 
+ know that this example works for MSSQL. &nbsp;However 
+ MySQL users probably received an error message indicating that the dateCreated 
+ value was not a valid date. &nbsp;Why? 
+ &nbsp;Well, not 
+ all database systems let you specify an expression as a default value 
+ for a column. &nbsp;MSSQL 
+ does, MySQL doesn't. &nbsp;Reactor 
+ is smart enough to translate a default value of <span class=function>getDate()</span> 
+ to a default value of <span class=function>now()</span> in the Record. 
+ &nbsp;Because 
+ MySQL doesn't support this, the column doesn't have a default value and 
+ Reactor treats it as an empty string. </p>
+
+<p>&nbsp;</p>
+
+<p>There are two solutions to this. &nbsp;The 
+ quickest and easiest is to simply add a call to <span class=function>setDateCreated()</span> 
+ and pass in a call to the ColdFusion <span class=function>now()</span> 
+ function. &nbsp;This 
+ works fine, but requires that you remember to do it everywhere. &nbsp;What 
+ if you could do this one time and never have to worry about it again? 
+ &nbsp;You can! 
+ &nbsp;But first, 
+ a Reactor anatomy lesson…</p>
+
+<p>&nbsp;</p>
+
+<p>Record Objects don't hold their own data. &nbsp;(That 
+ would be too simple!) &nbsp;Record 
+ Objects use Transfer Objects to hold their data. &nbsp;Essentially 
+ Transfer Objects are a little smarter than a structure and significantly 
+ dumber than a Bean.</p>
+
+<p>&nbsp;</p>
+
+<p>If you look in your data directory you'll note that there are now five 
+ folders. &nbsp;One 
+ of these is &quot;To,&quot; which is short for Transfer Object. &nbsp;If 
+ you open the database agnostic UserTo.cfc object you will see this code:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the database agnostic custom 
+ TO object for the User object. &nbsp;I 
+ am generated, but not overwritten if I exist. &nbsp;You 
+ are safe to edit me.&quot;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;extends=&quot;reactor.project.Scratch.To.UserTo&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;!--- 
+ Place custom code here, it will not be overwritten ---&gt;<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This looks quite a bit like the customizable UserGateway.cfc, doesn't 
+ it? &nbsp;You 
+ may also note that this object extends a project UserTo. &nbsp;Let's 
+ look at that too:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the base TO object for the 
+ User object. &nbsp;I 
+ am generated. &nbsp;DO 
+ NOT EDIT ME (but feel free to delete me).&quot;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;extends=&quot;reactor.base.abstractTo&quot; 
+ &gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;userId&quot; type=&quot;numeric&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;username&quot; type=&quot;string&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;password&quot; type=&quot;string&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;firstname&quot; type=&quot;string&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;lastname&quot; type=&quot;string&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfproperty 
+ name=&quot;dateCreated&quot; type=&quot;date&quot; /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ variables.signature = &quot;D4D176D79148DF927D91FABA697888EB&quot; /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.userId = &quot;0&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.username = &quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.password = &quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.firstname = &quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.lastname = &quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.dateCreated = &quot;#Now()#&quot; /&gt;<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>I've reformatted the code to fit better in this document, but it's the 
+ same code. &nbsp;You 
+ will note that my DateCreated value is being set to <span class=function>Now()</span>. 
+ &nbsp;MySQL (and 
+ some others) users will see this set to an empty string. &nbsp;That's 
+ the problem. </p>
+
+<p>&nbsp;</p>
+
+<p class=Quiz><span style="font-weight: bold;"><B>Pop Quiz:</B></span> How do 
+ you set the User TO's DateCreated value to default to Now()?<br>
+<br>
+I'll give you a minute to think about it…<br>
+<br>
+… ok, now that that's done, I'm sure you gave this as your answer:<br>
+<br>
+Override the default value in the customizable UserTo!<br>
+<br>
+You're right! &nbsp;That's 
+ exactly what you should do.</p>
+
+<p>&nbsp;</p>
+
+<p>Here's what a customized UserTo.cfc would look like for MySQL. This 
+ example defaults the DateCreated value to now().</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the database agnostic custom 
+ TO object for the User object. &nbsp;I 
+ am generated, but not overwritten if I exist. &nbsp;You 
+ are safe to edit me.&quot;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;extends=&quot;reactor.project.Scratch.To.UserTo&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;!--- 
+ Place custom code here, it will not be overwritten ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;cfset 
+ this.DateCreated = now() /&gt;<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Well done! &nbsp;MySQL 
+ users (and others) rerun your code and you'll see that you can easily 
+ add a record to the database. &nbsp;</p>
+
+<p>The only thing left to demonstrate is how to…</p>
+
+</body>
+</html>

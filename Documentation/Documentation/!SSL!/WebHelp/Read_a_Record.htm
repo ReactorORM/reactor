@@ -1,0 +1,231 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Read a Record</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+img_whs1 { border:none; width:335px; height:1326px; }
+img_whs2 { border:none; width:309px; height:132px; }
+img_whs3 { border:none; width:302px; height:132px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nRead a Record");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Read a Record</h1>
+
+<p>Before you can read a Record you need to create a Record object. &nbsp;We'll 
+ be using the same ReactorFactory object we created for the gateway example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Creating an instance of a record object is as simple as this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create a userRecord ---&gt;<br>
+&lt;cfset UserRecord = reactor.createRecord(&quot;User&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>The syntax for this is essentially identical to creating a gateway and 
+ all other Reactor generated objects.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's take a moment and look at what we've got now. &nbsp;If 
+ you dump this object you'll see this result: (I've collapsed portions 
+ to make it smaller for this document).</p>
+
+<p><img src="image5.gif" width="335px" height="1326px" border="0" class="img_whs1"></p>
+
+<p>By looking at the dump you can see that there 38 methods. &nbsp;Some 
+ of these we've discussed and most we haven't. &nbsp;These 
+ are all explained in the Record Object section.</p>
+
+<p>&nbsp;</p>
+
+<p>There are, however, the 12 getter and setter methods, one for each field 
+ in the table. &nbsp;We 
+ also have the <span class=function>load()</span>, <span class=function>save()</span> 
+ and <span class=function>delete()</span> methods. &nbsp;That 
+ leaves 23 other methods. &nbsp;Ignore 
+ them for now.</p>
+
+<p>&nbsp;</p>
+
+<p>For fun, let's call the 6 getters methods using this code:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- let's dump the default values in the UserRecord 
+ ---&gt;<br>
+&lt;cfoutput&gt;<br>
+getUserId(): &quot;#UserRecord.getUserId()#&quot;&lt;br /&gt;<br>
+getUsername(): &quot;#UserRecord.getUsername()#&quot;&lt;br /&gt;<br>
+getPassword(): &quot;#UserRecord.getPassword()#&quot;&lt;br /&gt;<br>
+getFirstName(): &quot;#UserRecord.getFirstName()#&quot;&lt;br /&gt;<br>
+getLastName(): &quot;#UserRecord.getLastName()#&quot;&lt;br /&gt;<br>
+getDateCreated(): &quot;#UserRecord.getDateCreated()#&quot;&lt;br /&gt;<br>
+&lt;/cfoutput&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This results in the following output:</p>
+
+<p><img src="image6.gif" width="309px" height="132px" border="0" class="img_whs2"></p>
+
+<p>Not much of interest here. &nbsp;One 
+ thing I would like to point out is that <span class=function>getDateCreated()</span> 
+ returned a date value. &nbsp;Depending 
+ on if your DBMS supports non-static default values, you may or may not 
+ see an empty string here. &nbsp;For 
+ at least MSSQL, a default expression which calls the getDate() method 
+ will be translated into <span class=function>now()</span> in ColdFusion. 
+ &nbsp;I'll show 
+ a related trick for other DBMS in a bit.</p>
+
+<p>&nbsp;</p>
+
+<p>Carrying on now…</p>
+
+<p>&nbsp;</p>
+
+<p>Before we can load a record we need to tell the Record which row it 
+ represents. &nbsp;According 
+ to our schema, the User table has one primary key, userId. &nbsp;By 
+ default, Reactor relies on primary key values to identify specific rows 
+ to read (and all objects support multiple primary and foreign keys). &nbsp;You 
+ can also pass name/value pairs into the <span class=function>load()</span> 
+ method to load arbitrary rows.</p>
+
+<p>&nbsp;</p>
+
+<p>In my database I have one row. &nbsp;This 
+ row has a UserId value of 1. &nbsp;So, 
+ I'll set the userId value in my UserRecord to 1:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- set the record to load ---&gt;<br>
+&lt;cfset UserRecord.setUserId(1) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: You wouldn't typically hard-code the value &quot;1&quot; 
+ into your application. &nbsp;This 
+ is just an example.</p>
+
+<p>&nbsp;</p>
+
+<p>Now that the record &quot;knows&quot; its primary key you can load the 
+ data. &nbsp;Be 
+ warned! &nbsp;This 
+ might not be for the faint of heart:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- load the record ---&gt;<br>
+&lt;cfset UserRecord.load() /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Well, that wasn't that bad after all, was it? &nbsp;But 
+ what happened? &nbsp;Let's 
+ call those six methods again and see…</p>
+
+<p><img src="image10.gif" width="302px" height="132px" border="0" class="img_whs3"></p>
+
+<p>Isn't that cool?! &nbsp;Calling 
+ the <span class=function>load()</span> method automatically populated 
+ the object with the correct data from the database! &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>This is a short-hand example of the same thing:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- load the record ---&gt;<br>
+&lt;cfset UserRecord = Reactor.createRecord(&quot;User&quot;).load(userId=1) 
+ /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>So, what happens when you change the data and <a href="Save_Changes_to_a_Record.htm">Save 
+ Changes to a Record</a>?</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Other Types of Relationships</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { font-style:italic; }
+p.whs2 { font-style:normal; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nOther Types of Relationships");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Other Types of Relationships</h1>
+
+<p>Reactor has a few other tricks up its sleeves too. &nbsp;For 
+ instance, what if you wanted to know all the Customers associated with 
+ an address? &nbsp;Piece 
+ of cake! &nbsp;In 
+ this case, because one address can be associated with many Customers, 
+ an address &quot;has many&quot; customers. &nbsp;To 
+ facilitate this we'll add a hasMany relationship to our Reactor.xml configuration 
+ file.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/ScratchData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;development&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/config&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt; 
+ <br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This update has added a new object tag for the Address table to our 
+ configuration. &nbsp;This 
+ Address object has a &quot;hasMany&quot; tag that relates the Address 
+ to Customers via the addressId column in both tables. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>So, if we create an AddressRecord object we'll see a new method on it. 
+ &nbsp;Go ahead 
+ and do that now. &nbsp;I'll 
+ wait for you to get back. &nbsp;Let 
+ me know what methods are new.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">… Long Pause …</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs2">Ok. What'd you find? &nbsp;Ah 
+ ha! &nbsp;You're 
+ correct. &nbsp;The 
+ hasMany relationship caused one method to be generated: <span class=function>getCustomerIterator()</span></p>
+
+<p class="whs2">Without getting into too much detail, this 
+ method returns an object that allows you to easily iterate over and manipulate 
+ sets of related Records. &nbsp;In 
+ this case it represents the Address' Customers.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">The Iterator object has several methods 
+ of note. &nbsp;We'll 
+ first focus on <span class=function>getQuery()</span> and <span class=function>getArray()</span>. 
+ &nbsp;<span class=function>GetQuery()</span> 
+ returns a query of the related customers. &nbsp;<span 
+ class=function>GetArray()</span> returns 
+ an array of CustomerRecords. &nbsp;Both 
+ of these methods accept optional arguments to limit the scope of the data 
+ returned. &nbsp;The 
+ signature of these two methods are:</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">query = getQuery(from, count)</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">array= getArray(from, count)</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">In both methods from and count are optional. 
+ &nbsp;From is 
+ the first row to return. &nbsp;Count 
+ is the number of rows to return.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">For example, the following code will return 
+ a query of all the customers related to an AddressRecord:</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class=code>&lt;cfset customers = AddressRecord.getCustomerIterator().getQuery() 
+ /&gt;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">The next example will return only 5 records 
+ starting from the 10th record.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class=code>&lt;cfset customers = AddressRecord.getCustomerIterator().getQuery(10, 
+ 5) /&gt;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">If the from and count arguments do not define 
+ a valid range then anything out side of the range will not be returned. 
+ &nbsp;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">Using the from and count is particularly 
+ useful when working with paginated lists of data. &nbsp;In 
+ fact, the Iterator object has methods for sorting and filtering data. 
+ &nbsp;The end 
+ result is the Iterator enables you to create applications which include 
+ sorting, filtering and paginating data.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">The <span class=function>getArray()</span> 
+ method works just the same as the <span class=function>getQuery()</span> 
+ method, but it returns an array of records.</p>
+
+&nbsp;
+
+<p class=note>Note: Iterators are backed by ColdFusion queries. &nbsp;Calling 
+ <span class=function>getArray()</span> translates rows in the query into 
+ record objects which are cached inside the Iterator. &nbsp;This 
+ means that even if you have a query of several thousand objects it's not 
+ terribly expensive to use <span class=function>getArray()</span> with 
+ the from and count arguments to translate a small subset of data into 
+ records. &nbsp;</p>
+
+<p class=note>&nbsp;</p>
+
+<p class=note>However, if you call <span class=function>getArray()</span> 
+ without the from and to arguments on anything more than a small set of 
+ data you may run into performance problems.<br>&nbsp;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">Unlike the hasOne relationships, there is 
+ no <span class=function>setCustomerIterator()</span> method on the Address. 
+ This is because there's really nothing to set from the Address' perspective. 
+ The address doesn't have a field for customerId.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">This all leads up to the next relationship 
+ type, Relationships via Linking Tables.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

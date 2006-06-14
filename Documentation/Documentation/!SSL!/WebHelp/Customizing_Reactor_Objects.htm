@@ -1,0 +1,364 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Customizing Reactor Objects</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ol.whs1 { list-style:decimal; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nCustomizing Reactor Objects");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Customizing Reactor Objects</h1>
+
+<p>We've seen a lot of Reactors functionality now. &nbsp;But 
+ what if Reactor doesn't DO what you want? &nbsp;For 
+ instance, let's say that you need a method on the Customer object which 
+ you can call to see how much the customer has spent in your store across 
+ all of their purchases.</p>
+
+<p>&nbsp;</p>
+
+<p>It's easy enough to say that a customer has many invoices. &nbsp;I've 
+ updated my customer configuration like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;object name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&lt;/hasOne&gt; 
+ <br>
+<br>
+ &nbsp;&lt;hasMany 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
+ &nbsp;&lt;/hasMany&gt; 
+ <br>
+&lt;/object&gt;</p>
+
+&nbsp; 
+
+<br>So, 
+ logically, we could program something to get all of the customer’s InvoiceRecords, 
+ and then all the ProductRecords on those invoices and we could total them 
+ up - all in some sort of hari-kari query. 
+
+<br>&nbsp; 
+ 
+
+<br>Of 
+ course, it’d make more sense to just write a simple query. &nbsp;Something 
+ like this would do the trick just fine: 
+
+<br>&nbsp; 
+ 
+
+<p class=code>SELECT sum(p.price) as totalSpent<br>
+FROM Customer as c JOIN Invoice as i<br>
+ &nbsp;ON c.customerId 
+ = i.invoiceID<br>
+JOIN InvoiceProduct as ip<br>
+ &nbsp;ON i.invoiceId 
+ = ip.invoiceId<br>
+JOIN Product as p<br>
+ &nbsp;ON ip.productId 
+ = p.productId<br>
+WHERE c.customerId = 1</p>
+
+&nbsp; 
+
+<p>This begs a few questions:</p>
+
+<p>&nbsp;</p>
+
+<ol type="1" class="whs1">
+	
+	<li class=kadov-p><p>Where would we put this query? &nbsp;</p></li>
+	
+	<li class=kadov-p><p>How would we call it?</p></li>
+	
+	<li class=kadov-p><p>How do we specify the datasource for the cfquery 
+ tag?</p></li>
+	
+	<li class=kadov-p><p>This seems a little low-tech, isn't it Reactor’s 
+ purpose to avoid stuff like this?</p></li>
+	
+	<li class=kadov-p><p>Is there a different way to do this?</p></li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>I'll address these one at a time:</p>
+
+<h2>Where would we put this query?</h2>
+
+<p>If, for whatever reason, we wanted to use this query as it is, we'd 
+ want to make it reusable. &nbsp;The 
+ best way to do this is to encapsulate it in a method in a customizable 
+ object. </p>
+
+<p>&nbsp;</p>
+
+<p>To do this, open up your DBMS specific customizable Customer Record 
+ component. &nbsp;Because 
+ I'm using Microsoft SQL Server mind is named CustomerRecordmssql.cfc. 
+ &nbsp;This file 
+ looks like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the database agnostic custom 
+ Record object for the Customer object. &nbsp;I 
+ am generated, but not overwritten if I exist. &nbsp;You 
+ are safe to edit me.&quot; extends=&quot;reactor.project.Scratch.Record.CustomerRecord&quot; 
+ &gt;<br>
+&lt;!--- Place custom code here, it will not be overwritten ---&gt;<br>
+<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: If you don't remember the structure of files generated 
+ by Reactor you should check out <a href="The_Reactor_Generated_Files.htm">The 
+ Reactor Generated Files</a> section.</p>
+
+<p>&nbsp;</p>
+
+<p>We need to add a method to this CFC to run the query and return the 
+ value we're looking for. &nbsp;We're 
+ putting this method in the DBMS specific CustomerRecord file because the 
+ query is DBMS specific. &nbsp;(Honestly, 
+ this query sure looks cross-DBMS specific, but it's a best practice to 
+ put hand written queries in their CFC that represents the database the 
+ query will be run against.) &nbsp;The 
+ CustomerRecord was chose because the context of the returned data is specific 
+ to only one customer. &nbsp;This 
+ is a bit of a judgment call. &nbsp;It 
+ could also go in the customizable CustomerGateway. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Inside all of the Reactor Generated objects there's a method <span class=function>_getConfig()</span> 
+ which will return a reactor.config.config object. &nbsp;This 
+ is really just a bean which lets you access the settings in the &quot;config&quot; 
+ section of your Reactor.xml file. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>My method looks like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cffunction name=&quot;getTotalSpent&quot; access=&quot;public&quot; 
+ output=&quot;false&quot; returntype=&quot;numeric&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ var total = 0 /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfquery 
+ name=&quot;total&quot; datasource=&quot;#_getConfig().getDsn()#&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECT 
+ sum(p.price) as totalSpent<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM 
+ Customer as c JOIN Invoice as i<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ c.customerId = i.invoiceID<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOIN 
+ InvoiceProduct as ip<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ i.invoiceId = ip.invoiceId<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOIN 
+ Product as p<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ ip.productId = p.productId<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE 
+ c.customerId = #getCustomerId()#<br>
+ &nbsp;&nbsp;&nbsp;&lt;/cfquery&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfreturn 
+ Val(total.totalSpent) /&gt;<br>
+&lt;/cffunction&gt;</p>
+
+<p>&nbsp;</p>
+
+This method will run the query and return the total amount any given Customer 
+ spent (or 0 if the customer hasn't spent anything). 
+
+<h2>How would we call it?</h2>
+
+Calling this method is as simple as calling this method. (Helpful, wasn't 
+ that?) &nbsp;Here’s 
+ an example: 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a customerRecord and load one ---&gt;<br>
+&lt;cfset CustomerRecord = Reactor.createRecord(&quot;Customer&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.setCustomerId(1) /&gt;<br>
+&lt;cfset CustomerRecord.load() /&gt;<br>
+<br>
+&lt;!--- how much did this customer spend? ---&gt;<br>
+&lt;cfoutput&gt;<br>
+ &nbsp;&nbsp;&nbsp;#CustomerRecord.getTotalSpent()#<br>
+&lt;/cfoutput&gt;</p>
+
+<h2>How do we get the datasource for the cfquery tag?</h2>
+
+<p>This was actually answered already, but I'll answer it again:</p>
+
+<p>&nbsp;</p>
+
+<p>In all Reactor generated objects there's a method <span class=function>_getConfig()</span> 
+ which will return a reactor.config.config object. &nbsp;This 
+ is really just a bean which let's you access the settings in the &quot;config&quot; 
+ section of your Reactor.xml file. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Our query looked like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfquery name=&quot;total&quot; datasource=&quot;#_getConfig().getDsn()#&quot;&gt;<br>
+ &nbsp;&nbsp;SELECT 
+ sum(p.price) as totalSpent<br>
+ &nbsp;&nbsp;FROM 
+ Customer as c JOIN Invoice as i<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ c.customerId = i.invoiceID<br>
+ &nbsp;&nbsp;JOIN 
+ InvoiceProduct as ip<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ i.invoiceId = ip.invoiceId<br>
+ &nbsp;&nbsp;JOIN 
+ Product as p<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON 
+ ip.productId = p.productId<br>
+ &nbsp;&nbsp;WHERE 
+ c.customerId = #getCustomerId()#<br>
+&lt;/cfquery&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>As you can see, we’re calling <span class=function>getDsn()</span> on 
+ the config object returned by the <span class=function>_getConfig()</span> 
+ method. &nbsp;This 
+ will return the configured datasource name.</p>
+
+<h2>This seems a little low-tech, isn't it Reactor’s purpose to avoid stuff 
+ like this?</h2>
+
+<p>Nope. &nbsp;That's 
+ not true. &nbsp;Reactor's 
+ job is to automate the tedious and repetitive work involved in creating 
+ an object oriented persistence mechanism. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>This example may be tedious, but it's not repetitive. &nbsp;You 
+ won't be adding this same code all over the place. &nbsp;You'll 
+ only add it this one time in this one place.</p>
+
+<p>&nbsp;</p>
+
+<p>In a nutshell, being able to add this type of functionally is part of 
+ the real power of Reactor.</p>
+
+<h2>Is there a different way to do this?</h2>
+
+<p>How very perceptive of you. &nbsp;Why, 
+ yes, there is a different way to do this.</p>
+
+<p>&nbsp;</p>
+
+<p>I encourage you to think back to the point where we first created a 
+ Gateway object. &nbsp;You 
+ may have dumped it out and noted that there was a method on it, <span 
+ class=function>createQuery()</span>.</p>
+
+<p>&nbsp;</p>
+
+<p>This method will return a Query object which is the basis of Reactor's 
+ Object Oriented Query capabilities.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's take a look under the covers of Object Oriented Queries.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<!-- saved from url=(0026)http://www.macromedia.com/ -->
+<html>
+
+<head>
+<title>Creating Objects with Reactor</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+ul.whs1 { list-style:disc; }
+img_whs2 { border:none; width:505px; height:74px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script  type="text/javascript" language="javascript1.2">
+    <!--
+    var linkedScrollbarStyle = "<link rel='stylesheet' href='wf_topics.css'>";
+    if( (!isTopicOnly()) &&(parent.gbFHPureHtml == null) )
+    {
+        document.write(linkedScrollbarStyle);
+    }
+    //-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.addTocInfo)
+{
+addTocInfo("Reactor Crash Course\nCreating Objects with Reactor");
+
+  addShowButton();
+}
+if (window.setRelStartPage)
+{
+setRelStartPage("Reactor_Documentation.htm");
+
+	sendTopicLoaded();
+	autoSync(1);
+	sendSyncInfo();
+	sendAveInfo();
+	sendBgColorInfo();
+}
+//-->
+</script>
+<h1>Creating Objects with Reactor</h1>
+
+<p>To create objects you will use the ReactorFactory object. &nbsp;The 
+ ReactorFactory requires that you pass the path to the config file via 
+ it's <span class=function>init()</span> method when you instantiate it. 
+ &nbsp;Here's 
+ an example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>You will now have an instance of the ReactorFactory. &nbsp;This 
+ object provides several methods to create objects, including the following: 
+ </p>
+
+<p>&nbsp;</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>createRecord()</B></span> 
+ – Creates Record Objects which represent one row in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>createGateway()</B></span> 
+ – Creates Table Data Gateway Objects (Gateways) which are used to act 
+ on multiple rows in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>createDao()</B></span> 
+ – Creates Data Access Objects (DAOs) which are not typically used directly 
+ by developers, but provide methods for loading, saving and deleting single 
+ rows in the database.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>createTo()</B></span> 
+ – Creates Transfer Objects (TOs) which are not typically used directly 
+ by developers, but are used behind the scenes to move data around.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;"><B>createMetadata()</B></span> 
+ - Creates Metadata Objects which are not typically used directly by developers, 
+ but are used to describe the database structure and configuration programmatically.</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>The first thing I think that most people will want to do is simply list 
+ data from their database. &nbsp;We 
+ added a record to the User table above, let's go ahead and list it out 
+ now.</p>
+
+<p>&nbsp;</p>
+
+<p>To do this, we'll need to create a gateway object using the ReactorFactory 
+ we created above.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create a userGateway ---&gt;<br>
+&lt;cfset UserGateway = Reactor.createGateway(&quot;User&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Gateway Objects provide a <span class=function>getAll()</span> method 
+ (among others) which returns all the records in the table. &nbsp;The 
+ following code gets all of the records in the User table and dumps it 
+ out.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- get all records ---&gt;<br>
+&lt;cfset qUsers = UserGateway.getAll() /&gt;<br>
+&lt;!--- dump the results ---&gt;<br>
+&lt;cfdump var=&quot;#qUsers#&quot; /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Here are the results:</p>
+
+<p>&nbsp;<img src="image4.gif" width="505px" height="74px" border="0" class="img_whs2"></p>
+
+<p>For a complete list of Gateway methods, see the Gateway Objects section.</p>
+
+</body>
+</html>

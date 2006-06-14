@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+  <title>Database Tables</title><!--(Meta)==========================================================-->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com" />
+  <meta name="generator-major-version" content="0.1" />
+  <meta name="generator-minor-version" content="1" />
+  <meta name="filetype" content="kadov" />
+  <meta name="filetype-version" content="1" />
+  <meta name="page-count" content="1" />
+  <meta name="layout-height" content="849" />
+  <meta name="layout-width" content="1153" /><!--(Links)=========================================================-->
+  <link rel="StyleSheet" href="default.css" />
+</head><!--(Body)==========================================================-->
+
+<body>
+  <h1>Database Tables</h1>
+
+  <p>Before we write any code, let's create a simple database. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->We'll build on this database to illustrate various concepts as we move along.</p>
+
+  <p>Let's start by creating one table, User, with the following columns:</p>
+
+  <p> </p><!--(Table)=========================================================-->
+
+  <table x-use-null-cells="" style="width: 100%; border-spacing: 0px;" cellspacing="0" width="100%">
+    <tr>
+      <th scope="col" style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Name</th>
+
+      <th scope="col" style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Type</th>
+
+      <th scope="col" style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Nullable</th>
+
+      <th scope="col" style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Default</th>
+
+      <th scope="col" style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Other</th>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">userId</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Int</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">PK / Identity</td>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">username</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Varchar(50)</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">password</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Varchar(50)</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">firstName</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Varchar(50)</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">lastName</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">Varchar(50)</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+    </tr>
+
+    <tr>
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">dateCreated</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">DateTime</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">No</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;">getDate()</td>
+
+      <td style="padding-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px;"> </td>
+    </tr>
+  </table>
+
+  <p> </p>
+
+  <p class="note">Note: Not all DBMS support default non-constant values. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->In this case simply set this column to not null. Later, when we generate objects we'll edit the Transfer Object (TO) and override the default value for this column.</p>
+
+  <p><!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}--></p>
+
+  <p class="note">Another Note: I use a convention where table names are singular. This is not required. You can call your table whatever you want. However, when objects are created the object type is appended to the table name to name the object.</p>
+
+  <p class="note"><!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}--></p>
+
+  <p class="note">So, if I create a Record Object based on the User table it will be named UserRecord. I think this is nicer on many levels than UsersRecord, which makes less sense, especially seeing as one record represents on row in the table.</p>
+
+  <p><!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}--></p>
+
+  <p>Now that we've created this table why don't you manually throw a couple records in the table which we'll query for? I added the following record:</p>
+
+  <p><!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}--></p><!--(Table)=========================================================-->
+
+  <table x-use-null-cells="" style="x-cell-content-align: top; width: 100%; border-spacing: 0;" cellspacing="0" width="100%">
+    <col style="width: 9.974%;" />
+    <col style="width: 90.026%;" />
+
+    <tr valign="top">
+      <td style="border-left-width: 1px; border-left-color: #000000; border-left-style: Solid; border-top-style: Solid; border-top-color: #000000; border-top-width: 1px; border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="9.974%">
+        <p><strong>username</strong></p>
+      </td>
+
+      <td style="border-top-style: Solid; border-top-color: #000000; border-top-width: 1px; border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="90.026%">
+        <p>dhughes</p>
+      </td>
+    </tr>
+
+    <tr valign="top">
+      <td style="border-left-width: 1px; border-left-color: #000000; border-left-style: Solid; border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="9.974%">
+        <p><strong>password</strong></p>
+      </td>
+
+      <td style="border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="90.026%">
+        <p>test</p>
+      </td>
+    </tr>
+
+    <tr valign="top">
+      <td style="border-left-width: 1px; border-left-color: #000000; border-left-style: Solid; border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="9.974%">
+        <p><strong>firstName</strong></p>
+      </td>
+
+      <td style="border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="90.026%">
+        <p>Doug</p>
+      </td>
+    </tr>
+
+    <tr valign="top">
+      <td style="border-left-width: 1px; border-left-color: #000000; border-left-style: Solid; border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="9.974%">
+        <p><strong>lastName</strong></p>
+      </td>
+
+      <td style="border-right-width: 1px; border-right-color: #000000; border-right-style: Solid; border-bottom-style: Solid; border-bottom-color: #000000; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;" width="90.026%">
+        <p>Hughes</p>
+      </td>
+    </tr>
+  </table>
+
+  <p> </p>
+
+  <p> </p>
+</body>
+</html>

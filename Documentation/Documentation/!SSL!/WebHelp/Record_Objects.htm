@@ -1,0 +1,142 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Record Objects</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nRecord Objects");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Record Objects</h1>
+
+<p>Now that we know how to query for data, you'll probably want to know 
+ how to load, save and delete individual rows. &nbsp;To 
+ do this you will use Record Objects.</p>
+
+<p>&nbsp;</p>
+
+<p>A Record Object is an object which represents one row in the database. 
+ &nbsp;At the 
+ risk of using too much technical jargon, Record Objects are, in many ways, 
+ Beans objects which also implement the Active Record design pattern.</p>
+
+<p>&nbsp;</p>
+
+<p>Before we get too far, let's define what a &quot;Bean&quot; is. &nbsp;A 
+ Bean is traditionally a component which encapsulates its instance data 
+ in private properties. &nbsp;It 
+ then provided &quot;getters and setters&quot; (assessors and mutators, 
+ technically) which are used to read and write those values.</p>
+
+<p>&nbsp;</p>
+
+<p>Did you get all that? &nbsp;I'll 
+ simplify it a bit, just in case: Our User table has six fields. &nbsp;When 
+ we create a Record object it will have six pairs of methods for reading 
+ and setting the values of those fields. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>For instance, one field is username. &nbsp;So, 
+ we'll have a method <span class=function>getUsername()</span> which returns 
+ the username. &nbsp;We'll 
+ also have a method called <span class=function>setUsername(username)</span> 
+ which accepts a username and sets the value within the object. &nbsp;If 
+ you pass &quot;Doug&quot; into <span class=function>setUsername()</span>, 
+ subsequent calls to <span class=function>getUsername()</span> will return 
+ Doug.</p>
+
+<p>&nbsp;</p>
+
+<p>Traditionally, a bean only has getters and setters and nothing more. 
+ &nbsp;However, 
+ I also said that the Record objects implemented the Active Record design 
+ pattern. &nbsp;This 
+ really means that Record objects know how to persist themselves to the 
+ database.</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: There are a few interpretations of the Active Record 
+ design pattern. &nbsp;This 
+ is not exactly the same as the implementation in Ruby on Rails!</p>
+
+<p>&nbsp;</p>
+
+<p>To facilitate this, the Record objects have three important methods: 
+ <span class=function>load()</span>, <span class=function>save()</span> 
+ and <span class=function>delete()</span>. &nbsp;They 
+ are very descriptive of what they do.</p>
+
+<p>&nbsp;</p>
+
+<p>I suspect that by now you want to know how to <a href="Read_a_Record.htm">Read 
+ a Record</a>.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

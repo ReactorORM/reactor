@@ -1,0 +1,208 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Object Oriented Queries</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { font-weight:bold; font-style:italic; }
+p.whs2 { font-weight:normal; font-style:normal; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nObject Oriented Queries");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Object Oriented Queries</h1>
+
+<p>Behind the scenes, in all gateway objects Reactor actually uses a &quot;Query&quot; 
+ object to abstract queries. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>For example, each gateway object has a method called <span class=function>getByFields()</span>. 
+ &nbsp;This method 
+ has optional arguments for each field in the table. &nbsp;As 
+ you pass in values, Reactor actually creates a Query object, which represents 
+ the query you want to run. &nbsp;Each 
+ field you pass into the <span class=function>getByFields()</span> method 
+ is added to the &quot;where&quot; portion of the Query object.</p>
+
+<p>&nbsp;</p>
+
+<p>Once completely configured, that query object is passed off to a <span 
+ class=function>getByQuery()</span> method which exists on the AbstractGateway 
+ object which we briefly mentioned earlier in this document. &nbsp;That 
+ <span class=function>getByQuery()</span> method translates the Query object 
+ into a parameterized query, executes it, and returns the results. </p>
+
+<p>&nbsp;</p>
+
+<p>There's no reason you can't use this same mechanism to get the total 
+ a customer spent. &nbsp;I'll 
+ show you how to rewrite the CustomerRecord's <span class=function>getTotalSpent()</span> 
+ method using a Query object, though we're not going to get deeply into 
+ the details of Query objects at this point.</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cffunction name=&quot;getTotalSpent&quot; access=&quot;public&quot; 
+ output=&quot;false&quot; returntype=&quot;numeric&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ var InvoiceGateway = _getReactorFactory().createGateway(&quot;Invoice&quot;) 
+ /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ var Query = InvoiceGateway.createQuery() /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ var products = 0 /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;!--- 
+ let's filter this to only this customer's invoices ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ Query.getWhere().isEqual(&quot;Invoice&quot;, &quot;customerId&quot;, 
+ getCustomerId()) /&gt;<br>
+ &nbsp;&nbsp;&nbsp;<br>
+ &nbsp;&nbsp;&nbsp;&lt;!--- 
+ let's join the invoice table to the invoiceproduct and product tables 
+ ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ Query.join(&quot;Invoice&quot;, &quot;InvoiceProduct&quot;, &quot;InvoiceProduct&quot;).join(&quot;InvoiceProduct&quot;, 
+ &quot;Product&quot;, &quot;Product&quot;) /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;!--- 
+ let's only return the price field ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ Query.returnObjectField(&quot;Product&quot;, &quot;price&quot;) /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;!--- 
+ let's run the query ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ products = InvoiceGateway.getByQuery(Query) /&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;!--- 
+ now let's get a value list and add up the results ---&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfreturn 
+ ArraySum(ListToArray(ValueList(products.price))) /&gt;<br>
+&lt;/cffunction&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>You might be wondering why you would use this technique over simply 
+ writing the query. &nbsp;It 
+ seems, perhaps, a little less efficient than actually running the query. 
+ &nbsp;Also, you're 
+ doing the aggregate calculation to add up all of the prices in ColdFusion 
+ and not on the SQL server.</p>
+
+<p>&nbsp;</p>
+
+<p>For the most part you're right. &nbsp;However, 
+ there's one big advantage that makes this worth considering:</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1">It's portable!</p>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs2">Let’s say that your 
+ application needs to support both MySQL and MSSQL (and, maybe another 
+ few DBMS). &nbsp;The 
+ Object Oriented query will automatically work in both systems without 
+ modification. &nbsp;However, 
+ if you were to actually write a query you might need to rewrite the query 
+ to make it work on all platforms. &nbsp;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">Because of this advantage, 
+ it's suggested that OO queries not be placed in the DBMS specific customizable 
+ objects. &nbsp;Instead, 
+ they should be placed in the customizable objects. (CustomerRecord.cfc 
+ instead of CustomerRecordmssql.cfc).</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">Do you want to have 
+ to tweak the query we wrote earlier to run on each DBMS? &nbsp;Maybe… 
+ Maybe not… &nbsp;It 
+ depends on your application.</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">But, at the same time, 
+ if you could simply write the method one time in the database agnostic 
+ file and know that it would work, you might choose to save the time. &nbsp;</p>
+
+<p class="whs2">&nbsp;</p>
+
+<p class="whs2">There's a lot of power 
+ behind Query objects. &nbsp;I 
+ suggest reading over the Object Oriented Queries section.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

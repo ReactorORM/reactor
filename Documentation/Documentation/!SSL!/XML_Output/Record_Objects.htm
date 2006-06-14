@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+  <title>Record Objects</title><!--(Meta)==========================================================-->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com" />
+  <meta name="generator-major-version" content="0.1" />
+  <meta name="generator-minor-version" content="1" />
+  <meta name="filetype" content="kadov" />
+  <meta name="filetype-version" content="1" />
+  <meta name="page-count" content="1" />
+  <meta name="layout-height" content="849" />
+  <meta name="layout-width" content="1153" /><!--(Links)=========================================================-->
+  <link rel="StyleSheet" href="default.css" />
+</head><!--(Body)==========================================================-->
+
+<body>
+  <h1>Record Objects</h1>
+
+  <p>Now that we know how to query for data, you'll probably want to know how to load, save and delete individual rows. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->To do this you will use Record Objects.</p>
+
+  <p> </p>
+
+  <p>A Record Object is an object which represents one row in the database. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->At the risk of using too much technical jargon, Record Objects are, in many ways, Beans objects which also implement the Active Record design pattern.</p>
+
+  <p> </p>
+
+  <p>Before we get too far, let's define what a "Bean" is. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->A Bean is traditionally a component which encapsulates its instance data in private properties. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->It then provided "getters and setters" (assessors and mutators, technically) which are used to read and write those values.</p>
+
+  <p> </p>
+
+  <p>Did you get all that? <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->I'll simplify it a bit, just in case: Our User table has six fields. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->When we create a Record object it will have six pairs of methods for reading and setting the values of those fields. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}--></p>
+
+  <p> </p>
+
+  <p>For instance, one field is username. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->So, we'll have a method <span class="function">getUsername()</span> which returns the username. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->We'll also have a method called <span class="function">setUsername(username)</span> which accepts a username and sets the value within the object. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->If you pass "Doug" into <span class="function">setUsername()</span>, subsequent calls to <span class="function">getUsername()</span> will return Doug.</p>
+
+  <p> </p>
+
+  <p>Traditionally, a bean only has getters and setters and nothing more. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->However, I also said that the Record objects implemented the Active Record design pattern. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->This really means that Record objects know how to persist themselves to the database.</p>
+
+  <p> </p>
+
+  <p class="note">Note: There are a few interpretations of the Active Record design pattern. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->This is not exactly the same as the implementation in Ruby on Rails!</p>
+
+  <p> </p>
+
+  <p>To facilitate this, the Record objects have three important methods: <span class="function">load()</span>, <span class="function">save()</span> and <span class="function">delete()</span>. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->They are very descriptive of what they do.</p>
+
+  <p> </p>
+
+  <p>I suspect that by now you want to know how to <a href="Read_a_Record.htm">Read a Record</a>.</p>
+</body>
+</html>

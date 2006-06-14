@@ -1,0 +1,221 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Relationships Cascade</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nDigging Into Relationships");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Digging Into Relationships</h1>
+
+<p>One important thing to keep in mind is that Record objects lazy-load 
+ and cache related records. &nbsp;That 
+ is to say that, when getAddressRecord() was called, behind the scenes, 
+ a new record object was created, populated and stored in the variables 
+ scope of the CustomerRecord. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>That means that if you call this method twice while, betwixt the first 
+ and second call, someone else updates the Address, the data in your second 
+ call will not contain the changes made by the other person.</p>
+
+<p>&nbsp;</p>
+
+<p>In fact, all objects that do not contain mutable (changable) instance 
+ data are cached by the framework and become singletons within one instance 
+ of the ReactorFactory.</p>
+
+<p>&nbsp;</p>
+
+<p>Additionally, when you call save on a record with relationships to other 
+ records the save will cascade down to related objects which are either 
+ new or have been modified. &nbsp;For 
+ example, a customer hasOne address. &nbsp;When 
+ you save the customer the customer's address will also be saved if it's 
+ been modified. &nbsp;In 
+ Reactor's vocabulary records which have been modified are said to be &quot;dirty&quot;.</p>
+
+<p>&nbsp;</p>
+
+<p>Deletes do not cascade. &nbsp;If 
+ you attempt to delete something which violates a foreign key constraint 
+ you will receive an error.</p>
+
+<p>&nbsp;</p>
+
+<p>Let's take a look at cascading saves. &nbsp;Here's 
+ some code which will create a new Customer and Address. &nbsp;Note 
+ that to save both the user and the address I only call save on the Customer:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a customerRecord ---&gt;<br>
+&lt;cfset CustomerRecord = Reactor.createRecord(&quot;Customer&quot;) /&gt;<br>
+<br>
+&lt;!--- get the user record's address ---&gt;<br>
+&lt;cfset AddressRecord = CustomerRecord.getAddress() /&gt;<br>
+<br>
+&lt;!--- populate the customer and address ---&gt;<br>
+&lt;cfset CustomerRecord.setUsername(&quot;jblow&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.setPassword(&quot;9ummy&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.setFirstName(&quot;Joe&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.setLastName(&quot;Blow&quot;) /&gt;<br>
+<br>
+&lt;cfset AddressRecord.setStreet1(&quot;1234 Left Turn Ln.&quot;) /&gt;<br>
+&lt;cfset AddressRecord.setCity(&quot;Albuquerque&quot;) /&gt;<br>
+&lt;cfset AddressRecord.setState(&quot;New Mexico&quot;) /&gt;<br>
+&lt;cfset AddressRecord.setZip(&quot;87112&quot;) /&gt;<br>
+<br>
+&lt;!--- save the customer and address! ---&gt;<br>
+&lt;cfset CustomerRecord.save() /&gt;</p>
+
+&nbsp; 
+
+<br>This 
+ also works when updating records. &nbsp;The 
+ following code demonstrates loading the Customer, updating its address, 
+ and then saving the changes. 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a customerRecord ---&gt;<br>
+&lt;cfset CustomerRecord = Reactor.createRecord(&quot;Customer&quot;).load(customerId=2) 
+ /&gt;<br>
+<br>
+&lt;!--- update the customer's address ---&gt;<br>
+&lt;cfset CustomerRecord.getAddress().setStreet1(&quot;432 Foo Ln.&quot;) 
+ /&gt;<br>
+&lt;cfset CustomerRecord.getAddress().setCity(&quot;Dead Horse&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.getAddress().setState(&quot;Alaska&quot;) /&gt;<br>
+&lt;cfset CustomerRecord.getAddress().setZip(&quot;99723&quot;) /&gt;<br>
+<br>
+&lt;!--- save the changes---&gt;<br>
+&lt;cfset CustomerRecord.save() /&gt;</p>
+
+&nbsp; 
+
+<br>Note 
+ that rather than saving the address I simply call <span class=function>save()</span> 
+ on the CustomerRecord. 
+
+<br>&nbsp; 
+ 
+
+<p class=Quiz><span style="font-weight: bold;"><B>Pop Quiz:</B></span> How many 
+ queries were run in the last block of code?<br>
+<br>
+Answer: Three. One to load the CustomerRecord when <span class=function>load()</span> 
+ is called. &nbsp;One 
+ to load the Address when <span class=function>getAddress()</span> is first 
+ called (Reactor lazy-loads the AddressRecord and caches it in the CustomerRecord). 
+ One to save the Address when <span class=function>save()</span> is called 
+ on the CustomerRecord. &nbsp;The 
+ customer is not saved because it's not dirty.</p>
+
+&nbsp; 
+
+<br>If 
+ you skipped the pop quiz, please go back and read it. &nbsp;It 
+ illustrates the point that related data is lazy loaded and that only dirty 
+ data is saved. &nbsp;
+
+<br>&nbsp;
+
+<br>If 
+ you had instead only updated the CustomerRecord and never loaded the address 
+ then the call to the <span class=function>save()</span> method would have 
+ only saved the CustomerRecord.
+
+<br>&nbsp;
+
+<br>Furthermore, 
+ relationships can be deeper than just one level. &nbsp;For 
+ example, it would be a better practice to have the Address's state be 
+ stored in a State lookup table. &nbsp;This 
+ would mean that an Address would haveOne State. &nbsp;Now, 
+ for the sake of argument, let's say you load a customer, change it's first 
+ name, then get the AddressRecord and from the AddressRecord you get the 
+ StateRecord and change the state's abbreviation. &nbsp;(It's 
+ a weak example, but work with me.) &nbsp;When 
+ you call <span class=function>save()</span> on the CustomerRecord the 
+ Customer will be saved and the State will be saved. &nbsp;The 
+ AddressRecord will not be saved but will cascade the save.
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

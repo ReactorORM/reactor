@@ -1,0 +1,106 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Configuring an Application</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Getting Started With Reactor\nConfiguring an Application");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Configuring an Application</h1>
+
+<p>To use Reactor with your application you will need to create a ColdFusion 
+ data source and a mapping to a directory where Reactor generated objects 
+ will be written for your project.</p>
+
+<p>&nbsp;</p>
+
+<p>For example, if I was working with a database named &quot;Example,&quot; 
+ I would create a data source in ColdFusion for that database. &nbsp;I 
+ would probably name that data source &quot;Example,&quot; though the name 
+ of the data source can be anything.</p>
+
+<p>&nbsp;</p>
+
+<p>Additionally, I would probably have a directory named &quot;data&quot; 
+ where I would want Reactor to write files. &nbsp;To 
+ facilitate this I will need to create a mapping which points to the &quot;data&quot; 
+ directory. &nbsp;I 
+ would probably name this something like &quot;/MyApplicationData&quot;. 
+ &nbsp;Once again, 
+ the actual mapping name is not important and can be changed without impacting 
+ your application.</p>
+
+<p>&nbsp;</p>
+
+<p>When you create you Reactor.xml configuration file you will provide 
+ the data source name and the mapping to the data directory. &nbsp;For 
+ more information see the Reactor.xml Configuration File section.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

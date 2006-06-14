@@ -8,6 +8,21 @@ H1 {
 LI.kadov-H1 { 
              font-weight:bold; 
              font-size:24.0pt;  }
+TABLE { 
+       border-collapse:collapse;  }
+TABLE tr th { 
+             background-color:#00CCFF; 
+             padding:3px;  }
+td { 
+    padding:3px;  }
+TABLE tr td { 
+             border-top:1px solid lightgray;  }
+LI { 
+    padding-top:5px; 
+    padding-bottom:5px;  }
+IMG { 
+     margin-top:10px; 
+     margin-bottom:10px;  }
 H2 { 
     font-weight:bold; 
     font-size:18.0pt; 
@@ -117,6 +132,11 @@ P.note {
 LI.kadov-P-Cnote { 
                   font-style:italic; 
                   font-weight:normal;  }
+P.Quiz { 
+        background-color:#eaeaea; 
+        padding:3px; 
+        border:1px solid black;  }
+LI.kadov-P-CQuiz {  }
 ol ol { 
        margin-top:1px;  }
 ol ul { 

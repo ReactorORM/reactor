@@ -1,0 +1,374 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Configuring Relationships in Reactor</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+img_whs1 { border:none; width:335px; height:1326px; border-style:none; }
+p.whs2 { x-text-underline:normal; text-decoration:underline; }
+table.whs3 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs4 { width:7.855%; }
+col.whs5 { width:92.145%; }
+tr.whs6 { x-cell-content-align:top; }
+td.whs7 { width:7.855%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+p.whs8 { font-weight:bold; }
+td.whs9 { width:92.145%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs10 { width:7.855%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs11 { width:92.145%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+p.whs12 { font-style:italic; }
+p.whs13 { font-style:normal; }
+img_whs14 { border:none; width:206px; height:81px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nConfiguring Relationships in Reactor");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Configuring Relationships in Reactor</h1>
+
+<p>Reactor can be configured so that it is aware of various types of relationships 
+ between objects. &nbsp;For 
+ example, we can easily tell Reactor that a CustomerRecord &quot;has one&quot; 
+ AddressRecord by virtue of the addressId column in both tables.</p>
+
+<p>&nbsp;</p>
+
+<p>Open your reactor.xml config file. &nbsp;This 
+ is what it currently looks like for me:</p>
+
+<p>&nbsp;</p>
+
+<p class=code
+	style="margin-left: 0px;">&lt;reactor&gt;<br>
+&lt;config&gt;<br>
+ &nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;dsn 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;mapping 
+ value=&quot;/ScratchData&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;mode 
+ value=&quot;development&quot; /&gt;<br>
+&lt;/config&gt;<br>
+<br>
+&lt;objects/&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<p>The Objects section is where you define relationships. &nbsp;To 
+ create the “has one” relationship between a Customer and an Address I 
+ add this code inside the objects tag:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;object name=&quot;Customer&quot;&gt;<br>
+&lt;hasOne name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+&lt;/hasOne&gt; <br>
+&lt;/object&gt;</p>
+
+&nbsp; 
+
+<p>The object tag identifies a specific object being configured. &nbsp;In 
+ this case I'm configuring the Customer object and saying that it has one 
+ Address by virtue of the addressId column in both tables.</p>
+
+<p>&nbsp;</p>
+
+<p>For details on other configuration objects see the Reactor.xml Configuration 
+ File section.</p>
+
+<p>&nbsp;</p>
+
+<p>My complete config file now looks like this:</p>
+
+&nbsp; 
+
+<p class=code
+	style="margin-left: 0px;">&lt;reactor&gt;<br>
+&lt;config&gt;<br>
+ &nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;dsn 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;mapping 
+ value=&quot;/ScratchData&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;mode 
+ value=&quot;development&quot; /&gt;<br>
+&lt;/config&gt;<br>
+<br>
+&lt;object name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;/hasOne&gt; 
+ <br>
+&lt;/object&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<br>Pretty 
+ simple, eh? &nbsp;Rerun 
+ the code you created that generated the CustomerRecord and dump the object. 
+ &nbsp;Look at 
+ the methods closely. &nbsp;You 
+ will now see these methods on the object: <span class=function>setAddress()</span> 
+ and <span class=function>getAddress()</span>. 
+
+<br>&nbsp; 
+ 
+
+<p>If you call <span class=function>getAddress()</span> and dump it like 
+ this…</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- dump this customer's address record ---&gt;<br>
+&lt;cfdump var=&quot;#CustomerRecord.getAddress()#&quot; /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>…you'll see this dump output:</p>
+
+<p><img src="image11.gif" width="335px" height="1326px" border="0" class="img_whs1"> </p>
+
+As you can see, the <span class=function>getAddress()</span> method has 
+ returned an AddressRecord object! &nbsp;The 
+ AddressRecord object has methods for each of the fields in the Address 
+ table in your database. 
+
+<br>&nbsp; 
+ 
+
+<br>As 
+ of now, I don't have any data in my database. &nbsp;For 
+ this next example I'm going to manually add the following information 
+ to the database: 
+
+<br>&nbsp; 
+ 
+
+<p class="whs2">Address 
+ Table</p>
+
+<p class="whs2">&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
+//--></script>
+<col class="whs4">
+<col class="whs5">
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs7">
+<p class="whs8">street1</td>
+<td width="92.145%" class="whs9">
+<p>1234 Sample Street</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">street2</td>
+<td width="92.145%" class="whs11">
+<p class="whs12">null</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">city</td>
+<td width="92.145%" class="whs11">
+<p>Happyville</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">state</td>
+<td width="92.145%" class="whs11">
+<p>New York</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">zip</td>
+<td width="92.145%" class="whs11">
+<p>54321</td></tr>
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
+//--></script>
+</table>
+
+<p class="whs2">&nbsp;</p>
+
+<p>The database automatically sets 1 as this record’s addressId.</p>
+
+<p>&nbsp;</p>
+
+<p class="whs2">Customer 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
+//--></script>
+<col class="whs4">
+<col class="whs5">
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs7">
+<p class="whs8">username</td>
+<td width="92.145%" class="whs9">
+<p>dhughes</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">password</td>
+<td width="92.145%" class="whs11">
+<p class="whs13">test</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">firstName</td>
+<td width="92.145%" class="whs11">
+<p>Doug</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">lastName</td>
+<td width="92.145%" class="whs11">
+<p>Hughes</td></tr>
+
+<tr valign="top" class="whs6">
+<td width="7.855%" class="whs10">
+<p class="whs8">addressId</td>
+<td width="92.145%" class="whs11">
+<p>1</td></tr>
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
+//--></script>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Now, I'll create a new chunk of code to read the CustomerRecord and 
+ outputs the associated address information for that Customer:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a customerRecord ---&gt;<br>
+&lt;cfset CustomerRecord = Reactor.createRecord(&quot;Customer&quot;) /&gt;<br>
+<br>
+&lt;!--- read customer 1 ---&gt;<br>
+&lt;cfset CustomerRecord.setCustomerId(1) /&gt;<br>
+&lt;cfset CustomerRecord.load() /&gt;<br>
+<br>
+&lt;!--- get the customer's address record ---&gt;<br>
+&lt;cfset CustomerAddressRecord = CustomerRecord.getAddress() /&gt;<br>
+<br>
+&lt;!--- output the customer's name and address ---&gt;<br>
+&lt;cfoutput&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;p&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;strong&gt;#CustomerRecord.getFirstName()#<br>
+ &nbsp;&nbsp;&nbsp;#CustomerRecord.getLastName()#&lt;/strong&gt;&lt;br 
+ /&gt;<br>
+ &nbsp;&nbsp;&nbsp;#CustomerAddressRecord.getStreet1()#&lt;br 
+ /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfif 
+ Len(CustomerAddressRecord.getStreet2())&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#CustomerAddressRecord.getStreet2()#&lt;br 
+ /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/cfif&gt;<br>
+ &nbsp;&nbsp;&nbsp;#CustomerAddressRecord.getCity()#,<br>
+ &nbsp;&nbsp;&nbsp;#CustomerAddressRecord.getState()#<br>
+ &nbsp;&nbsp;&nbsp;#CustomerAddressRecord.getZip()#<br>
+ &nbsp;&nbsp;&nbsp;&lt;/p&gt;<br>
+&lt;/cfoutput&gt;</p>
+
+&nbsp; 
+
+<br>When 
+ run, this code will load the CustomerRecord, get its AddressRecord and 
+ then display the Customer’s address. &nbsp;The 
+ results look like this: 
+
+<br><img src="image13.gif" width="206px" height="81px" border="0" class="img_whs14">
+
+<br>&nbsp;
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

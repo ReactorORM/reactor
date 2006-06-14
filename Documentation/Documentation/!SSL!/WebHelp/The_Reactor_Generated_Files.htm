@@ -1,0 +1,198 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>The Reactor Generated Files</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nThe Reactor Generated Files");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>The Reactor Generated Files</h1>
+
+<p>Now that we've generated a gateway object, let's take a look at our 
+ file system and see what happened.</p>
+
+<p>&nbsp;</p>
+
+<p>Open your data directory. &nbsp;What 
+ once was empty now has two folders: Gateway and Metadata. &nbsp;These 
+ two folders correspond to the types of objects Reactor had to generate 
+ to create your UserGateway object.</p>
+
+<p>&nbsp;</p>
+
+<p>Underneath both of these folders are a collection of CFCs. &nbsp;Underneath 
+ the /data/Gateway folder there are two files, UserGateway.cfc and UserGatewayDBMS.cfc, 
+ where DBMS is the abbreviation of the database system you're using. &nbsp;Because 
+ I'm working with MSSQL mine is named UserGatewaymssql.cfc. &nbsp;If 
+ you're using MySQL 5 or later it would be named UserGatewaymysql.cfc.</p>
+
+<p>&nbsp;</p>
+
+<p>If you look at UserGatewaymssql.cfc you will see:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the mssql custom Gateway 
+ object for the User object. &nbsp;I 
+ am generated, but not overwritten if I exist. &nbsp;You 
+ are safe to edit me.&quot;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;extends=&quot;UserGateway&quot; 
+ &gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;!--- 
+ Place custom code here, it will not be overwritten ---&gt;<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This file is created so that you can add Database-Specific code to your 
+ application. &nbsp;For 
+ example, if you are creating an application that will be distributed to 
+ run on either MySQL or MSSQL, you would end up having two versions of 
+ the database-specific file. &nbsp;If 
+ you have a requirement for database-specific code it would go into the 
+ database-specific file.</p>
+
+<p>&nbsp;</p>
+
+<p>The database-specific file extends a database agnostic component, UserGateway.</p>
+
+<p>&nbsp;</p>
+
+<p>If you open UserGateway.cfc you will see the following code:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;cfcomponent hint=&quot;I am the database agnostic custom 
+ Gateway object for the User object. &nbsp;I 
+ am generated, but not overwritten if I exist. &nbsp;You 
+ are safe to edit me.&quot;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;extends=&quot;reactor.project.Scratch.Gateway.UserGateway&quot; 
+ &gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;!--- 
+ Place custom code here, it will not be overwritten ---&gt;<br>
+&lt;/cfcomponent&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This file is created so that you can add Database-Agnostic code to your 
+ application. &nbsp;Code 
+ in this CFC should always work, no matter what DBMS you're using.</p>
+
+<p>&nbsp;</p>
+
+<p>This file extends another component, &quot;reactor.project.Scratch.Gateway.UserGateway&quot;. 
+ &nbsp;This CFC 
+ is created by reactor and contains a range of functions for the specific 
+ type of object. &nbsp;This 
+ file should never be edited. &nbsp;In 
+ fact, it's generated outside of your data directory (and maybe even your 
+ application) because the files in the reactor.project folder are volatile 
+ and could be overwritten at any time. &nbsp;You're 
+ safe to look at the file, but don't edit it. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note that the &quot;Scratch&quot; in reactor.project.Scratch 
+ is your application name. &nbsp;If 
+ you change your application name your DBMS-agnostic files will have the 
+ old application name hard coded into them. &nbsp;They 
+ won't be able to find the CFCs for your new application name.</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: Reactor generated code is not as nicely formatted as 
+ you might prefer. &nbsp;Steps 
+ were taken to make it as readable as possible while still making the core 
+ XSL files reasonably easy to read. All in all, this code is not intended 
+ for human consumption.</p>
+
+<p>&nbsp;</p>
+
+<p>Files in the reactor.Project folder extend core Reactor objects, such 
+ as AbstractGateway, based on their type which provide a set of core type-specific 
+ functions. &nbsp;And, 
+ lastly, all of these objects ultimately extend a core AbstractObject object 
+ which provides the basest Reactor generated object functionality.</p>
+
+<p>&nbsp;</p>
+
+<p>You don't need to remember this. &nbsp;There 
+ will not be a test. &nbsp;I 
+ just think it's useful to understand what's going on under the covers.</p>
+
+<p>To learn what methods Reactor generated objects have, I suggest either 
+ dumping the objects using the cfdump tag or browsing directly to the component 
+ to see the ColdFusion generated documentation.</p>
+
+<p>&nbsp;</p>
+
+<p>All other generated objects follow the same pattern as the UserGateway.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

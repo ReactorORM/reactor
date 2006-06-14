@@ -1,0 +1,431 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Relationships via Linking Tables</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+p.whs1 { x-text-underline:normal; text-decoration:underline; }
+table.whs2 { width:100%; border-spacing:0px; }
+th.whs3 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+td.whs4 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nRelationships via Linking Tables");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Relationships via Linking Tables</h1>
+
+<p>Let's pretend for a moment that we really are building some sort of 
+ eCommerce site. (Perhaps we sell silly lights that look like they're wearing 
+ hats!) &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>To do this, we would need to have a table of products which would hold 
+ the details of the lamps being sold. &nbsp;This 
+ is easy. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>But, what if we wanted to associate the products a Customer bought back 
+ to them somehow? &nbsp;Or, 
+ what if we wanted to be able to pull a report on all the invoices for 
+ the day? &nbsp;Or, 
+ what if we wanted to find all the people who purchased a particularly 
+ strange lamp so that we could report them to the authorities?</p>
+
+<p>&nbsp;</p>
+
+<p>It sounds to me like we're going to need to have a table of invoices. 
+ &nbsp;An Invoice 
+ would represent all the items a customer purchased in one transaction. 
+ &nbsp;We could 
+ have multiple invoices per customer. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>To relate products to invoices we'll have to create a table that relates 
+ to the two. &nbsp;Reactor 
+ thinks of these as &quot;Linking&quot; tables. &nbsp;Linking 
+ tables are tables that relate two tables to each other. </p>
+
+<p>&nbsp;</p>
+
+<p>Let's do some quick database designing:</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1"><span><U>Product 
+ Table</U></span></p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs3">Type</th>
+<th scope="col" class="whs3">Nullable</th>
+<th scope="col" class="whs3">Default</th>
+<th scope="col" class="whs3">Other</th></tr>
+
+<tr>
+<td class="whs4">
+<p>productId</td>
+<td class="whs4">
+<p>Int</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td class="whs4">
+<p>name</td>
+<td class="whs4">
+<p>Varchar(50)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>description</td>
+<td class="whs4">
+<p>Varchar(2000)</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs4">
+<p>price</td>
+<td class="whs4">
+<p>Money</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Invoice 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs3">Type</th>
+<th scope="col" class="whs3">Nullable</th>
+<th scope="col" class="whs3">Default</th>
+<th scope="col" class="whs3">Other</th></tr>
+
+<tr>
+<td class="whs4">
+<p>invoiceId</td>
+<td class="whs4">Int</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">PK / Identity</td></tr>
+
+<tr>
+<td class="whs4">
+<p>customerId</td>
+<td class="whs4">Int</td>
+<td class="whs4">No</td>
+<td class="whs4">&nbsp;</td>
+<td class="whs4">FK to Customer.customerId</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">InvoiceProduct 
+ Table</p>
+
+<p class="whs1">&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs3">Type</th>
+<th scope="col" class="whs3">Nullable</th>
+<th scope="col" class="whs3">Default</th>
+<th scope="col" class="whs3">Other</th></tr>
+
+<tr>
+<td class="whs4">
+<p>productInvoiceId</td>
+<td class="whs4">
+<p>Int</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">PK / Identity</td></tr>
+
+<tr>
+<td class="whs4">
+<p>invoiceId</td>
+<td class="whs4">
+<p>Int</td>
+<td class="whs4">
+<p>No</td>
+<td class="whs4">
+<p>&nbsp;</td>
+<td class="whs4">
+<p>FK to Invoice.invoiceId</td></tr>
+
+<tr>
+<td colspan="1" rowspan="1" class="whs4">
+<p>productId</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>Int</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>No</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" class="whs4">
+<p>FK to Customer.customerId</td></tr>
+</table>
+
+<p class="whs1">&nbsp;</p>
+
+<p class=note>Note: These are example tables. &nbsp;You 
+ probably wouldn't do anything this simple in a real application. &nbsp;Also, 
+ I used varchar(2000) for the product description so that the &quot;like&quot; 
+ operator would work in a future example.</p>
+
+&nbsp; 
+
+<p>By now you should know that by simply creating the tables in your database 
+ you can now generate and instantiate Record objects which represent the 
+ tables. &nbsp;So, 
+ we're going to skip over that part. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Think about what you know right now and how you'd configure these tables 
+ in the database. &nbsp;You 
+ would have a hasMany relationship from both Invoice and Product to the 
+ InvoiceProduct table. &nbsp;The 
+ InvoiceProduct table would have two hasOne relationships back to Invoice 
+ and Product.</p>
+
+<p>&nbsp;</p>
+
+<p>Given that, what would your code look like if you wanted to get all 
+ the products on a particular invoice? &nbsp;Maybe 
+ like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create an invoice record ---&gt;<br>
+&lt;cfset InvoiceRecord = Reactor.createRecord(&quot;Invoice&quot;).load(invoiceId=1) 
+ /&gt;<br>
+<br>
+&lt;!--- output all the products on this invoice ---&gt;<br>
+<br>
+&lt;!--- get all of the Invoice Product Records ---&gt;<br>
+&lt;cfset InvoiceProducts = InvoiceRecord.getInvoiceProductIterator().getArray() 
+ /&gt;<br>
+<br>
+&lt;!--- loop over the invoice products and get the product record ---&gt;<br>
+&lt;cfloop from=&quot;1&quot; to=&quot;#ArrayLen(InvoiceProducts)#&quot; 
+ index=&quot;x&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfset 
+ ProductRecord = InvoiceProducts[x].getProduct()/&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;cfoutput&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#ProductRecord.getName()#&lt;br&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/cfoutput&gt;<br>
+&lt;/cfloop&gt;</p>
+
+&nbsp; 
+
+<br>This 
+ code is a bit of a pain. &nbsp;It’s 
+ not evil, but it’s not something I'd want to do all the time. &nbsp;Not 
+ to mention, the fact that each one of those <span class=function>getProduct()</span> 
+ method calls executes a query. &nbsp;This 
+ is not a good solution! 
+
+<br>&nbsp; 
+ 
+
+<p>Wouldn't it be cool if we could somehow tell the Invoice and Product 
+ tables that they were linked? &nbsp;And 
+ maybe then we'd be able to use the same Iterator interface we did for 
+ other hasMany relationships? &nbsp;Not 
+ to worry, you can!</p>
+
+<p>&nbsp;</p>
+
+<p>To support this, you use the &quot;link&quot; tag inside a hasMany tag. 
+ &nbsp;For example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;object name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+&lt;/object&gt;<br>
+<br>
+&lt;object name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ &nbsp;&nbsp;&lt;/hasMany&gt;<br>
+&lt;/object&gt;<br>
+<br>
+&lt;object name=&quot;InvoiceProduct&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;productId&quot; to=&quot;productId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;invoiceId&quot; to=&quot;invoiceId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+&lt;/object&gt;</p>
+
+&nbsp; 
+
+<br>Take 
+ a look at the Product and Invoice configurations. &nbsp;The 
+ configuration is effectively saying that an Invoice has many Products 
+ by virtue of a link through InvoiceProduct (which has one of both). &nbsp;It 
+ works the other way around too. 
+
+<br>&nbsp; 
+ 
+
+<p class=note>Note: Adding a link through another table implicitly adds 
+ a hasOne relationship to the object with the link. &nbsp;So, 
+ the link from Product to Invoice says to Reactor that the Product hasOne 
+ InvoiceProduct.</p>
+
+&nbsp; 
+
+<br>Now, 
+ let's rewrite the code above and make it a bit nicer: 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create an invoice record ---&gt;<br>
+&lt;cfset InvoiceRecord = Reactor.createRecord(&quot;Invoice&quot;).load(invoiceId=1) 
+ /&gt;<br>
+<br>
+&lt;!--- dump all of the Products on the invoice ---&gt;<br>
+&lt;cfdump var=&quot;#InvoiceRecord.getProductIterator().getQuery()#&quot; 
+ /&gt;</p>
+
+&nbsp; 
+
+<p>Wasn't that easier? &nbsp;Reactor 
+ intelligently knows how to join the Invoice table to the InvoiceProduct 
+ table to the Product table. &nbsp;Furthermore, 
+ it returns only the records from the product table.</p>
+
+<p>&nbsp;</p>
+
+<p>This leads me to the last few points in this crash course, how to customize 
+ Reactor generated objects.</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<!-- saved from url=(0026)http://www.macromedia.com/ -->
+<html>
+
+<head>
+<title>Delete a Record</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script  type="text/javascript" language="javascript1.2">
+    <!--
+    var linkedScrollbarStyle = "<link rel='stylesheet' href='wf_topics.css'>";
+    if( (!isTopicOnly()) &&(parent.gbFHPureHtml == null) )
+    {
+        document.write(linkedScrollbarStyle);
+    }
+    //-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.addTocInfo)
+{
+addTocInfo("Reactor Crash Course\nDelete a Record");
+
+  addShowButton();
+}
+if (window.setRelStartPage)
+{
+setRelStartPage("Reactor_Documentation.htm");
+
+	sendTopicLoaded();
+	autoSync(1);
+	sendSyncInfo();
+	sendAveInfo();
+	sendBgColorInfo();
+}
+//-->
+</script>
+<h1>Delete a Record</h1>
+
+<p>Deleting a record is also quite simple. &nbsp;As 
+ with the load() method, Reactor defaults to using the primary key values 
+ for the record you're deleting.</p>
+
+<p>&nbsp;</p>
+
+<p>You must first create a Record object:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- create a userRecord ---&gt;<br>
+&lt;cfset UserRecord = reactor.createRecord(&quot;User&quot;) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>Now that you have the Record you can set its primary key value(s):</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- set the record to delete ---&gt;<br>
+&lt;cfset UserRecord.setUserId(2) /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>In many cases you may actually have already loaded the object by this 
+ point. It's not strictly necessary, but it works just fine. You can delete 
+ a record which has never been loaded. This code shows how:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- delete the record ---&gt;<br>
+&lt;cfset UserRecord.delete() /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>If you run this code, the record we created earlier would be deleted 
+ from the database. &nbsp;If, 
+ for whatever reason, the Record object had been loaded previous to calling 
+ the delete() method, it would have worked just fine.</p>
+
+<p>&nbsp;</p>
+
+<p>The same code can be written in shorthand like this:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- load the record ---&gt;<br>
+&lt;cfset UserRecord = Reactor.createRecord(&quot;User&quot;).delete(userId=2) 
+ /&gt;</p>
+
+</body>
+</html>

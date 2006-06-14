@@ -1,0 +1,217 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Database Tables</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+table.whs1 { width:100%; border-spacing:0px; }
+th.whs2 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+td.whs3 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; }
+table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0; }
+col.whs5 { width:9.974%; }
+col.whs6 { width:90.026%; }
+td.whs7 { border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs8 { border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs9 { border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs10 { border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor Crash Course\nDatabase Tables");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Database Tables</h1>
+
+<p>Before we write any code, let's create a simple database. &nbsp;We'll 
+ build on this database to illustrate various concepts as we move along.</p>
+
+<p>Let's start by creating one table, User, with the following columns:</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+
+<tr>
+<th scope="col" class="whs2">Name</th>
+<th scope="col" class="whs2">Type</th>
+<th scope="col" class="whs2">Nullable</th>
+<th scope="col" class="whs2">Default</th>
+<th scope="col" class="whs2">Other</th></tr>
+
+<tr>
+<td class="whs3">userId</td>
+<td class="whs3">Int</td>
+<td class="whs3">No</td>
+<td class="whs3">&nbsp;</td>
+<td class="whs3">PK / Identity</td></tr>
+
+<tr>
+<td class="whs3">username</td>
+<td class="whs3">Varchar(50)</td>
+<td class="whs3">No</td>
+<td class="whs3">&nbsp;</td>
+<td class="whs3">&nbsp;</td></tr>
+
+<tr>
+<td class="whs3">password</td>
+<td class="whs3">Varchar(50)</td>
+<td class="whs3">No</td>
+<td class="whs3">&nbsp;</td>
+<td class="whs3">&nbsp;</td></tr>
+
+<tr>
+<td class="whs3">firstName</td>
+<td class="whs3">Varchar(50)</td>
+<td class="whs3">No</td>
+<td class="whs3">&nbsp;</td>
+<td class="whs3">&nbsp;</td></tr>
+
+<tr>
+<td class="whs3">lastName</td>
+<td class="whs3">Varchar(50)</td>
+<td class="whs3">No</td>
+<td class="whs3">&nbsp;</td>
+<td class="whs3">&nbsp;</td></tr>
+
+<tr>
+<td class="whs3">dateCreated</td>
+<td class="whs3">DateTime</td>
+<td class="whs3">No</td>
+<td class="whs3">getDate()</td>
+<td class="whs3">&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: Not all DBMS support default non-constant values. &nbsp;In 
+ this case simply set this column to not null.&nbsp;Later, when we generate 
+ objects we'll edit the Transfer Object (TO) and override the default value 
+ for this column.</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Another Note: I use a convention where table names are singular. 
+ This is not required. You can call your table whatever you want. However, 
+ when objects are created the object type is appended to the table name 
+ to name the object.</p>
+
+<p class=note>&nbsp;</p>
+
+<p class=note>So, if I create a Record Object based on the User table it 
+ will be named UserRecord. I think this is nicer on many levels than UsersRecord, 
+ which makes less sense, especially seeing as one record represents on 
+ row in the table.</p>
+
+<p>&nbsp;</p>
+
+<p>Now that we've created this table why don't you manually throw a couple 
+ records in the table which we'll query for? I added the following record:</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs4">
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
+//--></script>
+<col class="whs5">
+<col class="whs6">
+
+<tr valign=top>
+<td width="9.974%" class="whs7">
+<p><strong>username</strong></td>
+<td width="90.026%" class="whs8">
+<p>dhughes</td></tr>
+
+<tr valign=top>
+<td width="9.974%" class="whs9">
+<p><strong>password</strong></td>
+<td width="90.026%" class="whs10">
+<p>test</td></tr>
+
+<tr valign=top>
+<td width="9.974%" class="whs9">
+<p><strong>firstName</strong></td>
+<td width="90.026%" class="whs10">
+<p>Doug</td></tr>
+
+<tr valign=top>
+<td width="9.974%" class="whs9">
+<p><strong>lastName</strong></td>
+<td width="90.026%" class="whs10">
+<p>Hughes</td></tr>
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
+//--></script>
+</table>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>
