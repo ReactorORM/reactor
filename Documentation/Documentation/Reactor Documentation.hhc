@@ -122,6 +122,95 @@
       <param name="Name" value="Delete a Record">
       <param name="Local" value="Delete_a_Record.htm">
     </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="We're Just Getting Started">
+      <param name="Local" value="We’re_Just_Getting_Started!.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Configuring Relationships in Reactor">
+      <param name="Local" value="Configuring_Relationships_in_Reactor.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Digging Into Relationships">
+      <param name="Local" value="Relationships_Cascade.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Other Types of Relationships">
+      <param name="Local" value="Other_Types_of_Relationships.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Relationships via Linking Tables">
+      <param name="Local" value="Relationships_via_Linking_Tables.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Customizing Reactor Objects">
+      <param name="Local" value="Customizing_Reactor_Objects.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Object Oriented Queries">
+      <param name="Local" value="Object_Oriented_Queries.htm">
+    </object>
     </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Reactor XML Configuration File">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Overview">
+      <param name="Local" value="XML_Overview.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="General Configuration">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Object Configuration">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Relationship Configuration">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="The Reactor API">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="reactor">
+    </object>
+    <ul>
+      <li><object type="text/sitemap">
+        <param name="Name" value="Reactor Package">
+        <param name="Local" value="Reactor_Package.htm">
+      </object>
+      <li><object type="text/sitemap">
+        <param name="Name" value="reactor.ReactorFactory">
+        <param name="Local" value="reactor.ReactorFactory.htm">
+      </object>
+      </ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="reactor.base">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="reactor.config">
+    </object>
+    <ul>
+      <li><object type="text/sitemap">
+        <param name="Name" value="Config Package">
+        <param name="Local" value="Config_Package.htm">
+      </object>
+      <li><object type="text/sitemap">
+        <param name="Name" value="reactor.config.config">
+        <param name="Local" value="reactor.config.config.htm">
+      </object>
+      </ul>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Object Oriented Queries ">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="IOC Integration (ColdSpring)">
+  </object>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Miscellaneous Information">
+  </object>
 </ul>
 </html>

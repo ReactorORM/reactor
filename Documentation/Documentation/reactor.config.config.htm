@@ -1,0 +1,1504 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>reactor.config.config</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=5084>
+<meta name=layout-width content=1346>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h6>reactor.config</h6>
+
+<h1>Class config</h1>
+
+The config object is used by Reactor to encapsulate configuration settings. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->It is either 
+ created automatically by Reactor when the <a href="reactor.ReactorFactory.htm">ReactorFactory</a> 
+ is instantiated or it is manually created and passed into the <a href="reactor.ReactorFactory.htm">ReactorFactory</a> 
+ or this configuration can be managed by an IOC container such as ColdSpring. 
+ 
+
+<h2>Methods</h2>
+
+<h3>init()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>init()</span> method is the pseudo-constructor 
+ for the config component. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ method configures and returns the config component.</p>
+
+<h4>Syntax</h4>
+
+<p>reactor.config.config = init(pathToConfigXml)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>pathToConfigXml</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>This is a relative or absolute path to a reactor XML configuration file.</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<h3>getObjectConfig()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getObjectConfig()</span> method returns the 
+ XML configuration information for a specific database object. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ the object is not configured a default configuration is returned.</p>
+
+<p>&nbsp;</p>
+
+<p>This method is only intended for use by Reactor. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ method may change or be removed in future versions of Reactor.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getObjectConfig(alias)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>alias</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The alias of the object to get the configuration XML for.</td></tr>
+</table>
+
+<h3>setDsn()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setDsn()</span> method sets the ColdFusion 
+ datasource that Reactor will use to access data.</p>
+
+<h4>Syntax</h4>
+
+<p>setDsn(alias)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>alias</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The datasource to use.</td></tr>
+</table>
+
+<h3>getDsn()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getDsn()</span> method gets the ColdFusion 
+ datasource that Reactor will use to access data.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getDsn()</p>
+
+<h3>setType()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setType()</span> method sets the type of database 
+ that Reactor is working with. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--></p>
+
+<h4>Syntax</h4>
+
+<p>setType(type)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>type</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The type of database being used. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Options 
+ are:</p>
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">mssql</span> 
+ - Microsoft SQL Server 2000 and 2005.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">mysql</span> 
+ - MySQL 5</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">mysql4</span> 
+ - MySQL 4</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">postgresql</span> 
+ - PostgreSQL 8</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">db2</span> - 
+ IBM DB2</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">oracle</span> 
+ - Oracle 9i and 10g</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">oraclerdb</span> 
+ - Oracle RDB (this is not officially supported)</p></li>
+</ul></td></tr>
+</table>
+
+<h3>getType()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getType()</span> method gets the type of database 
+ that Reactor is working with.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getType()</p>
+
+<h3>setMapping()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setMapping()</span> method sets the location 
+ where Reactor-generated files will be written. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Although 
+ this method is &quot;setMapping&quot; this does not need to be a ColdFusion 
+ mapping, it can also be a relative path from the application's webroot.</p>
+
+<p>&nbsp;</p>
+
+<p>For example, if my application's webroot is in &quot;c:\inetpub\myApp&quot; 
+ then I could specify &quot;/data&quot; for &quot;c:\inetpub\myApp\data&quot;. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Alternativly 
+ &quot;/data&quot; could be a mapping to another directory outside of the 
+ webroot.</p>
+
+<h4>Syntax</h4>
+
+<p>setMapping(mapping)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>mapping</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The relative path or mapping to the directory where reactor will write 
+ generated files.</td></tr>
+</table>
+
+<h3>getMapping()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getMapping()</span> method gets the location 
+ where Reactor writes generated files.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getMapping()</p>
+
+<h2>getMappingObjectStem()</h2>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getMappingObjectStem()</span> method translates 
+ the mapping named (set by <span class=function>setMapping()</span>) to 
+ the root portion of a package name.</p>
+
+<p>&nbsp;</p>
+
+<p>This method is only intended for use by Reactor. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ method may change or be removed in future versions of Reactor.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getMappingObjectStem()</p>
+
+<h3>setMode()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setMode()</span> method sets the circumstances 
+ under which Reactor will generate files.</p>
+
+<h4>Syntax</h4>
+
+<p>setMode(mode)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>mode</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The mode reactor is in. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Options 
+ are:</p>
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">always</span> 
+ - Reactor always recreates project files. This is the slowest setting 
+ and is used primarily for development of the Reactor framework.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">development</span> 
+ - Reactor only regenerates project files when the database object or the 
+ Reactor XML configuration has changed. This is a faster setting than always 
+ and is used primarily for development of applications which use Reactor.</p></li>
+	
+	<li class=kadov-p><p><span style="font-weight: bold;">production</span> 
+ - Reactor never regenerates project files when they already exist. This 
+ is a fastest setting and is used in production applications.</p></li>
+</ul>
+<p>&nbsp;</p>
+<p class=note>Note: Custom files are never regenerated when they already 
+ exist.</td></tr>
+</table>
+
+<h3>getMode()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getMode()</span> method gets the mode Reactor 
+ is in.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getMode()</p>
+
+<h3>setProject()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setProject()</span> method sets the name of 
+ the project Reactor is being used in. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ is akin to the application name used in the &lt;cfapplication&gt; tag. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For a given 
+ application this name should never be changed once it's set. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Reactor 
+ hard codes this name into the custom objects to specify the location of 
+ project files. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ this changes all of the custom objects need to be manually updated or 
+ deleted and regenerated.</p>
+
+<h4>Syntax</h4>
+
+<p>setProject(project)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>project</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The name of the project.</td></tr>
+</table>
+
+<h3>getProject()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getProject()</span> method gets the project 
+ name.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getProject()</p>
+
+<h3>setUsername()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setUsername()</span> method sets the username 
+ that Reactor uses when querying the database. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ setting is not required if your datasource does not require it.</p>
+
+<h4>Syntax</h4>
+
+<p>setUsername(username)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>username</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The DSN username to use.</td></tr>
+</table>
+
+<h3>getUsername()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getUsername()</span> method gets the DSN username.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getUsername()</p>
+
+<h3>setPassword()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>setPassword()</span> method sets the password 
+ that Reactor uses when querying the database. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ setting is not required if your datasource does not require it.</p>
+
+<h4>Syntax</h4>
+
+<p>setPassword(password)</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Argument</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Required</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Type</th>
+<th scope=col
+	style="width: 25%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 25%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>password</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>Yes</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>String</td>
+<td style="width: 25%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=25%>
+<p>The DSN password to use.</td></tr>
+</table>
+
+<h3>getPassword()</h3>
+
+<h4>Description</h4>
+
+<p>The <span class=function>getPassword()</span> method gets the DSN password.</p>
+
+<h4>Syntax</h4>
+
+<p>string = getPassword()</p>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>
