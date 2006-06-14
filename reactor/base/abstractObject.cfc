@@ -4,6 +4,7 @@
 	<cfset variables.config = 0 />
 	<cfset variables.name = "" />
 	<cfset variables.ReactorFactory = 0 />
+	<cfset variables.BeanFactory = 0 />
 	
 	<!---
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
@@ -72,5 +73,15 @@
     <cffunction name="_getAlias" access="public" output="false" returntype="string">
        <cfreturn variables.alias />
     </cffunction>
+
+  <!--- BeanFactory --->
+  <cffunction name="_setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+  	<cfargument name="beanFactory" type="any" required="true" />
+  	<cfset variables.BeanFactory = arguments.beanFactory />
+	</cffunction>    
+  <cffunction name="_getBean" access="public" output="false" returntype="any" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+  	<cfargument name="name" type="string" required="true" />
+  	<cfreturn variables.BeanFactory.getBean(arguments.name) />
+	</cffunction>    
 		
 </cfcomponent>

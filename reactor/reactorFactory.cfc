@@ -12,6 +12,9 @@
 		<!--- pass the configuration into the objectFactory --->
 		<cfset setObjectFactory(CreateObject("Component", "reactor.core.objectFactory").init(arguments.configuration, this)) />
 		
+		<!--- give the objectfactory the beanfactory --->
+		<cfset getObjectFactory().setBeanFactory(getBeanFactory()) />		
+		
 		<cfreturn this />
 	</cffunction>
 	
@@ -103,12 +106,21 @@
 	</cffunction>
 	
 	<!--- ObjectFactory --->
-    <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
-       <cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />
-       <cfset variables.ObjectFactory = arguments.ObjectFactory />
-    </cffunction>
-    <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
-       <cfreturn variables.ObjectFactory />
-    </cffunction>
+  <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
+     <cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />
+     <cfset variables.ObjectFactory = arguments.ObjectFactory />
+  </cffunction>
+  <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
+     <cfreturn variables.ObjectFactory />
+  </cffunction>
+  
+  <!--- BeanFactory --->
+  <cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+  	<cfargument name="beanFactory" type="coldspring.beans.beanFactory" required="true" />
+		<cfset variables.BeanFactory = arguments.beanFactory />
+	</cffunction>
+  <cffunction name="getBeanFactory" access="private" output="false" returntype="coldspring.beans.beanFactory">
+     <cfreturn variables.BeanFactory />
+  </cffunction>
 
 </cfcomponent>

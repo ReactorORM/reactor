@@ -2,6 +2,7 @@
 	
 	<cfset variables.config = "" />
 	<cfset variables.ReactorFactory = "" />
+	<cfset variables.BeanFactory = "" />
 	<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 10)) />
 	<cfset variables.Cache = StructNew() />
 	<cfset variables.Cache.Dao = StructNew() />
@@ -147,6 +148,10 @@
 			</cfif>
 		</cfif>
 		
+		<cfif isObject(variables.BeanFactory)>
+			<cfset GeneratedObject._setBeanFactory(variables.BeanFactory) />
+		</cfif>
+		
 		<cfreturn GeneratedObject />
 	</cffunction>
 
@@ -248,39 +253,45 @@
 	</cffunction>
 	
 	<!--- config --->
-    <cffunction name="setConfig" access="public" output="false" returntype="void">
-       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.config.config" />
-       <cfset variables.config = arguments.config />
-    </cffunction>
-    <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
-       <cfreturn variables.config />
-    </cffunction>
+  <cffunction name="setConfig" access="public" output="false" returntype="void">
+     <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.config.config" />
+     <cfset variables.config = arguments.config />
+  </cffunction>
+  <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
+     <cfreturn variables.config />
+  </cffunction>
 	
 	<!--- reactorFactory --->
-    <cffunction name="setReactorFactory" access="private" output="false" returntype="void">
-       <cfargument name="reactorFactory" hint="I am the reactorFactory object" required="yes" type="reactor.reactorFactory" />
-       <cfset variables.reactorFactory = arguments.reactorFactory />
-    </cffunction>
-    <cffunction name="getReactorFactory" access="private" output="false" returntype="reactor.reactorFactory">
-       <cfreturn variables.reactorFactory />
-    </cffunction>
+  <cffunction name="setReactorFactory" access="private" output="false" returntype="void">
+     <cfargument name="reactorFactory" hint="I am the reactorFactory object" required="yes" type="reactor.reactorFactory" />
+     <cfset variables.reactorFactory = arguments.reactorFactory />
+  </cffunction>
+  <cffunction name="getReactorFactory" access="private" output="false" returntype="reactor.reactorFactory">
+     <cfreturn variables.reactorFactory />
+  </cffunction>
 
+  <!--- BeanFactory --->
+  <cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+  	<cfargument name="beanFactory" type="any" required="true" />
+  	<cfset variables.BeanFactory = arguments.beanFactory />
+</cffunction>
+	
 	<!--- convention --->
-    <cffunction name="setConvention" access="private" output="false" returntype="void">
-       <cfargument name="convention" hint="I am a convention object" required="yes" type="reactor.data.abstractConvention" />
-       <cfset variables.convention = arguments.convention/>
-    </cffunction>
-    <cffunction name="getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
-       <cfreturn variables.convention />
-    </cffunction>
+  <cffunction name="setConvention" access="private" output="false" returntype="void">
+     <cfargument name="convention" hint="I am a convention object" required="yes" type="reactor.data.abstractConvention" />
+     <cfset variables.convention = arguments.convention/>
+  </cffunction>
+  <cffunction name="getConvention" access="private" output="false" returntype="reactor.data.abstractConvention">
+     <cfreturn variables.convention />
+  </cffunction>
 	
 	<!--- pluginList --->
-    <cffunction name="setPluginList" access="private" output="false" returntype="void">
-       <cfargument name="pluginList" hint="I am a list of avaliable plugins" required="yes" type="string" />
-       <cfset variables.pluginList = arguments.pluginList />
-    </cffunction>
-    <cffunction name="getPluginList" access="private" output="false" returntype="string">
-       <cfreturn variables.pluginList />
-    </cffunction>
+  <cffunction name="setPluginList" access="private" output="false" returntype="void">
+     <cfargument name="pluginList" hint="I am a list of avaliable plugins" required="yes" type="string" />
+     <cfset variables.pluginList = arguments.pluginList />
+  </cffunction>
+  <cffunction name="getPluginList" access="private" output="false" returntype="string">
+     <cfreturn variables.pluginList />
+  </cffunction>
 	
 </cfcomponent>
