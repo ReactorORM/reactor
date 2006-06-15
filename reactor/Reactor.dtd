@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT reactor (config?,objects?)>
+
+<!ELEMENT config (project,dsn,type,mapping,mode,username?,password?)>
+
+<!ELEMENT project EMPTY>
+<!ATTLIST project value CDATA #REQUIRED>
+	
+<!ELEMENT dsn EMPTY>
+<!ATTLIST dsn value CDATA #REQUIRED>
+
+<!ELEMENT type EMPTY>
+<!ATTLIST type value (mssql|mysql|mysql4|postgresql|db2|oracle|oraclerdb) #REQUIRED>
+
+<!ELEMENT mapping EMPTY>
+<!ATTLIST mapping value CDATA #REQUIRED>
+
+<!ELEMENT mode EMPTY>
+<!ATTLIST mode value (always|development|production) #REQUIRED>
+
+<!ELEMENT username EMPTY>
+<!ATTLIST username value CDATA #REQUIRED>
+
+<!ELEMENT password EMPTY>
+<!ATTLIST password value CDATA #REQUIRED>
+
+<!ELEMENT objects (object*)>
+
+<!ELEMENT object (field*,hasOne*,hasMany*)*>
+<!ATTLIST object
+		name CDATA #REQUIRED
+		alias CDATA #IMPLIED>
+
+<!ELEMENT field EMPTY>
+<!ATTLIST field
+		name CDATA #REQUIRED
+		alias CDATA #IMPLIED
+		sequence CDATA #IMPLIED>
+
+<!ELEMENT hasOne (relate+)>
+<!ATTLIST hasOne
+		name CDATA #REQUIRED
+		alias CDATA #IMPLIED
+		sharedKey CDATA #IMPLIED>
+
+<!ELEMENT hasMany (link|relate+)>
+<!ATTLIST hasMany
+		name CDATA #REQUIRED
+		alias CDATA #IMPLIED>
+
+<!ELEMENT link EMPTY>
+<!ATTLIST link
+		name CDATA #REQUIRED
+		from CDATA #IMPLIED
+		to CDATA #IMPLIED>
+
+<!ELEMENT relate EMPTY>
+<!ATTLIST relate
+		from CDATA #REQUIRED
+		to CDATA #REQUIRED>
