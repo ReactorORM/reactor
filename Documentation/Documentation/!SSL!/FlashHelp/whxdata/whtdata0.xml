@@ -39,15 +39,36 @@
 		<item name="Customizing Reactor Objects" url="Customizing_Reactor_Objects.htm"/>
 		<item name="Object Oriented Queries" url="Object_Oriented_Queries.htm"/>
 	</book>
-	<book name="Reactor XML Configuration File">
-		<item name="Overview" url="XML_Overview.htm"/>
+	<book name="Reactor XML Configuration File" url="Overview.htm">
+		<book name="reactor tag" url="reactor_tag.htm">
+			<book name="config tag" url="config_tag.htm">
+				<item name="project tag" url="project_tag.htm"/>
+				<item name="dsn tag" url="dsn_tag.htm"/>
+				<item name="type tag" url="type_tag.htm"/>
+				<item name="mapping tag" url="mapping_tag.htm"/>
+				<item name="mode tag" url="mode_tag.htm"/>
+				<item name="username tag" url="username_tag.htm"/>
+				<item name="password tag" url="password_tag.htm"/>
+			</book>
+			<book name="objects tag" url="objects_tag.htm">
+				<book name="object tag" url="object_tag.htm">
+					<book name="hasOne tag" url="hasOne_tag.htm">
+						<item name="relate tag" url="relate_tag.htm"/>
+					</book>
+					<book name="hasMany tag" url="hasMany.htm">
+						<item name="relate tag" url="relate_tag.htm"/>
+					</book>
+					<item name="link tag" url="link_tag.htm"/>
+				</book>
+			</book>
+		</book>
 	</book>
 	<book name="The Reactor API">
-		<book name="reactor">
+		<book name="reactor" url="Reactor_Package.htm">
 			<item name="Reactor Package" url="Reactor_Package.htm"/>
 			<item name="reactor.ReactorFactory" url="reactor.ReactorFactory.htm"/>
 		</book>
-		<book name="reactor.config">
+		<book name="reactor.config" url="Config_Package.htm">
 			<item name="Config Package" url="Config_Package.htm"/>
 			<item name="reactor.config.config" url="reactor.config.config.htm"/>
 		</book>

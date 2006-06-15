@@ -49,6 +49,7 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
 if (window.addTocInfo)
 {
 addTocInfo("Reactor Crash Course\nOverview");
+addTocInfo("Reactor XML Configuration File");
 
   addShowButton();
 }
@@ -64,29 +65,122 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<h1>Overview</h1>
+<h1>Reactor XML Configuration Overview</h1>
 
-<p>This section is intended to show you some of the features of Reactor 
- while also showing a simple example of how Reactor works. &nbsp;This 
- intended to be followed along with, without requiring you to know much 
- about Reactor. </p>
-
-<p>&nbsp;</p>
-
-<p>Once you've seen reactor working, and written a bit of code, the rest 
- of the documentation should make a lot more sense.</p>
+<p>The Reactor framework is configured via an XML file. &nbsp;The 
+ XML configuration file is used to (optionally) set various configuration 
+ options such as the DSN and application name. &nbsp;It 
+ is also used to configure relationships between database objects.</p>
 
 <p>&nbsp;</p>
 
-<p>This example doesn't really do anything other than illustrate concepts. 
- &nbsp;However, 
- the objects created roughly relate to concepts you might find in a typical 
- application.</p>
+<p>The XML configuration file is separated into two parts, general configuration 
+ and object relationship configuration.</p>
 
 <p>&nbsp;</p>
 
-<p>If you want to see code that does something more useful see the Blog 
- and ContactManager sample applications.</p>
+<p>This is a simple sample reactor XML configuration file which shows most 
+ of reactor's configuration options:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/ScratchData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;development&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ These config values are not required --&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ &lt;username value=&quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;password 
+ value=&quot;&quot; /&gt; --&gt;<br>
+ &nbsp;&nbsp;&lt;/config&gt;<br>
+<br>
+ &nbsp;&nbsp;&lt;objects&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt; 
+ <br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt; 
+ <br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;InvoiceProduct&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Product&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;productId&quot; to=&quot;productId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Invoice&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;invoiceId&quot; to=&quot;invoiceId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<br>As 
+ you can see by looking at the example, the document is contained inside 
+ a root &quot;reactor&quot; tag block. &nbsp;The 
+ &quot;reactor&quot; tag block contains only two other tag blocks, &quot;config&quot; 
+ and &quot;objects&quot;.
+
+<p>&nbsp;</p>
+
+<p>The &quot;config&quot; block is used for general configuration. &nbsp;The 
+ &quot;objects&quot; block is used to define relationships between objects 
+ in your database.</p>
 
 </body>
 </html>

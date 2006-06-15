@@ -13,26 +13,84 @@
   <meta name="filetype" content="kadov" />
   <meta name="filetype-version" content="1" />
   <meta name="page-count" content="1" />
-  <meta name="layout-height" content="816" />
-  <meta name="layout-width" content="933" /><!--(Links)=========================================================-->
+  <meta name="layout-height" content="1248" />
+  <meta name="layout-width" content="1346" /><!--(Links)=========================================================-->
   <link rel="StyleSheet" href="default.css" />
 </head><!--(Body)==========================================================-->
 
 <body>
-  <h1>Overview</h1>
+  <h1>Reactor XML Configuration Overview</h1>
 
-  <p>This section is intended to show you some of the features of Reactor while also showing a simple example of how Reactor works. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->This intended to be followed along with, without requiring you to know much about Reactor.</p>
-
-  <p> </p>
-
-  <p>Once you've seen reactor working, and written a bit of code, the rest of the documentation should make a lot more sense.</p>
+  <p>The Reactor framework is configured via an XML file. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->The XML configuration file is used to (optionally) set various configuration options such as the DSN and application name. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->It is also used to configure relationships between database objects.</p>
 
   <p> </p>
 
-  <p>This example doesn't really do anything other than illustrate concepts. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->However, the objects created roughly relate to concepts you might find in a typical application.</p>
+  <p>The XML configuration file is separated into two parts, general configuration and object relationship configuration.</p>
 
   <p> </p>
 
-  <p>If you want to see code that does something more useful see the Blog and ContactManager sample applications.</p>
+  <p>This is a simple sample reactor XML configuration file which shows most of reactor's configuration options:</p>
+
+  <p> </p>
+
+  <p class="code">&lt;reactor&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->  <!--kadov_tag{{</spaces>}}-->&lt;config&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;project value="Scratch" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;dsn value="Scratch" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;type value="mssql" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;mapping value="/ScratchData" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;mode value="development" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;!-- These config values are not required --&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;!-- &lt;username value="" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;password value="" /&gt; --&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->  <!--kadov_tag{{</spaces>}}-->&lt;/config&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->  <!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;object name="Customer"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasOne name="Address"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;relate from="addressId" to="addressId" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasMany name="Invoice"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;relate from="customerId" to="customerId" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;object name="Address"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasMany name="Customer"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;relate from="addressId" to="addressId" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;object name="Invoice"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasMany name="Product"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;link name="InvoiceProduct" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;object name="Product"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasMany name="Invoice"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;link name="InvoiceProduct" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;object name="InvoiceProduct"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasOne name="Product"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;relate from="productId" to="productId" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}--><br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;hasOne name="Invoice"&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->                 <!--kadov_tag{{</spaces>}}-->&lt;relate from="invoiceId" to="invoiceId" /&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->            <!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br />
+  <!--kadov_tag{{<spaces>}}-->       <!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br />
+  <br />
+  <!--kadov_tag{{<spaces>}}-->  <!--kadov_tag{{</spaces>}}-->&lt;/objects&gt;<br />
+  &lt;/reactor&gt;</p>  <!--begin!kadov{{--><br />
+  <!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->As you can see by looking at the example, the document is contained inside a root "reactor" tag block. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->The "reactor" tag block contains only two other tag blocks, "config" and "objects".
+
+  <p> </p>
+
+  <p>The "config" block is used for general configuration. <!--kadov_tag{{<spaces>}}--> <!--kadov_tag{{</spaces>}}-->The "objects" block is used to define relationships between objects in your database.</p>
 </body>
 </html>

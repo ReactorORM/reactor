@@ -12,6 +12,7 @@
 	<entry name="DBMS" value=""/>
 	<entry name="design pattern" value=""/>
 	<entry name="Dirty" value="Dirty"/>
+	<entry name="DSN" value=""/>
 	<entry name="framework" value=""/>
 	<entry name="Gateway" value="See Table Data Gateway"/>
 	<entry name="Metadata Object" value=""/>
