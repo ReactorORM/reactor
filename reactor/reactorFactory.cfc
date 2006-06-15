@@ -1,5 +1,6 @@
 <cfcomponent>
 	<cfset variables.ObjectFactory = 0 />
+	<cfset variables.BeanFactory = 0 />
 	
 	<cffunction name="init" access="public" hint="I configure this object factory" returntype="reactorFactory">
 		<cfargument name="configuration" hint="I am either a relative or absolute path to the config XML file or an instance of a reactor.config.config component" required="yes" type="any" />
