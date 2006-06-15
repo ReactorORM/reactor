@@ -19,7 +19,7 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="any">
+	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
 		<cfset var Record = 0 />
 		
@@ -107,21 +107,21 @@
 	</cffunction>
 	
 	<!--- ObjectFactory --->
-  <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
-     <cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />
-     <cfset variables.ObjectFactory = arguments.ObjectFactory />
-  </cffunction>
-  <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
-     <cfreturn variables.ObjectFactory />
-  </cffunction>
+	<cffunction name="setObjectFactory" access="private" output="false" returntype="void">
+		<cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />
+		<cfset variables.ObjectFactory = arguments.ObjectFactory />
+	</cffunction>
+	<cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
+		<cfreturn variables.ObjectFactory />
+	</cffunction>
   
-  <!--- BeanFactory --->
-  <cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
-  	<cfargument name="beanFactory" type="coldspring.beans.beanFactory" required="true" />
+	<!--- BeanFactory --->
+	<cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+		<cfargument name="beanFactory" type="coldspring.beans.beanFactory" required="true" />
 		<cfset variables.BeanFactory = arguments.beanFactory />
 	</cffunction>
-  <cffunction name="getBeanFactory" access="private" output="false" returntype="any">
-     <cfreturn variables.BeanFactory />
-  </cffunction>
+	<cffunction name="getBeanFactory" access="private" output="false" returntype="any">
+		<cfreturn variables.BeanFactory />
+	</cffunction>
 
 </cfcomponent>

@@ -153,21 +153,85 @@
     </ul>
   <li><object type="text/sitemap">
     <param name="Name" value="Reactor XML Configuration File">
+    <param name="Local" value="Overview.htm">
   </object>
   <ul>
     <li><object type="text/sitemap">
-      <param name="Name" value="Overview">
-      <param name="Local" value="XML_Overview.htm">
+      <param name="Name" value="reactor tag">
+      <param name="Local" value="reactor_tag.htm">
     </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="General Configuration">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Object Configuration">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Relationship Configuration">
-    </object>
+    <ul>
+      <li><object type="text/sitemap">
+        <param name="Name" value="config tag">
+        <param name="Local" value="config_tag.htm">
+      </object>
+      <ul>
+        <li><object type="text/sitemap">
+          <param name="Name" value="project tag">
+          <param name="Local" value="project_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="dsn tag">
+          <param name="Local" value="dsn_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="type tag">
+          <param name="Local" value="type_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="mapping tag">
+          <param name="Local" value="mapping_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="mode tag">
+          <param name="Local" value="mode_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="username tag">
+          <param name="Local" value="username_tag.htm">
+        </object>
+        <li><object type="text/sitemap">
+          <param name="Name" value="password tag">
+          <param name="Local" value="password_tag.htm">
+        </object>
+        </ul>
+      <li><object type="text/sitemap">
+        <param name="Name" value="objects tag">
+        <param name="Local" value="objects_tag.htm">
+      </object>
+      <ul>
+        <li><object type="text/sitemap">
+          <param name="Name" value="object tag">
+          <param name="Local" value="object_tag.htm">
+        </object>
+        <ul>
+          <li><object type="text/sitemap">
+            <param name="Name" value="hasOne tag">
+            <param name="Local" value="hasOne_tag.htm">
+          </object>
+          <ul>
+            <li><object type="text/sitemap">
+              <param name="Name" value="relate tag">
+              <param name="Local" value="relate_tag.htm">
+            </object>
+            </ul>
+          <li><object type="text/sitemap">
+            <param name="Name" value="hasMany tag">
+            <param name="Local" value="hasMany.htm">
+          </object>
+          <ul>
+            <li><object type="text/sitemap">
+              <param name="Name" value="relate tag">
+              <param name="Local" value="relate_tag.htm">
+            </object>
+            <li><object type="text/sitemap">
+              <param name="Name" value="link tag">
+              <param name="Local" value="link_tag.htm">
+            </object>
+            </ul>
+          </ul>
+        </ul>
+      </ul>
     </ul>
   <li><object type="text/sitemap">
     <param name="Name" value="The Reactor API">
@@ -175,6 +239,7 @@
   <ul>
     <li><object type="text/sitemap">
       <param name="Name" value="reactor">
+      <param name="Local" value="Reactor_Package.htm">
     </object>
     <ul>
       <li><object type="text/sitemap">
@@ -191,6 +256,7 @@
     </object>
     <li><object type="text/sitemap">
       <param name="Name" value="reactor.config">
+      <param name="Local" value="Config_Package.htm">
     </object>
     <ul>
       <li><object type="text/sitemap">
