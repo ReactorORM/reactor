@@ -120,7 +120,7 @@
   	<cfargument name="beanFactory" type="coldspring.beans.beanFactory" required="true" />
 		<cfset variables.BeanFactory = arguments.beanFactory />
 	</cffunction>
-  <cffunction name="getBeanFactory" access="private" output="false" returntype="coldspring.beans.beanFactory">
+  <cffunction name="getBeanFactory" access="private" output="false" returntype="any">
      <cfreturn variables.BeanFactory />
   </cffunction>
 
