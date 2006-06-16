@@ -34,8 +34,8 @@
 				
 		<cfset arguments.node.direction = arguments.direction />
 		
-		<cfset node.alias = node.fieldAlias />
-		<cfset node.field = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
+		<cfset node.fieldAlias = node.fieldAlias />
+		<cfset node.fieldName = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
 		
 		<cfset ArrayAppend(order, node) />	
 		<cfset setOrder(order) />
@@ -74,7 +74,7 @@
 		<cfloop from="1" to="#ArrayLen(variables.order)#" index="x">
 			
 			<cfif IsStruct(variables.order[x])>
-				<cfset field = getQuery().findObject(variables.order[x].objectAlias).getField(variables.order[x].alias) />
+				<cfset field = getQuery().findObject(variables.order[x].objectAlias).getField(variables.order[x].fieldAlias) />
 				
 				<cfif StructKeyExists(field, "expression")>
 					<cfset variables.order[x].expression = field.expression />

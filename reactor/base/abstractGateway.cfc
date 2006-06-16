@@ -629,7 +629,7 @@
 			<cfif StructKeyExists(arguments.node, "expression")>
 				<cfreturn arguments.node.expression />
 			<cfelse>
-				<cfreturn arguments.Convention.formatFieldName(arguments.node.fieldAlias, arguments.node.objectAlias) />
+				<cfreturn arguments.Convention.formatFieldName(arguments.node.fieldName, arguments.node.objectAlias) />
 			</cfif>
 		</cfif>
 	</cffunction>
