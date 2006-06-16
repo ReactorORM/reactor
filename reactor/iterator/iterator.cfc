@@ -432,7 +432,13 @@
 			<cfif variables.query.recordCount>
 				<cfset ArraySet(deletedArray, 1, variables.query.recordCount, 0) />
 			</cfif>
-			<cfset QueryAddColumn(variables.query, "reactorRowDeleted", "Bit", deletedArray) />
+			
+			<cfif ListFirst(Server.ColdFusion.ProductVersion) GTE 7>
+				<cfset QueryAddColumn(variables.query, "reactorRowDeleted", "Bit", deletedArray) />
+			<cfelse>
+				<!--- hopefully this works in MX 6.1 --->
+				<cfset QueryAddColumn(variables.query, "reactorRowDeleted", deletedArray) />
+			</cfif>
 			
 			<cfif variables.query.recordCount GT 0>
 				<cfset ArraySet(variables.array, 1, variables.query.recordCount, "") />
