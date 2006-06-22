@@ -3,7 +3,7 @@
 	<cfset variables.config = "" />
 	<cfset variables.ReactorFactory = "" />
 	<cfset variables.BeanFactory = "" />
-	<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 10)) />
+	<!---<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 10)) />--->
 	<cfset variables.Cache = StructNew() />
 	<cfset variables.Cache.Dao = StructNew() />
 	<cfset variables.Cache.Gateway = StructNew() />
@@ -169,7 +169,7 @@
 					<cftry>
 						<!--- get an instance of the object from cache or create it --->
 						<cfif StructKeyExists(variables.Cache["Dictionary"], arguments.alias)>
-							<cfset DictionaryObject = variables.TimedCache.getValue(dictionaryXmlPath) />
+							<cfset DictionaryObject = variables.Cache["Dictionary"][arguments.alias] />
 						<cfelse>
 							<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
 							<cfset variables.Cache["Dictionary"][arguments.alias] = DictionaryObject />
@@ -211,21 +211,21 @@
 		<cfset var Object = 0 />
 		<cfset var ObjectDao = 0/>
 		
-		<!--- check for a cached version of the object --->
+		<!--- check for a cached version of the object
 		<cfif variables.TimedCache.exists(arguments.name)>
 			<cftry>
 				<!--- try to get the object --->
 				<cfset Object = variables.TimedCache.getValue(arguments.name) />
 				<!--- refresh the object in cache --->
-				<cfset variables.TimedCache.setValue(arguments.name,Object) />
+				<cfset variables.TimedCache.setValue(arguments.name, Object) />
 				<cfcatch/>
 			</cftry>
-		</cfif>
+		</cfif> --->
 		
 		<!--- if the object isn't an object then it wasn't cached and we need to create a new one --->
 		<cfif NOT IsObject(Object)>
 			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
-			<cfset variables.TimedCache.setValue(arguments.name,Object) />
+			<!---<cfset variables.TimedCache.setValue(arguments.name,Object) />--->
 			<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 			
 			<!--- read the object --->

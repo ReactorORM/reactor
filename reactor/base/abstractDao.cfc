@@ -5,7 +5,7 @@
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
-		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
+		<cfargument name="ObjectMetadata" hint="I am a database metadata object." required="yes" type="reactor.base.abstractMetadata" />
 		
 		<cfset super.configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />

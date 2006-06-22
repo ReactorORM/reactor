@@ -27,7 +27,7 @@
 		<cfloop collection="#this#" item="item">
 		
 			<cftry>
-				<cfif NOT IsCustomFunction(this[item]) AND ToString(this[item]) IS NOT ToString(arguments.to[item])>
+				<cfif NOT IsCustomFunction(this[item]) AND Compare(ToString(this[item]), ToString(arguments.to[item])) IS NOT 0>
 					<cfreturn false />
 				</cfif>
 				<cfcatch>
