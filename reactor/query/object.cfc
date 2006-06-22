@@ -82,7 +82,7 @@
 			<cfif IsSimpleValue(arguments.returnFields[x]) AND arguments.returnFields[x] IS getAlias()>
 				<cfreturn true />
 			
-			<cfelseif IsStruct(arguments.returnFields[x]) AND arguments.returnFields[x].fieldAlias IS arguments.fieldAlias>
+			<cfelseif IsStruct(arguments.returnFields[x]) AND arguments.returnFields[x].fieldAlias IS arguments.fieldAlias AND arguments.returnFields[x].objectAlias IS getAlias()>
 				<cfreturn true />
 			
 			</cfif>
