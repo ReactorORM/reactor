@@ -28,8 +28,9 @@
 		
 		<!--- add the ON --->
 		<cfloop from="1" to="#ArrayLen(relationship.relate)#" index="x">
-			<cfset join = join & " ON " & arguments.Convention.formatFieldName(relationship.relate[x].from, arguments.FromObject.getAlias()) />
-			<cfset join = join & " = " & arguments.Convention.formatFieldName(relationship.relate[x].to, getObject().getAlias()) />
+			
+			<cfset join = join & " ON " & arguments.Convention.formatFieldName(FromObject.getObjectMetadata().getField(relationship.relate[x].from).name, arguments.FromObject.getAlias()) />
+			<cfset join = join & " = " & arguments.Convention.formatFieldName(Object.getObjectMetadata().getField(relationship.relate[x].to).name, getObject().getAlias()) />
 			
 			<!--- if we're related by more than one column then add an and and repeat! --->
 			<cfif x IS NOT ArrayLen(relationship.relate)>

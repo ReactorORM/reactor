@@ -175,7 +175,7 @@
 		<!--- find the relationship to/from this object --->
 		<cfif getObjectMetadata().hasRelationship(arguments.relationshipAlias)>
 			<cfset relationship = getObjectMetadata().getRelationship(arguments.relationshipAlias) />
-			
+					
 		<cfelseif ToObjectMetadata.hasRelationship(arguments.relationshipAlias)>
 			<cfset relationship = ToObjectMetadata.getRelationship(arguments.relationshipAlias) />
 			

@@ -211,26 +211,11 @@
 		<cfset var Object = 0 />
 		<cfset var ObjectDao = 0/>
 		
-		<!--- check for a cached version of the object
-		<cfif variables.TimedCache.exists(arguments.name)>
-			<cftry>
-				<!--- try to get the object --->
-				<cfset Object = variables.TimedCache.getValue(arguments.name) />
-				<!--- refresh the object in cache --->
-				<cfset variables.TimedCache.setValue(arguments.name, Object) />
-				<cfcatch/>
-			</cftry>
-		</cfif> --->
+		<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+		<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 		
-		<!--- if the object isn't an object then it wasn't cached and we need to create a new one --->
-		<cfif NOT IsObject(Object)>
-			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
-			<!---<cfset variables.TimedCache.setValue(arguments.name,Object) />--->
-			<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
-			
-			<!--- read the object --->
-			<cfset ObjectDao.read(Object) />
-		</cfif>
+		<!--- read the object --->
+		<cfset ObjectDao.read(Object) />
 		
 		<!--- return the object --->
 		<cfreturn Object />
