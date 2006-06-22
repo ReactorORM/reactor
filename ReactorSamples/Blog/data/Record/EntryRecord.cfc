@@ -2,32 +2,14 @@
 <cfcomponent hint="I am the database agnostic custom Record object for the Entry table.  I am generated, but not overwritten if I exist.  You are safe to edit me."
 	extends="reactor.project.ReactorBlog.Record.EntryRecord" >
 	<!--- Place custom code here, it will not be overwritten --->
-	
-	<!---<cffunction name="validate" access="public" hint="I validate this object and populate and return a ValidationErrorCollection object." output="false" returntype="reactor.util.ValidationErrorCollection">
-		<cfargument name="ValidationErrorCollection" hint="I am the ValidationErrorCollection to populate." required="no" type="reactor.util.ValidationErrorCollection" default="#createErrorCollection()#" />
-		<cfset var Dictionary = _getDictionary() />
-		<!--- strip all html and special characters to see if the user actually provided an article --->
-		<cfset var article = Trim(ReReplaceNoCase(getArticle(), '(<(.|\n)+?>)|&.+?;|\r|\n|\t', "", "all")) />
-		
-		<!--- validate the Entry --->
-		<cfset super.validate(arguments.ValidationErrorCollection) />
-				
-		<!--- make sure the user actually provided an article --->
-		<cfif NOT Len(article)>
-			<cfset arguments.ValidationErrorCollection.addError("article", Dictionary.getValue("Article.notProvided")) />
-		</cfif>
-		
-		<!--- Add custom validation logic here, it will not be overwritten --->
-		<cfreturn arguments.ValidationErrorCollection />
-	</cffunction>--->
-	
+
 	<!--- Iterator For Category --->
 	<cffunction name="getCategoryIterator" access="public" output="false" returntype="reactor.iterator.iterator">
 		<cfset var CategoryIterator = super.getCategoryIterator() />
 		
 		<!--- if the iterator is not sorted then sort it --->
 		<cfif NOT CategoryIterator.isPopulated()>
-			<cfset CategoryIterator.getOrder().setAsc("category", "name") />
+			<cfset CategoryIterator.getOrder().setAsc("Category", "name") />
 			<cfset CategoryIterator.setDistinct(true) />
 		</cfif>
 		
