@@ -25,16 +25,7 @@
 		
 		<xsl:for-each select="//field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
-				&lt;cfset Where.isEqual(
-					<xsl:choose>
-						<xsl:when test="string-length(/object/@alias) &gt; 0">
-							"<xsl:value-of select="/object/@alias" />"
-						</xsl:when>
-						<xsl:otherwise>
-							"<xsl:value-of select="/object/@name" />"
-						</xsl:otherwise>
-					</xsl:choose>
-				, "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
+				&lt;cfset Where.isEqual(_getAlias(), "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
 			&lt;/cfif&gt;
 		</xsl:for-each>
 		
@@ -56,16 +47,7 @@
 		
 		<xsl:for-each select="//field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
-				&lt;cfset Where.isEqual(
-					<xsl:choose>
-						<xsl:when test="string-length(/object/@alias) &gt; 0">
-							"<xsl:value-of select="/object/@alias" />"
-						</xsl:when>
-						<xsl:otherwise>
-							"<xsl:value-of select="/object/@name" />"
-						</xsl:otherwise>
-					</xsl:choose>
-				, "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
+				&lt;cfset Where.isEqual(_getAlias(), "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
 			&lt;/cfif&gt;
 		</xsl:for-each>
 		
