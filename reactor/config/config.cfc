@@ -18,6 +18,12 @@
 			<cfset arguments.pathToConfigXml = expandPath(arguments.pathToConfigXml) />
 		</cfif>
 
+		<cfif NOT FileExists(arguments.pathToConfigXml)>
+			<cfthrow type="reactor.config.InvalidPathToConfig"
+				message="Invalid Path To Config"
+				detail="The path #arguments.pathToConfigXml# does not exist." />
+		</cfif>
+
 		<!--- read and parse the xml --->
 		<cffile action="read" file="#arguments.pathToConfigXml#" variable="xml" />
 		<cfset xml = XMLParse(xml) />
