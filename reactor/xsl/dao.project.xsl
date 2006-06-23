@@ -35,9 +35,9 @@
 		</xsl:choose>
 	&lt;/cffunction&gt;
 	
-	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0 and count(object/fields/field[@identity = 'true']) = 0">
+	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0">
 	&lt;cffunction name="exists" access="public" hint="I check to see if the <xsl:value-of select="object/@alias" /> object exists." output="false" returntype="boolean"&gt;
-		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be populated." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
+		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be checked." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
 		&lt;cfset var qExists = 0 /&gt;
 		&lt;cfset var <xsl:value-of select="object/@alias" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@alias" />") /&gt;
 				

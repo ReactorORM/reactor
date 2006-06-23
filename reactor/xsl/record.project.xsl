@@ -150,6 +150,13 @@
 		&lt;/cffunction&gt;
 	</xsl:for-each>	
 	
+	<xsl:if test="count(object/fields/field[@primaryKey = 'true']) &gt; 0">
+	&lt;!--- exists ---&gt;
+	&lt;cffunction name="exists" access="public" hint="I check to see if this record exists." output="false" returntype="boolean"&gt;
+		&lt;cfreturn _getDao().exists(_getTo()) /&gt;
+	&lt;/cffunction&gt;
+	</xsl:if>	
+	
 	&lt;!--- to ---&gt;
 	&lt;cffunction name="_setTo" access="public" output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am this record's transfer object." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
