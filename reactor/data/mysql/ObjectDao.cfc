@@ -182,6 +182,9 @@
 			<cfcase value="binary">
 				<cfreturn "cf_sql_binary" />
 			</cfcase>
+			<cfcase value="time">
+				<cfreturn "cf_sql_time" />
+			</cfcase>
 		</cfswitch>
 		
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
