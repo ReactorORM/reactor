@@ -150,7 +150,7 @@
 				<cfreturn "cf_sql_smallint" />
 			</cfcase>
 			<cfcase value="decimal">
-				<cfreturn "cf_sql_decimal" />
+				<cfreturn "cf_sql_float" />
 			</cfcase>
 			<cfcase value="numeric">
 				<cfreturn "cf_sql_varchar" />

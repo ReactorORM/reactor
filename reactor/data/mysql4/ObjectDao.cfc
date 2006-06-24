@@ -177,7 +177,7 @@
 				<cfreturn "cf_sql_double" />
 			</cfcase>
 			<cfcase value="decimal,dec">
-				<cfreturn "cf_sql_decimal" />
+				<cfreturn "cf_sql_float" />
 			</cfcase>
 			<cfcase value="date">
 				<cfreturn "cf_sql_date" />

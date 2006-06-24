@@ -338,6 +338,7 @@
 		<cfset xmlField.XmlAttributes["cfDataType"] = arguments.field.getCfDataType() />
 		<cfset xmlField.XmlAttributes["cfSqlType"] = arguments.field.getCfSqlType() />
 		<cfset xmlField.XmlAttributes["length"] = arguments.field.getLength() />
+		<cfset xmlField.XmlAttributes["scale"] = arguments.field.getScale() />
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.getDefault() />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
 		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.getSequenceName() />

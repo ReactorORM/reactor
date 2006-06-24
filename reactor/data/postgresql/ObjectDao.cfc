@@ -326,7 +326,7 @@
 				<cfreturn "cf_sql_money" />
 			</cfcase>
 			<cfcase value="numeric,decimal">
-				<cfreturn "cf_sql_numeric" />
+				<cfreturn "cf_sql_float" />
 			</cfcase>
 			<!---
 			<cfcase value="path">
