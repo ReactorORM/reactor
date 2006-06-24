@@ -52,7 +52,6 @@
 					WHEN ISNUMERIC(col.CHARACTER_MAXIMUM_LENGTH) = 1 THEN col.CHARACTER_MAXIMUM_LENGTH
 					ELSE 0
 				END as length,
-				col.NUMERIC_SCALE as scale,
 				col.COLUMN_DEFAULT as [default]
 			FROM INFORMATION_SCHEMA.COLUMNS as col LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS as tabCon
 				ON col.TABLE_NAME = tabCon.TABLE_NAME
@@ -75,7 +74,6 @@
 			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
 			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
 			<cfset Field.setLength(qFields.length) />
-			<cfset Field.setScale(Val(qFields.scale)) />
 			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
 			
 			<!--- add the field to the table --->
