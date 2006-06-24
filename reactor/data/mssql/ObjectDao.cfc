@@ -198,7 +198,7 @@
 				<cfreturn "cf_sql_smallint" />
 			</cfcase>
 			<cfcase value="smallmoney">
-				<cfreturn "cf_sql_decimal" />
+				<cfreturn "cf_sql_float" />
 			</cfcase>
 			<cfcase value="text">
 				<cfreturn "cf_sql_longvarchar" />
