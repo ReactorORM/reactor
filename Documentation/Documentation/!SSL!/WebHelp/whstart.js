@@ -31,8 +31,8 @@ function delayReload()
 	}
 }
 
-var gsToolbarOrder = "toc|idx|fts|glo|custom1|custom2|custom3|blankblock|searchform|banner";
-var gsMinibarOrder = "avprev|avnext|blankblock|hide2|";
+var gsToolbarOrder = "toc|idx|fts|glo|blankblock|searchform|banner";
+var gsMinibarOrder = "blankblock|hide2|";
 
 var gsTopic = "Introduction.htm";
 var PANE_OPT_SEARCH = 1;

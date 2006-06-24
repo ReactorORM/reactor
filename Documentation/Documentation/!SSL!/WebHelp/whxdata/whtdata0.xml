@@ -40,18 +40,20 @@
   <item name="Object Oriented Queries" url="Object_Oriented_Queries.htm" />
 </book>
 <book name="Reactor XML Configuration File" url="Overview.htm" >
-  <book name="reactor tag" url="reactor_tag.htm" >
-    <book name="config tag" url="config_tag.htm" >
-      <item name="project tag" url="project_tag.htm" />
-      <item name="dsn tag" url="dsn_tag.htm" />
-      <item name="type tag" url="type_tag.htm" />
-      <item name="mapping tag" url="mapping_tag.htm" />
-      <item name="mode tag" url="mode_tag.htm" />
-      <item name="username tag" url="username_tag.htm" />
-      <item name="password tag" url="password_tag.htm" />
+  <item name="Reactor XML Document Type Definition (DTD)" url="Reactor_XML_Document_Type_Definition_(DTD).htm" />
+  <book name="&lt;reactor&gt; tag" url="reactor_tag.htm" >
+    <book name="&lt;config&gt; tag" url="config_tag.htm" >
+      <item name="&lt;project&gt; tag" url="project_tag.htm" />
+      <item name="&lt;dsn&gt; tag" url="dsn_tag.htm" />
+      <item name="&lt;type&gt; tag" url="type_tag.htm" />
+      <item name="&lt;mapping&gt; tag" url="mapping_tag.htm" />
+      <item name="&lt;mode&gt; tag" url="mode_tag.htm" />
+      <item name="&lt;username&gt; tag" url="username_tag.htm" />
+      <item name="&lt;password&gt; tag" url="password_tag.htm" />
     </book>
-    <book name="objects tag" url="objects_tag.htm" >
-      <book name="object tag" url="object_tag.htm" >
+    <book name="&lt;objects&gt; tag" url="objects_tag.htm" >
+      <book name="&lt;object&gt; tag" url="object_tag.htm" >
+        <item name="&lt;field&gt; tag" url="field_tag.htm" />
         <book name="hasOne tag" url="hasOne_tag.htm" >
           <item name="relate tag" url="relate_tag.htm" />
         </book>
@@ -68,10 +70,17 @@
     <item name="Reactor Package" url="Reactor_Package.htm" />
     <item name="reactor.ReactorFactory" url="reactor.ReactorFactory.htm" />
   </book>
+  <book name="reactor.base" >
+    <item name="Base Package" url="Base_Package.htm" />
+    <item name="reactor.base.abstractObject" url="reactor.base.abstractObject.htm" />
+  </book>
   <book name="reactor.config" url="Config_Package.htm" >
     <item name="Config Package" url="Config_Package.htm" />
     <item name="reactor.config.config" url="reactor.config.config.htm" />
   </book>
+</book>
+<book name="Miscellaneous Information" >
+  <item name="The Structure of Reactor Generated Files" url="The_Structure_of_Reactor_Generated_Files.htm" />
 </book>
 
 </tocdata>

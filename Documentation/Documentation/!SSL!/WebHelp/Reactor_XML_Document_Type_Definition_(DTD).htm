@@ -1,0 +1,145 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>Reactor XML Document Type Definition (DTD)</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.addTocInfo)
+	{
+	addTocInfo("Reactor XML Configuration File\nReactor XML Document Type Definition (DTD)");
+addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
+
+	}
+	if (window.writeBtnStyle)
+		writeBtnStyle();
+
+	if (window.writeIntopicBar)
+		writeIntopicBar(1);
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("Reactor_Documentation.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+<h1>Reactor XML Document Type Definition (DTD)</h1>
+
+Reactor is provided with a Document Type Definition (DTD) file that can 
+ be used to validate your XML configuration file. &nbsp;The 
+ DTD, reactor.dtd, is located under the &quot;/reactor&quot; directory. 
+ &nbsp;It is not 
+ necessary to use the DTD file, but it may be of assistance in validating 
+ your &nbsp;configuration. 
+ &nbsp;&nbsp;This 
+ can be of particular use when you receive an error that appears related 
+ the configuration file.
+
+<br>&nbsp; 
+ 
+
+<br>To 
+ use the DTD place it in the same directory as your XML configuration file. 
+ &nbsp;Edit your 
+ configuration xml file and add a doctype reference to the top of the document. 
+ &nbsp;For example: 
+ 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;!DOCTYPE reactor SYSTEM &quot;Reactor.dtd&quot;&gt;<br>
+&lt;reactor /&gt;</p>
+
+&nbsp; 
+
+<p class=note>Note: The above is actually a valid configuration file, but 
+ does not define reactor's configuration nor any relationships so it's 
+ rather useless. &nbsp;To 
+ actually use the file you would need to instantiate a <a href="reactor.config.config.htm">config</a> 
+ object and pass it into the <a href="reactor.ReactorFactory.htm">reactorFactory</a> 
+ when it's instantiated. &nbsp;This 
+ is useful when working with a third party IOC container such as <a href="http://www.coldspringframework.org/">ColdSpring</a>.</p>
+
+&nbsp; 
+
+<br>The 
+ DTD can be used by most XML editors to validate your XML configuration 
+ file. &nbsp;For 
+ example, if you are editing your XML configuration file &nbsp;using 
+ DreamWeaver you could simply run the validator by clicking File &gt; Check 
+ Page &gt; Validate Markup. &nbsp;Errors 
+ will be shown in the Results page.
+
+<br>&nbsp;
+
+<br>Other 
+ developers like to use XMLBuddy with Eclipse. &nbsp;With 
+ XMLBuddy you can click XML &gt; Validate to validate the document.
+
+<br>&nbsp;
+
+<br>Beyond 
+ this, it's up to you to figure out how to (or if you plan to) use the 
+ DTD. &nbsp;
+
+<br>&nbsp; 
+ 
+
+<br>&nbsp; 
+ 
+
+<br>&nbsp; 
+ 
+
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+//-->
+</script>
+</body>
+</html>

@@ -1,11 +1,231 @@
-<HTML>
-<HEAD>
- <TITLE>project tag</TITLE>
- <LINK rel="StyleSheet" href="default.css">
- <META NAME="generator" CONTENT="RoboHELP by eHelp Corporation - www.ehelp.com">
-</HEAD>
-<BODY>
- <H1>project tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>project tag</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=990>
+<meta name=layout-width content=1300>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>&lt;project&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The project tag defines a unique name for the Reactor project. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->To 
+ completely understand how this tag works you must understand how Reactor 
+ generates files. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ you don't yet understand this then the following might not mean much to 
+ you. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->In 
+ this case simply follow the naming rules for the value attribute. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--></p>
+
+<p>&nbsp;</p>
+
+<p>When Reactor generates files it creates two types of files, customizable 
+ files and project files. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ DBMS agnostic customizable file extends the project file. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ project file is generated under the &quot;/reactor/project&quot; folder. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This is 
+ done for two reasons:</p>
+
+<p>&nbsp;</p>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p style="margin-left: 40px;">The project files are 
+ not safe to edit. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Placing 
+ these files under the framework itself helps discourage developers from 
+ editing them.</p></li>
+	
+	<li class=kadov-p><p style="margin-left: 40px;">It makes projects more 
+ portable and easily deployed. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->(Just 
+ trust me on this one.)</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>The value attribute of the project tag defines the name of the project 
+ and therefore the name of the folder in which project files are generated 
+ under &quot;/reactor/project&quot;. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example, if my project were called &quot;HelloWorld&quot; my project files 
+ would be created in &quot;/reactor/project/scratch&quot;. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ customizable DBMS agnostic files extend files in the project folder. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example, helloWorldData.record.UserRecord extends reactor.project.helloWorld.record.UserRecord.</p>
+
+<p>&nbsp;</p>
+
+<p>For more information on the structure of Reactor generated files see 
+ <a href="The_Reactor_Generated_Files.htm">The Reactor Generated Files</a> 
+ section in the <a href="Overview.htm">Reactor Crash Course</a> and <a 
+ href="The_Structure_of_Reactor_Generated_Files.htm">The Structure of Reactor 
+ Generated Files</a>.</p>
+
+<p>&nbsp;</p>
+
+<p>It is not advisable to have two different applications use the same 
+ project name. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->However, 
+ multiple instances of the same exact application (such as multiple instances 
+ of a blog application) can use the same project name and share the generated 
+ project files.</p>
+
+<h4>Attributes</h4>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Attribute</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Required</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: Solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>value</td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Yes</td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: Solid;
+			border-bottom-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Defines the name unique name for the Reactor project. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ value provided must follow the same conventions as allowed in <a href="http://livedocs.macromedia.com/coldfusion/7/htmldocs/wwhelp/wwhimpl/common/html/wwhelp.htm?context=ColdFusion_Documentation&amp;file=00000883.htm">variable 
+ naming</a>. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example, no spaces, punctuation, etc.</td></tr>
+</table>
+
+<h4>Child Tags</h4>
+
+<p style="font-style: italic;">None</p>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;config&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;dsn 
+ value=&quot;scratch&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;mapping 
+ value=&quot;/reactorData&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;mode 
+ value=&quot;always&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/config&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+
+</html>

@@ -1,15 +1,33 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
 <!-- saved from url=(0026)http://www.macromedia.com/ -->
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>config tag</TITLE>
+<html>
+
+<head>
+<title>config tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs2 { width:33.333%; }
+tr.whs3 { x-cell-content-align:top; }
+th.whs4 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs5 { width:33.333%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs8 { width:33.333%; padding-right:10px; padding-left:10px; border-left-style:Solid; border-left-color:#000000; border-left-width:1px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
+td.whs9 { width:33.333%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
+td.whs10 { width:33.333%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+td.whs11 { width:33.333%; padding-right:10px; padding-left:10px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -39,12 +57,12 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
     }
     //-->
 </script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.addTocInfo)
 {
-addTocInfo("Reactor XML Configuration File\nreactor tag\nconfig tag");
+addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<config> tag");
 
   addShowButton();
 }
@@ -60,7 +78,110 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<H1>config tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<h1>&lt;config&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The config tag contains a set of tags which configure how Reactor functions. 
+ &nbsp;Though 
+ the config tag is not required, when provided it's child tags are required 
+ as shown below.</p>
+
+<h4>Attributes</h4>
+
+<p>This tag has no attributes.</p>
+
+<h4>Child Tags</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+<col class="whs2">
+<col class="whs2">
+<col class="whs2">
+
+<tr valign="top" class="whs3">
+<th scope="col" width="33.333%" class="whs4">
+<p>Tag</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p><a href="project_tag.htm">project</a></td>
+<td width="33.333%" class="whs7">
+<p>Yes</td>
+<td width="33.333%" class="whs7">
+<p>Defines a unique name for your application.</td></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p><a href="dsn_tag.htm">dsn</a></td>
+<td width="33.333%" class="whs7">
+<p>Yes</td>
+<td width="33.333%" class="whs7">
+<p>Defines the datasource that Reactor will use to access the database.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs8">
+<p><a href="type_tag.htm">type</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Yes</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Defines the type of database being used.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs10">
+<p><a href="mapping_tag.htm">mapping</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>Yes</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>Defines the relative path where Reactor will generated files.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs8">
+<p><a href="mode_tag.htm">mode</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Yes</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Indicates the conditions under which Reactor will regenerate files.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs10">
+<p><a href="username_tag.htm">username</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>No</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>Defines the username to use with the datasource.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs8">
+<p><a href="password_tag.htm">password</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>No</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">Defines the password to use with the datasource.</td></tr>
+</table>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/reactorData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;always&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ &lt;username value=&quot;&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;password 
+ value=&quot;&quot; /&gt; --&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/config&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+</html>

@@ -1,15 +1,32 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
 <!-- saved from url=(0026)http://www.macromedia.com/ -->
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>project tag</TITLE>
+<html>
+
+<head>
+<title>project tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+ul.whs1 { list-style:disc; }
+p.whs2 { margin-left:40px; }
+table.whs3 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs4 { width:33.333%; }
+tr.whs5 { x-cell-content-align:top; }
+th.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs7 { width:33.333%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs8 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs9 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+p.whs10 { font-style:italic; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -39,12 +56,12 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
     }
     //-->
 </script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.addTocInfo)
 {
-addTocInfo("Reactor XML Configuration File\nreactor tag\nconfig tag\nproject tag");
+addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<config> tag\n<project> tag");
 
   addShowButton();
 }
@@ -60,7 +77,113 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<H1>project tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<h1>&lt;project&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The project tag defines a unique name for the Reactor project. &nbsp;To 
+ completely understand how this tag works you must understand how Reactor 
+ generates files. &nbsp;If 
+ you don't yet understand this then the following might not mean much to 
+ you. &nbsp;In 
+ this case simply follow the naming rules for the value attribute. &nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>When Reactor generates files it creates two types of files, customizable 
+ files and project files. &nbsp;The 
+ DBMS agnostic customizable file extends the project file. &nbsp;The 
+ project file is generated under the &quot;/reactor/project&quot; folder. 
+ &nbsp;This is 
+ done for two reasons:</p>
+
+<p>&nbsp;</p>
+
+<ul type="disc" class="whs1">
+	
+	<li class=kadov-p><p class="whs2">The project files are 
+ not safe to edit. &nbsp;Placing 
+ these files under the framework itself helps discourage developers from 
+ editing them.</p></li>
+	
+	<li class=kadov-p><p class="whs2">It makes projects more 
+ portable and easily deployed. &nbsp;(Just 
+ trust me on this one.)</p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>The value attribute of the project tag defines the name of the project 
+ and therefore the name of the folder in which project files are generated 
+ under &quot;/reactor/project&quot;. &nbsp;For 
+ example, if my project were called &quot;HelloWorld&quot; my project files 
+ would be created in &quot;/reactor/project/scratch&quot;. &nbsp;The 
+ customizable DBMS agnostic files extend files in the project folder. &nbsp;For 
+ example, helloWorldData.record.UserRecord extends reactor.project.helloWorld.record.UserRecord.</p>
+
+<p>&nbsp;</p>
+
+<p>For more information on the structure of Reactor generated files see 
+ <a href="The_Reactor_Generated_Files.htm">The Reactor Generated Files</a> 
+ section in the <a href="Overview.htm">Reactor Crash Course</a> and <a 
+ href="The_Structure_of_Reactor_Generated_Files.htm">The Structure of Reactor 
+ Generated Files</a>.</p>
+
+<p>&nbsp;</p>
+
+<p>It is not advisable to have two different applications use the same 
+ project name. &nbsp;However, 
+ multiple instances of the same exact application (such as multiple instances 
+ of a blog application) can use the same project name and share the generated 
+ project files.</p>
+
+<h4>Attributes</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
+<col class="whs4">
+<col class="whs4">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<th scope="col" width="33.333%" class="whs6">
+<p>Attribute</th>
+<th scope="col" width="33.333%" class="whs7">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs7">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs5">
+<td width="33.333%" class="whs8">
+<p>value</td>
+<td width="33.333%" class="whs9">
+<p>Yes</td>
+<td width="33.333%" class="whs9">
+<p>Defines the name unique name for the Reactor project. &nbsp;The 
+ value provided must follow the same conventions as allowed in <a href="http://livedocs.macromedia.com/coldfusion/7/htmldocs/wwhelp/wwhimpl/common/html/wwhelp.htm?context=ColdFusion_Documentation&amp;file=00000883.htm">variable 
+ naming</a>. &nbsp;For 
+ example, no spaces, punctuation, etc.</td></tr>
+</table>
+
+<h4>Child Tags</h4>
+
+<p class="whs10">None</p>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/reactorData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;always&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/config&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+</html>

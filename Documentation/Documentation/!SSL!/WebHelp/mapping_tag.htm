@@ -1,14 +1,29 @@
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>mapping tag</TITLE>
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>mapping tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs2 { width:33.333%; }
+tr.whs3 { x-cell-content-align:top; }
+th.whs4 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs5 { width:33.333%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+p.whs8 { font-style:italic; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -31,14 +46,14 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.gbWhTopic)
 {
 	if (window.addTocInfo)
 	{
-	addTocInfo("Reactor XML Configuration File\nreactor tag\nconfig tag\nmapping tag");
+	addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<config> tag\n<mapping> tag");
 addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
 
 	}
@@ -62,13 +77,83 @@ else
 		document.location.reload();
 //-->
 </script>
-<H1>mapping tag</H1>
- <P>Type topic text here.</P>
+<h1>&lt;mapping&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The mapping tag specified the relative location where Reactor will write 
+ generated files. &nbsp;The 
+ value argument can be either a path relative to the webroot or it can 
+ be a ColdFusion mapping.</p>
+
+<p>&nbsp;</p>
+
+<p>For example, if you have a folder &quot;/data&quot; under your webroot 
+ and you wanted to write Reactor generated files in that directory you 
+ would provide this mapping tag:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;mapping value=&quot;/data&quot; /&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>However, if need be you could also create a ColdFusion mapping to any 
+ other directory on your server. &nbsp;This 
+ is not a best practice, but it works just fine.</p>
+
+<h4>Attributes</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+<col class="whs2">
+<col class="whs2">
+<col class="whs2">
+
+<tr valign="top" class="whs3">
+<th scope="col" width="33.333%" class="whs4">
+<p>Attribute</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p>value</td>
+<td width="33.333%" class="whs7">
+<p>Yes</td>
+<td width="33.333%" class="whs7">
+<p>Defines the relative path to the directory where Reactor will write 
+ generated files. &nbsp;Alternatively, 
+ this may be a ColdFusion mapping.</td></tr>
+</table>
+
+<h4>Child Tags</h4>
+
+<p class="whs8">None</p>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ value=&quot;Scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ value=&quot;scratch&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ value=&quot;mssql&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ value=&quot;/reactorData&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ value=&quot;always&quot; /&gt;<br>
+ &nbsp;&lt;/config&gt;<br>
+&lt;/reactor&gt;</p>
+
 <script type="text/javascript" language="javascript1.2">
 <!--
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
 //-->
 </script>
-</BODY>
-</HTML>
+</body>
+</html>

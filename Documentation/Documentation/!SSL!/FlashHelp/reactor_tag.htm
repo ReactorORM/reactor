@@ -1,15 +1,29 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
 <!-- saved from url=(0026)http://www.macromedia.com/ -->
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>reactor tag</TITLE>
+<html>
+
+<head>
+<title>reactor tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs2 { width:33.333%; }
+tr.whs3 { x-cell-content-align:top; }
+th.whs4 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs5 { width:33.333%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -39,12 +53,12 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
     }
     //-->
 </script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.addTocInfo)
 {
-addTocInfo("Reactor XML Configuration File\nreactor tag");
+addTocInfo("Reactor XML Configuration File\n<reactor> tag");
 
   addShowButton();
 }
@@ -60,7 +74,57 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<H1>reactor tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<h1>&lt;reactor&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The reactor tag is the root tag of the Reactor XML configuration file. 
+ &nbsp;It contains 
+ all of the settings for the reactor framework including configuration 
+ options and object definitions and relationships.</p>
+
+<h4>Attributes</h4>
+
+<p>This tag has no attributes.</p>
+
+<h4>Child Tags</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+<col class="whs2">
+<col class="whs2">
+<col class="whs2">
+
+<tr valign="top" class="whs3">
+<th scope="col" width="33.333%" class="whs4">
+<p>Tag</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p><a href="config_tag.htm">config</a></td>
+<td width="33.333%" class="whs7">
+<p>No</td>
+<td width="33.333%" class="whs7">
+<p>Contains a set of tags for configuring Reactor.</td></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p><a href="objects_tag.htm">objects</a></td>
+<td width="33.333%" class="whs7">
+<p>No</td>
+<td width="33.333%" class="whs7">
+<p>Contains a set of tags that define objects and their relationships.</td></tr>
+</table>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ configuration XML goes here --&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+</html>

@@ -13,8 +13,10 @@
  <entry name="design pattern" value="" />
  <entry name="Dirty" value="Dirty" />
  <entry name="DSN" value="" />
+ <entry name="DTD" value="Document Type Definition. A file that describes the structure of an XML document." />
  <entry name="framework" value="" />
  <entry name="Gateway" value="See Table Data Gateway" />
+ <entry name="IOC" value="" />
  <entry name="Metadata Object" value="" />
  <entry name="mutator" value="" />
  <entry name="Object Oriented Programming" value="" />

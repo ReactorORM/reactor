@@ -24,10 +24,14 @@ NAME=Dirty
 Dirty
 NAME=DSN
 
+NAME=DTD
+Document Type Definition. A file that describes the structure of an XML document.
 NAME=framework
 
 NAME=Gateway
 See Table Data Gateway
+NAME=IOC
+
 NAME=Metadata Object
 
 NAME=mutator
