@@ -4,6 +4,291 @@
 /*=(Created with RoboEditor.)=======================================*/
 /*=(===============================================================)*/
 
+
+/*begin-old-version{{*/
+/*=(===============================================================)*/
+
+/*=(===============================================================)*/
+/*=(Created with RoboEditor.)=======================================*/
+/*=(===============================================================)*/
+
+BODY {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: #ffffff;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+H1 {
+	font-weight: bold;
+	font-size: 24.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H1 {
+	font-weight: bold;
+	font-size: 24.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+TABLE {
+	border-collapse: collapse;
+}
+
+TABLE tr th {
+	background-color: #00CCFF;
+}
+
+TABLE tr th,
+td {
+	padding: 3px;
+}
+
+TABLE tr td {
+	border-top: 1px solid lightgray;
+}
+
+LI {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+IMG {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+H2 {
+	font-weight: bold;
+	font-size: 18.0pt;
+}
+
+PRE{
+	padding: 4.5pt;
+	background-color: #FFFFE6;
+	border-left-style: Solid;
+	border-left-width: 1px;
+	border-right-style: Solid;
+	border-right-width: 1px;
+	border-top-style: Solid;
+	border-top-width: 1px;
+	border-bottom-style: Solid;
+	border-bottom-width: 1px;
+	font-family: "Courier New", monospace;
+	color: #606000;
+	font-weight: bold;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H2 {
+	font-weight: bold;
+	font-size: 18.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H3 {
+	font-weight: bold;
+	font-size: 14.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H3 {
+	font-weight: bold;
+	font-size: 14.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H4 {
+	font-weight: bold;
+	font-size: 12.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H4 {
+	font-weight: bold;
+	font-size: 12.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H5 {
+	font-weight: bold;
+	font-size: 10.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H5 {
+	font-weight: bold;
+	font-size: 10.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H6 {
+	font-weight: bold;
+	font-size: 8.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H6 {
+	font-weight: bold;
+	font-size: 8.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P {
+	font-size: 12.0pt;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P {
+	font-size: 12.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+A.expandspot {
+	color: #008000;
+	cursor: hand;
+	font-style: italic;
+	x-text-underline: off;
+	x-text-overline: off;
+	x-text-line-through: off;
+	/*begin!kadov{{*/ text-decoration: none none none; /*}}end!kadov*/ 
+}
+
+SPAN.expandtext {
+	font-style: italic;
+	font-weight: normal;
+	color: #ff0000;
+}
+
+A.dropspot {
+	cursor: hand;
+	color: #008000;
+	font-style: italic;
+	x-text-underline: off;
+	x-text-overline: off;
+	x-text-line-through: off;
+	/*begin!kadov{{*/ text-decoration: none none none; /*}}end!kadov*/ 
+}
+
+A.glossterm {
+	color: #800000;
+	cursor: hand;
+	font-style: italic;
+	x-text-underline: off;
+	x-text-overline: off;
+	x-text-line-through: off;
+	/*begin!kadov{{*/ text-decoration: none none none; /*}}end!kadov*/ 
+}
+
+SPAN.glosstext {
+	font-style: italic;
+	font-weight: normal;
+	color: #0000ff;
+}
+
+OL,
+UL {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+SPAN.function {
+	color: #0000ff;
+}
+
+P.code {
+	padding: 4.5pt;
+	background-color: #FFFFE6;
+	border-left-style: Solid;
+	border-left-width: 1px;
+	border-right-style: Solid;
+	border-right-width: 1px;
+	border-top-style: Solid;
+	border-top-width: 1px;
+	border-bottom-style: Solid;
+	border-bottom-width: 1px;
+	font-family: "Courier New", monospace;
+	color: #606000;
+	font-weight: bold;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-Ccode {
+	font-family: "Courier New", monospace;
+	color: #606000;
+	font-weight: bold;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.note {
+	font-style: italic;
+	font-weight: normal;
+	background-color: #ecf5ff;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-Cnote {
+	font-style: italic;
+	font-weight: normal;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.Quiz {
+	background-color: #eaeaea;
+	padding: 3px;
+	border: 1px solid #000000;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CQuiz {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+
+/*=(===============================================================)*/
+
+/*}}end-old-version*/
 BODY {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	background-color: #ffffff;
@@ -249,13 +534,37 @@ LI.kadov-P-Cnote {
 P.Quiz {
 	background-color: #eaeaea;
 	padding: 3px;
-	border: 1px solid black;
+	border: 1px solid #000000;
 }
 
 /*=(Generated Code)=================================================*/
 /*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
 /*begin!kadov{{=====================================================*/ 
 LI.kadov-P-CQuiz {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.Preformatted {
+	line-height: normal;
+	margin-bottom: 14pt;
+	margin-top: 14pt;
+	x-text-tab-stops: repeat 1in;
+	white-space: nowrap;
+	font-size: smaller;
+	font-family: monospace;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CPreformatted {
+	line-height: normal;
+	x-text-tab-stops: repeat 1in;
+	white-space: nowrap;
+	font-size: smaller;
+	font-family: monospace;
 }
 /*}}end!kadov=======================================================*/ 
 

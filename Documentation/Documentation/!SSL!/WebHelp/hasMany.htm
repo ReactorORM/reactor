@@ -1,14 +1,40 @@
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>hasMany tag</TITLE>
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<head>
+<title>hasMany tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+p.whs1 { x-text-underline:normal; text-decoration:underline; }
+table.whs2 { width:100%; border-spacing:0px; }
+th.whs3 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; border-left-color:#000000; border-left-width:1px; border-left-style:Solid; border-top-color:#000000; border-top-width:1px; border-top-style:Solid; }
+th.whs4 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; border-top-color:#000000; border-top-width:1px; border-top-style:Solid; }
+th.whs5 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; border-top-color:#000000; border-top-width:1px; border-top-style:Solid; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; }
+td.whs6 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; border-left-color:#000000; border-left-width:1px; border-left-style:Solid; }
+td.whs7 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; }
+td.whs8 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; border-left-color:#000000; border-left-width:1px; border-left-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; }
+td.whs9 { padding-left:3px; padding-top:3px; padding-right:3px; padding-bottom:3px; border-right-color:#000000; border-right-width:1px; border-right-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; border-bottom-style:Solid; }
+ul.whs10 { list-style:disc; }
+table.whs11 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs12 { width:33.333%; }
+tr.whs13 { x-cell-content-align:top; }
+th.whs14 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:solid; border-top-style:solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs15 { width:33.333%; border-top-style:solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs16 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:solid; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs17 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs18 { width:33.333%; padding-right:10px; padding-left:10px; border-left-style:solid; border-left-color:#000000; border-left-width:1px; border-right-style:solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:solid; }
+td.whs19 { width:33.333%; padding-right:10px; padding-left:10px; border-right-style:solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:solid; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -31,14 +57,14 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.gbWhTopic)
 {
 	if (window.addTocInfo)
 	{
-	addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\nhasMany tag");
+	addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\n<hasMany> tag");
 addButton("show",BTN_TEXT,"Show","","","","",0,0,"","","");
 
 	}
@@ -62,13 +88,668 @@ else
 		document.location.reload();
 //-->
 </script>
-<H1>hasMany</H1>
- <P>Type topic text here.</P>
+<h1>&lt;hasMany&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The hasMany tag defines a relationship where an object has more than 
+ one of the child object specified by this tag. &nbsp;For 
+ example, a User might have several addresses. &nbsp;<br>&nbsp;</p>
+
+<p>There are two ways that hasMany relationships can be configured. &nbsp;The 
+ first is just like <a href="hasOne_tag.htm">hasOne</a> relationships except 
+ in the opposite direction. &nbsp;Rather 
+ than the parent object having a foreign key to the child object, the child 
+ object has the foreign key to the parent. &nbsp;To 
+ clarify, in your database you may have Customer table and an Address table 
+ with the following structure:</p>
+
+<p>&nbsp;</p>
+
+<p class="whs1"><span 
+ style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ "><U>Customer 
+ Table</U></span></p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs4">Type</th>
+<th scope="col" class="whs4">Nullable</th>
+<th scope="col" class="whs4">Default</th>
+<th scope="col" class="whs5">Other</th></tr>
+
+<tr>
+<td class="whs6">customerId</td>
+<td class="whs7">Int</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">PK / Identity</td></tr>
+
+<tr>
+<td class="whs6">username</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">password</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">firstName</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">lastName</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs8">
+<p>dateCreated</td>
+<td class="whs9">
+<p>DateTime</td>
+<td class="whs9">
+<p>No</td>
+<td class="whs9">
+<p>getDate()</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">Address 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs4">Type</th>
+<th scope="col" class="whs4">Nullable</th>
+<th scope="col" class="whs4">Default</th>
+<th scope="col" class="whs5">Other</th></tr>
+
+<tr>
+<td class="whs6">
+<p>addressId</td>
+<td class="whs7">
+<p>Int</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td colspan="1" rowspan="1" class="whs6">
+<p>customerId</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>Int</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>No</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>FK to Customer.customerId</td></tr>
+
+<tr>
+<td class="whs6">
+<p>street1</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>street2</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>Yes</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>city</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>state</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs8">
+<p>zip</td>
+<td class="whs9">
+<p>Varchar(10)</td>
+<td class="whs9">
+<p>No</td>
+<td class="whs9">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Without any configuration, an instance of a Customer Record will automatically 
+ have getters and setters for each of the fields in the table. &nbsp;However, 
+ with a little extra configuration you tell Reactor that your Customer 
+ has many Addresses by virtue of the customerId field in both tables. &nbsp;Here 
+ is an example of that configuration:</p>
+
+<p class=Preformatted-code>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany 
+ &gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<br>Now, 
+ when you generate the Customer Record it will not have these additional 
+ method: 
+
+<br>&nbsp;<br>
+
+<ul type="disc" class="whs10">
+	
+	<li class=kadov-p
+		class=kadov-p><span class=function>getAddressIterator()</span> 
+ - This method returns an Iterator of Addresses related to the Customer. 
+ &nbsp;Iterators 
+ are objects which hold collections of records.</li>
+</ul>
+
+&nbsp; 
+
+<p class=note>Note: All reactor generated methods with return objects lazy 
+ load the object. &nbsp;In 
+ other words the Iterator object is not instantiated until you call <span 
+ class=function>getAddressIterator()</span>. &nbsp;Additionally 
+ these objects are cached. &nbsp;Calling 
+ <span class=function>getAddressIterator()</span> two times will return 
+ the same instance of the Address Iterator.</p>
+
+&nbsp;
+
+<br>The 
+ hasMany tag has one child tag, <a href="relate_tag.htm">relate</a>, which 
+ specify the fields which relate the two objects. &nbsp;You 
+ can nest multiple relate tags to indicate that the relationship between 
+ the objects depends on multiple fields. &nbsp;For 
+ example: 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;fooId&quot; to=&quot;fooId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<br>This 
+ example shows that the Customer is related by two columns to the Address, 
+ addressId and fooId which exist in both tables. &nbsp;This 
+ feature is useful when you have compound foreign keys defined in your 
+ database. 
+
+<br>&nbsp; 
+ 
+
+<br>The 
+ other type of hasMany relationships are called linking relationships. 
+ &nbsp;These are 
+ used to gain objects which are related via another object. &nbsp;For 
+ example, it's common to have a CustomerAddress table which relates Customers 
+ to Addresses. &nbsp;This 
+ type of configuration in databases is frequently called a many to many 
+ relationship. &nbsp;Here's 
+ an example database structure: 
+
+<p>&nbsp;</p>
+
+<p class="whs1"><span 
+ style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ "><U>Customer 
+ Table</U></span></p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs4">Type</th>
+<th scope="col" class="whs4">Nullable</th>
+<th scope="col" class="whs4">Default</th>
+<th scope="col" class="whs5">Other</th></tr>
+
+<tr>
+<td class="whs6">customerId</td>
+<td class="whs7">Int</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">PK / Identity</td></tr>
+
+<tr>
+<td class="whs6">username</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">password</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">firstName</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">lastName</td>
+<td class="whs7">Varchar(50)</td>
+<td class="whs7">No</td>
+<td class="whs7">&nbsp;</td>
+<td class="whs7">&nbsp;</td></tr>
+
+<tr>
+<td class="whs8">
+<p>dateCreated</td>
+<td class="whs9">
+<p>DateTime</td>
+<td class="whs9">
+<p>No</td>
+<td class="whs9">
+<p>getDate()</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p class="whs1">UserAddress 
+ Table</p>
+
+<p class="whs1">&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs4">Type</th>
+<th scope="col" class="whs4">Nullable</th>
+<th scope="col" class="whs4">Default</th>
+<th scope="col" class="whs5">Other</th></tr>
+
+<tr>
+<td class="whs6">
+<p>userAddressId</td>
+<td class="whs7">
+<p>Int</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td colspan="1" rowspan="1" class="whs6">
+<p>customerId</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>Int</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>No</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" class="whs7">
+<p>FK to Customer.customerId</td></tr>
+
+<tr>
+<td class="whs8">
+<p>addressId</td>
+<td class="whs9">
+<p>Int</td>
+<td class="whs9">
+<p>No</td>
+<td class="whs9">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>FK to Address.addressId</td></tr>
+</table>
+
+<p class="whs1">&nbsp;</p>
+
+<p class="whs1">Address 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+
+<tr>
+<th scope="col" class="whs3">Name</th>
+<th scope="col" class="whs4">Type</th>
+<th scope="col" class="whs4">Nullable</th>
+<th scope="col" class="whs4">Default</th>
+<th scope="col" class="whs5">Other</th></tr>
+
+<tr>
+<td class="whs6">
+<p>addressId</td>
+<td class="whs7">
+<p>Int</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td class="whs6">
+<p>street1</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>street2</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>Yes</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>city</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs6">
+<p>state</td>
+<td class="whs7">
+<p>Varchar(50)</td>
+<td class="whs7">
+<p>No</td>
+<td class="whs7">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td class="whs8">
+<p>zip</td>
+<td class="whs9">
+<p>Varchar(10)</td>
+<td class="whs9">
+<p>No</td>
+<td class="whs9">
+<p>&nbsp;</td>
+<td class="whs7">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>This type of table structure allows for multiple addresses to be related 
+ to multiple customer and vice versa.</p>
+
+<p>&nbsp;</p>
+
+<p>In this type of situation you would define the linking object to have 
+ one of both the related objects. &nbsp;The 
+ parent object would have many of the child object via a link though the 
+ linking object. &nbsp;This 
+ link is accomplished with the <a href="link_tag.htm">link</a> tag.</p>
+
+<p>&nbsp;</p>
+
+<p>Here's an example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ name=&quot;Customer&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;CustomerAddress&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<p>Now, when you create a Customer Record the object will have a <span 
+ class=function>getAddressIterator(</span>) method which will return an 
+ Iterator of address objects related to the Customer via the CustomerAddress 
+ table.</p>
+
+<p>&nbsp;</p>
+
+The hasMany tag has an optional alias argument. &nbsp;When 
+ not provided the alias defaults to the value of the name attribute. &nbsp;The 
+ alias argument controls how the methods generated from the relationship 
+ are named. &nbsp;For 
+ example, in the example above the Customer object hasMany Address objects. 
+ This causes the method name getAddressIterator() to be returned. &nbsp;If 
+ you wanted to rename this method to something else you can provide an 
+ alias on the relationship tag. &nbsp;If 
+ you provided an alias of &quot;Location&quot; the generated method would 
+ be named <span class=function>getLocatinIterator().</span> 
+
+<br>&nbsp; 
+ 
+
+<br>Unlike 
+ the relate tag, you can express multi-step relationships by providing 
+ multiple link tags. 
+
+<h4>Attributes</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs11">
+<col class="whs12">
+<col class="whs12">
+<col class="whs12">
+
+<tr valign="top" class="whs13">
+<th scope="col" width="33.333%" class="whs14">
+<p>Attribute</th>
+<th scope="col" width="33.333%" class="whs15">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs15">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs13">
+<td width="33.333%" class="whs16">
+<p>name</td>
+<td width="33.333%" class="whs17">
+<p>yes</td>
+<td width="33.333%" class="whs17">
+<p>The alias of the related object.</p>
+<p>&nbsp;</p>
+<p class=note>Note: If you did not specify an alias for the object that 
+ you are relating to, the alias is defaulted to the object's name.</td></tr>
+
+<tr valign="top" class="whs13">
+<td colspan="1" rowspan="1" width="33.333%" class="whs18">
+<p>alias</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs19">
+<p>no</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs19">
+<p>The alias to assign to this relationship. When not provided this defaults 
+ to the value of the name attribute.</td></tr>
+</table>
+
+<h4>Child tags</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs11">
+<col class="whs12">
+<col class="whs12">
+<col class="whs12">
+
+<tr valign="top" class="whs13">
+<th scope="col" width="33.333%" class="whs14">
+<p>Tag</th>
+<th scope="col" width="33.333%" class="whs15">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs15">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs13">
+<td width="33.333%" class="whs16">
+<p><a href="relate_tag.htm">relate</a></td>
+<td width="33.333%" class="whs17">
+<p>yes (if a link is not provided)</td>
+<td width="33.333%" class="whs17">
+<p>Defines what fields that relate this object to the related object.</td></tr>
+
+<tr valign="top" class="whs13">
+<td colspan="1" rowspan="1" width="33.333%" class="whs18">
+<p><a href="link_tag.htm">link</a></td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs19">
+<p>yes (if a relate is not provided)</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs19">
+<p>Defines the object which links this parent object to its child.</td></tr>
+</table>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasone 
+ name=&quot;Address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasone&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
 <script type="text/javascript" language="javascript1.2">
 <!--
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
 //-->
 </script>
-</BODY>
-</HTML>
+</body>
+</html>

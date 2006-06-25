@@ -1,15 +1,32 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
 <!-- saved from url=(0026)http://www.macromedia.com/ -->
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>relate tag</TITLE>
+<html>
+
+<head>
+<title>relate tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
 {   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs2 { width:33.333%; }
+tr.whs3 { x-cell-content-align:top; }
+th.whs4 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:solid; border-top-style:solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs5 { width:33.333%; border-top-style:solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:solid; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:solid; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs8 { width:33.333%; padding-right:10px; padding-left:10px; border-left-style:solid; border-left-color:#000000; border-left-width:1px; border-right-style:solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:solid; }
+td.whs9 { width:33.333%; padding-right:10px; padding-left:10px; border-right-style:solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:solid; }
+p.whs10 { font-style:italic; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -39,13 +56,13 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
     }
     //-->
 </script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.addTocInfo)
 {
-addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\nhasOne tag\nrelate tag");
-addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\nhasMany tag\nrelate tag");
+addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\n<hasOne> tag\n<relate> tag");
+addTocInfo("Reactor XML Configuration File\n<reactor> tag\n<objects> tag\n<object> tag\n<hasMany> tag\n<relate> tag");
 
   addShowButton();
 }
@@ -61,7 +78,131 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<H1>relate tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<h1>&lt;relate&gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The relate tag is used to define which fields are used when relating 
+ two objects. &nbsp;This 
+ tag can be nested in either a <a href="hasOne_tag.htm">hasOne</a> tag 
+ or a <a href="hasMany.htm">hasMany</a> tag. &nbsp;This 
+ tag has two argments, from and to. &nbsp;The 
+ from argument specifies the alias of a field on the parent object (the 
+ object in which the hasOne or hasMany tag is nested). &nbsp;The 
+ to argument specifies the alias of a filed on the child object.</p>
+
+<p>&nbsp;</p>
+
+<p class=note>Note: If a field does not have an alias explicitly set using 
+ the <a href="field_tag.htm">field</a> tag then the alias defaults to the 
+ field's name.</p>
+
+<p>&nbsp;</p>
+
+<p>Multiple relate tags can be nested under a <a href="hasOne_tag.htm">hasOne</a> 
+ or <a href="hasMany.htm">hasMany</a> tag to represent compound relationships 
+ such as compound foreign keys made up of more than one field.</p>
+
+<p>&nbsp;</p>
+
+<p>For detailed information on relationships see the <a href="hasOne_tag.htm">hasOne</a> 
+ or <a href="hasMany.htm">hasMany</a> tag documentation.</p>
+
+<p>&nbsp;</p>
+
+<p>To understand the relate tag consider a SQL join statement. &nbsp;If 
+ you were to join User to Address on an addressId column you would write 
+ this SQL code:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>SELECT *<br>
+FROM User as u JOIN Address as a<br>
+ &nbsp;&nbsp;&nbsp;ON 
+ u.addressId = a.addressId</p>
+
+&nbsp; 
+
+<br>The 
+ last line of the query (the one beginning with &quot;on&quot;) serves 
+ the same purpose as the relate tag. &nbsp;It 
+ says User is related to Address by an addressId column on both objects. 
+ &nbsp;This relationship 
+ in XML would look like this: 
+
+<br>&nbsp; 
+ 
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;user&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressid&quot; to=&quot;addressid&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;address&quot; /&gt;<br>
+<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+<h4>Attributes</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+<col class="whs2">
+<col class="whs2">
+<col class="whs2">
+
+<tr valign="top" class="whs3">
+<th scope="col" width="33.333%" class="whs4">
+<p>Attribute</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p>from</td>
+<td width="33.333%" class="whs7">
+<p>yes</td>
+<td width="33.333%" class="whs7">Specifies a field alias on the parent object </td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs8">
+<p>to</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Yes</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>Specifies a field alias on the child object </td></tr>
+</table>
+
+<h4>Child tags</h4>
+
+<p class="whs10">None</p>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;user&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ name=&quot;address&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ from=&quot;addressid&quot; to=&quot;addressid&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;address&quot; /&gt;<br>
+<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+</html>

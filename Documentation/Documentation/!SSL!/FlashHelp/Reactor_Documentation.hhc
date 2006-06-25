@@ -213,26 +213,26 @@
             <param name="Local" value="field_tag.htm">
           </object>
           <li><object type="text/sitemap">
-            <param name="Name" value="hasOne tag">
+            <param name="Name" value="&lt;hasOne&gt; tag">
             <param name="Local" value="hasOne_tag.htm">
           </object>
           <ul>
             <li><object type="text/sitemap">
-              <param name="Name" value="relate tag">
+              <param name="Name" value="&lt;relate&gt; tag">
               <param name="Local" value="relate_tag.htm">
             </object>
             </ul>
           <li><object type="text/sitemap">
-            <param name="Name" value="hasMany tag">
+            <param name="Name" value="&lt;hasMany&gt; tag">
             <param name="Local" value="hasMany.htm">
           </object>
           <ul>
             <li><object type="text/sitemap">
-              <param name="Name" value="relate tag">
+              <param name="Name" value="&lt;relate&gt; tag">
               <param name="Local" value="relate_tag.htm">
             </object>
             <li><object type="text/sitemap">
-              <param name="Name" value="link tag">
+              <param name="Name" value="&lt;link&gt; tag">
               <param name="Local" value="link_tag.htm">
             </object>
             </ul>

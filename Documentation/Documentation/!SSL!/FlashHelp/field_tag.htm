@@ -1,15 +1,34 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
 <!-- saved from url=(0026)http://www.macromedia.com/ -->
-<HTML>
-<HEAD>
-<meta http-equiv="content-type" content="text/html;charset=windows-1252">
-<TITLE>field tag</TITLE>
-<link rel="stylesheet" href="w95help_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<html>
+
+<head>
+<title>field tag</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
-{   document.write("<link rel='stylesheet' href='w95help.css'>");}
+{   document.write("<link rel='stylesheet' href='default.css'>");}
 //-->
 </script>
- <meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com"><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<style type="text/css">
+<!--
+table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs2 { width:33.333%; }
+tr.whs3 { x-cell-content-align:top; }
+th.whs4 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+th.whs5 { width:33.333%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs6 { width:33.333%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs8 { width:33.333%; padding-right:10px; padding-left:10px; border-left-style:Solid; border-left-color:#000000; border-left-width:1px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
+td.whs9 { width:33.333%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
+td.whs10 { width:33.333%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+td.whs11 { width:33.333%; padding-right:10px; padding-left:10px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+p.whs12 { font-style:italic; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
 function reDo() {
   if (innerWidth != origWidth || innerHeight != origHeight)
@@ -39,8 +58,8 @@ div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibili
     }
     //-->
 </script>
-</HEAD>
-<BODY><script type="text/javascript" language="javascript1.2">
+</head>
+<body><script type="text/javascript" language="javascript1.2">
 <!--
 if (window.addTocInfo)
 {
@@ -60,7 +79,111 @@ setRelStartPage("Reactor_Documentation.htm");
 }
 //-->
 </script>
-<H1>field tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<h1>&lt;field&gt; tag</h1>
+
+<p>The field tag defines details of a specific field in your database object. 
+ &nbsp;The tag 
+ can be to assign an alias to a field. &nbsp;On 
+ DBMS which use sequences instead of identity or auto increment columns 
+ the field tag can also be used to specify the sequence to get new value 
+ from when writing records into the database.</p>
+
+<p>&nbsp;</p>
+
+<p>Every field of a database object is used to generate getter and setter 
+ methods on record objects. &nbsp;They're 
+ also used in several other places in the framework. &nbsp;However, 
+ many databases have naming conventions for fields (or tables) which don't 
+ translate nicely into names for these methods. For example, a column named 
+ str_user_name would, by default generate the methods getStr_user_name() 
+ and setStr_user_name().</p>
+
+<p>&nbsp;</p>
+
+<p>Methods with name like these are not just unsightly and hard to type 
+ (you try it!), they don't really do a good job of describing what they're 
+ returning. &nbsp;Yes, 
+ I know that &quot;Str&quot; probably stands for &quot;string&quot;, but 
+ would you name a method that adds two numbers and returns the value intAdd()? 
+ &nbsp;Maybe, 
+ but more likely you'd name it add().</p>
+
+<p>&nbsp;</p>
+
+<p>To work around these generated method names you can specify an alias. 
+ &nbsp;For example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;object name=&quot;User&quot;&gt;<br>
+ &nbsp;&lt;field 
+ name=&quot;str_user_name&quot; alias=&quot;username&quot; /&gt;<br>
+&lt;/object&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>This would configure Reactor to generate methods named getUsername() 
+ and setUsername().</p>
+
+<h4>Attributes</h4>
+
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
+<col class="whs2">
+<col class="whs2">
+<col class="whs2">
+
+<tr valign="top" class="whs3">
+<th scope="col" width="33.333%" class="whs4">
+<p>Attribute</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Required</th>
+<th scope="col" width="33.333%" class="whs5">
+<p>Description</th></tr>
+
+<tr valign="top" class="whs3">
+<td width="33.333%" class="whs6">
+<p>name</td>
+<td width="33.333%" class="whs7">
+<p>Yes</td>
+<td width="33.333%" class="whs7">
+<p>The name of the field in the database. </td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs8">
+<p>alias</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>No</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs9">
+<p>The alias to assign to the field. &nbsp;If 
+ this is not provided it is defaulted to the value of the name attribute.</td></tr>
+
+<tr valign="top" class="whs3">
+<td colspan="1" rowspan="1" width="33.333%" class="whs10">
+<p>sequence</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>No</td>
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
+<p>The name of a sequence to use to get the next value for this field from. 
+ &nbsp;This is 
+ useful only for databases which use sequences instead of identity or auto-incrementing 
+ values such as Oracle and PosgreSQL.</td></tr>
+</table>
+
+<h4>Child Tags</h4>
+
+<p class="whs12">None</p>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
+ name=&quot;User&quot;&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;field 
+ name=&quot;uid&quot; alias=&quot;userId&quot; /&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+</html>

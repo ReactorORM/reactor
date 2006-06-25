@@ -54,12 +54,12 @@
 			<book name="&lt;objects&gt; tag" url="objects_tag.htm">
 				<book name="&lt;object&gt; tag" url="object_tag.htm">
 					<item name="&lt;field&gt; tag" url="field_tag.htm"/>
-					<book name="hasOne tag" url="hasOne_tag.htm">
-						<item name="relate tag" url="relate_tag.htm"/>
+					<book name="&lt;hasOne&gt; tag" url="hasOne_tag.htm">
+						<item name="&lt;relate&gt; tag" url="relate_tag.htm"/>
 					</book>
-					<book name="hasMany tag" url="hasMany.htm">
-						<item name="relate tag" url="relate_tag.htm"/>
-						<item name="link tag" url="link_tag.htm"/>
+					<book name="&lt;hasMany&gt; tag" url="hasMany.htm">
+						<item name="&lt;relate&gt; tag" url="relate_tag.htm"/>
+						<item name="&lt;link&gt; tag" url="link_tag.htm"/>
 					</book>
 				</book>
 			</book>

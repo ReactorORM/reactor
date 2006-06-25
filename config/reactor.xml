@@ -1,8 +1,8 @@
 <reactor>
 	<config>
 		<project value="Scratch" />
-		<dsn value="scratch" />
-		<type value="mssql" />
+		<dsn value="scratchMysql5" />
+		<type value="mysql" />
 		<mapping value="/reactorData" />
 		<mode value="always" />
 		<!-- These config values are not required -->

@@ -1,64 +1,124 @@
 BODY { 
       font-family:Verdana, Arial, Helvetica, sans-serif; 
+      background-color:#ffffff; 
+      font-family:Verdana, Arial, Helvetica, sans-serif; 
       background-color:#ffffff;  }
 H1 { 
+    font-weight:bold; 
+    font-size:24.0pt; 
     font-weight:bold; 
     font-size:24.0pt;  }
 LI.kadov-H1 { 
              font-weight:bold; 
+             font-size:24.0pt; 
+             font-weight:bold; 
              font-size:24.0pt;  }
 TABLE { 
+       border-collapse:collapse; 
        border-collapse:collapse;  }
 TABLE tr th { 
              background-color:#00CCFF; 
+             padding:3px; 
+             background-color:#00CCFF; 
              padding:3px;  }
 td { 
+    padding:3px; 
     padding:3px;  }
 TABLE tr td { 
+             border-top:1px solid lightgray; 
              border-top:1px solid lightgray;  }
 LI { 
+    padding-top:5px; 
+    padding-bottom:5px; 
     padding-top:5px; 
     padding-bottom:5px;  }
 IMG { 
      margin-top:10px; 
+     margin-bottom:10px; 
+     margin-top:10px; 
      margin-bottom:10px;  }
 H2 { 
     font-weight:bold; 
+    font-size:18.0pt; 
+    font-weight:bold; 
     font-size:18.0pt;  }
+PRE { 
+     padding:4.5pt; 
+     background-color:#FFFFE6; 
+     border-left-style:Solid; 
+     border-left-width:1px; 
+     border-right-style:Solid; 
+     border-right-width:1px; 
+     border-top-style:Solid; 
+     border-top-width:1px; 
+     border-bottom-style:Solid; 
+     border-bottom-width:1px; 
+     font-family:"Courier New" , monospace; 
+     color:#606000; 
+     font-weight:bold;  }
 LI.kadov-H2 { 
+             font-weight:bold; 
+             font-size:18.0pt; 
              font-weight:bold; 
              font-size:18.0pt;  }
 H3 { 
     font-weight:bold; 
+    font-size:14.0pt; 
+    font-weight:bold; 
     font-size:14.0pt;  }
 LI.kadov-H3 { 
+             font-weight:bold; 
+             font-size:14.0pt; 
              font-weight:bold; 
              font-size:14.0pt;  }
 H4 { 
     font-weight:bold; 
+    font-size:12.0pt; 
+    font-weight:bold; 
     font-size:12.0pt;  }
 LI.kadov-H4 { 
+             font-weight:bold; 
+             font-size:12.0pt; 
              font-weight:bold; 
              font-size:12.0pt;  }
 H5 { 
     font-weight:bold; 
+    font-size:10.0pt; 
+    font-weight:bold; 
     font-size:10.0pt;  }
 LI.kadov-H5 { 
+             font-weight:bold; 
+             font-size:10.0pt; 
              font-weight:bold; 
              font-size:10.0pt;  }
 H6 { 
     font-weight:bold; 
+    font-size:8.0pt; 
+    font-weight:bold; 
     font-size:8.0pt;  }
 LI.kadov-H6 { 
+             font-weight:bold; 
+             font-size:8.0pt; 
              font-weight:bold; 
              font-size:8.0pt;  }
 P { 
    font-size:12.0pt; 
    margin-top:0pt; 
+   margin-bottom:0pt; 
+   font-size:12.0pt; 
+   margin-top:0pt; 
    margin-bottom:0pt;  }
 LI.kadov-P { 
+            font-size:12.0pt; 
             font-size:12.0pt;  }
 A.expandspot { 
+              color:#008000; 
+              cursor:hand; 
+              font-style:italic; 
+              x-text-underline:off; 
+              x-text-overline:off; 
+              x-text-line-through:off; 
+              text-decoration:none none none; 
               color:#008000; 
               cursor:hand; 
               font-style:italic; 
@@ -69,8 +129,18 @@ A.expandspot {
 SPAN.expandtext { 
                  font-style:italic; 
                  font-weight:normal; 
+                 color:#ff0000; 
+                 font-style:italic; 
+                 font-weight:normal; 
                  color:#ff0000;  }
 A.dropspot { 
+            cursor:hand; 
+            color:#008000; 
+            font-style:italic; 
+            x-text-underline:off; 
+            x-text-overline:off; 
+            x-text-line-through:off; 
+            text-decoration:none none none; 
             cursor:hand; 
             color:#008000; 
             font-style:italic; 
@@ -85,20 +155,48 @@ A.glossterm {
              x-text-underline:off; 
              x-text-overline:off; 
              x-text-line-through:off; 
+             text-decoration:none none none; 
+             color:#800000; 
+             cursor:hand; 
+             font-style:italic; 
+             x-text-underline:off; 
+             x-text-overline:off; 
+             x-text-line-through:off; 
              text-decoration:none none none;  }
 SPAN.glosstext { 
+                font-style:italic; 
+                font-weight:normal; 
+                color:#0000ff; 
                 font-style:italic; 
                 font-weight:normal; 
                 color:#0000ff;  }
 OL { 
     margin-top:0px; 
+    margin-bottom:0px; 
+    margin-top:0px; 
     margin-bottom:0px;  }
 UL { 
     margin-top:0px; 
+    margin-bottom:0px; 
+    margin-top:0px; 
     margin-bottom:0px;  }
 SPAN.function { 
+               color:#0000ff; 
                color:#0000ff;  }
 P.code { 
+        padding:4.5pt; 
+        background-color:#FFFFE6; 
+        border-left-style:Solid; 
+        border-left-width:1px; 
+        border-right-style:Solid; 
+        border-right-width:1px; 
+        border-top-style:Solid; 
+        border-top-width:1px; 
+        border-bottom-style:Solid; 
+        border-bottom-width:1px; 
+        font-family:"Courier New" , monospace; 
+        color:#606000; 
+        font-weight:bold; 
         padding:4.5pt; 
         background-color:#FFFFE6; 
         border-left-style:Solid; 
@@ -115,16 +213,41 @@ P.code {
 LI.kadov-P-Ccode { 
                   font-family:"Courier New" , monospace; 
                   color:#606000; 
+                  font-weight:bold; 
+                  font-family:"Courier New" , monospace; 
+                  color:#606000; 
                   font-weight:bold;  }
 P.note { 
+        font-style:italic; 
+        font-weight:normal; 
+        background-color:#ecf5ff; 
         font-style:italic; 
         font-weight:normal; 
         background-color:#ecf5ff;  }
 LI.kadov-P-Cnote { 
                   font-style:italic; 
+                  font-weight:normal; 
+                  font-style:italic; 
                   font-weight:normal;  }
 P.Quiz { 
         background-color:#eaeaea; 
         padding:3px; 
-        border:1px solid black;  }
+        border:1px solid #000000; 
+        background-color:#eaeaea; 
+        padding:3px; 
+        border:1px solid #000000;  }
 LI.kadov-P-CQuiz {  }
+P.Preformatted { 
+                line-height:normal; 
+                margin-bottom:14pt; 
+                margin-top:14pt; 
+                x-text-tab-stops:repeat 1in; 
+                white-space:nowrap; 
+                font-size:smaller; 
+                font-family:monospace;  }
+LI.kadov-P-CPreformatted { 
+                          line-height:normal; 
+                          x-text-tab-stops:repeat 1in; 
+                          white-space:nowrap; 
+                          font-size:smaller; 
+                          font-family:monospace;  }

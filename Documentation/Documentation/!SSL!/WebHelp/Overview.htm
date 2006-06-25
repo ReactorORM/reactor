@@ -87,87 +87,87 @@ else
 <p>&nbsp;</p>
 
 <p class=code>&lt;reactor&gt;<br>
- &nbsp;&nbsp;&lt;config&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ &nbsp;&lt;config&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;project 
  value=&quot;Scratch&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ &nbsp;&nbsp;&nbsp;&lt;dsn 
  value=&quot;Scratch&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ &nbsp;&nbsp;&nbsp;&lt;type 
  value=&quot;mssql&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ &nbsp;&nbsp;&nbsp;&lt;mapping 
  value=&quot;/ScratchData&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ &nbsp;&nbsp;&nbsp;&lt;mode 
  value=&quot;development&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ &nbsp;&nbsp;&nbsp;&lt;!-- 
  These config values are not required --&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- 
+ &nbsp;&nbsp;&nbsp;&lt;!-- 
  &lt;username value=&quot;&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;password 
+ &nbsp;&nbsp;&nbsp;&lt;password 
  value=&quot;&quot; /&gt; --&gt;<br>
- &nbsp;&nbsp;&lt;/config&gt;<br>
+ &nbsp;&lt;/config&gt;<br>
 <br>
- &nbsp;&nbsp;&lt;objects&gt;<br>
+ &nbsp;&lt;objects&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Customer&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt; 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt; 
  <br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;Invoice&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;customerId&quot; to=&quot;customerId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt; 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt; 
  <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;Customer&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Invoice&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;Product&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
  name=&quot;InvoiceProduct&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Product&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;Invoice&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link 
  name=&quot;InvoiceProduct&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;InvoiceProduct&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
  name=&quot;Product&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;productId&quot; to=&quot;productId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
  name=&quot;Invoice&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;invoiceId&quot; to=&quot;invoiceId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br>
 <br>
- &nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
 &lt;/reactor&gt;</p>
 
 &nbsp; 
@@ -176,7 +176,7 @@ else
  you can see by looking at the example, the document is contained inside 
  a root &quot;reactor&quot; tag block. &nbsp;The 
  &quot;reactor&quot; tag block contains only two other tag blocks, &quot;config&quot; 
- and &quot;objects&quot;.
+ and &quot;objects&quot;. 
 
 <p>&nbsp;</p>
 

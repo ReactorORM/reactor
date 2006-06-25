@@ -27,6 +27,20 @@ H2 {
     font-weight:bold; 
     font-size:18.0pt; 
     font-family:Verdana, Arial, Helvetica, sans-serif;  }
+PRE { 
+     padding:4.5pt; 
+     background-color:#FFFFE6; 
+     border-left-style:Solid; 
+     border-left-width:1px; 
+     border-right-style:Solid; 
+     border-right-width:1px; 
+     border-top-style:Solid; 
+     border-top-width:1px; 
+     border-bottom-style:Solid; 
+     border-bottom-width:1px; 
+     font-family:"Courier New"  , monospace; 
+     color:#606000; 
+     font-weight:bold;  }
 LI.kadov-H2 { 
              font-weight:bold; 
              font-size:18.0pt;  }
@@ -135,8 +149,22 @@ LI.kadov-P-Cnote {
 P.Quiz { 
         background-color:#eaeaea; 
         padding:3px; 
-        border:1px solid black;  }
+        border:1px solid #000000;  }
 LI.kadov-P-CQuiz {  }
+P.Preformatted { 
+                line-height:normal; 
+                margin-bottom:14pt; 
+                margin-top:14pt; 
+                x-text-tab-stops:repeat 1in; 
+                white-space:nowrap; 
+                font-size:smaller; 
+                font-family:monospace;  }
+LI.kadov-P-CPreformatted { 
+                          line-height:normal; 
+                          x-text-tab-stops:repeat 1in; 
+                          white-space:nowrap; 
+                          font-size:smaller; 
+                          font-family:monospace;  }
 ol ol { 
        margin-top:1px;  }
 ol ul { 

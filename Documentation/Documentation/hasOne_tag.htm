@@ -1,11 +1,2451 @@
-<HTML>
-<HEAD>
- <TITLE>hasOne tag</TITLE>
- <LINK rel="StyleSheet" href="default.css">
- <META NAME="generator" CONTENT="RoboHELP by eHelp Corporation - www.ehelp.com">
-</HEAD>
-<BODY>
- <H1>hasOne tag</H1>
- <P>Type topic text here.</P>
-</BODY>
-</HTML>
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>hasOne tag</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=3811>
+<meta name=layout-width content=1306>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=default.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>&lt;hasOne &gt; tag</h1>
+
+<h4>Description</h4>
+
+<p>The hasOne tag defines a relationship where a parent object has one 
+ of a child object. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ relationship is useful in cases where the parent object is related to 
+ a child object via a foreign key. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->To 
+ clarify, in your database you may have Customer table and an Address table 
+ with the following structure:</p>
+
+<p>&nbsp;</p>
+
+<p style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Customer 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="width: 100%; border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+
+<tr>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Name</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Type</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Nullable</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Default</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Other</th></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">customerId</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Int</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">PK / Identity</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">username</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">password</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">firstName</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">lastName</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>dateCreated</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>DateTime</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>getDate()</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>addressId</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>Int</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>No</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>&nbsp;</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>FK to Address.addressId</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Address 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="width: 100%; border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+
+<tr>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Name</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Type</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Nullable</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Default</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Other</th></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>addressId</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Int</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>PK / Identity</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>street1</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>street2</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Yes</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>city</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>state</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>zip</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>Varchar(10)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Without any configuration, an instance of a Customer Record will automatically 
+ have getters and setters for each of the fields in the table. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->However, 
+ with a little extra configuration you tell Reactor that your Customer 
+ has one Address by virtue of the addressId field in both tables. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Here 
+ is an example of that configuration:</p>
+
+<p class=Preformatted-code>&nbsp;</p>
+
+<p class=code>&lt;reactor&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Now, 
+ when you generate the Customer Record it will not have these additional 
+ methods: 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_empty_p>}}-->&nbsp;<br><!--kadov_tag{{</implicit_empty_p>}}-->
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p
+		class=kadov-p><span class=function>getAddress()</span> - returns 
+ an Address Record corresponding to the Customer's addressId value. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ the addressId was null then an empty Address record is returned</li>
+	
+	<li class=kadov-p
+		class=kadov-p><span class=function>setAddress()</span> - accepts 
+ an Address Record which is used to set the Customer's addressId value.</li>
+</ul>
+
+&nbsp; 
+
+<p class=note>Note: all reactor generated methods with return objects lazy 
+ load the object. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->In 
+ other words the Address object is not instantiated or read from the database 
+ until you call <span class=function>getAddress()</span>. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Additionally 
+ these objects are cached. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Calling 
+ <span class=function>getAddress()</span> two times will return the same 
+ instance of the address. </p>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->The 
+ hasOne tag has one child tag, relate, which specify the fields which relate 
+ the two objects. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->You 
+ can nest multiple relate tags to indicate that the relationship between 
+ the objects depends on multiple fields. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example: 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<p class=code>&lt;reactor&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;Address&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;fooId&quot; to=&quot;fooId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->This 
+ example shows that the Customer is related by two columns to the Address, 
+ addressId and fooId which exist in both tables. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ feature is useful when you have compound foreign keys defined in your 
+ database. 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->The 
+ hasOne tag has an optional alias argument. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->When 
+ not provided the alias defaults to the value of the name attribute. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+ alias argument controls how the methods generated from the relationship 
+ are named. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example, in the example above the Customer object hasMany Address objects. 
+ This causes the method name getAddressIterator() to be returned. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ you wanted to rename this method to something else you can provide an 
+ alias on the relationship tag. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->If 
+ you provided an alias of &quot;Location&quot; the generated method would 
+ be named <span class=function>getLocatinIterator().</span> 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Unlike 
+ the relate tag, you can express multi-step relationships by providing 
+ multiple link tags. 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Another 
+ feature of the hasOne relationship is the use of &quot;shared keys&quot;. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Shared 
+ keys are useful when the field being related is the primary key on both 
+ objects. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For 
+ example, consider a situation where you have a core type of user. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->However, 
+ you might have variations on this type of user, each which collect their 
+ own data. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Consider 
+ these tables as an example: 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<p style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ "><span>User 
+ Table</span></p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="width: 100%; border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+
+<tr>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Name</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Type</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Nullable</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Default</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Other</th></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">userId</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Int</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">PK / Identity</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">username</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">password</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">firstName</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">lastName</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>dateCreated</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>DateTime</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>getDate()</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Physician 
+ Table</p>
+
+<p>&nbsp;</p>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="width: 100%; border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+
+<tr>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Name</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Type</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Nullable</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Default</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Other</th></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">physicianId</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Int</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">PK / FK to User.userId</td></tr>
+
+<tr>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>licensedState</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>Varchar(10)</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>No</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>&nbsp;</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+</table>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}--><span 
+ style="x-text-underline: normal; /*begin!kadov{{*/ text-decoration: underline; /*}}end!kadov*/ ">Developer 
+ Table</span> 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_empty_p>}}-->&nbsp;<br><!--kadov_tag{{</implicit_empty_p>}}-->
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="width: 100%; border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+
+<tr>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Name</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Type</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Nullable</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;">Default</th>
+<th scope=col
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-top-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Other</th></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>developerId</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">Int</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">PK / FK to User.userId</td></tr>
+
+<tr>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;">
+<p>language</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>Varchar(50)</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>No</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td>
+<td style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+
+<tr>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-left-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>likesCoffee</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>Bit</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>No</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;">
+<p>1</td>
+<td colspan=1
+	rowspan=1
+	style="padding-left: 3px;
+			padding-top: 3px;
+			padding-right: 3px;
+			padding-bottom: 3px;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			border-bottom-style: Solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-right-style: Solid;">
+<p>&nbsp;</td></tr>
+</table>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}--><span>As 
+ you can see, the Physician and Developer table's primary key values are 
+ </span><span style="font-style: italic;">not</span><span> identity or 
+ auto number values. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Instead, 
+ they are foreign keys to the user table. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ means that one Physician Record relates directly to one User Record.</span> 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Reactor 
+ supports cascading saves. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ means that if you load a Physician Record and it's configure to have one 
+ User Record that saving the Physician will save the User. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->However, 
+ because the Phsyician's PK value is based on the value of the User Record 
+ the User Record must be saved first. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->To 
+ automate this process you can set the sharedKey attribute on the Physician 
+ (or Developer) to true. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Reactor 
+ will automatically save the records correctly. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Here's 
+ an example configuration: 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->&nbsp; 
+ 
+
+<p class=code>&lt;reactor&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Physician&quot; sharedKey=&quot;true&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;User&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;physicianId&quot; to=&quot;userId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Developer&quot; sharedKey=&quot;true&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;User&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;developerId&quot; to=&quot;userId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;User&quot; /&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->This 
+ configuration will allow for the following code to work: 
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;!--- create the reactorFactory ---&gt;<br>
+&lt;cfset Reactor = CreateObject(&quot;Component&quot;, &quot;reactor.reactorFactory&quot;).init(expandPath(&quot;reactor.xml&quot;)) 
+ /&gt;<br>
+<br>
+&lt;!--- populate the physician ---&gt;<br>
+&lt;cfset Physician = Reactor.createRecord(&quot;Physician&quot;) /&gt;<br>
+&lt;cfset Physician.setLanguage(&quot;ColdFusion&quot;) /&gt;<br>
+&lt;cfset Physician.setLikesCoffee(true) /&gt;<br>
+&lt;cfset Physician.getUser().setUsername(&quot;dhughes&quot;) /&gt;<br>
+&lt;cfset Physician.getUser().setPassword(&quot;example&quot;) /&gt;<br>
+&lt;cfset Physician.getUser().setFirstName(&quot;Doug&quot;) /&gt;<br>
+&lt;cfset Physician.getUser().setLastName(&quot;Hughes&quot;) /&gt;<br>
+<br>
+&lt;!--- save the physician ---&gt;<br>
+&lt;cfset Physician.save() /&gt;</p>
+
+&nbsp; 
+
+<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->This 
+ example will save the User, get the userId and set that into the phsycianId 
+ before saving the physician. 
+
+<h4>Attributes</h4>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: solid;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Attribute</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Required</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>name</td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>yes</td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>The alias of the related object.</p>
+<p>&nbsp;</p>
+<p class=note>Note: if you did not specify an alias for the object that 
+ you are relating to, the alias is defaulted to the object's name.</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-style: solid;
+			border-left-color: #000000;
+			border-left-width: 1px;
+			border-right-style: solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: solid;"
+	width=33.333%>
+<p>alias</td>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: solid;"
+	width=33.333%>
+<p>no</td>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-style: solid;
+			border-right-color: #000000;
+			border-right-width: 1px;
+			border-bottom-width: 1px;
+			border-bottom-color: #000000;
+			border-bottom-style: solid;"
+	width=33.333%>
+<p>The alias to assign to this relationship. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->When 
+ not provided this defaults to the value of the name attribute.</td></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=33.333%>
+<p>sharedKey</td>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=33.333%>
+<p>No</td>
+<td colspan=1
+	rowspan=1
+	style="width: 33.333%;
+			padding-right: 10px;
+			padding-left: 10px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;"
+	width=33.333%>
+<p>This indicates if the primary key on this object is related to the primary 
+ on the related object. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->When 
+ not provided this defaults to false. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--></td></tr>
+</table>
+
+<h4>Child tags</h4>
+
+<!--(Table)=========================================================-->
+<table x-use-null-cells
+		style="x-cell-content-align: top;
+				width: 100%;
+				border-spacing: 0px;
+				border-spacing: 0px;"
+		cellspacing=0
+		width=100%>
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+<col style="width: 33.333%;">
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<th scope=col
+	style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: solid;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Tag</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Required</th>
+<th scope=col
+	style="width: 33.333%;
+			border-top-style: solid;
+			border-top-color: #000000;
+			border-top-width: 1px;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Description</th></tr>
+
+<tr style="x-cell-content-align: top;"
+	valign=top>
+<td style="width: 33.333%;
+			border-left-width: 1px;
+			border-left-color: #000000;
+			border-left-style: solid;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p><a href="relate_tag.htm">relate</a></td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>yes</td>
+<td style="width: 33.333%;
+			border-right-width: 1px;
+			border-right-color: #000000;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-bottom-color: #000000;
+			border-bottom-width: 1px;
+			padding-right: 10px;
+			padding-left: 10px;"
+	width=33.333%>
+<p>Defines what fields that relate this object to the related object.</td></tr>
+</table>
+
+<h4>Example</h4>
+
+<p class=code>&lt;reactor&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Customer&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->name=&quot;Address&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/object&gt;<br>
+<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;object 
+ name=&quot;Address&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;objects&gt;<br>
+&lt;/reactor&gt;</p>
+
+</body>
+
+</html>

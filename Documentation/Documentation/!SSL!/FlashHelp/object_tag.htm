@@ -25,9 +25,8 @@ td.whs7 { width:33.333%; border-right-width:1px; border-right-color:#000000; bor
 td.whs8 { width:33.333%; padding-right:10px; padding-left:10px; border-left-style:Solid; border-left-color:#000000; border-left-width:1px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
 td.whs9 { width:33.333%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
 p.whs10 { font-weight:bold; }
-table.whs11 { x-cell-content-align:top; width:100%; border-spacing:0px; }
-td.whs12 { width:33.333%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
-td.whs13 { width:33.333%; padding-right:10px; padding-left:10px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+td.whs11 { width:33.333%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+td.whs12 { width:33.333%; padding-right:10px; padding-left:10px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -140,25 +139,28 @@ setRelStartPage("Reactor_Documentation.htm");
  doesn't really make sense to have a UsersRecord. &nbsp;A 
  UserRecord makes more sense.</p>
 
-&nbsp;
+&nbsp; 
 
 <br>Given 
  the configuration above you can now instantiate a CustomerMarket record 
- like this:
+ like this: 
 
-<br>&nbsp;
+<br>&nbsp; 
+ 
 
 <p class=code>&lt;cfset CustomerMarketRecord = ReactorFactory.createRecord(&quot;CustomerMarket&quot;) 
  /&gt;</p>
 
-&nbsp;
+&nbsp; 
 
 <br>Not 
  only do you specify the alias in the createRecord method, the alias is 
  used when writing files to disk. &nbsp;You'll 
- end up with files with names like &quot;CustomerMarketRecord.cfc&quot;.
+ end up with files with names like &quot;CustomerMarketRecord.cfc&quot;. 
+ 
 
-<br>&nbsp;
+<br>&nbsp; 
+ 
 
 <p class=note>Note: Throughout the framework methods which require you 
  to specify objects actually only accept object aliases. &nbsp;In 
@@ -208,7 +210,7 @@ setRelStartPage("Reactor_Documentation.htm");
 
 <h4>Child Tags</h4>
 
-<table x-use-null-cells cellspacing="0" width="100%" class="whs11">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs2">
 <col class="whs2">
@@ -241,11 +243,11 @@ setRelStartPage("Reactor_Documentation.htm");
  a user may have one address.</td></tr>
 
 <tr valign="top" class="whs3">
-<td colspan="1" rowspan="1" width="33.333%" class="whs12">
+<td colspan="1" rowspan="1" width="33.333%" class="whs11">
 <p>hasMany</td>
-<td colspan="1" rowspan="1" width="33.333%" class="whs13">
+<td colspan="1" rowspan="1" width="33.333%" class="whs12">
 <p>No</td>
-<td colspan="1" rowspan="1" width="33.333%" class="whs13">
+<td colspan="1" rowspan="1" width="33.333%" class="whs12">
 <p>I define a relationship where this object has many of another object. 
  &nbsp;For example, 
  an address may have many users.</td></tr>
@@ -254,25 +256,25 @@ setRelStartPage("Reactor_Documentation.htm");
 <h4>Example</h4>
 
 <p class=code>&lt;reactor&gt;<br>
- &nbsp;&nbsp;&lt;objects&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;User&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
-<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+ <br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;User&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
- &nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
 &lt;/reactor&gt;</p>
 
 </body>

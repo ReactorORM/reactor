@@ -94,10 +94,9 @@ else
 <p>&nbsp;</p>
 
 <p class=code>&lt;cfquery name=&quot;users&quot; datasource=&quot;#_getConfig().getDsn()#&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;SELECT 
+ &nbsp;SELECT 
  *<br>
- &nbsp;&nbsp;&nbsp;&nbsp;FROM 
- Users<br>
+ &nbsp;FROM Users<br>
 &lt;/cfquery&gt;</p>
 
 <h4>Attributes</h4>
@@ -132,15 +131,15 @@ else
 
 <p class=code>&lt;reactor&gt;<br>
  &nbsp;&lt;config&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;project 
+ &nbsp;&nbsp;&nbsp;&lt;project 
  value=&quot;Scratch&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;dsn 
+ &nbsp;&nbsp;&nbsp;&lt;dsn 
  value=&quot;scratch&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;type 
+ &nbsp;&nbsp;&nbsp;&lt;type 
  value=&quot;mssql&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mapping 
+ &nbsp;&nbsp;&nbsp;&lt;mapping 
  value=&quot;/reactorData&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;mode 
+ &nbsp;&nbsp;&nbsp;&lt;mode 
  value=&quot;always&quot; /&gt;<br>
  &nbsp;&lt;/config&gt;<br>
 &lt;/reactor&gt;</p>

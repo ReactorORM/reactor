@@ -116,25 +116,25 @@ else
 <h4>Example</h4>
 
 <p class=code>&lt;reactor&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&lt;objects&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&lt;objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;User&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasOne 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasOne&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
 <br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;object 
+ &nbsp;&nbsp;&nbsp;&lt;object 
  name=&quot;Address&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;hasMany 
  name=&quot;User&quot;&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;relate 
  from=&quot;addressId&quot; to=&quot;addressId&quot; /&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
- &nbsp;&nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/hasMany&gt;<br>
+ &nbsp;&nbsp;&nbsp;&lt;/objects&gt;<br>
+ &nbsp;&lt;/objects&gt;<br>
 &lt;/reactor&gt;</p>
 
 <script type="text/javascript" language="javascript1.2">
