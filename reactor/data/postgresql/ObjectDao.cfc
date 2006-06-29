@@ -172,27 +172,28 @@
 		
 		<cfloop query="qFields">
 			<!--- create the field --->
-			<cfset Field = CreateObject("Component", "reactor.core.field") />
-			<cfset Field.setName(qFields.name) />
-			<cfset Field.setPrimaryKey(qFields.primaryKey) />
-			<cfset Field.setIdentity(qFields.identity) />
-			<cfset Field.setNullable(qFields.nullable) />
-			<cfset Field.setDbDataType(qFields.dbDataType) />
-			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
-			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
+			<cfset Field = StructNew() />
+			<cfset Field.name = qFields.name />
+			<cfset Field.primaryKey = qFields.primaryKey />
+			<cfset Field.identity = qFields.identity />
+			<cfset Field.nullable = qFields.nullable />
+			<cfset Field.dbDataType = qFields.dbDataType />
+			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
+			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
 			<cfif qFields.dbDataType eq "text">
-				<cfset Field.setLength(2147483647) /> <!--- the actual value for text is unlimited, with up to 1.6TB per row --->
+				<cfset Field.length = 2147483647 /> <!--- the actual value for text is unlimited, with up to 1.6TB per row --->
 			<cfelse>
-				<cfset Field.setLength(val(qFields.length)) />
+				<cfset Field.length = val(qFields.length) />
 			</cfif>
-			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
-			
+			<cfset Field.default = getDefault(qFields.default, Field.getCfDataType(), Field.getNullable()) />
 			<cfif qFields.identity eq "YES">
-				<cfset Field.setSequenceName(Replace(ListGetAt(qFields.default,2,"'"),"public.","")) />
+				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"),"public.","") />
 			</cfif>
+			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
 		</cfloop>
+		
 	</cffunction>
 	
 	<cffunction name="getDefault" access="public" hint="I get a default value for a cf datatype." output="false" returntype="string">

@@ -303,7 +303,7 @@
 	</cffunction>
 	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">
-		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="reactor.core.field" />
+		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="struct" />
 		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="string" />
 		<cfset var xmlField = 0 />
 		<cfset var fieldTags = XmlSearch(arguments.config, "/object/field") />
@@ -315,7 +315,7 @@
 			we're working with.  I used to use XmlSearch, but that's case sensitive and I need it not to be.		
 		--->
 		<cfloop from="1" to="#ArrayLen(fieldTags)#" index="x">
-			<cfif fieldTags[x] .XmlAttributes.name IS arguments.field.getName()>
+			<cfif fieldTags[x] .XmlAttributes.name IS arguments.field.name>
 				<cfset fieldTag = fieldTags[x] />
 				<cfbreak />
 			</cfif>
@@ -325,29 +325,29 @@
 		<cfset xmlField = XMLElemNew(arguments.config, "field") />
 		
 		<!--- set the field's properties --->
-		<cfset xmlField.XmlAttributes["name"] = arguments.field.getName() />
+		<cfset xmlField.XmlAttributes["name"] = arguments.field.name />
 		<cfif NOT IsSimpleValue(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "alias") >
 			<cfset xmlField.XmlAttributes["alias"] = fieldTag.XmlAttributes.alias />
 		<cfelse>
-			<cfset xmlField.XmlAttributes["alias"] = arguments.field.getName() />
+			<cfset xmlField.XmlAttributes["alias"] = arguments.field.name />
 		</cfif>
-		<cfset xmlField.XmlAttributes["primaryKey"] = arguments.field.getPrimaryKey() />
-		<cfset xmlField.XmlAttributes["identity"] = arguments.field.getIdentity() />
-		<cfset xmlField.XmlAttributes["nullable"] = arguments.field.getNullable() />
-		<cfset xmlField.XmlAttributes["dbDataType"] = arguments.field.getDbDataType() />
-		<cfset xmlField.XmlAttributes["cfDataType"] = arguments.field.getCfDataType() />
-		<cfset xmlField.XmlAttributes["cfSqlType"] = arguments.field.getCfSqlType() />
-		<cfset xmlField.XmlAttributes["length"] = arguments.field.getLength() />
-		<cfset xmlField.XmlAttributes["default"] = arguments.field.getDefault() />
+		<cfset xmlField.XmlAttributes["primaryKey"] = arguments.field.primaryKey />
+		<cfset xmlField.XmlAttributes["identity"] = arguments.field.identity />
+		<cfset xmlField.XmlAttributes["nullable"] = arguments.field.nullable />
+		<cfset xmlField.XmlAttributes["dbDataType"] = arguments.field.dbDataType />
+		<cfset xmlField.XmlAttributes["cfDataType"] = arguments.field.cfDataType />
+		<cfset xmlField.XmlAttributes["cfSqlType"] = arguments.field.cfSqlType />
+		<cfset xmlField.XmlAttributes["length"] = arguments.field.length />
+		<cfset xmlField.XmlAttributes["default"] = arguments.field.default />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
-		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.getSequenceName() />
+		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.sequenceName />
 		
 		<!--- use sequence name specfied in the reactor.xml file if provided, if it doesn't match the default sequence specified for a column then throw an error --->
 		<cfif NOT IsSimpleValue(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >
-			<cfif len(arguments.field.getSequenceName()) eq 0>
+			<cfif len(arguments.field.sequenceName) eq 0>
 				<cfset xmlField.XmlAttributes["sequence"] = fieldTag.XmlAttributes.sequence />
-			<cfelseif arguments.field.getSequenceName() neq fieldTag.XmlAttributes.sequence>
-				<cfthrow message="Sequence names are not the same." detail="The database's default value for table: '#arguments.config.object.XmlAttributes.name#' column: '#arguments.field.getName()#' uses a sequence named '#arguments.field.getSequenceName()#' but the reactor.xml configuration file indicates that a sequence named '#fieldTag.XmlAttributes.sequence#' should be used." type="reactor.core.object.addXmlField.SequenceNameMismatch" />
+			<cfelseif arguments.field.sequenceName neq fieldTag.XmlAttributes.sequence>
+				<cfthrow message="Sequence names are not the same." detail="The database's default value for table: '#arguments.config.object.XmlAttributes.name#' column: '#arguments.field.name#' uses a sequence named '#arguments.field.sequenceName#' but the reactor.xml configuration file indicates that a sequence named '#fieldTag.XmlAttributes.sequence#' should be used." type="reactor.core.object.addXmlField.SequenceNameMismatch" />
 			</cfif>
 		</cfif>
 		
@@ -384,20 +384,20 @@
 	</cffunction>
 	
 	<cffunction name="addField" access="public" hint="I add a field to this object." output="false" returntype="void">
-		<cfargument name="field" hint="I am the field to add" required="yes" type="reactor.core.field" />
+		<cfargument name="field" hint="I am the field to add" required="yes" type="struct" />
 		<cfset var fields = getFields() />
 		<cfset fields[ArrayLen(fields) + 1] = arguments.field />
 		
 		<cfset setFields(fields) />
 	</cffunction>
 
-	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="reactor.core.field">
+	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="struct">
 		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="string" />
 		<cfset var fields = getFields() />
 		<cfset var x = 1 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
-			<cfif fields[x].getName() IS arguments.name>
+			<cfif fields[x].name IS arguments.name>
 				<cfreturn fields[x] />
 			</cfif>
 		</cfloop>

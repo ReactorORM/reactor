@@ -97,28 +97,28 @@
 			<cfset field = fields[x] />
 			
 			<!--- insure the field exists --->
-			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#") />
 				
 			<!--- insure a label exists --->
-			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/label", field.getName()) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/label", field.name) />
 			
 			<!--- insure a comment exists --->
-			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/comment", "") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/comment", "") />
 			
 			<!--- insure a maxLength exists --->
-			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/maxlength", field.getLength()) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/maxlength", field.length) />
 			
 			<!--- required validation error message --->
-			<cfif NOT fields[x].getNullable()>
-				<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/notProvided", "The #field.getName()# field is required but was not provided.") />
+			<cfif NOT fields[x].nullable>
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/notProvided", "The #field.name# field is required but was not provided.") />
 			</cfif>
 			
 			<!--- data type validation error message --->
-			<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/invalidType", "The #field.getName()# field does not contain valid data.  This field must be a #fields[x].getCfDataType()# value.") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/invalidType", "The #field.name# field does not contain valid data.  This field must be a #fields[x].cfDataType# value.") />
 					
 			<!--- size validataion error message --->
-			<cfif field.getLength()>
-				<cfset paramNode(dictionaryXml, "/#alias#/#field.getName()#/invalidLength", "The #field.getName()# field is too long.  This field must be no more than #field.getLength()# bytes long.") />
+			<cfif field.length>
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/invalidLength", "The #field.name# field is too long.  This field must be no more than #field.length# bytes long.") />
 			</cfif>			
 		</cfloop>
 		
@@ -265,4 +265,5 @@
     <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
        <cfreturn variables.objectFactory />
     </cffunction>
+
 </cfcomponent>

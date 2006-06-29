@@ -61,16 +61,17 @@
 		
 		<cfloop query="qFields">
 			<!--- create the field --->
-			<cfset Field = CreateObject("Component", "reactor.core.field") />
-			<cfset Field.setName(trim(qFields.NAME)) />
-			<cfset Field.setPrimaryKey(qFields.PRIMARYKEY) />
-			<cfset Field.setIdentity(qFields.IDENTITY) />
-			<cfset Field.setNullable(qFields.NULL) />
-			<cfset Field.setDbDataType(trim(qFields.COLTYPE)) />
-			<cfset Field.setCfDataType(getCfDataType(trim(qFields.COLTYPE))) />
-			<cfset Field.setCfSqlType(getCfSqlType(trim(qFields.COLTYPE))) />
-			<cfset Field.setLength(qFields.LENGTH) />
-			<cfset Field.setDefault(getDefault(trim(qFields.DEFAULT), Field.getCfDataType(), Field.getNullable())) />
+			<cfset Field = StructNew() />
+			<cfset Field.name = trim(qFields.NAME) />
+			<cfset Field.primaryKey = qFields.PRIMARYKEY />
+			<cfset Field.identity = qFields.IDENTITY />
+			<cfset Field.nullable = qFields.NULL />
+			<cfset Field.dbDataType = trim(qFields.COLTYPE) />
+			<cfset Field.cfDataType = getCfDataType(trim(qFields.COLTYPE)) />
+			<cfset Field.cfSqlType = getCfSqlType(trim(qFields.COLTYPE)) />
+			<cfset Field.length = qFields.LENGTH />
+			<cfset Field.default = getDefault(trim(qFields.DEFAULT), Field.getCfDataType(), Field.getNullable()) />
+			<cfset Field.sequenceName = "" />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

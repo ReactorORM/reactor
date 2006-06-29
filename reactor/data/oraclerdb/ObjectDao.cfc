@@ -154,27 +154,28 @@
 													maxlength="31"
 													value="#uCase(arguments.Object.getName())#" />
 		</cfquery>
+		
  		<cfloop query="qFields">
 			<!--- create the field --->
 			<cfset Field = CreateObject("Component", "reactor.core.field") />
-			<cfset Field.setName(qFields.name) />
+			<cfset Field.nmae = qFields.name />
 			<cfif qFields.primaryKey is not "">
-				<cfset Field.setPrimaryKey(true) />
+				<cfset Field.primaryKey = true />
 			<cfelse>
-				<cfset Field.setPrimaryKey(false) />
+				<cfset Field.primaryKey = false />
 			</cfif>
 
-			<cfset Field.setIdentity(qFields.identity) />
+			<cfset Field.identity = qFields.identity />
 			<cfif qFields.not_nullable is "">
-				<cfset Field.setNullable(true) />
+				<cfset Field.nullable = true />
 			<cfelse>
-				<cfset Field.setNullable(false) />
+				<cfset Field.nullable = false />
 			</cfif>
 
-			<cfset Field.setDbDataType(qFields.dbDataType) />
-			<cfset Field.setCfDataType(getCfDataType(qFields.dbDataType)) />
-			<cfset Field.setCfSqlType(getCfSqlType(qFields.dbDataType)) />
-			<cfset Field.setLength(qFields.length) />
+			<cfset Field.dbDataType = qFields.dbDataType />
+			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
+			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
+			<cfset Field.length = qFields.length />
  			<cfscript>
  				thisDefault = "";
  				if (first_default is "") {
@@ -183,7 +184,8 @@
  					thisDefault = first_default;
  				}
  			</cfscript>
-			<cfset Field.setDefault(getDefault(first_default, Field.getCfDataType(), Field.getNullable())) />
+			<cfset Field.default = getDefault(first_default, Field.getCfDataType(), Field.getNullable()) />
+			<cfset Field.sequenceName = "" />
 
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

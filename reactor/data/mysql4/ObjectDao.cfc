@@ -79,18 +79,19 @@
 				</cfdefaultcase>
 			</cfswitch>
 			<!--- end mod by SPJ --->
-			
+					
 			<!--- create the field --->
-			<cfset Field = CreateObject("Component", "reactor.core.field") />
-			<cfset Field.setName(qFields.FIELD) />
-			<cfset Field.setPrimaryKey(qFields.KEY is "PRI") />
-			<cfset Field.setIdentity(qFields.EXTRA is "auto_increment") />
-			<cfset Field.setNullable(qFields.NULL is "YES") />
-			<cfset Field.setDbDataType(dataType) />
-			<cfset Field.setCfDataType(getCfDataType(dataType)) />
-			<cfset Field.setCfSqlType(getCfSqlType(dataType)) />
-			<cfset Field.setLength(length) />
-			<cfset Field.setDefault(getDefault(qFields.default, Field.getCfDataType(), Field.getNullable())) />
+			<cfset Field = StructNew() />
+			<cfset Field.name = qFields.FIELD />
+			<cfset Field.primaryKey = qFields.KEY is "PRI" />
+			<cfset Field.identity = qFields.EXTRA is "auto_increment" />
+			<cfset Field.nullable = qFields.NULL is "YES" />
+			<cfset Field.dbDataType = dataType />
+			<cfset Field.cfDataType = getCfDataType(dataType) />
+			<cfset Field.cfSqlType = getCfSqlType(dataType) />
+			<cfset Field.length = length />
+			<cfset Field.default = getDefault(qFields.default, Field.getCfDataType(), Field.getNullable()) />
+			<cfset Field.sequenceName = "" />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
