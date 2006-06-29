@@ -39,6 +39,7 @@
 	<cffunction name="getField" access="public" hint="I return a field in this object." output="false" returntype="struct">
 		<cfargument name="fieldAlias" hint="I am the alias of the field to get." required="yes" type="string" />
 		<cfset var fields = getFields() />
+		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfif fields[x].alias IS arguments.fieldAlias>
@@ -147,6 +148,7 @@
 	<cffunction name="getJoinsAsString" access="package" hint="I get this object's joins as a fragment of a from statement" output="false" returntype="string">
 		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
 		<cfset var from = "" />
+		<cfset var x = 0 />
 		
 		<!--- get this object's joins too --->
 		<cfloop from="1" to="#arrayLen(variables.Joins)#" index="x">

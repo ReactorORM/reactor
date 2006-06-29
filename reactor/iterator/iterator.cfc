@@ -112,6 +112,7 @@
 	<!--- isDirty --->
 	<cffunction name="isDirty" access="public" hint="I indicate if there are any records in this iterator that are dirty." output="false" returntype="boolean">
 		<cfset var array = getArray() />
+		<cfset var x = 0 />
 		
 		<!--- loop over all the records that have been loaded and changed and save them --->
 		<cfloop from="1" to="#ArrayLen(array)#" index="x">
@@ -129,6 +130,7 @@
 		<cfset var Record = 0 />
 		<cfset var indexArray = 0 />
 		<cfset var Records = 0 />
+		<cfset var x = 0 />
 		
 		<cfif NOT StructCount(arguments)>
 			<!--- nothing was provided, throw an error --->
@@ -453,6 +455,8 @@
 	
 	<!--- cleanup --->
 	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
+		<cfset var x = 0 />
+		
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
 			<cfif IsObject(variables.array[x])>
 				<cfif variables.array[x].isDeleted()
@@ -519,6 +523,7 @@
 		<cfset var column = 0 />
 		<cfset var linkRelationship = 0 />
 		<cfset var Link = 0 />
+		<cfset var x = 0 />
 		
 		<cfif getLinked()>
  			<cfset linkRelationship = getLinkRelationshipMetadata() />
@@ -557,28 +562,7 @@
 		<!--- return this squeaky clean record --->
 		<cfreturn Record />
 	</cffunction>
-	
-	<!---<cffunction name="dumpQuery">
-		<cfreturn variables.query />
-	</cffunction>
-	
-	<cffunction name="dumpArray">
-		<cfset var test = ArrayNew(1) />
-		<cfset var x = 0 />
-		
-		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			<cftry>
-				<cfset ArrayAppend(test, variables.array[x]._getTo()) />
-				<cfcatch>
-					<cfset ArrayAppend(test,"DELETED") />
-				</cfcatch>
-			</cftry>
-
-		</cfloop>
-		
-		<cfreturn test />
-	</cffunction>--->
-		
+			
 	<!--- query --->
     <cffunction name="getQuery" access="public" output="false" returntype="query">
 		<cfargument name="from" hint="I am the first row to return." required="no" type="numeric" default="1" />
@@ -586,6 +570,8 @@
 		<cfset var query = 0 />
 		<cfset var filterIndex = ArrayNew(1) />
 		<cfset var fields = 0 />
+		<cfset var columnName = "" />
+		<cfset var x = "" />
 		
 		<cfset populate() />
 		
@@ -623,35 +609,6 @@
 		
 		<cfreturn query />		
     </cffunction>
-	
-	<!--- updateQuery
-	<cffunction name="updateQuery" access="private" hint="I update the query with data from dirty records and mark deleted records." output="false" returntype="void">
-		<cfset var query = 0 />
-		<cfset var x = 0 />
-		
-		<cfquery name="query" dbtype="query">
-			SELECT *
-			FROM variables.query
-			WHERE reactorRowDeleted = 0
-		</cfquery>
-		
-		<cfloop query="query">
-			<cfif IsObject(variables.array[query]) AND NOT variables.array[x].IsDeleted()>
-				<!--- the record exists --->
-				<cfset copyRecordToRow(variables.array[x], x) />
-				
-			<cfelseif IsObject(variables.array[x]) AND variables.array[x].IsDeleted()>
-				<!--- the record was deleted --->
-				<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
-				
-			</cfif>
-		</cfloop>
-		
-		
-		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
-			
-		</cfloop>
-	</cffunction> --->
 	
 	<!--- copyRecordToRow --->
 	<cffunction name="copyRecordToRow" access="private" hint="I copy a record's to data to a specific row in the query" output="false" returntype="void">
@@ -787,63 +744,33 @@
 	
 	<!--- getWhere --->
 	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="reactor.query.where">
-		<!---<cfif NOT IsQuery(variables.query)>--->
 		<cfset reset() />
 		<cfreturn getQueryObject().getWhere() />
-		<!---<cfelse>
-			<cfthrow message="Can Not Get Where"
-				detail="Calls to getWhere are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.getWhere.CanNotGetWhere" />
-		</cfif>--->
 	</cffunction>
 	
 	<!--- setDistinct --->
 	<cffunction name="setDistinct" access="public" hint="I filter the query that backs this iterator to return only distinct values.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
 		<cfargument name="distinct" hint="I indicate if the query should only return distinct matches" required="yes" type="boolean" />
-		<!---<cfif NOT IsQuery(variables.query)>--->
 		<cfset reset() />
 		<cfreturn getQueryObject().setDistinct(arguments.distinct) />
-		<!---<cfelse>
-			<cfthrow message="Can Not Set Distinct"
-				detail="Calls to setDistinct are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.setDistinct.CanNotSetDistinct" />
-		</cfif>--->
 	</cffunction>
 		
 	<!--- getOrder --->
 	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="reactor.query.order">
-		<!---<cfif NOT IsQuery(variables.query)>--->
 		<cfset reset() />
 		<cfreturn getQueryObject().getOrder() />
-		<!---<cfelse>
-			<cfthrow message="Can Not Get Order"
-				detail="Calls to getOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.getOrder.CanNotGetOrder" />
-		</cfif>--->
 	</cffunction>
 	
 	<!--- resetOrder --->
 	<cffunction name="resetOrder" access="public" hint="I reset the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
-		<!---<cfif NOT IsQuery(variables.query)>--->
 		<cfset reset() />
 		<cfset getQueryObject().resetOrder() />
-		<!---<cfelse>
-			<cfthrow message="Can Not Reset Order"
-				detail="Calls to resetOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.resetOrder.CanNotResetOrder" />
-		</cfif>--->
 	</cffunction>
 	
 	<!--- resetWhere --->
 	<cffunction name="resetWhere" access="public" hint="I reset the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
-		<!---<cfif NOT IsQuery(variables.query)>--->
 		<cfset reset() />
 		<cfset getQueryObject().resetWhere() />
-		<!---<cfelse>
-			<cfthrow message="Can Not Reset Order"
-				detail="Calls to resetOrder are not allowed after getting an iterators query or array data or using any method that returns data from the database.  You must call reset first, which reset any changes you have made to objects in the iterator."
-				type="reactor.iterator.resetOrder.CanNotResetOrder" />
-		</cfif>--->
 	</cffunction>
 	
 	<!--- gateway --->

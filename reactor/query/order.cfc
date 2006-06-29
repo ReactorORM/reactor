@@ -34,10 +34,9 @@
 				
 		<cfset arguments.node.direction = arguments.direction />
 		
-		<cfset node.fieldAlias = node.fieldAlias />
-		<cfset node.fieldName = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
+		<cfset arguments.node.fieldName = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
 		
-		<cfset ArrayAppend(order, node) />	
+		<cfset ArrayAppend(order, arguments.node) />	
 		<cfset setOrder(order) />
 		
 		<cfreturn this />
@@ -70,6 +69,7 @@
     </cffunction>
     <cffunction name="getOrder" access="public" output="false" returntype="array">
 		<cfset var field = 0 />
+		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(variables.order)#" index="x">
 			

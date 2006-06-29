@@ -43,7 +43,7 @@
 		<cfset var DbObject = 0 />
 		<cfset var GeneratedObject = 0 />
 		<cfset var generate = false />
-		<cfset var objectTranslator = 0 />
+		<cfset var ObjectTranslator = 0 />
 		<cfset var metadata = 0 />
 		
 		<cfif NOT arguments.plugin AND NOT ListFind("Record,Dao,Gateway,To,Metadata,Validator", arguments.type)>
@@ -259,7 +259,7 @@
   <cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
   	<cfargument name="beanFactory" type="any" required="true" />
   	<cfset variables.BeanFactory = arguments.beanFactory />
-</cffunction>
+  </cffunction>
 	
 	<!--- convention --->
   <cffunction name="setConvention" access="private" output="false" returntype="void">

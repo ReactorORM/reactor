@@ -605,12 +605,6 @@
 			
 		<cfset setLastExecutedQuery(queryData) />
 		
-		<!---<cfif arguments.releaseQuery>
-			<cfset releaseQueryInstance(arguments.Query) />
-		</cfif>--->
-		<!---<cfset qGet.result = result />--->
-		
-		<!--- return the query result --->
 		<cfreturn qGet />
 	</cffunction>
 	
@@ -650,37 +644,3 @@
     </cffunction>
 	
 </cfcomponent>
-
-
-	<!---
-		jRinehart 4/24/2006: add pool management for query "object" objects, based off of Sean's query pool
-		pool management: queryObjectPool is a linked-list with 0 as the terminator
-	
-	<!--- get a query "object" instance from the pool (thread-safe) --->
-	<cffunction name="getQueryObject" access="private" output="false" returntype="reactor.query.object">
-		<cfset var object = 0 />
-		<cfif isStruct(variables.queryObjectPool)>
-			<cflock name="reactor_gateway_#_getAlias()#_objectpool" timeout="10" type="exclusive">
-				<cfif isStruct(variables.queryObjectPool)>
-					<cfset object = variables.queryObjectPool.head />
-					<cfset variables.queryObjectPool = variables.queryObjectPool.next />
-				</cfif>
-			</cflock>
-		</cfif>
-		<!--- create a new object if the pool was empty --->
-		<cfif not isObject(object)>
-			<cfset object = createObject("component","reactor.query.object") />
-		</cfif>
-		<cfreturn object />
-	</cffunction>	
-	
-	<!--- return a query "object" instance to the pool (thread-safe) --->
-	<cffunction name="releaseQueryObject" access="private" output="false" returntype="void">
-		<cfargument name="object" required="true" />
-		<cfset var link = structNew() />
-		<cfset link.head = arguments.object />
-		<cflock name="reactor_gateway_#_getAlias()#_objectpool" timeout="10" type="exclusive">
-			<cfset link.next = variables.queryObjectPool />
-			<cfset variables.queryObjectPool = link />
-		</cflock>
-	</cffunction>	--->

@@ -360,7 +360,6 @@
 		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any">
 		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any">
 		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any">
-	
 		<cfset var key = "" />
 		<cfset var index = "" />
 		<cfset var i = "" />

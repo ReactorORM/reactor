@@ -20,7 +20,6 @@
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
 		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
 		<cfset var objectXML = getObject().getXml() />
-		<cfset var pathToErrorFile = "" />
 		
 		<!--- write the project object --->
 		<cfset generate(

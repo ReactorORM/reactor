@@ -43,7 +43,6 @@
 		</xsl:for-each>
 		&lt;cfset var Query = createQuery() />
 		&lt;cfset var Where = Query.getWhere() />
-		&lt;cfset var x = 0 />
 		
 		<xsl:for-each select="//field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;

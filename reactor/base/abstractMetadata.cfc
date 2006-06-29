@@ -73,9 +73,7 @@
 	
 	<cffunction name="getFieldList" access="public" hint="I return a list of fields in this object." output="false" returntype="string">
 		<cfset var fields = getFields() />
-		<cfset var superFields = 0 />
 		<cfset var columList = "" />
-		<cfset var field = "" />
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
@@ -89,6 +87,7 @@
 	<cffunction name="hasSharedkey" access="public" hint="I indicate if any of this object's relationships to the object with the specified alias use shared keys." output="false" returntype="boolean">
 		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="string" />
 		<cfset var relationships = getRelationships(arguments.alias) />
+		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfif StructKeyExists(relationships[x], "sharedKey") AND relationships[x].sharedKey IS true>

@@ -53,8 +53,9 @@
 			
 		<cfelseif IsDefined("arguments") AND fieldList IS NOT 1>
 			<cfloop collection="#arguments#" item="item">
-				<cfset func = this["set#item#"] />
-				<cfset func(arguments[item]) />
+				<cfinvoke component="#this#" method="set#item#">
+					<cfinvokeargument name="#item#" value="#arguments[item]#" />
+				</cfinvoke>
 			</cfloop>
 			
 		</cfif>
@@ -200,11 +201,10 @@
 	
 	<!--- afterSave --->
 	<cffunction name="afterSave" access="private" hint="I am code executed after saving the record." output="false" returntype="void">
-		<cfset var relationships = 0 />
 		<cfset var relationship = 0 />
 		<cfset var x = 0 />
-		<cfset var y = 0 />
 		<cfset var value = 0 />
+		<cfset var item = 0 />
 		
 		<!--- check to see if this object has children in iterators.  If so, set the related fields in the child from this parent. --->
 		<cfloop collection="#variables.children#" item="item">
