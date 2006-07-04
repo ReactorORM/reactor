@@ -157,7 +157,7 @@
 		
  		<cfloop query="qFields">
 			<!--- create the field --->
-			<cfset Field = CreateObject("Component", "reactor.core.field") />
+			<cfset Field = StructNew() />
 			<cfset Field.nmae = qFields.name />
 			<cfif qFields.primaryKey is not "">
 				<cfset Field.primaryKey = true />

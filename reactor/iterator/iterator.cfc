@@ -585,7 +585,7 @@
 		</cfquery>
 		
 		<!--- if we're filtering the rows then filter them --->
-		<cfif NOT (arguments.from IS 1 AND arguments.count IS -1)>
+		<cfif NOT (arguments.from IS 1 AND arguments.count IS -1) AND query.RecordCount GT 0>
 			
 			<!--- create an index row with rownumbers stored in the index --->
 			<cfset ArrayResize(filterIndex, query.recordcount) />
