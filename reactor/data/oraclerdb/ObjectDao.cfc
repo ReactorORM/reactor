@@ -184,7 +184,7 @@
  					thisDefault = first_default;
  				}
  			</cfscript>
-			<cfset Field.default = getDefault(first_default, Field.getCfDataType(), Field.getNullable()) />
+			<cfset Field.default = getDefault(first_default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
 
 			<!--- add the field to the table --->

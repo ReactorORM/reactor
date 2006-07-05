@@ -185,7 +185,7 @@
 			<cfelse>
 				<cfset Field.length = val(qFields.length) />
 			</cfif>
-			<cfset Field.default = getDefault(qFields.default, Field.getCfDataType(), Field.getNullable()) />
+			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfif qFields.identity eq "YES">
 				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"),"public.","") />
 			</cfif>
