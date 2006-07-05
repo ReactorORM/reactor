@@ -70,7 +70,7 @@
 			<cfset Field.cfDataType = getCfDataType(trim(qFields.COLTYPE)) />
 			<cfset Field.cfSqlType = getCfSqlType(trim(qFields.COLTYPE)) />
 			<cfset Field.length = qFields.LENGTH />
-			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
+			<cfset Field.default = getDefault(trim(qFields.default), Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
 			
 			<!--- add the field to the table --->
