@@ -66,9 +66,12 @@
 			<cfset Records = getArray() />
 			
 			<!--- get all the specified indexes and return them --->
-			<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
-				<cfset ArrayAppend(Array, Records[indexArray[x]]) />
-			</cfloop>
+			
+			<cfif ArrayLen(indexArray)>
+				<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
+					<cfset ArrayAppend(Array, Records[indexArray[x]]) />
+				</cfloop>
+			</cfif>
 		</cfif>
 		
 		<!--- return the matches --->
@@ -190,10 +193,12 @@
 			<cfset ArraySort(indexArray, "Numeric", "desc") />
 			
 			<!--- get all the specified indexes and return them --->
-			<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
-				<!--- delete the record --->
-				<cfset delete(indexArray[x]) />
-			</cfloop>
+			<cfif ArrayLen(indexArray)>
+				<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
+					<!--- delete the record --->
+					<cfset delete(indexArray[x]) />
+				</cfloop>
+			</cfif>
 			
 		</cfif>
 		

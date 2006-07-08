@@ -117,6 +117,25 @@
 	
 	<!--- delete --->
 	<cffunction name="delete" access="public" hint="I delete the record." output="false" returntype="void">
+		<cfargument name="useTransaction" hint="I indicate if this delete should be executed within a transaction." required="no" type="boolean" default="true" />
+		
+		<cfif arguments.useTransaction>
+			<cfset deleteInTransaction() />
+		<cfelse>
+			<cfset executeDelete() />
+		</cfif>
+		
+	</cffunction>
+	
+	<!--- deleteInTransaction --->
+	<cffunction name="deleteInTransaction" access="private" hint="I delete the record in a transaction." output="false" returntype="void">
+		<cftransaction>
+			<cfset executeDelete() />
+		</cftransaction>
+	</cffunction>
+	
+	<!--- executeDelete --->
+	<cffunction name="executeDelete" access="private" hint="I actually delete the record." output="false" returntype="void">
 		<cfset beforeDelete() />
 		
 		<cfif StructCount(arguments)>
