@@ -307,9 +307,10 @@
 					</cfloop>
 				</cfif>
 			</cfsavecontent>
-			<cfoutput>#queryData.query#</cfoutput>
+			<cfoutput>#replaceNoCase(queryData.query, "''", "'", "all")#</cfoutput>
 		</cfquery>
 			
+		<cfset queryData.query = replaceNoCase(queryData.query, "''", "'", "all") />
 		<cfset setLastExecutedQuery(queryData) />
 		
 	</cffunction>
@@ -600,9 +601,10 @@
 					</cfloop>
 				</cfif>		
 			</cfsavecontent>
-			<cfoutput>#queryData.query#</cfoutput>
+			<cfoutput>#replaceNoCase(queryData.query, "''", "'", "all")#</cfoutput>
 		</cfquery>
 			
+		<cfset queryData.query = replaceNoCase(queryData.query, "''", "'", "all") />
 		<cfset setLastExecutedQuery(queryData) />
 		
 		<cfreturn qGet />
