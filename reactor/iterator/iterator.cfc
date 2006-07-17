@@ -33,7 +33,17 @@
 		
 		<cfreturn this />
 	</cffunction>
-	
+		
+	<!--- sizeTo --->
+	<cffunction name="sizeTo" access="public" hint="I set the minimum number of items in the iterator." output="false" returntype="void">
+		<cfargument name="length" hint="I am the minimum number of items in the iterator." required="yes" type="numeric" />
+		<cfset var x = 0 />
+		
+		<cfloop from="#getRecordCount()+1#" to="#arguments.length#" index="x">
+			<cfset add() />
+		</cfloop>
+	</cffunction>
+		
 	<!--- getAt --->
 	<cffunction name="getAt" access="public" hint="I return a specific element based on it's index." output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="index" hint="I am the index of the record to get." required="yes" type="numeric" />

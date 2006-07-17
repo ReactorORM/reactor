@@ -110,6 +110,16 @@
 		<cfreturn getDictionary().getValue(arguments.error) />		
 	</cffunction>
 	
+	<cffunction name="merge" hint="I merge another ErrorCollection into this." access="public" output="false" returntype="void">
+		<cfargument name="ErrorCollection" hint="I am the other ErrorCollection" required="yes" type="reactor.util.ErrorCollection" />
+		<cfset var errors = arguments.ErrorCollection.getErrors() />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(errors)#" index="x">
+			<cfset addError(errors[x]) />
+		</cfloop>		
+	</cffunction>
+	
 	<!--- count --->
     <cffunction name="count" hint="I return the number of errors in this error collection." access="public" output="false" returntype="numeric">
        <cfreturn ArrayLen(getErrors()) />
