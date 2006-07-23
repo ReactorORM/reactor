@@ -77,19 +77,19 @@
 			a.attname AS name, 
 			
 			CASE 
-			    WHEN (co.conkey IS NULL) THEN 'NO'
-				WHEN (a.attnum = ANY (co.conkey)) THEN 'YES'
-				ELSE 'NO'
+			    WHEN (co.conkey IS NULL) THEN 'false'
+				WHEN (a.attnum = ANY (co.conkey)) THEN 'true'
+				ELSE 'false'
 			END as primaryKey,
 			
 			CASE 
-				WHEN ad.adsrc LIKE 'nextval(%' THEN 'YES'
-				ELSE 'NO'
+				WHEN ad.adsrc LIKE 'nextval(%' THEN 'true'
+				ELSE 'false'
 			END as identity,
 			
 			CASE 
-				WHEN (a.attnotnull OR ((t.typtype = 'd') AND t.typnotnull)) THEN 'NO' 
-				ELSE 'YES' 
+				WHEN (a.attnotnull OR ((t.typtype = 'd') AND t.typnotnull)) THEN 'false' 
+				ELSE 'true' 
 			END AS nullable, 
 			
 			CASE 
@@ -186,7 +186,7 @@
 				<cfset Field.length = val(qFields.length) />
 			</cfif>
 			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
-			<cfif qFields.identity eq "YES">
+			<cfif qFields.identity eq "true">
 				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"),"public.","") />
 			</cfif>
 			

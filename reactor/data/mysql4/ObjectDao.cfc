@@ -83,9 +83,21 @@
 			<!--- create the field --->
 			<cfset Field = StructNew() />
 			<cfset Field.name = qFields.FIELD />
-			<cfset Field.primaryKey = qFields.KEY is "PRI" />
-			<cfset Field.identity = qFields.EXTRA is "auto_increment" />
-			<cfset Field.nullable = qFields.NULL is "YES" />
+      <cfif qFields.KEY is "PRI">
+  			<cfset Field.primaryKey = "true" />
+      <cfelse>
+  			<cfset Field.primaryKey = "false" />
+      </cfif>
+      <cfif qFields.EXTRA is "auto_increment">
+        <cfset Field.identity = "true" />
+      <cfelse>
+        <cfset Field.identity = "false" />
+      </cfif>
+			<cfif qFields.NULL is "YES">
+        <cfset Field.nullable = "true" />
+			<cfelse>
+        <cfset Field.nullable = "false" />
+      </cfif>
 			<cfset Field.dbDataType = dataType />
 			<cfset Field.cfDataType = getCfDataType(dataType) />
 			<cfset Field.cfSqlType = getCfSqlType(dataType) />

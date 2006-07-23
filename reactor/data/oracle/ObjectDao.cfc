@@ -42,12 +42,15 @@
 			 SELECT
                	    col.COLUMN_NAME       as name,
                     CASE
-                          WHEN primaryConstraints.column_name IS NULL THEN 0
-                          ELSE 1
+                          WHEN primaryConstraints.column_name IS NULL THEN 'false'
+                          ELSE 'true'
                     END                   as primaryKey,
                     /* Oracle has no equivalent to autoincrement or  identity */
                     'false'                     AS "IDENTITY",
-                    col.NULLABLE,
+                    CASE
+                          WHEN col.NULLABLE = 'Y' THEN 'true'
+                          ELSE    'false'
+                    END                   as NULLABLE,
                     col.DATA_TYPE         as dbDataType,
                     col.DATA_LENGTH       as length,
                     col.DATA_DEFAULT      as "DEFAULT"
@@ -72,7 +75,7 @@
 			<cfset Field.name = qFields.name />
 			<cfset Field.primaryKey = qFields.primaryKey />
 			<cfset Field.identity = qFields.identity />
-			<cfset Field.nullable = qFields.nullable IS "Y" />
+			<cfset Field.nullable = qFields.nullable  />
 			<cfset Field.dbDataType = qFields.dbDataType />
 			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
 			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
