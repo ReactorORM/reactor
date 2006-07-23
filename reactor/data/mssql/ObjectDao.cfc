@@ -122,6 +122,7 @@
 					<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
 					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, "''", "'", "All") />
 					<cfset arguments.sqlDefaultValue = Replace(arguments.sqlDefaultValue, """", """""", "All") />
+          <cfreturn arguments.sqlDefaultValue/>
 				<cfelse>
 					<cfreturn "" />
 				</cfif>
