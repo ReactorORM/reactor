@@ -178,7 +178,7 @@
 		&lt;cfelseif qRead.recordCount GT 1&gt;
 			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.AmbiguousRecord" /&gt;
 		&lt;cfelseif qRead.recordCount IS 0&gt;
-			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.NoMatchingRecord" /&gt;
+			&lt;cfthrow message="Ambiguous Record" detail="Your request matched no records." type="Reactor.Record.NoMatchingRecord" /&gt;
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
 	
