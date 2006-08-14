@@ -46,13 +46,17 @@
                           ELSE 'true'
                     END                   as primaryKey,
                     /* Oracle has no equivalent to autoincrement or  identity */
-                    'false'                     AS "IDENTITY",
+                    'false'                     AS "IDENTITY",                    
                     CASE
                           WHEN col.NULLABLE = 'Y' THEN 'true'
-                          ELSE    'false'
-                    END                   as NULLABLE,
-                    col.DATA_TYPE         as dbDataType,
-                    col.DATA_LENGTH       as length,
+                          ELSE 'false'
+                    END                  as NULLABLE,
+                   col.DATA_TYPE         as dbDataType,
+                    case
+                      /* 26 is the length of now() in ColdFusion (i.e. {ts '2006-06-26 13:10:14'})*/
+                      when col.data_type = 'DATE'   then 26
+                      else col.data_length
+                    end                 as length,
                     col.DATA_DEFAULT      as "DEFAULT"
               FROM  all_tab_columns   col,
                     ( select  colCon.column_name,
@@ -72,15 +76,15 @@
 		<cfloop query="qFields">
 			<!--- create the field --->
 			<cfset Field = StructNew() />
-			<cfset Field.name = qFields.name />
-			<cfset Field.primaryKey = qFields.primaryKey />
-			<cfset Field.identity = qFields.identity />
-			<cfset Field.nullable = qFields.nullable  />
-			<cfset Field.dbDataType = qFields.dbDataType />
-			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
-			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
-			<cfset Field.length = qFields.length />
-			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
+			<cfset Field.name         = qFields.name />
+			<cfset Field.primaryKey   = qFields.primaryKey />
+			<cfset Field.identity     = qFields.identity />
+			<cfset Field.nullable     = qFields.nullable />
+			<cfset Field.dbDataType   = qFields.dbDataType />
+			<cfset Field.cfDataType   = getCfDataType(qFields.dbDataType) />
+			<cfset Field.cfSqlType    = getCfSqlType(qFields.dbDataType) />
+			<cfset Field.length       = qFields.length />
+			<cfset Field.default      = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
 			
 			<!--- add the field to the table --->
