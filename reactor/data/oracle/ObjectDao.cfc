@@ -70,7 +70,8 @@
                    ) primaryConstraints
               where col.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
               		and col.COLUMN_NAME        = primaryConstraints.COLUMN_NAME (+)
-                    AND col.TABLE_NAME         = primaryConstraints.TABLE_NAME (+)
+                    AND col.TABLE_NAME       = primaryConstraints.TABLE_NAME (+)
+          order by col.column_id
 		</cfquery>
 
 		<cfloop query="qFields">
