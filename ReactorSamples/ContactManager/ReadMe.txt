@@ -4,7 +4,9 @@ was written the options were:
 
 MSSQL Create Database.sql	- For Microsoft SQL
 MySQL Create Database.sql	- For MySQL (4 or 5, I think)
+Oracle Create Database.sql	- For Oracle
 Postgres Create Database.sql	- For PostgreSQL
+SQLAnywhere Create Database.sql	- For Adaptive Sql Anywhere
 
 After you've created the database create a DSN and change the name of the
 DSN in the reactor.xml file to the dsn you created.  For example, change
