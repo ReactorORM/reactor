@@ -11,7 +11,7 @@
 <!ATTLIST dsn value CDATA #REQUIRED>
 
 <!ELEMENT type EMPTY>
-<!ATTLIST type value (mssql|mysql|mysql4|postgresql|db2|oracle|oraclerdb) #REQUIRED>
+<!ATTLIST type value (mssql|mysql|mysql4|postgresql|db2|oracle|oraclerdb|sqlanywhere) #REQUIRED>
 
 <!ELEMENT mapping EMPTY>
 <!ATTLIST mapping value CDATA #REQUIRED>
