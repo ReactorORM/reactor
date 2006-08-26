@@ -134,7 +134,7 @@
 			</cfif>
 
 		<cfelse>
-			<cfif ListFind("Dao,Gateway,Record", arguments.type)>
+			<cfif ListFind("Dao,Gateway,Record", arguments.type) OR arguments.plugin>
 				<!--- check to see if a metadata object of this type exists.  If not, create it --->
 				<cfif StructKeyExists(variables.Cache.metadata, arguments.alias)>
 					<cfset metadata = variables.Cache.metadata[arguments.alias] />
