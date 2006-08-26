@@ -149,7 +149,7 @@
 			</cfcase>
 			<!--- time --->
 			<cfcase value="date">
-				<cfreturn "cf_sql_date" />
+				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
 			<cfcase value="timestamp(6)">
 				<cfreturn "cf_sql_date" />
