@@ -84,13 +84,13 @@
 				</xsl:when>
 				<xsl:when test="@cfDataType = 'date'">
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
-					&lt;cfif NOT IsDate(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())<xsl:if test="@nullable = 'true'"> AND Len(Trim(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@name" />()))</xsl:if>&gt;
+					&lt;cfif NOT IsDate(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())<xsl:if test="@nullable = 'true'"> AND Len(Trim(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />()))</xsl:if>&gt;
 						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
 				<xsl:when test="@cfDataType = 'numeric'">
 					&lt;!--- validate <xsl:value-of select="@alias" /> is <xsl:value-of select="@cfDataType" /> ---&gt;
-					&lt;cfif Len(Trim(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())) AND NOT IsNumeric(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@name" />())&gt;
+					&lt;cfif Len(Trim(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())) AND NOT IsNumeric(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
 						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
