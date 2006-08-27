@@ -91,7 +91,7 @@
 			<xsl:for-each select="relate">
 				&lt;cfset variables.children.<xsl:value-of select="../@alias"/>.set<xsl:value-of select="@to" />(get<xsl:value-of select="@from" />()) /&gt;
 			</xsl:for-each>
-			&lt;cfset variables.children.<xsl:value-of select="@alias"/>.load('<xsl:for-each select="relate"><xsl:value-of select="@to" />,</xsl:for-each>') /&gt; 
+			&lt;cfset variables.children.<xsl:value-of select="@alias"/>.load('<xsl:for-each select="relate"><xsl:value-of select="@to" /><xsl:if test="position() != last()">,</xsl:if></xsl:for-each>') /&gt; 
 		&lt;/cfif&gt;
 		
 		&lt;cfreturn variables.children.<xsl:value-of select="@alias"/> /&gt;
