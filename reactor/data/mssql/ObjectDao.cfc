@@ -39,8 +39,8 @@
 					ELSE 'false'
 				END as primaryKey,
 				CASE
-					WHEN columnProperty(object_id(col.TABLE_NAME), col.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
-					ELSE 'false'
+          WHEN columnProperty(object_id(quotename(col.TABLE_SCHEMA)+'.'+quotename(col.TABLE_NAME)), col.COLUMN_NAME, 'IsIdentity') > 0 THEN 'true'
+          ELSE 'false'
 				END AS [identity],	
 				CASE
 					WHEN col.IS_NULLABLE = 'No' THEN 'false'
