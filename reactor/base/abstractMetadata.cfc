@@ -47,6 +47,36 @@
 		<cfreturn fieldQuery/>
 	</cffunction>
 	
+	<cffunction name="hasexternalFields" access="public" hint="I indicate if this object has any configured external fields" output="false" returntype="boolean">
+		<cfreturn ArrayLen(getObjectMetadata().externalFields) GT 0/>
+	</cffunction>
+	
+	<cffunction name="getexternalFields" access="public" hint="I return an array of structures describing this object's external mapped fields" output="false" returntype="array">
+		<cfreturn Duplicate(getObjectMetadata().externalFields) />
+	</cffunction>
+	
+	<cffunction name="getExternalFieldQuery" access="public" hint="I return an Query of describing this object's external mapped fields" output="false" returntype="query">
+		<cfset var fields = getexternalFields() />
+		<cfset var fieldQuery = QueryNew(StructKeyList(fields[1])) />
+		<cfset var x = 0 />
+		<cfset var field = "" />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfset QueryAddRow(fieldQuery) />
+			<cfloop collection="#fields[x]#" item="field">
+				<cfset QuerySetCell(fieldQuery, field, fields[x][field]) />					
+			</cfloop>
+		</cfloop>
+		
+		<cfquery name="fieldQuery" dbtype="query">
+			SELECT *
+			FROM fieldQuery
+			ORDER BY sourceAlias
+		</cfquery>
+		
+		<cfreturn fieldQuery/>
+	</cffunction>
+	
 	<cffunction name="getField" access="public" hint="I return a structure of data about a specific field." output="false" returntype="struct">
 		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="string" />
 		<cfset var fields = getFields() />
@@ -78,6 +108,18 @@
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset columList = ListAppend(columList, fields[x].alias) />
+		</cfloop>
+		
+		<cfreturn columList />
+	</cffunction>
+	
+	<cffunction name="getExternalFieldList" access="public" hint="I return a list of external fields in this object." output="false" returntype="string">
+		<cfset var fields = getexternalFields() />
+		<cfset var columList = "" />
+		<cfset var x = 0 />
+				
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfset columList = ListAppend(columList, fields[x].fieldAlias) />
 		</cfloop>
 		
 		<cfreturn columList />

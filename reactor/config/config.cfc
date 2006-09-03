@@ -8,7 +8,8 @@
 	<cfset variables.mode = "" />
 	<cfset variables.username = "" />
 	<cfset variables.password = "" />
-
+	<cfset variables.objectMap = structNew() />
+	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
 		<cfset var xml = 0 />
@@ -28,22 +29,78 @@
 		<cffile action="read" file="#arguments.pathToConfigXml#" variable="xml" />
 		<cfset xml = XMLParse(xml) />
 
-		<!--- set the config xml into this object's instance data --->
-		<cfset setConfigXml(xml) />
-
 		<!--- load the basic configuration settings --->
-		<cfset loadConfig() />
+		<cfset loadConfig(xml) />
+
+		<!--- load this file's objects --->
+		<cfset addObjectsFromXml(xml) />
 
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- addObjects --->
+	<cffunction name="addObjects" returntype="void" access="public" output="false" hint="I add more Reactor objects to the configuration.">
+		<cfargument name="objectXmlFile" type="string" required="true" hint="I am the path to the config XML file to be added." />
+		<cfset var xml = 0 />
+
+		<!--- attempt to expand the path to config --->
+		<cfif fileExists(expandPath(arguments.objectXmlFile))>
+			<cfset arguments.objectXmlFile = expandPath(arguments.objectXmlFile) />
+		</cfif>
+
+		<cfif not fileExists(arguments.objectXmlFile)>
+			<cfthrow type="reactor.config.InvalidPathToConfig"
+				message="Invalid Path To Config"
+				detail="The path #arguments.objectXmlFile# does not exist." />
+		</cfif>
+
+		<!--- read and parse the xml --->
+		<cffile action="read" file="#arguments.objectXmlFile#" variable="xml" />
+		<cfset xml = XMLParse(xml) />
+		
+		<cfset addObjectsFromXml(xml) />
+	</cffunction>
+	
+	<!--- addObjectsFromXml --->
+	<cffunction name="addObjectsFromXml" returntype="void" access="private" output="false" hint="I add Reactor objects from an XML object.">
+		<cfargument name="configXml" type="xml" required="true" hint="I am the XML object to be processed." />
+		<cfset var objectsConfig = 0 />
+		<cfset var objectConfig = ArrayNew(1) />
+		<cfset var object = 0 />
+		<cfset var x = 0 />
+
+		<cfif StructKeyExists(arguments.configXml.reactor, "objects")>
+			<cfset objectsConfig = arguments.configXml.reactor.objects />
+		</cfif>
+
+		<cfif IsXml(objectsConfig) AND ArrayLen(objectsConfig.XmlChildren)>
+			<cfset objectConfig = objectsConfig.XmlChildren />
+			
+			<cfloop from="1" to="#ArrayLen(objectConfig)#" index="x">
+				<cfset object = objectConfig[x] />
+				
+				<cfif NOT StructKeyExists(object.xmlAttributes, "alias")>
+					<cfset object.xmlAttributes["alias"] = object.xmlAttributes.name />
+				</cfif>
+				
+				<!--- check to see if the containing object tag has a mapping attribute.  if so, copy its value into this tag. --->
+				<cfif StructKeyExists(objectsConfig.XmlAttributes, "mapping") AND NOT StructKeyExists(object.xmlAttributes, "mapping")>
+					<cfset object.xmlAttributes["mapping"] = objectsConfig.XmlAttributes.mapping />
+				</cfif>
+				
+				<cfset variables.objectMap[object.xmlAttributes.alias] = object />
+			</cfloop>
+		</cfif>
 	</cffunction>
 
 	<!--- loadConfig --->
 	<cffunction name="loadConfig" access="private" hint="I read the basic config settings from the config xml." output="false" returntype="void">
+		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="string" />
 		<cfset var config = 0 />
 		<cfset var x = 0 />
 
 		<!--- load the config settings --->
-		<cfset config = XMLSearch(getConfigXml(), "/reactor/config/*") />
+		<cfset config = XMLSearch(arguments.configXml, "/reactor/config/*") />
 
 		<cfloop from="1" to="#ArrayLen(config)#" index="x">
 			<cfswitch expression="#config[x].XmlName#">
@@ -72,38 +129,18 @@
 		</cfloop>
 	</cffunction>
 
-	<!--- getObjectConfig --->
-	<cffunction name="getObjectConfig" access="public" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned." output="false" returntype="string">
-		<cfargument name="alias" hint="I am the alias of the object to get the configuration for" required="yes" type="string" />
-		<cfset var configXml = getConfigXml() />
-		<cfset var tableConfig = XmlSearch(configXml, "/reactor/objects/object") />
+	<cffunction name="getObjectConfig" access="public" output="false" returntype="string" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
+		<cfargument name="alias" required="yes" type="string" hint="I am the alias of the object to get the configuration for" />
 		<cfset var table = 0 />
-		<cfset var x = 0 />
 
-		<!--- if a matching element is found then convert it to be it's own document.  Otherwise create a new document. --->
-		<cfif ArrayLen(tableConfig)>
-			<cfloop from="1" to="#ArrayLen(tableConfig)#" index="x">
-				<cfset table = tableConfig[x] />
-				<cfif NOT IsDefined("table.XmlAttributes.alias")>
-					<cfset table.XmlAttributes["alias"] = table.XmlAttributes.name />
-				</cfif>
-
-				<cfif table.XmlAttributes.alias IS arguments.alias>
-					<cfset table = tableConfig[x] />
-					<cfbreak />
-				<cfelse>
-					<cfset table = 0 />
-				</cfif>
-			</cfloop>
-		</cfif>
-
-		<!--- if we don't have a configuration for this object then return a default configuration --->
-		<cfif table IS 0>
+		<cfif structKeyExists(variables.objectMap,arguments.alias)>
+			<cfset table = variables.objectMap[arguments.alias] />
+		<cfelse>
 			<cfset table = "<object name=""#arguments.alias#"" alias=""#arguments.alias#"" />" />
 		</cfif>
 
 		<!--- return the base config --->
-		<cfreturn XmlParse(ToString(table)) />
+		<cfreturn xmlParse(toString(table)) />
 	</cffunction>
 
 	<!--- dsn --->
@@ -144,10 +181,22 @@
 		<cfset variables.mapping = arguments.mapping />
     </cffunction>
     <cffunction name="getMapping" access="public" output="false" returntype="string">
-       <cfreturn variables.mapping />
+		<cfargument name="alias" hint="I am an optional alias of an object.  The object will be checked for its own custom mapping." required="no" type="string" default="" />
+		<cfset var mapping = variables.mapping />
+		<cfset var object = 0 />
+		
+		<cfif Len(arguments.alias)>
+			<cfset object = getObjectConfig(arguments.alias) />
+			<cfif StructKeyExists(object.object.XmlAttributes, "mapping")>
+				<cfset mapping = object.object.XmlAttributes.mapping />
+			</cfif>
+		</cfif>
+		
+		<cfreturn mapping />
     </cffunction>
     <cffunction name="getMappingObjectStem" access="public" output="false" returntype="string">
-		<cfset var objectStem = ReReplaceNoCase(getMapping(), "/+", ".", "all") />
+		<cfargument name="mapping" hint="I am the mapping to get the stem for." required="no" default="#getMapping()#" />
+		<cfset var objectStem = ReReplaceNoCase(arguments.mapping, "/+", ".", "all") />
 
 		<cfif Left(objectStem, 1) IS ".">
 			<cfset objectStem = Right(objectStem, Len(objectStem) - 1) />
@@ -199,15 +248,4 @@
        <cfreturn variables.password />
     </cffunction>
 
-	<!--- configXml --->
-    <cffunction name="setConfigXml" access="private" output="false" returntype="void">
-       <cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="string" />
-       <cfset variables.configXml = arguments.configXml />
-    </cffunction>
-    <cffunction name="getConfigXml" access="private" output="false" returntype="string">
-       <cfreturn variables.configXml />
-    </cffunction>
-
 </cfcomponent>
-
-

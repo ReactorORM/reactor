@@ -329,7 +329,6 @@
 		<cfset queryData.query = "" />
 		<cfset queryData.params = ArrayNew(1) />
 		
-		
 		<cfquery name="qGet" datasource="#_getConfig().getDsn()#" maxrows="#arguments.Query.getMaxRows()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#">
 			<cfsavecontent variable="queryData.query">
 				SELECT

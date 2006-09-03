@@ -10,6 +10,7 @@
 	<cfset variables.Joins = ArrayNew(1) />
 	<cfset variables.alias = "" />
 	<cfset variables.fields = 0 />
+	<cfset variables.externalFields = 0 />
 	<cfset variables.fieldPrefix = "" />
 	
 	<cffunction name="init" hint="I configure and return the object." output="false" returntype="reactor.query.object">
@@ -28,6 +29,13 @@
 		<cfset setFields(arguments.ObjectMetadata.getFields()) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- setFieldAlias --->
+	<cffunction name="setFieldAlias" access="public" hint="I set a new alias for a field in the query." output="false" returntype="void">
+		<cfargument name="currentAlias" hint="I am current field alias." required="yes" type="string" />
+		<cfargument name="newAlias" hint="I am new field alias to use." required="yes" type="string" />
+		<cfset getField(arguments.currentAlias).alias = arguments.newAlias />
 	</cffunction>
 	
 	<!--- hasJoins --->
@@ -124,7 +132,6 @@
 				
 				<!--- add this to the select --->
 				<cfset select = select & " " & field />
-				
 				
 				<cfset y = y + 1 />
 			</cfif>

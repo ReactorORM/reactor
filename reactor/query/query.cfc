@@ -8,12 +8,14 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object that will be queried." required="yes" type="string" />
 		<cfargument name="queryAlias" hint="I am the alias of the object within the query." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the ReactorFactory" required="yes" type="reactor.reactorFactory" />
+		<cfset var externalFields = 0 />
+		<cfset var x = 0 />
 		
 		<!--- this is the base object being queried --->
 		<cfset setObject(CreateObject("Component", "reactor.query.object").init(arguments.ReactorFactory.createMetadata(arguments.objectAlias), arguments.queryAlias, arguments.ReactorFactory)) />
 		<!--- by default we want to return all fields --->
 		<cfset variables.instance.returnFields = ArrayNew(1) />
-		
+				
 		<!--- configure the distinct / maxrows --->
 		<cfset variables.instance.distinct = false />
 		<cfset variables.instance.maxrows = -1 />
@@ -21,15 +23,35 @@
 		<!--- create/reset the where and order --->
 		<cfset resetWhere() />
 		<cfset resetOrder() />
+
+		<!--- join any external objects --->
+		<cfif getObject().getObjectMetadata().hasExternalFields()>
+			<cfset externalFields = getObject().getObjectMetadata().getExternalFieldQuery() />
+
+			<!--- loop over all the objects (which are already sorted by the source alias) --->
+			<cfoutput query="externalFields" group="sourceAlias">
+				<!--- join to the source object --->
+				<cfset leftJoin(getObject().getObjectMetadata().getName(), externalFields.sourceName, externalFields.sourceAlias, "ReactorReadOnly" & externalFields.sourceAlias) />
+				<cfoutput>
+					<!--- only return filds in that object --->
+					<cfset setFieldAlias("ReactorReadOnly" & externalFields.sourceAlias, externalFields.field, externalFields.fieldAlias) />
+					<cfset returnObjectFields("ReactorReadOnly" & externalFields.sourceAlias, externalFields.fieldAlias) />
+				</cfoutput>			
+			</cfoutput>
+			
+			<!--- make sure all the fields from the base object are returned --->
+			<cfset returnObjectFields(getObject().getObjectMetadata().getName()) />
+		</cfif>
 		
 		<cfreturn this />
 	</cffunction>
 	
-	<!--- setFieldPrefix --->
-	<cffunction name="setFieldPrefix" access="public" hint="I I set a prefix prepended to all fields returned from the named object." output="false" returntype="void">
-		<cfargument name="objectAlias" hint="I am the alias of the object that the prefix is being added to." required="yes" type="string" />
-		<cfargument name="prefix" hint="I am the prefix to prepend." required="yes" type="string" />
-		<cfset findObject(arguments.objectAlias).setFieldPrefix(arguments.prefix) />
+	<!--- setFieldAlias --->
+	<cffunction name="setFieldAlias" access="public" hint="I set an alias on the field from the named object." output="false" returntype="void">
+		<cfargument name="objectAlias" hint="I am the alias of the object that the alias is being set for." required="yes" type="string" />
+		<cfargument name="currentAlias" hint="I am current field alias." required="yes" type="string" />
+		<cfargument name="newAlias" hint="I am new field alias to use." required="yes" type="string" />
+		<cfset findObject(arguments.objectAlias).setFieldAlias(arguments.currentAlias, arguments.newAlias) />
 				
 	</cffunction>
 	
@@ -61,6 +83,14 @@
 		<cfset ArrayAppend(variables.instance.returnFields, field) />
 		
 		<cfreturn this />
+	</cffunction>
+	
+	<!--- setFieldPrefix --->
+	<cffunction name="setFieldPrefix" access="public" hint="I I set a prefix prepended to all fields returned from the named object." output="false" returntype="void">
+		<cfargument name="objectAlias" hint="I am the alias of the object that the prefix is being added to." required="yes" type="string" />
+		<cfargument name="prefix" hint="I am the prefix to prepend." required="yes" type="string" />
+		<cfset findObject(arguments.objectAlias).setFieldPrefix(arguments.prefix) />
+				
 	</cffunction>
 	
 	<!--- setFieldExpression --->

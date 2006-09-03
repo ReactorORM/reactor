@@ -235,9 +235,18 @@
 
 	<!--- hasMore --->
 	<cffunction name="hasMore" access="public" hint="I indicate if the iterator has more elements" output="false" returntype="boolean">
-		<cfreturn variables.index LT getRecordCount() />
+		<cfreturn getIndex() LT getRecordCount() />
 	</cffunction>
 
+	<!--- index --->
+    <cffunction name="setIndex" access="public" output="false" returntype="void">
+       <cfargument name="index" hint="I am the iterator's index" required="yes" type="numeric" />
+       <cfset variables.index = arguments.index />
+    </cffunction>
+    <cffunction name="getIndex" access="public" output="false" returntype="numeric">
+       <cfreturn variables.index />
+    </cffunction>
+	
 	<!--- getRecordCount --->
 	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="numeric">
 		<cfreturn getQuery().recordcount />
@@ -250,9 +259,9 @@
 			<cfthrow message="No More Records" detail="There are no more records in the iterator." type="reactor.iterator.NoMoreRecords" />
 		</cfif>
 		<!--- incrament the iterator --->
-		<cfset variables.index = variables.index + 1 />
+		<cfset setIndex(getIndex() + 1) />
 
-		<cfset array = get(variables.index) />
+		<cfset array = get(getIndex()) />
 
 		<cfreturn array[1] />
 	</cffunction>
@@ -664,12 +673,12 @@
 	<cffunction name="reset" access="public" hint="I reset the array and query data that backs this iterator." output="false" returntype="void">
 		<cfset variables.query = 0 />
 		<cfset variables.array = ArrayNew(1) />
-		<cfset variables.index = 0 />
+		<cfset setIndex(0) />
 	</cffunction>
 
 	<!--- resetIndex --->
 	<cffunction name="resetIndex" hint="I reset the iterator's index." output="false" returntype="void">
-		<cfset variables.index = 0 />
+		<cfset setIndex(0) />
 	</cffunction>
 
 	<!--- join --->

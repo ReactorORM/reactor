@@ -30,7 +30,7 @@
 		<cfargument name="objectAlias" hint="I am the alias of the object of the field should be in" required="yes" type="string" />
 		<cfargument name="fieldAlias" hint="I am the name of the field to validate" required="yes" type="string" />
 		
-		<cfset getQuery().findObject(arguments.objectAlias).getObjectMetadata().getField(arguments.fieldAlias) />
+		<cfset getQuery().findObject(arguments.objectAlias).getField(arguments.fieldAlias) />
 	</cffunction>
 	
 	<cffunction name="appendNode" access="private" hint="I append a node to the where expression" output="false" returntype="reactor.query.where">
@@ -39,7 +39,7 @@
 		<cfset var where = getWhere() />
 		<cfset var mode = getMode() />
 		
-		<cfset arguments.node.fieldName = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
+		<cfset arguments.node.fieldName = getQuery().findObject(node.objectAlias).getField(node.fieldAlias).name />
 		
 		<cfif ArrayLen(where) GT 0>
 			<cfset ArrayAppend(where, mode) />
