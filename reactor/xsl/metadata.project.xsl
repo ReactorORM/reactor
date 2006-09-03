@@ -78,6 +78,17 @@
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["sequence"] = "<xsl:value-of select="@sequence" />" /&gt;
 	</xsl:for-each>
 	
+	
+	&lt;!--- External Fields ---&gt;
+	&lt;cfset variables.metadata.externalFields = ArrayNew(1) /&gt;
+	<xsl:for-each select="object/fields/externalField">
+		&lt;cfset variables.metadata.externalFields[<xsl:value-of select="position()" />] = StructNew() /&gt;
+		&lt;cfset variables.metadata.externalFields[<xsl:value-of select="position()" />]["fieldAlias"] = "<xsl:value-of select="@fieldAlias" />" /&gt;
+		&lt;cfset variables.metadata.externalFields[<xsl:value-of select="position()" />]["sourceAlias"] = "<xsl:value-of select="@sourceAlias" />" /&gt;
+		&lt;cfset variables.metadata.externalFields[<xsl:value-of select="position()" />]["sourceName"] = "<xsl:value-of select="@sourceName" />" /&gt;
+		&lt;cfset variables.metadata.externalFields[<xsl:value-of select="position()" />]["field"] = "<xsl:value-of select="@field" />" /&gt;
+	</xsl:for-each>
+	
 &lt;/cfcomponent&gt;
 	</xsl:template>
 </xsl:stylesheet>

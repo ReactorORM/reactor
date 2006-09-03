@@ -18,6 +18,9 @@
 		<xsl:for-each select="//field">
 			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="string" /&gt;
 		</xsl:for-each>
+		<xsl:for-each select="//externalField">
+			&lt;cfargument name="<xsl:value-of select="@fieldAlias" />" hint="If provided, I match the provided value to the read only <xsl:value-of select="@alias" /> field in the <xsl:value-of select="@sourceAlias" /> object." required="no" type="string" /&gt;
+		</xsl:for-each>
 		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="string" default="" /&gt;
 		&lt;cfset var Query = createQuery() /&gt;
 		&lt;cfset var Where = Query.getWhere() /&gt;
@@ -26,6 +29,11 @@
 		<xsl:for-each select="//field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
 				&lt;cfset Where.isEqual(_getAlias(), "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
+			&lt;/cfif&gt;
+		</xsl:for-each>
+		<xsl:for-each select="//externalField">
+			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@fieldAlias" />')&gt;
+				&lt;cfset Where.isEqual("ReactorReadOnly<xsl:value-of select="@sourceAlias" />", "<xsl:value-of select="@fieldAlias" />", arguments.<xsl:value-of select="@fieldAlias" />) /&gt;
 			&lt;/cfif&gt;
 		</xsl:for-each>
 		

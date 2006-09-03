@@ -29,17 +29,23 @@
 				<xsl:when test="count(//hasOne/relate[@from = $alias]) &gt; 0">
 					&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
 					&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
+						&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
+						
 						<xsl:for-each select="//hasOne/relate[@from = $alias]">
+							<xsl:variable name="sourceAlias" select="../@alias" />
 							&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND IsObject(variables.children.<xsl:value-of select="../@alias" />)&gt;
 								&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
 							&lt;/cfif&gt;
 							&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
+							
+							&lt;!--- load the correct record
+							&lt;cfset get<xsl:value-of select="../@alias" />() /&gt; ---&gt;
+							
+							<xsl:for-each select="//externalField[@sourceAlias = $sourceAlias]">
+								&lt;cfset _getTo().<xsl:value-of select="@fieldAlias" /> = get<xsl:value-of select="$sourceAlias" />().get<xsl:value-of select="@field" />() /&gt;								
+							</xsl:for-each>
 						</xsl:for-each>
 						
-						&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
-						
-						&lt;!--- load the correct address record ---&gt;
-						&lt;cfset get<xsl:value-of select="@alias" />() /&gt;
 					&lt;/cfif&gt;
 					
 				</xsl:when>
@@ -50,6 +56,21 @@
 		&lt;/cffunction&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>" hint="I get the <xsl:value-of select="@alias"/> value." access="public" output="false" returntype="string"&gt;
 			&lt;cfreturn _getTo().<xsl:value-of select="@alias"/> /&gt;
+		&lt;/cffunction&gt;	
+	</xsl:for-each>
+	
+	<xsl:for-each select="object/fields/externalField">
+		&lt;!--- readonly <xsl:value-of select="@fieldAlias"/> ---&gt;
+		&lt;cffunction name="get<xsl:value-of select="@fieldAlias"/>" hint="I get the <xsl:value-of select="@fieldAlias"/> value." access="public" output="false" returntype="string"&gt;
+			
+			&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@sourceAlias"/>") OR (
+				StructKeyExists(variables.children, "<xsl:value-of select="@sourceAlias"/>")
+				AND NOT IsObject(variables.children.<xsl:value-of select="@sourceAlias"/>)
+			) &gt;
+				&lt;cfreturn _getTo().<xsl:value-of select="@fieldAlias"/> /&gt;
+			&lt;cfelse&gt;
+				&lt;cfreturn get<xsl:value-of select="@sourceAlias"/>().get<xsl:value-of select="@field"/>() /&gt;
+			&lt;/cfif&gt;
 		&lt;/cffunction&gt;	
 	</xsl:for-each>
 	
