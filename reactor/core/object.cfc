@@ -261,12 +261,16 @@
 		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<cfset addXmlField(fields[x], Config) />
-		</cfloop>
+		</cfloop>		
 		
 		<!--- delete the fields from the base config file --->
 		<cfloop from="#ArrayLen(Config.object.xmlChildren)#" to="1" index="x" step="-1">
 			<cfif Config.object.xmlChildren[x].XmlName IS "field">
-				<cfset ArrayDeleteAt(Config.object.xmlChildren, x) />
+				<cfif StructKeyExists(Config.object.xmlChildren[x].XmlAttributes, "source")>
+					<cfset addExternalField(Config.object.xmlChildren[x], Config) />
+				</cfif>
+				
+				<cfset ArrayDeleteAt(Config.object.xmlChildren, x) />	
 			</cfif>
 		</cfloop>
 		
@@ -277,13 +281,19 @@
 		
 		<!--- config meta data required for generating objects --->
 		<cfset Config.Object.XmlAttributes["project"] = getConfig().getProject() />
-		<cfset Config.Object.XmlAttributes["mapping"] = getConfig().getMappingObjectStem() />
+		
+		<cfif StructKeyExists(Config.Object.XmlAttributes, "mapping")>
+			<cfset Config.Object.XmlAttributes["mapping"] = getConfig().getMappingObjectStem(Config.Object.XmlAttributes.mapping) />
+		<cfelse>
+			<cfset Config.Object.XmlAttributes["mapping"] = getConfig().getMappingObjectStem() />
+		</cfif>
+		
 		<cfset Config.Object.XmlAttributes["dbms"] = getConfig().getType() />
 		
 		<!--- add the object's signature --->
 		<cfset Config.Object.XmlAttributes["signature"] = Hash(ToString(Config)) />
 		
-		<!---<cfif getAlias() is "case">
+		<!---<cfif getAlias() is "Daisy">
 			<cfdump var="#Config#" /><cfabort>
 		</cfif>--->
 		
@@ -302,6 +312,56 @@
 		</cfloop>		
 	</cffunction>
 	
+	<cffunction name="addExternalField" access="private" hint="I add a field from another object to the xml document." output="false" returntype="void">
+		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="any" />
+		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="string" />
+		<cfset var externalField = XMLElemNew(arguments.config, "externalField") />
+		<cfset var hasOne = XmlSearch(arguments.config, "/object/hasOne[@alias = '#arguments.field.xmlAttributes.source#']") />
+		<cfset var remoteField = getObject(hasOne[1].XmlAttributes.name, getConfig()).getField(arguments.field.xmlAttributes.field) />
+		
+		<cfif StructKeyExists(arguments.field.xmlAttributes, "alias")>
+			<cfset externalField.XmlAttributes["fieldAlias"] = arguments.field.xmlAttributes.alias />
+		<cfelse>
+			<cfset externalField.XmlAttributes["fieldAlias"] = arguments.field.xmlAttributes.field />
+		</cfif>
+		<cfset externalField.XmlAttributes["sourceAlias"] = arguments.field.xmlAttributes.source />
+		<cfset externalField.XmlAttributes["sourceName"] = hasOne[1].XmlAttributes.name />
+		<cfset externalField.XmlAttributes["field"] = arguments.field.xmlAttributes.field />
+		
+		<cfset externalField.XmlAttributes["cfDataType"] = remoteField.cfDataType />
+		<cfset externalField.XmlAttributes["default"] = remoteField.default />
+				
+		<!--- add the external field node --->
+		<cfset ArrayAppend(arguments.config.Object.fields.XmlChildren, externalField) />
+	</cffunction>
+	
+	<!---<cffunction name="getFieldDetails" access="public" hint="I return the complete details (alias and all) for a field" output="false" returntype="struct">
+		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="string" />
+		<cfset var field = getField(arguments.name) />
+		<cfset var config = getconfig().getObjectConfig(getAlias()) />
+		<cfset var fieldTags = XmlSearch(config, "/object/field") />
+		<cfset var fieldTag = 0 />
+		<cfset var x = 0 />
+		
+		<!---
+			The next few lines of code loop over the provided xml config and look for a field with the same name as the field
+			we're working with.  I used to use XmlSearch, but that's case sensitive and I need it not to be.		
+		--->
+		<cfloop from="1" to="#ArrayLen(fieldTags)#" index="x">
+			<cfif StructKeyExists(fieldTags[x].XmlAttributes, "name") AND fieldTags[x].XmlAttributes.name IS arguments.field.name>
+				<cfset fieldTag = fieldTags[x] />
+				<cfbreak />
+			</cfif>
+		</cfloop>
+		
+		<cfif IsSimpleValue(fieldTag)>
+			<cfreturn field />
+		<cfelse>
+			<cfdump var="#field#" />
+			<cfdump var="#fieldTag#" /><cfabort>	
+		</cfif>
+	</cffunction>--->
+	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">
 		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="struct" />
 		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="string" />
@@ -315,7 +375,7 @@
 			we're working with.  I used to use XmlSearch, but that's case sensitive and I need it not to be.		
 		--->
 		<cfloop from="1" to="#ArrayLen(fieldTags)#" index="x">
-			<cfif fieldTags[x] .XmlAttributes.name IS arguments.field.name>
+			<cfif StructKeyExists(fieldTags[x].XmlAttributes, "name") AND fieldTags[x].XmlAttributes.name IS arguments.field.name>
 				<cfset fieldTag = fieldTags[x] />
 				<cfbreak />
 			</cfif>
@@ -400,6 +460,21 @@
 				<cfreturn fields[x] />
 			</cfif>
 		</cfloop>
+	</cffunction>
+	
+	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="reactor.core.object">
+		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="string" />
+		<cfset var Object = 0 />
+		<cfset var ObjectDao = 0/>
+		
+		<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+		<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
+		
+		<!--- read the object --->
+		<cfset ObjectDao.read(Object) />
+		
+		<!--- return the object --->
+		<cfreturn Object />
 	</cffunction>
 	
 	<!--- name --->

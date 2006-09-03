@@ -51,7 +51,7 @@
 		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
 		<cfset var xsl = 0 />
 		<cfset var code = 0 />
-		
+				
 		<!--- check to see if the output file exists and if we can overwrite it --->
 		<cfif NOT (FileExists(arguments.outputPath) AND NOT arguments.overwrite)>
 			<!--- read the xsl --->
@@ -71,14 +71,11 @@
 	<cffunction name="generateDictionary" access="public" hint="I generate the xml for a dictionary.xml file" output="false" returntype="void">
 		<cfargument name="dictionaryXmlPath" hint="I am the path to the dictionary xml file." required="yes" type="string" />
 		<cfset var alias = getObject().getAlias() />
+		<cfset var dictionaryXml = "<#alias# />" />
 		<cfset var initialDictionaryXml = 0 />
 		<cfset var fields = Object.getFields() />
 		<cfset var field = 0 />
 		<cfset var x = 0 />
-		<cfset var lowerAlias = lcase(alias) />
-		<cfset var lowerFieldName = "" />
-		<cfset var dictionaryXml = "<#lowerAlias# />" />
-		
 		<cfset arguments.dictionaryXmlPath = ExpandPath(arguments.dictionaryXmlPath)  />
 		
 		<!--- check to see if the dictionary.xml file exists at all --->
@@ -93,40 +90,36 @@
 		<!--- parse the dictionaryXml --->
 		<cfset dictionaryXml = XMLParse(dictionaryXml, false) />
 		<cfset initialDictionaryXml = Duplicate(dictionaryXml) />
-
+		
 		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
 			<!--- grab a specific field --->
 			<cfset field = fields[x] />
-		
-			<!--- force lower-case --->
-			<cfset lowerFieldName = lcase(field.name) />
-				
+			
 			<!--- insure the field exists --->
-			<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#") />
 				
 			<!--- insure a label exists --->
-			<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/label", field.name) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/label", field.name) />
 			
 			<!--- insure a comment exists --->
-			<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/comment", "") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/comment", "") />
 			
 			<!--- insure a maxLength exists --->
-			<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/maxlength", field.length) />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/maxlength", field.length) />
 			
 			<!--- required validation error message --->
 			<cfif NOT fields[x].nullable>
-				<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/notProvided", "The #field.name# field is required but was not provided.") />
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/notProvided", "The #field.name# field is required but was not provided.") />
 			</cfif>
 			
 			<!--- data type validation error message --->
-			<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/invalidType", "The #field.name# field does not contain valid data.  This field must be a #fields[x].cfDataType# value.") />
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/invalidType", "The #field.name# field does not contain valid data.  This field must be a #fields[x].cfDataType# value.") />
 					
 			<!--- size validataion error message --->
 			<cfif field.length>
-				<cfset paramNode(dictionaryXml, "/#lowerAlias#/#lowerFieldName#/invalidLength", "The #field.name# field is too long.  This field must be no more than #field.length# bytes long.") />
+				<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/invalidLength", "The #field.name# field is too long.  This field must be no more than #field.length# bytes long.") />
 			</cfif>			
 		</cfloop>
-		
 		
 		<!--- if the initial xml and the new xml are different, format the xml and write it back to the dictionary xml file --->
 		<cfif dictionaryXml IS NOT initialDictionaryXml>
@@ -180,17 +173,18 @@
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
 		<cfset var root = "" />
+		<cfset var mapping = "/" & Replace(getObject().getXml().object.XmlAttributes.mapping, ".", "/", "all") />
 		
 		<cfif arguments.class IS "Project">
 			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" />
 			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Base">
-			<cfset root = expandPath(getConfig().getMapping() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
+			<cfset root = expandPath(mapping & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
 			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Custom">
-			<cfset root = expandPath(getConfig().getMapping() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
+			<cfset root = expandPath(mapping & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
 			<cfreturn root & arguments.name & arguments.type & getConfig().getType() & ".cfc" />
 		
 		</cfif>

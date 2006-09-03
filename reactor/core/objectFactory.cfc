@@ -226,13 +226,14 @@
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="string" />
 		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="boolean" />
 		<cfset var creationPath = "" />
+		<cfset var mapping = getConfig().getMapping(arguments.name) />
 		
 		<!--- if the user doesn't have a leading slash on their mapping then add one --->
-		<cfif left(getConfig().getMapping(), 1) IS NOT "/">
-			<cfset getConfig().setMapping("/" & getConfig().getMapping()) />
+		<cfif left(mapping, 1) IS NOT "/">
+			<cfset mapping = "/" & mapping />
 		</cfif>
-		
-		<cfset creationPath = replaceNoCase(right(getConfig().getMapping(), Len(getConfig().getMapping()) - 1), "/", ".", "all") />
+				
+		<cfset creationPath = replaceNoCase(right(mapping, Len(mapping) - 1), "/", ".", "all") />
 				
 		<cfreturn creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
 	</cffunction>
