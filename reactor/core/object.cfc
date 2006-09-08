@@ -28,6 +28,11 @@
 		<cfreturn getXml().object.XmlAttributes.signature />
 	</cffunction>
 	
+	<cffunction name="getMapping" access="public" hint="I return this object's mapping" output="false" returntype="string">
+		<cfset var mapping = "/" & Replace(getXml().object.XmlAttributes.mapping, ".", "/", "all") />
+		<cfreturn mapping />
+	</cffunction>
+	
  	<cffunction name="getRelationships" access="private" hint="I find relationships between the two provided object aliases" output="false" returntype="array">
 		<cfargument name="from" hint="I am the alias of the object the relationship is from" required="yes" type="string" />
 		<cfargument name="to" hint="I am the alias of the object the relationship is to" required="yes" type="string" />
@@ -161,7 +166,6 @@
 					
 					<cfset fromRelationship = getRelationship(linkedConfig, relationship.XmlChildren[y].XmlAttributes.from) />
 					<cfset toRelationship = getRelationship(linkedConfig, relationship.XmlChildren[y].XmlAttributes.to) />
-						
 					<!--- get info on the from relationship --->
 					<cfset linkExpandNode = XMLElemNew(Config, "relation") />
 					<cfset linkExpandNode.XmlAttributes["name"] = relationship.XmlChildren[y].XmlAttributes.from />

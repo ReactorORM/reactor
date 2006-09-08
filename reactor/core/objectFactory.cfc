@@ -64,7 +64,7 @@
 					<cfset DbObject = getObject(arguments.alias) />
 					<cfset generate = true />
 				</cfcase>
-				<cfcase value="development">
+				<cfcase value="development">					
 					<!--- we always need the db object to compare to our existing object --->
 					<cfset DbObject = getObject(arguments.alias) />
 					<cftry>
@@ -160,7 +160,7 @@
 		<cfset var DbObject = 0 />
 		<cfset var generate = false />
 		<cfset var DictionaryObject = 0 />
-		<cfset var dictionaryXmlPath = "#getConfig().getMapping()#/Dictionary/#arguments.alias#dictionary.xml" />
+		<cfset var dictionaryXmlPath = "#getObject(arguments.alias).getMapping()#/Dictionary/#arguments.alias#dictionary.xml" />
 		<cfset var ObjectTranslator = 0 />
 		
 		<cftry>

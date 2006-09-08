@@ -173,7 +173,7 @@
 		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
 		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
 		<cfset var root = "" />
-		<cfset var mapping = "/" & Replace(getObject().getXml().object.XmlAttributes.mapping, ".", "/", "all") />
+		<cfset var mapping = getObject().getMapping() />
 		
 		<cfif arguments.class IS "Project">
 			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" />
