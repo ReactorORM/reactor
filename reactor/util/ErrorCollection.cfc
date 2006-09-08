@@ -13,6 +13,30 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<!--- getAsStruct --->
+	<cffunction name="getAsStruct" access="public" hint="I return the collected errors as a struct of arrays.  this is really intended to work with MG:U's validationErrors tag." output="false" returntype="struct">
+		<cfset var errorStruct = StructNew() />
+		<cfset var error = "" />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#count()#" index="x">
+			<cfset error = getAt(x) />
+
+			<cfparam name="errorStruct.#ListGetAt(error, 2, ".")#" default="#ArrayNew(1)#" />
+			
+			<cfset ArrayAppend(errorStruct[ListGetAt(error, 2, ".")], getTranslatedError(error)) />
+		</cfloop>
+		
+		<cfreturn errorStruct />
+	</cffunction>
+	
+	<!--- getAt --->
+	<cffunction name="getAt" access="public" hint="I return an error at a specific index." output="false" returntype="string">
+		<cfargument name="index" hint="I am the index of the error to return" required="yes" type="numeric" />
+		<cfset var errors = getErrors() />
+		<cfreturn errors[arguments.index] />
+	</cffunction>
+	
 	<!--- addError --->
 	<cffunction name="addError" access="public" hint="I add an error to the collection." output="false" returntype="void">
 		<cfargument name="error" output="I am an idetifier for an error.  This should be a dot-style syntax where each element corrisponds to an element in the provided dictionary.  For example, username.notProvided.  Be aware that the identifiers are case sensitive. Duplicate identifiers are ignored." required="yes" type="string" />
