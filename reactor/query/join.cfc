@@ -32,7 +32,7 @@
         <cfset join = join & " ON " />
       </cfif>
 			<cfset join = join & arguments.Convention.formatFieldName(FromObject.getObjectMetadata().getField(relationship.relate[x].from).name, arguments.FromObject.getAlias()) />
-			<cfset join = join & " = " & arguments.Convention.formatFieldName(Object.getObjectMetadata().getField(relationship.relate[x].to).name, getObject().getAlias()) />
+			<cfset join = join & " = " & arguments.Convention.formatFieldName(getObject().getObjectMetadata().getField(relationship.relate[x].to).name, getObject().getAlias()) />
 			
 			<!--- if we're related by more than one column then add an and and repeat! --->
 			<cfif x IS NOT ArrayLen(relationship.relate)>
