@@ -31,7 +31,7 @@
 			<!--- loop over all the objects (which are already sorted by the source alias) --->
 			<cfoutput query="externalFields" group="sourceAlias">
 				<!--- join to the source object --->
-				<cfset leftJoin(getObject().getObjectMetadata().getName(), externalFields.sourceName, externalFields.sourceAlias, "ReactorReadOnly" & externalFields.sourceAlias) />
+				<cfset leftJoin(getObject().getObjectMetadata().getAlias(), externalFields.sourceName, externalFields.sourceAlias, "ReactorReadOnly" & externalFields.sourceAlias) />
 				<cfoutput>
 					<!--- only return filds in that object --->
 					<cfset setFieldAlias("ReactorReadOnly" & externalFields.sourceAlias, externalFields.field, externalFields.fieldAlias) />
@@ -40,7 +40,7 @@
 			</cfoutput>
 			
 			<!--- make sure all the fields from the base object are returned --->
-			<cfset returnObjectFields(getObject().getObjectMetadata().getName()) />
+			<cfset returnObjectFields(getObject().getObjectMetadata().getAlias()) />
 		</cfif>
 		
 		<cfreturn this />
