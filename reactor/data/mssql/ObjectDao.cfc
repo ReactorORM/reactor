@@ -87,6 +87,8 @@
 		<cfargument name="typeName" hint="I am the cf type name to get a default value for." required="yes" type="string" />
 		<cfargument name="nullable" hint="I indicate if the column is nullable." required="yes" type="boolean" />
 		
+    <cfset var MSguid = CreateUUID() />
+    
 		<!--- strip out parens --->
 		<cfif Len(arguments.sqlDefaultValue)>
 			<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2 )/>
@@ -110,6 +112,13 @@
 					<cfreturn Iif(arguments.sqlDefaultValue, DE(true), DE(false)) />
 				<cfelse>
 					<cfreturn false />
+				</cfif>
+			</cfcase>
+			<cfcase value="uniqueidentifier">
+				<cfif ReFindNoCase("'*newId()'*", arguments.sqlDefaultValue)>
+					<cfreturn "##left(MSguid,23)&"-"&right(MSguid,12)##" />
+				<cfelse>
+					<cfreturn "" />
 				</cfif>
 			</cfcase>
 			<cfcase value="string">
@@ -210,7 +219,7 @@
 				<cfreturn "cf_sql_tinyint" />
 			</cfcase>
 			<cfcase value="uniqueidentifier">
-				<cfreturn "cf_sql_char" />
+				<cfreturn "cf_sql_idstamp" />
 			</cfcase>
 			<cfcase value="varbinary">
 				<cfreturn "cf_sql_varbinary" />
@@ -294,7 +303,7 @@
 				<cfreturn "numeric" />
 			</cfcase>
 			<cfcase value="uniqueidentifier">
-				<cfreturn "string" />
+				<cfreturn "guid" />
 			</cfcase>
 			<cfcase value="varbinary">
 				<cfreturn "binary" />

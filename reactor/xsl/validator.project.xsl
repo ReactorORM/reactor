@@ -94,6 +94,18 @@
 						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
 					&lt;/cfif&gt;					
 				</xsl:when>
+				<xsl:when test="@cfDataType = 'guid'">
+					&lt;!--- validate <xsl:value-of select="@alias" /> is a Microsoft GUID ---&gt;
+					&lt;cfif NOT ReFindNoCase("[A-F0-9]{8,8}-[A-F0-9]{4,4}-[A-F0-9]{4,4}-[A-F0-9]{4,4}-[A-F0-9]{12,12}", arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
+						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
+					&lt;/cfif&gt;	
+				</xsl:when>
+				<xsl:when test="@cfDataType = 'uuid'">
+					&lt;!--- validate <xsl:value-of select="@alias" /> is a CF uuid ---&gt;
+					&lt;cfif NOT ReFindNoCase("[A-F0-9]{8,8}-[A-F0-9]{4,4}-[A-F0-9]{4,4}-[A-F0-9]{16,16}", arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
+						&lt;cfset arguments.ErrorCollection.addError("<xsl:value-of select="../../@alias" />.<xsl:value-of select="@alias" />.invalidType") /&gt;
+					&lt;/cfif&gt;	
+				</xsl:when>
 				<xsl:when test="@dbDataType = 'uniqueidentifier'">
 					&lt;!--- validate <xsl:value-of select="@alias" /> is a CF uuid ---&gt;
 					&lt;cfif NOT ReFindNoCase("[A-F0-9]{8,8}-[A-F0-9]{4,4}-[A-F0-9]{4,4}-[A-F0-9]{16,16}", arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />())&gt;
