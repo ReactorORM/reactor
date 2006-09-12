@@ -187,6 +187,7 @@
 	
 	&lt;cffunction name="update" access="public" hint="I update a <xsl:value-of select="object/@alias" /> object." output="false" returntype="void"&gt;
 		&lt;cfargument name="to" hint="I am the transfer object for <xsl:value-of select="object/@alias" /> which will be used to update a record in the table." required="yes" type="reactor.project.<xsl:value-of select="object/@project"/>.To.<xsl:value-of select="object/@alias"/>To" /&gt;
+  <xsl:if test="count(object/fields/field[@primaryKey = 'false']) &gt; 0">
 		&lt;cfset var Convention = getConventions() /&gt;
 		&lt;cfset var qUpdate = 0 /&gt;
 				
@@ -229,6 +230,7 @@
 				</xsl:if>
 			</xsl:for-each>
 		&lt;/cfquery&gt;
+	</xsl:if>
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="delete" access="public" hint="I delete a record in the <xsl:value-of select="object/@alias" /> table." output="false" returntype="void"&gt;
