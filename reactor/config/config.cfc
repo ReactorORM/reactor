@@ -12,28 +12,14 @@
 	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
-		<cfset var xml = 0 />
-
-		<!--- attempt to expand the path to config --->
-		<cfif FileExists(expandPath(arguments.pathToConfigXml))>
-			<cfset arguments.pathToConfigXml = expandPath(arguments.pathToConfigXml) />
-		</cfif>
-
-		<cfif NOT FileExists(arguments.pathToConfigXml)>
-			<cfthrow type="reactor.config.InvalidPathToConfig"
-				message="Invalid Path To Config"
-				detail="The path #arguments.pathToConfigXml# does not exist." />
-		</cfif>
-
-		<!--- read and parse the xml --->
-		<cffile action="read" file="#arguments.pathToConfigXml#" variable="xml" />
-		<cfset xml = XMLParse(xml) />
+		<!--- validate and parse the xml file. --->
+		<cfset var xmlObject = validateAndParseXML( arguments.pathToConfigXml ) />
 
 		<!--- load the basic configuration settings --->
-		<cfset loadConfig(xml) />
+		<cfset loadConfig( xmlObject ) />
 
 		<!--- load this file's objects --->
-		<cfset addObjectsFromXml(xml) />
+		<cfset addObjectsFromXml( xmlObject ) />
 
 		<cfreturn this />
 	</cffunction>
@@ -41,50 +27,36 @@
 	<!--- addObjects --->
 	<cffunction name="addObjects" returntype="void" access="public" output="false" hint="I add more Reactor objects to the configuration.">
 		<cfargument name="objectXmlFile" type="string" required="true" hint="I am the path to the config XML file to be added." />
-		<cfset var xml = 0 />
-
-		<!--- attempt to expand the path to config --->
-		<cfif fileExists(expandPath(arguments.objectXmlFile))>
-			<cfset arguments.objectXmlFile = expandPath(arguments.objectXmlFile) />
-		</cfif>
-
-		<cfif not fileExists(arguments.objectXmlFile)>
-			<cfthrow type="reactor.config.InvalidPathToConfig"
-				message="Invalid Path To Config"
-				detail="The path #arguments.objectXmlFile# does not exist." />
-		</cfif>
-
-		<!--- read and parse the xml --->
-		<cffile action="read" file="#arguments.objectXmlFile#" variable="xml" />
-		<cfset xml = XMLParse(xml) />
+		<!--- validate and parse the xml file. --->
+		<cfset var xmlObject = validateAndParseXML( arguments.pathToConfigXml ) />
 		
-		<cfset addObjectsFromXml(xml) />
+		<!--- load this file's objects --->
+		<cfset addObjectsFromXml( xmlObject ) />
 	</cffunction>
 	
 	<!--- addObjectsFromXml --->
 	<cffunction name="addObjectsFromXml" returntype="void" access="private" output="false" hint="I add Reactor objects from an XML object.">
-		<cfargument name="configXml" type="xml" required="true" hint="I am the XML object to be processed." />
-		<cfset var objectsConfig = 0 />
-		<cfset var objectConfig = ArrayNew(1) />
-		<cfset var object = 0 />
+		<cfargument name="configXml" type="string" required="true" hint="I am the XML object to be processed." />
+		
+		<cfset var objectsConfig = xmlsearch( arguments.configXml, '//reactor/objects' ) />
 		<cfset var x = 0 />
-
-		<cfif StructKeyExists(arguments.configXml.reactor, "objects")>
-			<cfset objectsConfig = arguments.configXml.reactor.objects />
-		</cfif>
-
-		<cfif IsXml(objectsConfig) AND ArrayLen(objectsConfig.XmlChildren)>
-			<cfset objectConfig = objectsConfig.XmlChildren />
-			
-			<cfloop from="1" to="#ArrayLen(objectConfig)#" index="x">
-				<cfset object = objectConfig[x] />
+		<cfset var object = 0 />
+		<cfset var objectConfig = '' />
+		<cfset var nObjectConfig = '' />
+		
+		<cfif ArrayLen( objectsConfig )>
+			<cfset objectsConfig = objectsConfig[1] />
+			<cfset objectConfig = xmlsearch( objectsConfig, '//object' ) />	
+			<cfset nObjectConfig = arraylen( objectConfig ) />
+			<cfloop from="1" to="#nObjectConfig#" index="x">
+				<cfset object = objectConfig[x]>
 				
-				<cfif NOT StructKeyExists(object.xmlAttributes, "alias")>
+				<cfif NOT StructKeyExists( object.xmlAttributes, "alias" )>
 					<cfset object.xmlAttributes["alias"] = object.xmlAttributes.name />
 				</cfif>
 				
 				<!--- check to see if the containing object tag has a mapping attribute.  if so, copy its value into this tag. --->
-				<cfif StructKeyExists(objectsConfig.XmlAttributes, "mapping") AND NOT StructKeyExists(object.xmlAttributes, "mapping")>
+				<cfif StructKeyExists( objectsConfig.XmlAttributes, "mapping" ) AND NOT StructKeyExists( object.xmlAttributes, "mapping" )>
 					<cfset object.xmlAttributes["mapping"] = objectsConfig.XmlAttributes.mapping />
 				</cfif>
 				
@@ -98,37 +70,50 @@
 		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="string" />
 		<cfset var config = 0 />
 		<cfset var x = 0 />
-
+    
 		<!--- load the config settings --->
 		<cfset config = XMLSearch(arguments.configXml, "/reactor/config/*") />
 
 		<cfloop from="1" to="#ArrayLen(config)#" index="x">
-			<cfswitch expression="#config[x].XmlName#">
-				<cfcase value="project">
-					<cfset setProject(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="dsn">
-					<cfset setDsn(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="type">
-					<cfset setType(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="mapping">
-					<cfset setMapping(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="mode">
-					<cfset setMode(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="username">
-					<cfset setUsername(config[x].XmlAttributes.Value) />
-				</cfcase>
-				<cfcase value="password">
-					<cfset setPassword(config[x].XmlAttributes.Value) />
-				</cfcase>
-			</cfswitch>
+        <cfif listFindNocase("project,dsn,type,mapping,mode,username,password",config[x].XmlName) gt 0>
+    			<cfinvoke method="set#config[x].XmlName#">
+    				<cfinvokeargument name="#config[x].XmlName#" value="#config[x].XmlAttributes.Value#" />
+    			</cfinvoke>
+        </cfif>
 		</cfloop>
 	</cffunction>
 
+	<!--- validate and parse xml --->
+	<cffunction name="validateAndParseXML" returntype="any" access="private" output="false" hint="I validates and parses xml file passed as an argument.">
+		<cfargument name="xmlFile" type="string" required="true" hint="I am the path to the config XML file." />
+		<cfset var xml = "">
+		
+		<!--- attempt to expand the path to config --->
+		<cfif FileExists( expandPath( arguments.xmlFile ) )>
+			<cfset arguments.xmlFile = expandPath( arguments.xmlFile ) />
+		</cfif>
+
+		<cfif NOT FileExists( arguments.xmlFile )>
+			<cfthrow type="reactor.config.InvalidPathToConfig"
+				message="Invalid Path To Config"
+				detail="The path #arguments.xmlFile# does not exist." />
+		</cfif>
+
+		<!--- read and parse the xml --->
+		<cffile action="read" file="#arguments.xmlFile#" variable="xml" />
+		
+		<cftry>
+			<cfset xml = XMLParse(xml) />	
+			<cfcatch type="any">
+				<cfthrow type="reactor.config.InvalidConfigXML" 
+ 	                 message="Invalid XML Object" 
+ 	                 detail="configXml is not a valid XML Object." />
+			</cfcatch>
+		</cftry>
+		
+		<cfreturn xml />
+	</cffunction>
+	
 	<cffunction name="getObjectConfig" access="public" output="false" returntype="string" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
 		<cfargument name="alias" required="yes" type="string" hint="I am the alias of the object to get the configuration for" />
 		<cfset var table = 0 />
@@ -144,13 +129,13 @@
 	</cffunction>
 
 	<!--- dsn --->
-    <cffunction name="setDsn" access="public" output="false" returntype="void">
+  <cffunction name="setDsn" access="public" output="false" returntype="void">
        <cfargument name="dsn" hint="I am the DSN to connect to." required="yes" type="string" />
        <cfset variables.dsn = arguments.dsn />
-    </cffunction>
-    <cffunction name="getDsn" access="public" output="false" returntype="string">
+  </cffunction>
+  <cffunction name="getDsn" access="public" output="false" returntype="string">
        <cfreturn variables.dsn />
-    </cffunction>
+  </cffunction>
 
 	<!--- Type --->
 	<cffunction name="setType" access="public" output="false" returntype="void">
@@ -163,13 +148,13 @@
 		</cfif>
 
 		<cfset variables.Type = arguments.Type />
-    </cffunction>
-    <cffunction name="getType" access="public" output="false" returntype="string">
-       <cfreturn lcase(variables.Type) />
-    </cffunction>
+  </cffunction>
+  <cffunction name="getType" access="public" output="false" returntype="string">
+    <cfreturn lcase(variables.Type) />
+  </cffunction>
 
 	<!--- mapping --->
-    <cffunction name="setMapping" access="public" output="false" returntype="void">
+  <cffunction name="setMapping" access="public" output="false" returntype="void">
 		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
 
 		<cfif NOT DirectoryExists(expandPath(arguments.mapping))>
@@ -179,8 +164,9 @@
 		</cfif>
 
 		<cfset variables.mapping = arguments.mapping />
-    </cffunction>
-    <cffunction name="getMapping" access="public" output="false" returntype="string">
+  </cffunction>
+
+  <cffunction name="getMapping" access="public" output="false" returntype="string">
 		<cfargument name="alias" hint="I am an optional alias of an object.  The object will be checked for its own custom mapping." required="no" type="string" default="" />
 		<cfset var mapping = variables.mapping />
 		<cfset var object = 0 />
@@ -193,8 +179,9 @@
 		</cfif>
 		
 		<cfreturn mapping />
-    </cffunction>
-    <cffunction name="getMappingObjectStem" access="public" output="false" returntype="string">
+  </cffunction>
+
+  <cffunction name="getMappingObjectStem" access="public" output="false" returntype="string">
 		<cfargument name="mapping" hint="I am the mapping to get the stem for." required="no" default="#getMapping()#" />
 		<cfset var objectStem = ReReplaceNoCase(arguments.mapping, "/+", ".", "all") />
 
@@ -203,10 +190,10 @@
 		</cfif>
 
 		<cfreturn objectStem />
-    </cffunction>
+  </cffunction>
 
 	<!--- mode --->
-    <cffunction name="setMode" access="public" output="false" returntype="void">
+  <cffunction name="setMode" access="public" output="false" returntype="void">
 		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="yes" type="string" />
 
 		<cfif NOT ListFindNoCase("development,production,always", arguments.mode)>
@@ -216,36 +203,36 @@
 		</cfif>
 
 		<cfset variables.mode = arguments.mode />
-    </cffunction>
-    <cffunction name="getMode" access="public" output="false" returntype="string">
+  </cffunction>
+  <cffunction name="getMode" access="public" output="false" returntype="string">
        <cfreturn variables.mode />
-    </cffunction>
+  </cffunction>
 
 	<!--- project --->
-    <cffunction name="setProject" access="public" output="false" returntype="void">
+  <cffunction name="setProject" access="public" output="false" returntype="void">
        <cfargument name="project" hint="I am the name of the project." required="yes" type="string" />
        <cfset variables.project = ReReplace(arguments.project, "[\W]", "", "all") />
-    </cffunction>
-    <cffunction name="getProject" access="public" output="false" returntype="string">
+  </cffunction>
+  <cffunction name="getProject" access="public" output="false" returntype="string">
        <cfreturn variables.project />
-    </cffunction>
+  </cffunction>
 
 	<!--- username --->
-    <cffunction name="setUsername" access="public" output="false" returntype="void">
+  <cffunction name="setUsername" access="public" output="false" returntype="void">
        <cfargument name="username" hint="I am the username to use for DSNs" required="yes" type="string" />
        <cfset variables.username = arguments.username />
-    </cffunction>
-    <cffunction name="getUsername" access="public" output="false" returntype="string">
+  </cffunction>
+  <cffunction name="getUsername" access="public" output="false" returntype="string">
        <cfreturn variables.username />
-    </cffunction>
+  </cffunction>
 
 	<!--- password --->
-    <cffunction name="setPassword" access="public" output="false" returntype="void">
+  <cffunction name="setPassword" access="public" output="false" returntype="void">
        <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="string" />
        <cfset variables.password = arguments.password />
-    </cffunction>
-    <cffunction name="getPassword" access="public" output="false" returntype="string">
+  </cffunction>
+  <cffunction name="getPassword" access="public" output="false" returntype="string">
        <cfreturn variables.password />
-    </cffunction>
+  </cffunction>
 
 </cfcomponent>
