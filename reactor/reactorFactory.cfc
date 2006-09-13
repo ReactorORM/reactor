@@ -106,6 +106,10 @@
 		<cfreturn Object />
 	</cffunction>
 	
+	<cffunction name="compile" access="public" hint="I simply call all the create methods for all of the reactor object types so as to compile all objects according to the current configuration options" output="false" returntype="void">
+		<cfset getObjectFactory().compile() />
+	</cffunction>
+	
 	<!--- ObjectFactory --->
 	<cffunction name="setObjectFactory" access="private" output="false" returntype="void">
 		<cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />

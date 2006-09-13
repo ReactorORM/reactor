@@ -140,7 +140,15 @@
 		<cfset var parentNode = 0 />
 		
 		<!--- search to see if path exists in the document --->
-		<cfset matches = XmlSearch(arguments.xml, arguments.pathToNode) />
+		<!---<cftry>--->
+			<cfset matches = XmlSearch(arguments.xml, arguments.pathToNode) />
+			<!---<cfcatch>
+				<cfdump var="#matches#" />
+				<cfdump var="#arguments.xml#" />
+				<cfdump var="#arguments.pathToNode#" />
+				<cfabort>
+			</cfcatch>
+		</cftry>--->
 		
 		<!--- if the path doesn't exist, create it --->
 		<cfif NOT ArrayLen(matches)>

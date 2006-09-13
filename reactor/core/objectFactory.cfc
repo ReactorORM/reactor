@@ -35,6 +35,22 @@
 
 		<cfreturn this />
 	</cffunction>
+	
+	<cffunction name="compile" access="public" hint="I create all of the default reactor object types (but not plugins) so as to compile all objects according to the current configuration options" output="false" returntype="void">
+		<cfset var objectNames = getConfig().getObjectNames() />
+		<cfset var x = 0 />
+		
+		<!--- generate the base object types --->
+		<cfloop from="1" to="#ArrayLen(objectNames)#" index="x">
+			<cfset create(objectNames[x], "Record") />
+			<cfset create(objectNames[x], "Dao") />
+			<cfset create(objectNames[x], "To") />
+			<cfset create(objectNames[x], "Gateway") />
+			<cfset create(objectNames[x], "Metadata") />
+			<cfset createDictionary(objectNames[x]) />
+			<cfset create(objectNames[x], "Validator") />
+		</cfloop>
+	</cffunction>
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="reactor.base.abstractObject">
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="string" />
