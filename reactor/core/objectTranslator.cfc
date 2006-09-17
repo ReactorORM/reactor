@@ -122,7 +122,7 @@
 		</cfloop>
 		
 		<!--- if the initial xml and the new xml are different, format the xml and write it back to the dictionary xml file --->
-		<cfif dictionaryXml IS NOT initialDictionaryXml>
+		<cfif toString(dictionaryXml) IS NOT toString(initialDictionaryXml)>
 			<cflock type="exclusive" timeout="30">
 				<cffile action="write" file="#arguments.dictionaryXmlPath#" output="#formatXml(dictionaryXml)#" />
 			</cflock>
