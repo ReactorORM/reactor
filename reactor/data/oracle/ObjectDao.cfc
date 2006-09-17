@@ -120,7 +120,7 @@
 				</cfif>
 			</cfcase>
 			<cfcase value="STRING">
-				<cfif arguments.sqlDefaultValue IS "SYS_GUID()">
+				<cfif FindNoCase("SYS_GUID()", arguments.sqlDefaultValue) gt 0>
 					<cfreturn "##replace(CreateUUID(),'-','','all')##" />
 				<cfelse>
    				<cfreturn arguments.sqlDefaultValue  />
