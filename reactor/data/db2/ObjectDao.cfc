@@ -57,6 +57,7 @@
 				ON CO."TBNAME" = KC."TABLE_NAME"
 				AND CO."NAME" = KC."COLUMN_NAME"
 			WHERE CO."TBNAME" = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
+      ORDER by CO."COLNO"
 		</cfquery>
 		
 		<cfloop query="qFields">
