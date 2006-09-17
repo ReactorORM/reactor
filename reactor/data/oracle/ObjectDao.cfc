@@ -1,4 +1,4 @@
- <cfcomponent hint="I read Object data from a Oracle database." extends="reactor.data.abstractObjectDao">
+<cfcomponent hint="I read Object data from a Oracle database." extends="reactor.data.abstractObjectDao">
 
 	<cffunction name="read" access="public" hint="I populate an Object object based on it's name" output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to populate." required="yes" type="reactor.core.object" />
@@ -15,23 +15,59 @@
       <cfset var qObject = 0 />
 
 		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-			SELECT  object_type  as TABLE_TYPE,
+			SELECT   object_name table_name,
+          object_type  as TABLE_TYPE,
 					owner        as table_owner
 			FROM all_objects
 			where object_type in ('TABLE','VIEW')
 			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
 		</cfquery>
-
+		<cfif qObject.recordCount is 0>
+  		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
+  			SELECT  object_name table_name,
+            object_type  as TABLE_TYPE,
+  					owner        as table_owner
+  			FROM all_objects
+  			where object_type in ('TABLE','VIEW')
+  			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.Object.getName())#" />
+  		</cfquery>
+    </cfif>
+    
 		<cfif qObject.recordCount>
 			<!--- set the owner --->
 			<cfset arguments.Object.setOwner( qObject.TABLE_OWNER ) />
 			<cfset arguments.Object.setType( lcase(qObject.table_type) ) />
+			<cfset arguments.Object.setName( qObject.table_name ) />
 		<cfelse>
 			<cfthrow type="reactor.NoSuchObject" />
 		</cfif>
 	</cffunction>
 
+	<cffunction name="getExactObjectName" access="public" hint="I return the case-sensitive object name" output="false" returntype="string">
+		<cfargument name="ObjectName" hint="I am the object name to check on." required="true" type="string" />
+		<cfargument name="objectType" hint="I am the object type to check on." default="table"       type="string" />
 
+    <cfset var qObject = 0 />
+
+		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
+			SELECT   object_name
+			FROM     all_objects
+			where object_type = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.objectType)#" />
+			and	 
+        (   object_name   = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.ObjectName#" />
+         or object_name   = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.ObjectName )#" />
+         or upper(object_name) = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.ObjectName)#" /> )
+      order by case
+         when object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.ObjectName#" /> then 1
+         when upper(object_name) = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.ObjectName)#" /> then 2
+         else 3
+       end
+		</cfquery>
+    <cfif qObject.recordCount is 0>
+			<cfthrow type="reactor.NoSuchObject" />
+		</cfif>
+		<cfreturn qObject.object_name />
+	</cffunction>
 
 	<cffunction name="readFields" access="private" hint="I populate the table with fields." output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to read fields into." required="yes" type="reactor.core.object" />

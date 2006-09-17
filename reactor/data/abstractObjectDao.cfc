@@ -23,6 +23,14 @@
 			message="The read method is abstract and must be overridden." />
 	</cffunction>
 	
+	<!--- getObjectName --->
+	<cffunction name="getExactObjectName" access="public" hint="I return the case-sensitive object name" output="false" returntype="string">
+		<cfargument name="ObjectName"       hint="I am the object to check on." required="yes" type="string" />
+    <!--- override as needed to handle case-sensitivity issues --->
+		<cfargument name="ObjectType"   hint="I am the type of object to check on." default="table" type="string" />
+  	<cfreturn arguments.ObjectName />
+	</cffunction>
+	
 	<!--- dsn --->
     <cffunction name="setDsn" access="public" output="false" returntype="void">
        <cfargument name="dsn" hint="I am the DSN to use." required="yes" type="string" />

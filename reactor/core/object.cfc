@@ -11,16 +11,28 @@
 	<cfset variables.database = "" />
 	
 	<cfset variables.fields = ArrayNew(1) />
+
 	
 	<cffunction name="init" access="public" hint="I configure the object." returntype="reactor.core.object">
 		<cfargument name="alias" hint="I am the alias of the obeject being represented." required="yes" type="string" />
 		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
-		
+
+		<cfset var ObjectDao = 0/>
+    <cfset var exactObjectName = "" />
+    		
 		<cfset setAlias(arguments.alias) />
 		<cfset setConfig(arguments.Config) />
 		<cfset setObjectConfig(getConfig().getObjectConfig(getAlias())) />
 		<cfset setName(getObjectConfig().object.XmlAttributes.name) />
+
+		<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 		
+		<!--- read the object --->
+		<cfset exactObjectName = ObjectDao.getExactObjectName(objectname=this.getName(), objecttype="table") />
+    <cfif compare( exactObjectName, getName() ) is not 0>
+      <cfset setName( exactObjectName ) />
+      <cfset getObjectConfig().object.XmlAttributes.name = getName() />
+    </cfif>
 		<cfreturn this />
 	</cffunction>
 	
@@ -300,7 +312,6 @@
 		<!---<cfif getAlias() is "Daisy">
 			<cfdump var="#Config#" /><cfabort>
 		</cfif>--->
-		
 		<cfreturn Config />
 	</cffunction>
 	
@@ -373,6 +384,8 @@
 		<cfset var fieldTags = XmlSearch(arguments.config, "/object/field") />
 		<cfset var fieldTag = 0 />
 		<cfset var x = 0 />
+    <cfset var exactObjectName = "" />
+    <cfset var objectDAO = 0 />
 
 		<!---
 			The next few lines of code loop over the provided xml config and look for a field with the same name as the field
@@ -414,6 +427,20 @@
 				<cfthrow message="Sequence names are not the same." detail="The database's default value for table: '#arguments.config.object.XmlAttributes.name#' column: '#arguments.field.name#' uses a sequence named '#arguments.field.sequenceName#' but the reactor.xml configuration file indicates that a sequence named '#fieldTag.XmlAttributes.sequence#' should be used." type="reactor.core.object.addXmlField.SequenceNameMismatch" />
 			</cfif>
 		</cfif>
+
+    <cfif xmlField.XmlAttributes["sequence"] gt "">
+  		<cfset ObjectDao = CreateObject("Component"
+            , "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn()
+            , getConfig().getUsername()
+            , getConfig().getPassword()) />
+  		<cfset exactName = ObjectDao.getExactObjectName(objectName=xmlField.XmlAttributes["sequence"], objecttype="sequence") />
+      <cfif compare( exactName, xmlField.XmlAttributes["sequence"] ) is not 0>
+        <cfset xmlField.XmlAttributes["sequence"] = exactName />
+      </cfif>
+    </cfif>
+
+
+
 		
 		<!--- add the field node --->
 		<cfset ArrayAppend(arguments.config.Object.fields.XmlChildren, xmlField) />
