@@ -85,7 +85,7 @@
 		<cfreturn relationship />
 	</cffunction>
 	
-	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="string">
+	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="any">
 		<cfset var Config = Duplicate(getObjectConfig()) />
 		<cfset var fields = getFields() />
 		<cfset var links = 0 />
@@ -584,7 +584,7 @@
        <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
     </cffunction>
-    <cffunction name="getObjectConfig" access="public" output="false" returntype="string">
+    <cffunction name="getObjectConfig" access="public" output="false" returntype="any">
        <cfreturn variables.objectConfig />
     </cffunction>
 	
