@@ -124,12 +124,10 @@
 					</cftry>
 				</cfcase>
 			</cfswitch>
-			
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
 		</cftry>
-
 		<!--- return either a generated object or the existing object --->
 		<cfif generate>
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
@@ -144,9 +142,9 @@
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 				
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin))._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)).configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin))._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			</cfif>
 
 		<cfelse>
@@ -158,9 +156,9 @@
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 				
-				<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+				<cfset GeneratedObject = GeneratedObject._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
-				<cfset GeneratedObject = GeneratedObject.configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+				<cfset GeneratedObject = GeneratedObject._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			</cfif>
 		</cfif>
 		
