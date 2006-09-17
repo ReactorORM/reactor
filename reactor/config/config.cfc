@@ -120,7 +120,7 @@
 	</cffunction>
 	
 	<cffunction name="getObjectConfig" access="public" output="false" returntype="string" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
-		<cfargument name="alias" required="yes" type="string" hint="I am the alias of the object to get the configuration for" />
+		<cfargument name="alias" required="yes" type="any" hint="I am the alias of the object to get the configuration for" />
 		<cfset var table = 0 />
 
 		<cfif structKeyExists(variables.objectMap,arguments.alias)>
