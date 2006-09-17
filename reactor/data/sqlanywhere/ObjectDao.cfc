@@ -24,6 +24,7 @@
 				<!--- V - views; U - User tables; S - System tables --->
 				where sysobjects.type in ('V','U','S')
 				and   sysusers.uid = sysobjects.uid
+                and   sysusers.name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
 				and   sysobjects.name =
 			   <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
 		</cfquery>
