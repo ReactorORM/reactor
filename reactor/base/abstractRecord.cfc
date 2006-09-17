@@ -8,14 +8,14 @@
 	<cfset variables.alias = "" />
 		
 	<!--- configure --->
-	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractRecord">
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractRecord">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
 		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
 		
-		<cfset super.configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
+		<cfset super._configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset _setObjectMetadata(arguments.ObjectMetadata) />
 		
 		<cfreturn this />
@@ -31,12 +31,12 @@
     </cffunction>
 	
 	<cffunction name="clean" access="public" hint="I copy the current to into the initial to.  Assuming the TOs dont have any complex objects this should cause isDirty to return false." output="false" returntype="void">
-		<cfset _getInitialTo().copy(_getTo()) />
+		<cfset _getInitialTo()._copy(_getTo()) />
 	</cffunction>	
 	
 	<!--- isDirty --->
 	<cffunction name="isDirty" access="public" hint="I indicate if this object has been modified since it was created, loaded, saved, deleted or cleaned." output="false" returntype="boolean">
-		<cfreturn NOT _getTo().isEqual(_getInitialTo()) />
+		<cfreturn NOT _getTo()._isEqual(_getInitialTo()) />
 	</cffunction>
 	
 	<!--- load --->

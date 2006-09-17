@@ -7,14 +7,14 @@
 	<cfset variables.lastExecutedQuery = StructNew() />
 	
 	<!--- configure --->
-	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractGateway">
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractGateway">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
 		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
 		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
 		
-		<cfset super.configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
+		<cfset super._configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />>
     <cfset setMaxIntegerLength() />
 		
