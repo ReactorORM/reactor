@@ -11,48 +11,47 @@
 
 	<cffunction name="readObject" access="private" hint="I confirm that this object exists at all.  If not, I throw an error." output="false" returntype="void">
 		<cfargument name="Object" hint="I am the object to check on." required="yes" type="reactor.core.object" />
-      <!--- @@Note: added "var" --->
       <cfset var qObject = 0 />
 
-		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-			SELECT   object_name table_name,
-          object_type  as TABLE_TYPE,
-					owner        as table_owner
-			FROM all_objects
-			where object_type in ('TABLE','VIEW')
-			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
-		</cfquery>
-		<cfif qObject.recordCount is 0>
   		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-  			SELECT  object_name table_name,
+  			SELECT   object_name table_name,
             object_type  as TABLE_TYPE,
   					owner        as table_owner
   			FROM all_objects
   			where object_type in ('TABLE','VIEW')
-  			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.Object.getName())#" />
+  			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
   		</cfquery>
-    </cfif>
-    
-		<cfif qObject.recordCount>
-			<!--- set the owner --->
-			<cfset arguments.Object.setOwner( qObject.TABLE_OWNER ) />
-			<cfset arguments.Object.setType( lcase(qObject.table_type) ) />
-			<cfset arguments.Object.setName( qObject.table_name ) />
-		<cfelse>
-			<cfthrow type="reactor.NoSuchObject" />
-		</cfif>
+  		<cfif qObject.recordCount is 0>
+    		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
+    			SELECT  object_name table_name,
+              object_type  as TABLE_TYPE,
+    					owner        as table_owner
+    			FROM all_objects
+    			where object_type in ('TABLE','VIEW')
+    			and	object_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.Object.getName())#" />
+    		</cfquery>
+      </cfif>
+      
+  		<cfif qObject.recordCount>
+  			<!--- set the owner --->
+  			<cfset arguments.Object.setOwner( qObject.TABLE_OWNER ) />
+  			<cfset arguments.Object.setType( lcase(qObject.table_type) ) />
+  			<cfset arguments.Object.setName( qObject.table_name ) />
+  		<cfelse>
+  			<cfthrow type="reactor.NoSuchObject" />
+  		</cfif>
 	</cffunction>
 
 	<cffunction name="getExactObjectName" access="public" hint="I return the case-sensitive object name" output="false" returntype="string">
 		<cfargument name="ObjectName" hint="I am the object name to check on." required="true" type="string" />
-		<cfargument name="objectType" hint="I am the object type to check on." default="table"       type="string" />
+		<cfargument name="objectTypeList" default="table,view"       type="string" hint="I am a comma-delimited list of object types" />
 
     <cfset var qObject = 0 />
 
 		<cfquery name="qObject"   datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT   object_name
 			FROM     all_objects
-			where object_type = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.objectType)#" />
+			where object_type in ( <cfqueryparam value="#ucase(arguments.objectTypeList)#" cfsqltype="CF_SQL_VARCHAR" maxlength="64" list="Yes"> )
 			and	 
         (   object_name   = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.ObjectName#" />
          or object_name   = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#ucase(arguments.ObjectName )#" />

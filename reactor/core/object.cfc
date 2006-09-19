@@ -28,7 +28,7 @@
 		<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 		
 		<!--- read the object --->
-		<cfset exactObjectName = ObjectDao.getExactObjectName(objectname=this.getName(), objecttype="table") />
+		<cfset exactObjectName = ObjectDao.getExactObjectName(objectname=this.getName(), objectTypeList="table,view") />
     <cfif compare( exactObjectName, getName() ) is not 0>
       <cfset setName( exactObjectName ) />
       <cfset getObjectConfig().object.XmlAttributes.name = getName() />
@@ -433,7 +433,7 @@
             , "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn()
             , getConfig().getUsername()
             , getConfig().getPassword()) />
-  		<cfset exactName = ObjectDao.getExactObjectName(objectName=xmlField.XmlAttributes["sequence"], objecttype="sequence") />
+  		<cfset exactName = ObjectDao.getExactObjectName(objectName=xmlField.XmlAttributes["sequence"], objectTypeList="sequence") />
       <cfif compare( exactName, xmlField.XmlAttributes["sequence"] ) is not 0>
         <cfset xmlField.XmlAttributes["sequence"] = exactName />
       </cfif>

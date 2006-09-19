@@ -27,7 +27,7 @@
 	<cffunction name="getExactObjectName" access="public" hint="I return the case-sensitive object name" output="false" returntype="string">
 		<cfargument name="ObjectName"       hint="I am the object to check on." required="yes" type="string" />
     <!--- override as needed to handle case-sensitivity issues --->
-		<cfargument name="ObjectType"   hint="I am the type of object to check on." default="table" type="string" />
+		<cfargument name="ObjectTypeList"  hint="I am a comma-delimited list of the type of object to check on." default="table,view" type="string" />
   	<cfreturn arguments.ObjectName />
 	</cffunction>
 	
