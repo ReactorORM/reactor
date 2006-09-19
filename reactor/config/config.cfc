@@ -33,7 +33,7 @@
 	<cffunction name="addObjects" returntype="void" access="public" output="false" hint="I add more Reactor objects to the configuration.">
 		<cfargument name="objectXmlFile" type="string" required="true" hint="I am the path to the config XML file to be added." />
 		<!--- validate and parse the xml file. --->
-		<cfset var xmlObject = validateAndParseXML( arguments.pathToConfigXml ) />
+		<cfset var xmlObject = validateAndParseXML( arguments.objectXmlFile ) />
 		
 		<!--- load this file's objects --->
 		<cfset addObjectsFromXml( xmlObject ) />
