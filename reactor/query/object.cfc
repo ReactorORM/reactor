@@ -55,7 +55,8 @@
 			</cfif>
 		</cfloop>
 		
-		<cfthrow message="Field Does Not Exist" detail="The field '#arguments.alias#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.query.object.FieldDoesNotExist" />
+		<cfthrow message="Field Does Not Exist" detail="The field '#arguments.fieldAlias#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.query.object.FieldDoesNotExist" />
+
 	</cffunction>
 	
 	<!--- setFieldExpression --->
