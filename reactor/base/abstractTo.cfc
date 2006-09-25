@@ -13,7 +13,7 @@
 				
 	</cffunction>
 	
-	<cffunction name="isEqual" access="public" hint="I indicate if two TOs are the same in terms of type and values.  If any of the values in the TO can not be converted to a string them this will return false." output="false" returntype="any">
+	<cffunction name="_isEqual" access="public" hint="I indicate if two TOs are the same in terms of type and values.  If any of the values in the TO can not be converted to a string them this will return false." output="false" returntype="any">
 		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" />
 		<cfset var item = 0 />
 		

@@ -7,7 +7,7 @@
 	<cfset variables.lastExecutedQuery = StructNew() />
 	
 	<!--- configure --->
-	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="any">
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" />

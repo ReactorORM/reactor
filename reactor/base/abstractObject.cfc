@@ -10,7 +10,7 @@
 		This is a non-standard named init method.  The reason for this is so that all objects can share a common method for initilization
 		while not dis-allowing the use of the init method for specific purposes on objects like Records.
 	---->
-	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="any">
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any">
 		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" />
 		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" />
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" />
