@@ -4,10 +4,10 @@
 	<cfset variables.username = "" />
 	<cfset variables.password = "" />
 	
-	<cffunction name="init" access="public" hint="I configure and return a DAO" output="false" returntype="reactor.data.abstractObjectDao">
-		<cfargument name="dsn" hint="I am the DSN to use." required="yes" type="string" />
-		<cfargument name="username" hint="I am the username to use for DSNs." required="yes" type="string" />
-		<cfargument name="password" hint="I am the password to use for DSNs." required="yes" type="string" />
+	<cffunction name="init" access="public" hint="I configure and return a DAO" output="false" returntype="any">
+		<cfargument name="dsn" hint="I am the DSN to use." required="yes" type="any" />
+		<cfargument name="username" hint="I am the username to use for DSNs." required="yes" type="any" />
+		<cfargument name="password" hint="I am the password to use for DSNs." required="yes" type="any" />
 		
 		<cfset setDsn(arguments.dsn) />
 		<cfset setUsername(arguments.username) />
@@ -18,7 +18,7 @@
 	
 	<!--- read --->
 	<cffunction name="read" access="public" hint="I define the read method." output="false" returntype="void">
-		<cfargument name="Object" hint="I am the object to read." required="yes" type="reactor.core.object" />
+		<cfargument name="Object" hint="I am the object to read." required="yes" type="any" />
 		<cfthrow type="reactor.UnimplementedMethod"
 			message="The read method is abstract and must be overridden." />
 	</cffunction>
@@ -33,28 +33,28 @@
 	
 	<!--- dsn --->
     <cffunction name="setDsn" access="public" output="false" returntype="void">
-       <cfargument name="dsn" hint="I am the DSN to use." required="yes" type="string" />
+       <cfargument name="dsn" hint="I am the DSN to use." required="yes" type="any" />
        <cfset variables.dsn = arguments.dsn />
     </cffunction>
-    <cffunction name="getDsn" access="public" output="false" returntype="string">
+    <cffunction name="getDsn" access="public" output="false" returntype="any">
        <cfreturn variables.dsn />
     </cffunction>
 	
 	<!--- username --->
     <cffunction name="setUsername" access="public" output="false" returntype="void">
-       <cfargument name="username" hint="I am the username to use for DSNs." required="yes" type="string" />
+       <cfargument name="username" hint="I am the username to use for DSNs." required="yes" type="any" />
        <cfset variables.username = arguments.username />
     </cffunction>
-    <cffunction name="getUsername" access="public" output="false" returntype="string">
+    <cffunction name="getUsername" access="public" output="false" returntype="any">
        <cfreturn variables.username />
     </cffunction>
 	
 	<!--- password --->
     <cffunction name="setPassword" access="public" output="false" returntype="void">
-       <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="string" />
+       <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="any" />
        <cfset variables.password = arguments.password />
     </cffunction>
-    <cffunction name="getPassword" access="public" output="false" returntype="string">
+    <cffunction name="getPassword" access="public" output="false" returntype="any">
        <cfreturn variables.password />
     </cffunction>
 	

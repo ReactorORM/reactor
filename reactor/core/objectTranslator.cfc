@@ -4,10 +4,10 @@
 	<cfset variables.Object = 0 />
 	<cfset variables.ObjectFactory = 0 />
 	
-	<cffunction name="init" access="public" hint="I configure and return the objectTranslator" output="false" returntype="reactor.core.objectTranslator">
-		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="reactor.config.config" />
-		<cfargument name="Object" hint="I am the object being transformed" required="yes" type="reactor.core.object" />
-		<cfargument name="ObjectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="reactor.core.objectFactory" />
+	<cffunction name="init" access="public" hint="I configure and return the objectTranslator" output="false" returntype="any">
+		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="any" />
+		<cfargument name="Object" hint="I am the object being transformed" required="yes" type="any" />
+		<cfargument name="ObjectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="any" />
 		
 		<cfset setConfig(arguments.config) />
 		<cfset setObject(arguments.Object) />
@@ -17,8 +17,8 @@
 	</cffunction>
 	
 	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
-		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="string" />
-		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
+		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="any" />
+		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="any" />
 		<cfset var objectXML = getObject().getXml() />
 		
 		<!--- write the project object --->
@@ -45,10 +45,10 @@
 	</cffunction>
 	
 	<cffunction name="generate" access="private" hint="I transform the XML via the specified XSL file and output to the provided path, overwritting it configured to do so." output="false" returntype="void">
-		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="string" />
-		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="string" />
-		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="string" />
-		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="boolean" />
+		<cfargument name="objectXML" hint="I am the object's XML to transform." required="yes" type="any" />
+		<cfargument name="xslPath" hint="I am the path to the XSL file to use for translation" required="yes" type="any" />
+		<cfargument name="outputPath" hint="I am the path to the file to output to." required="yes" type="any" />
+		<cfargument name="overwrite" hint="I indicate if the ouput path should be overwritten if it exists." required="yes" type="any" />
 		<cfset var xsl = 0 />
 		<cfset var code = 0 />
 				
@@ -69,7 +69,7 @@
 	
 	<!--- generateDictionary --->
 	<cffunction name="generateDictionary" access="public" hint="I generate the xml for a dictionary.xml file" output="false" returntype="void">
-		<cfargument name="dictionaryXmlPath" hint="I am the path to the dictionary xml file." required="yes" type="string" />
+		<cfargument name="dictionaryXmlPath" hint="I am the path to the dictionary xml file." required="yes" type="any" />
 		<cfset var alias = getObject().getAlias() />
 		<cfset var dictionaryXml = "<#alias# />" />
 		<cfset var initialDictionaryXml = 0 />
@@ -131,9 +131,9 @@
 	
 	<!--- paramNode --->
 	<cffunction name="paramNode" access="private" hint="I insure that an xml node exists.  If not, I create it and set it to a default value." output="false" returntype="void">
-		<cfargument name="xml" hint="I am the xml document" required="yes" type="string" />
-		<cfargument name="pathToNode" hint="I am the xpath path to the parent node." required="yes" type="string" />
-		<cfargument name="value" hint="I am the default value for the node." required="no" type="string" default="" />
+		<cfargument name="xml" hint="I am the xml document" required="yes" type="any" />
+		<cfargument name="pathToNode" hint="I am the xpath path to the parent node." required="yes" type="any" />
+		<cfargument name="value" hint="I am the default value for the node." required="no" type="any" default="" />
 		<cfset var matches = 0 />
 		<cfset var node = 0 />
 		<cfset var parentNodePath = 0 />
@@ -175,11 +175,11 @@
 		</cfif>
 	</cffunction>
 	
-	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To, Metadata, Validator" required="yes" type="string" />
-		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="string" />
-		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="string" />
-		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="boolean" />
+	<cffunction name="getObjectPath" access="private" hint="I return the path to the type of object specified." output="false" returntype="any">
+		<cfargument name="type" hint="I am the type of object to return.  Options are: Record, Dao, Gateway, To, Metadata, Validator" required="yes" type="any" />
+		<cfargument name="name" hint="I am the name of the table to get the structure XML for." required="yes" type="any" />
+		<cfargument name="class" hint="I indicate if the 'class' of object to return.  Options are: Project, Base, Custom" required="yes" type="any" />
+		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="any" />
 		<cfset var root = "" />
 		<cfset var mapping = getObject().getMapping() />
 		
@@ -199,8 +199,8 @@
 		
 	</cffunction>
 	
-	<cffunction name="formatXml" access="public" hint="I format xml to make it more easily human readable." output="false" returntype="string">
-		<cfargument name="xml" hint="I am the xml to format." required="yes" type="string" />
+	<cffunction name="formatXml" access="public" hint="I format xml to make it more easily human readable." output="false" returntype="any">
+		<cfargument name="xml" hint="I am the xml to format." required="yes" type="any" />
 		<cfset var newXmlDocument = "" />
 		<cfset var splitXml = 0 />
 		<cfset var x = 0 />
@@ -239,7 +239,7 @@
 	</cffunction>
 	
 	<cffunction name="insurePathExists" access="private" hint="I insure the directories for the path to the specified exist" output="false" returntype="void">
-		<cfargument name="path" hint="I am the path to the file." required="yes" type="string" />
+		<cfargument name="path" hint="I am the path to the file." required="yes" type="any" />
 		<cfset var directory = getDirectoryFromPath(arguments.path) />
 		
 		<cfif NOT DirectoryExists(directory)>
@@ -249,28 +249,28 @@
 	
 	<!--- config --->
     <cffunction name="setConfig" access="public" output="false" returntype="void">
-       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="reactor.config.config" />
+       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="any" />
        <cfset variables.config = arguments.config />
     </cffunction>
-    <cffunction name="getConfig" access="public" output="false" returntype="reactor.config.config">
+    <cffunction name="getConfig" access="public" output="false" returntype="any">
        <cfreturn variables.config />
     </cffunction>
 	
 	<!--- object --->
     <cffunction name="setObject" access="private" output="false" returntype="void">
-       <cfargument name="object" hint="I am the object being transformed." required="yes" type="reactor.core.Object" />
+       <cfargument name="object" hint="I am the object being transformed." required="yes" type="any" />
        <cfset variables.object = arguments.object />
     </cffunction>
-    <cffunction name="getObject" access="private" output="false" returntype="reactor.core.Object">
+    <cffunction name="getObject" access="private" output="false" returntype="any">
        <cfreturn variables.object />
     </cffunction>
 	
 	<!--- objectFactory --->
     <cffunction name="setObjectFactory" access="private" output="false" returntype="void">
-       <cfargument name="objectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="reactor.core.objectFactory" />
+       <cfargument name="objectFactory" hint="I am the object factory used to generate any dependant objects" required="yes" type="any" />
        <cfset variables.objectFactory = arguments.objectFactory />
     </cffunction>
-    <cffunction name="getObjectFactory" access="private" output="false" returntype="reactor.core.objectFactory">
+    <cffunction name="getObjectFactory" access="private" output="false" returntype="any">
        <cfreturn variables.objectFactory />
     </cffunction>
 

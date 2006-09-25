@@ -4,8 +4,8 @@
 	<cfset variables.errors = ArrayNew(1) />
 	<cfset variables.alias = "" />
 	
-	<cffunction name="init" access="public" hint="I configure and return the error collection." output="false" returntype="ErrorCollection">
-		<cfargument name="Dictionary" hint="I am the dictionary to use to translate errors." required="yes" type="reactor.dictionary.dictionary" />
+	<cffunction name="init" access="public" hint="I configure and return the error collection." output="false" returntype="any">
+		<cfargument name="Dictionary" hint="I am the dictionary to use to translate errors." required="yes" type="any" />
 		
 		<!--- set the dictionary --->
 		<cfset setDictionary(arguments.Dictionary) />
@@ -14,7 +14,7 @@
 	</cffunction>
 	
 	<!--- getAsStruct --->
-	<cffunction name="getAsStruct" access="public" hint="I return the collected errors as a struct of arrays.  this is really intended to work with MG:U's validationErrors tag." output="false" returntype="struct">
+	<cffunction name="getAsStruct" access="public" hint="I return the collected errors as a struct of arrays.  this is really intended to work with MG:U's validationErrors tag." output="false" returntype="any">
 		<cfset var errorStruct = StructNew() />
 		<cfset var error = "" />
 		<cfset var x = 0 />
@@ -31,15 +31,15 @@
 	</cffunction>
 	
 	<!--- getAt --->
-	<cffunction name="getAt" access="public" hint="I return an error at a specific index." output="false" returntype="string">
-		<cfargument name="index" hint="I am the index of the error to return" required="yes" type="numeric" />
+	<cffunction name="getAt" access="public" hint="I return an error at a specific index." output="false" returntype="any">
+		<cfargument name="index" hint="I am the index of the error to return" required="yes" type="any" />
 		<cfset var errors = getErrors() />
 		<cfreturn errors[arguments.index] />
 	</cffunction>
 	
 	<!--- addError --->
 	<cffunction name="addError" access="public" hint="I add an error to the collection." output="false" returntype="void">
-		<cfargument name="error" output="I am an idetifier for an error.  This should be a dot-style syntax where each element corrisponds to an element in the provided dictionary.  For example, username.notProvided.  Be aware that the identifiers are case sensitive. Duplicate identifiers are ignored." required="yes" type="string" />
+		<cfargument name="error" output="I am an idetifier for an error.  This should be a dot-style syntax where each element corrisponds to an element in the provided dictionary.  For example, username.notProvided.  Be aware that the identifiers are case sensitive. Duplicate identifiers are ignored." required="yes" type="any" />
 		
 		<cfif NOT hasError(arguments.error)>
 			<cfset ArrayAppend(variables.errors, arguments.error) />
@@ -47,8 +47,8 @@
 	</cffunction>
 	
 	<!--- hasError --->
- 	<cffunction name="hasError" access="public" hint="I indicate if this collection has the provided error." output="false" returntype="boolean">
-		<cfargument name="error" output="I am an idetifier for an error.  This should be a dot-style syntax where each element corrisponds to an element in the provided dictionary.  For example, username.notProvided.  Be aware that the identifiers are case sensitive. Duplicate identifiers are ignored." required="yes" type="string" />
+ 	<cffunction name="hasError" access="public" hint="I indicate if this collection has the provided error." output="false" returntype="any">
+		<cfargument name="error" output="I am an idetifier for an error.  This should be a dot-style syntax where each element corrisponds to an element in the provided dictionary.  For example, username.notProvided.  Be aware that the identifiers are case sensitive. Duplicate identifiers are ignored." required="yes" type="any" />
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(variables.errors)#" index="x">
@@ -61,8 +61,8 @@
 	</cffunction>
 	
 	<!--- hasErrors --->
- 	<cffunction name="hasErrors" access="public" hint="I indicate if this collection has errors.  If the rootList argument is provided this incidates if there are any errors with the specified roots.  For example. foo.bar would return true if there was an error foo.bar.notProvided in the collection.  You can also provide a comma seperated list of roots to check.  IE, Foo.Bar,Bar.Foo.  When a list is provided if at least one item is matched this returns true." output="false" returntype="boolean">
-		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="string" default="" />
+ 	<cffunction name="hasErrors" access="public" hint="I indicate if this collection has errors.  If the rootList argument is provided this incidates if there are any errors with the specified roots.  For example. foo.bar would return true if there was an error foo.bar.notProvided in the collection.  You can also provide a comma seperated list of roots to check.  IE, Foo.Bar,Bar.Foo.  When a list is provided if at least one item is matched this returns true." output="false" returntype="any">
+		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="any" default="" />
 		<cfset var x = 0 />
 		<cfset var root = "" />
 		
@@ -82,8 +82,8 @@
 	</cffunction>
 	
 	<!--- getErrors --->
-    <cffunction name="getErrors" hint="I return the array of errors.  If the optional rootList argument is provided then only errors with a root specified in the list are returned.  Otherwise all errors are returned." access="public" output="false" returntype="array">
-		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="string" default="" />
+    <cffunction name="getErrors" hint="I return the array of errors.  If the optional rootList argument is provided then only errors with a root specified in the list are returned.  Otherwise all errors are returned." access="public" output="false" returntype="any">
+		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="any" default="" />
 		<cfset var x = 0 />
 		<cfset var errors = 0 />
 		<cfset var root = "" />
@@ -107,16 +107,16 @@
 	
 	<!--- dictionary --->
     <cffunction name="setDictionary" access="private" output="false" returntype="void">
-       <cfargument name="dictionary" hint="I am the dictionary object used to translate errors into messages." required="yes" type="reactor.dictionary.dictionary" />
+       <cfargument name="dictionary" hint="I am the dictionary object used to translate errors into messages." required="yes" type="any" />
        <cfset variables.dictionary = arguments.dictionary />
     </cffunction>
-    <cffunction name="getDictionary" access="private" output="false" returntype="reactor.dictionary.dictionary">
+    <cffunction name="getDictionary" access="private" output="false" returntype="any">
        <cfreturn variables.dictionary />
     </cffunction>
 	
 	<!--- getTranslatedErrors --->
-	<cffunction name="getTranslatedErrors" hint="I return an array of translated errors.  If the optional rootList argument is provided then only errors with a root specified in the list are returned.  Otherwise all errors are returned." access="public" output="false" returntype="array">
-		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="string" default="" />
+	<cffunction name="getTranslatedErrors" hint="I return an array of translated errors.  If the optional rootList argument is provided then only errors with a root specified in the list are returned.  Otherwise all errors are returned." access="public" output="false" returntype="any">
+		<cfargument name="rootList" output="I am an optional list of roots to match." required="no" type="any" default="" />
 		<cfset var x = 0 />
 		<cfset var errors = getErrors(arguments.rootList) />
 		<cfset var translated = ArrayNew(1) />
@@ -128,14 +128,14 @@
 		<cfreturn translated />
 	</cffunction>
 	
-	<cffunction name="getTranslatedError" hint="I translate a specific error." access="public" output="false" returntype="string">
-		<cfargument name="error" output="I am the error to translate.  I simply pass the provided string into the Dictionary object to translate it.  There's no guarantee that the provided error is an error on this object." required="yes" type="string" /><br>
+	<cffunction name="getTranslatedError" hint="I translate a specific error." access="public" output="false" returntype="any">
+		<cfargument name="error" output="I am the error to translate.  I simply pass the provided string into the Dictionary object to translate it.  There's no guarantee that the provided error is an error on this object." required="yes" type="any" /><br>
 
 		<cfreturn getDictionary().getValue(arguments.error) />		
 	</cffunction>
 	
 	<cffunction name="merge" hint="I merge another ErrorCollection into this." access="public" output="false" returntype="void">
-		<cfargument name="ErrorCollection" hint="I am the other ErrorCollection" required="yes" type="reactor.util.ErrorCollection" />
+		<cfargument name="ErrorCollection" hint="I am the other ErrorCollection" required="yes" type="any" />
 		<cfset var errors = arguments.ErrorCollection.getErrors() />
 		<cfset var x = 0 />
 		
@@ -145,7 +145,7 @@
 	</cffunction>
 	
 	<!--- count --->
-    <cffunction name="count" hint="I return the number of errors in this error collection." access="public" output="false" returntype="numeric">
+    <cffunction name="count" hint="I return the number of errors in this error collection." access="public" output="false" returntype="any">
        <cfreturn ArrayLen(getErrors()) />
     </cffunction>
 </cfcomponent>

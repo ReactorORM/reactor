@@ -13,10 +13,10 @@
 	<cfset variables.externalFields = 0 />
 	<cfset variables.fieldPrefix = "" />
 	
-	<cffunction name="init" hint="I configure and return the object." output="false" returntype="reactor.query.object">
-		<cfargument name="ObjectMetadata" hint="I am the metadata of the object being queried." required="yes" type="reactor.base.abstractMetadata" />
-		<cfargument name="alias" hint="I am the alais of the object within the query." required="yes" type="string" />
-		<cfargument name="ReactorFactory" hint="I am a reference to the ReactorFactory." required="yes" type="reactor.ReactorFactory" />
+	<cffunction name="init" hint="I configure and return the object." output="false" returntype="any">
+		<cfargument name="ObjectMetadata" hint="I am the metadata of the object being queried." required="yes" type="any" />
+		<cfargument name="alias" hint="I am the alais of the object within the query." required="yes" type="any" />
+		<cfargument name="ReactorFactory" hint="I am a reference to the ReactorFactory." required="yes" type="any" />
 		
 		<!--- set this object's metadata --->
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />
@@ -33,19 +33,19 @@
 	
 	<!--- setFieldAlias --->
 	<cffunction name="setFieldAlias" access="public" hint="I set a new alias for a field in the query." output="false" returntype="void">
-		<cfargument name="currentAlias" hint="I am current field alias." required="yes" type="string" />
-		<cfargument name="newAlias" hint="I am new field alias to use." required="yes" type="string" />
+		<cfargument name="currentAlias" hint="I am current field alias." required="yes" type="any" />
+		<cfargument name="newAlias" hint="I am new field alias to use." required="yes" type="any" />
 		<cfset getField(arguments.currentAlias).alias = arguments.newAlias />
 	</cffunction>
 	
 	<!--- hasJoins --->
-	<cffunction name="hasJoins" access="public" hint="I indicate if this object is joined to any others." output="false" returntype="boolean">
+	<cffunction name="hasJoins" access="public" hint="I indicate if this object is joined to any others." output="false" returntype="any">
 		<cfreturn ArrayLen(variables.Joins) GT 0 />
 	</cffunction>
 	
 	<!--- getField --->
-	<cffunction name="getField" access="public" hint="I return a field in this object." output="false" returntype="struct">
-		<cfargument name="fieldAlias" hint="I am the alias of the field to get." required="yes" type="string" />
+	<cffunction name="getField" access="public" hint="I return a field in this object." output="false" returntype="any">
+		<cfargument name="fieldAlias" hint="I am the alias of the field to get." required="yes" type="any" />
 		<cfset var fields = getFields() />
 		<cfset var x = 0 />
 		
@@ -61,9 +61,9 @@
 	
 	<!--- setFieldExpression --->
 	<cffunction name="setFieldExpression" access="public" hint="I am used to modify the value of a field when it's selected." output="false" returntype="void">
-		<cfargument name="fieldAlias" hint="I am the alias of the field." required="yes" type="string" />
-		<cfargument name="expression" hint="I am the expression to add replace the field with." required="yes" type="string" />
-		<cfargument name="cfDataType" hint="I am the cfsql data type to use." required="no" type="string" />
+		<cfargument name="fieldAlias" hint="I am the alias of the field." required="yes" type="any" />
+		<cfargument name="expression" hint="I am the expression to add replace the field with." required="yes" type="any" />
+		<cfargument name="cfDataType" hint="I am the cfsql data type to use." required="no" type="any" />
 		<cfset var fields = getFields() />
 		<cfset var x = 0 />
 		
@@ -79,9 +79,9 @@
 				
 	</cffunction>
 	
-	<cffunction name="evaluateReturn" access="private" hint="I check to see if a field should be returned in a query" output="false" returntype="boolean">
-		<cfargument name="returnFields" hint="I am an array of fields and objects to return." required="yes" type="array" />
-		<cfargument name="fieldAlias" hint="I am the alias of the field" required="yes" type="string" />
+	<cffunction name="evaluateReturn" access="private" hint="I check to see if a field should be returned in a query" output="false" returntype="any">
+		<cfargument name="returnFields" hint="I am an array of fields and objects to return." required="yes" type="any" />
+		<cfargument name="fieldAlias" hint="I am the alias of the field" required="yes" type="any" />
 		<cfset var x = 0 />
 		
 		<cfif NOT ArrayLen(arguments.returnFields)>
@@ -102,9 +102,9 @@
 	</cffunction>
 	
 	<!--- getSelectAsString --->
-	<cffunction name="getSelectAsString" access="public" hint="I return the fields to be seleted for the query." output="false" returntype="string">
-		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
-		<cfargument name="returnFields" hint="I am an array of fields and objects to return." required="yes" type="array" />
+	<cffunction name="getSelectAsString" access="public" hint="I return the fields to be seleted for the query." output="false" returntype="any">
+		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="any" />
+		<cfargument name="returnFields" hint="I am an array of fields and objects to return." required="yes" type="any" />
 		<cfset var select = "" />
 		<cfset var fields = getFields() />
 		<cfset var field = 0 />
@@ -153,8 +153,8 @@
 	</cffunction>
 	
 	<!--- getJoinsAsString --->
-	<cffunction name="getJoinsAsString" access="package" hint="I get this object's joins as a fragment of a from statement" output="false" returntype="string">
-		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="reactor.data.abstractConvention" />
+	<cffunction name="getJoinsAsString" access="package" hint="I get this object's joins as a fragment of a from statement" output="false" returntype="any">
+		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="any" />
 		<cfset var from = "" />
 		<cfset var x = 0 />
 		
@@ -168,10 +168,10 @@
 	
 	<!--- addJoin --->
 	<cffunction name="addJoin" access="package" hint="I add a join to this object." output="false" returntype="void">
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="string" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="string" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="yes" type="string" />
-		<cfargument name="joinType" hint="I am the type of join. Options are: left, right, full and inner." required="yes" type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="yes" type="any" />
+		<cfargument name="joinType" hint="I am the type of join. Options are: left, right, full and inner." required="yes" type="any" />
 		<cfset var ToObjectMetadata = 0 />
 		<cfset var relationship = 0 />
 		<cfset var x = 0 />
@@ -220,7 +220,7 @@
 	
 	<!--- findObject --->
 	<cffunction name="findObject" access="public" hint="I look for an object which is this object or joined to by this object or other joined objects." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the object being searched for." required="yes" type="string" />
+		<cfargument name="objectAlias" hint="I am the alias of the object being searched for." required="yes" type="any" />
 		<cfset var x = 0 />
 		<cfset var Object = 0 />
 		
@@ -246,46 +246,46 @@
 	
 	<!--- alias --->
     <cffunction name="setAlias" access="public" output="false" returntype="void">
-       <cfargument name="alias" hint="I am this object's alias" required="yes" type="string" />
+       <cfargument name="alias" hint="I am this object's alias" required="yes" type="any" />
        <cfset variables.alias = arguments.alias />
     </cffunction>
-    <cffunction name="getAlias" access="public" output="false" returntype="string">
+    <cffunction name="getAlias" access="public" output="false" returntype="any">
        <cfreturn variables.alias />
     </cffunction>
 	
 	<!--- objectMetadata --->
     <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
-       <cfargument name="objectMetadata" hint="I am the metadata of the object being queried" required="yes" type="reactor.base.abstractMetadata" />
+       <cfargument name="objectMetadata" hint="I am the metadata of the object being queried" required="yes" type="any" />
        <cfset variables.objectMetadata = arguments.objectMetadata />
     </cffunction>
-    <cffunction name="getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
+    <cffunction name="getObjectMetadata" access="public" output="false" returntype="any">
        <cfreturn variables.objectMetadata />
     </cffunction>
 	
 	<!--- reactorFactory --->
     <cffunction name="setReactorFactory" access="private" output="false" returntype="void">
-       <cfargument name="reactorFactory" hint="I am a reference to the ReactorFactory" required="yes" type="reactor.ReactorFactory" />
+       <cfargument name="reactorFactory" hint="I am a reference to the ReactorFactory" required="yes" type="any" />
        <cfset variables.reactorFactory = arguments.reactorFactory />
     </cffunction>
-    <cffunction name="getReactorFactory" access="private" output="false" returntype="reactor.ReactorFactory">
+    <cffunction name="getReactorFactory" access="private" output="false" returntype="any">
        <cfreturn variables.reactorFactory />
     </cffunction>
 	
 	<!--- fields --->
     <cffunction name="setFields" access="private" output="false" returntype="void">
-       <cfargument name="fields" hint="I am the fields in this object" required="yes" type="array" />
+       <cfargument name="fields" hint="I am the fields in this object" required="yes" type="any" />
        <cfset variables.fields = arguments.fields />
     </cffunction>
-    <cffunction name="getFields" access="public" output="false" returntype="array">
+    <cffunction name="getFields" access="public" output="false" returntype="any">
        <cfreturn variables.fields />
     </cffunction>
 	
 	<!--- fieldPrefix --->
     <cffunction name="setFieldPrefix" access="public" output="false" returntype="void">
-       <cfargument name="fieldPrefix" hint="I set the prefix to prepend to all fields in this object." required="yes" type="string" />
+       <cfargument name="fieldPrefix" hint="I set the prefix to prepend to all fields in this object." required="yes" type="any" />
        <cfset variables.fieldPrefix = arguments.fieldPrefix />
     </cffunction>
-    <cffunction name="getFieldPrefix" access="public" output="false" returntype="string">
+    <cffunction name="getFieldPrefix" access="public" output="false" returntype="any">
        <cfreturn variables.fieldPrefix />
     </cffunction>
 	

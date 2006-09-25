@@ -10,11 +10,11 @@
 	<cfset variables.password = "" />
 	<cfset variables.objectMap = structNew() />
 	
-	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="reactor.config.config">
-		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="string" />
+	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="any">
+		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="any" />
 		<!--- validate and parse the xml file. --->
 		<cfset var xmlObject = validateAndParseXML( arguments.pathToConfigXml ) />
-
+		
 		<!--- load the basic configuration settings --->
 		<cfset loadConfig( xmlObject ) />
 
@@ -25,13 +25,13 @@
 	</cffunction>
 	
 	<!--- getObjectNames --->
-	<cffunction name="getObjectNames" returntype="array" access="public" output="false" hint="I return an array of all configured object names.">
+	<cffunction name="getObjectNames" returntype="any" access="public" output="false" hint="I return an array of all configured object names.">
 		<cfreturn StructKeyArray(variables.objectMap) />
 	</cffunction>
 	
 	<!--- addObjects --->
 	<cffunction name="addObjects" returntype="void" access="public" output="false" hint="I add more Reactor objects to the configuration.">
-		<cfargument name="objectXmlFile" type="string" required="true" hint="I am the path to the config XML file to be added." />
+		<cfargument name="objectXmlFile" type="any" required="true" hint="I am the path to the config XML file to be added." />
 		<!--- validate and parse the xml file. --->
 		<cfset var xmlObject = validateAndParseXML( arguments.objectXmlFile ) />
 		
@@ -41,7 +41,7 @@
 	
 	<!--- addObjectsFromXml --->
 	<cffunction name="addObjectsFromXml" returntype="void" access="private" output="false" hint="I add Reactor objects from an XML object.">
-		<cfargument name="configXml" type="string" required="true" hint="I am the XML object to be processed." />
+		<cfargument name="configXml" type="any" required="true" hint="I am the XML object to be processed." />
 		
 		<cfset var objectsConfig = xmlsearch( arguments.configXml, '//reactor/objects' ) />
 		<cfset var x = 0 />
@@ -72,7 +72,7 @@
 
 	<!--- loadConfig --->
 	<cffunction name="loadConfig" access="private" hint="I read the basic config settings from the config xml." output="false" returntype="void">
-		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="string" />
+		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="any" />
 		<cfset var config = 0 />
 		<cfset var x = 0 />
     
@@ -90,7 +90,7 @@
 
 	<!--- validate and parse xml --->
 	<cffunction name="validateAndParseXML" returntype="any" access="private" output="false" hint="I validates and parses xml file passed as an argument.">
-		<cfargument name="xmlFile" type="string" required="true" hint="I am the path to the config XML file." />
+		<cfargument name="xmlFile" type="any" required="true" hint="I am the path to the config XML file." />
 		<cfset var xml = "">
 		
 		<!--- attempt to expand the path to config --->
@@ -119,7 +119,7 @@
 		<cfreturn xml />
 	</cffunction>
 	
-	<cffunction name="getObjectConfig" access="public" output="false" returntype="string" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
+	<cffunction name="getObjectConfig" access="public" output="false" returntype="any" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
 		<cfargument name="alias" required="yes" type="any" hint="I am the alias of the object to get the configuration for" />
 		<cfset var table = 0 />
 
@@ -135,16 +135,16 @@
 
 	<!--- dsn --->
   <cffunction name="setDsn" access="public" output="false" returntype="void">
-       <cfargument name="dsn" hint="I am the DSN to connect to." required="yes" type="string" />
+       <cfargument name="dsn" hint="I am the DSN to connect to." required="yes" type="any" />
        <cfset variables.dsn = arguments.dsn />
   </cffunction>
-  <cffunction name="getDsn" access="public" output="false" returntype="string">
+  <cffunction name="getDsn" access="public" output="false" returntype="any">
        <cfreturn variables.dsn />
   </cffunction>
 
 	<!--- Type --->
 	<cffunction name="setType" access="public" output="false" returntype="void">
-		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="string" />
+		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="any" />
 
 		<cfif NOT ListFind("mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere", arguments.Type)>
 			<cfthrow type="reactor.InvalidType"
@@ -154,13 +154,13 @@
 
 		<cfset variables.Type = arguments.Type />
   </cffunction>
-  <cffunction name="getType" access="public" output="false" returntype="string">
+  <cffunction name="getType" access="public" output="false" returntype="any">
     <cfreturn lcase(variables.Type) />
   </cffunction>
 
 	<!--- mapping --->
   <cffunction name="setMapping" access="public" output="false" returntype="void">
-		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="yes" type="string" />
+		<cfargument name="mapping" hint="I am a mapping to the location where objects are created." required="yes" type="any" />
 
 		<cfif NOT DirectoryExists(expandPath(arguments.mapping))>
 			<cfthrow type="reactor.Invalidmapping"
@@ -171,8 +171,8 @@
 		<cfset variables.mapping = arguments.mapping />
   </cffunction>
 
-  <cffunction name="getMapping" access="public" output="false" returntype="string">
-		<cfargument name="alias" hint="I am an optional alias of an object.  The object will be checked for its own custom mapping." required="no" type="string" default="" />
+  <cffunction name="getMapping" access="public" output="false" returntype="any">
+		<cfargument name="alias" hint="I am an optional alias of an object.  The object will be checked for its own custom mapping." required="no" type="any" default="" />
 		<cfset var mapping = variables.mapping />
 		<cfset var object = 0 />
 		
@@ -186,7 +186,7 @@
 		<cfreturn mapping />
   </cffunction>
 
-  <cffunction name="getMappingObjectStem" access="public" output="false" returntype="string">
+  <cffunction name="getMappingObjectStem" access="public" output="false" returntype="any">
 		<cfargument name="mapping" hint="I am the mapping to get the stem for." required="no" default="#getMapping()#" />
 		<cfset var objectStem = ReReplaceNoCase(arguments.mapping, "/+", ".", "all") />
 
@@ -199,7 +199,7 @@
 
 	<!--- mode --->
   <cffunction name="setMode" access="public" output="false" returntype="void">
-		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="yes" type="string" />
+		<cfargument name="mode" hint="I am the mode in which the system is running.  Options are: development, production" required="yes" type="any" />
 
 		<cfif NOT ListFindNoCase("development,production,always", arguments.mode)>
 			<cfthrow type="reactor.InvalidMode"
@@ -209,34 +209,34 @@
 
 		<cfset variables.mode = arguments.mode />
   </cffunction>
-  <cffunction name="getMode" access="public" output="false" returntype="string">
+  <cffunction name="getMode" access="public" output="false" returntype="any">
        <cfreturn variables.mode />
   </cffunction>
 
 	<!--- project --->
   <cffunction name="setProject" access="public" output="false" returntype="void">
-       <cfargument name="project" hint="I am the name of the project." required="yes" type="string" />
+       <cfargument name="project" hint="I am the name of the project." required="yes" type="any" />
        <cfset variables.project = ReReplace(arguments.project, "[\W]", "", "all") />
   </cffunction>
-  <cffunction name="getProject" access="public" output="false" returntype="string">
+  <cffunction name="getProject" access="public" output="false" returntype="any">
        <cfreturn variables.project />
   </cffunction>
 
 	<!--- username --->
   <cffunction name="setUsername" access="public" output="false" returntype="void">
-       <cfargument name="username" hint="I am the username to use for DSNs" required="yes" type="string" />
+       <cfargument name="username" hint="I am the username to use for DSNs" required="yes" type="any" />
        <cfset variables.username = arguments.username />
   </cffunction>
-  <cffunction name="getUsername" access="public" output="false" returntype="string">
+  <cffunction name="getUsername" access="public" output="false" returntype="any">
        <cfreturn variables.username />
   </cffunction>
 
 	<!--- password --->
   <cffunction name="setPassword" access="public" output="false" returntype="void">
-       <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="string" />
+       <cfargument name="password" hint="I am the password to use for DSNs" required="yes" type="any" />
        <cfset variables.password = arguments.password />
   </cffunction>
-  <cffunction name="getPassword" access="public" output="false" returntype="string">
+  <cffunction name="getPassword" access="public" output="false" returntype="any">
        <cfreturn variables.password />
   </cffunction>
 

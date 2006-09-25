@@ -8,12 +8,12 @@
 	<cfset variables.alias = "" />
 		
 	<!--- configure --->
-	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="reactor.base.abstractRecord">
-		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="reactor.config.config" />
-		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="string" />
-		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="reactor.reactorFactory" />
-		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="reactor.data.abstractConvention" />
-		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="reactor.base.abstractMetadata" />
+	<cffunction name="configure" access="public" hint="I configure and return this object." output="false" returntype="any">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" />
+		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="any" />
 		
 		<cfset super._configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset _setObjectMetadata(arguments.ObjectMetadata) />
@@ -23,10 +23,10 @@
 	
 	<!--- objectMetadata --->
     <cffunction name="_setObjectMetadata" access="private" output="false" returntype="void">
-       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="reactor.base.abstractMetadata" />
+       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" />
        <cfset variables.objectMetadata = arguments.objectMetadata />
     </cffunction>
-    <cffunction name="_getObjectMetadata" access="public" output="false" returntype="reactor.base.abstractMetadata">
+    <cffunction name="_getObjectMetadata" access="public" output="false" returntype="any">
        <cfreturn variables.objectMetadata />
     </cffunction>
 	
@@ -35,12 +35,12 @@
 	</cffunction>	
 	
 	<!--- isDirty --->
-	<cffunction name="isDirty" access="public" hint="I indicate if this object has been modified since it was created, loaded, saved, deleted or cleaned." output="false" returntype="boolean">
+	<cffunction name="isDirty" access="public" hint="I indicate if this object has been modified since it was created, loaded, saved, deleted or cleaned." output="false" returntype="any">
 		<cfreturn NOT _getTo()._isEqual(_getInitialTo()) />
 	</cffunction>
 	
 	<!--- load --->
-	<cffunction name="load" access="public" hint="I load the record." output="false" returntype="reactor.base.abstractRecord">
+	<cffunction name="load" access="public" hint="I load the record." output="false" returntype="any">
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var item = 0 />
 		<cfset var func = 0 />
@@ -87,7 +87,7 @@
 	</cffunction>
 	
 	<cffunction name="save" access="public" hint="I save the record." output="false" returntype="void">
-		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="boolean" default="true" />
+		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="any" default="true" />
 		
 		<cfif arguments.useTransaction>
 			<cfset saveInTransaction() />
@@ -117,7 +117,7 @@
 	
 	<!--- delete --->
 	<cffunction name="delete" access="public" hint="I delete the record." output="false" returntype="void">
-		<cfargument name="useTransaction" hint="I indicate if this delete should be executed within a transaction." required="no" type="boolean" default="true" />
+		<cfargument name="useTransaction" hint="I indicate if this delete should be executed within a transaction." required="no" type="any" default="true" />
 		
 		<cfif arguments.useTransaction>
 			<cfset deleteInTransaction() />
@@ -287,7 +287,7 @@
 		<cfset clean() />
 	</cffunction>
 	
-	<cffunction name="isInLinkedRelationship" access="private" hint="I indicate if this record is currently in a has many linked relationship." output="false" returntype="boolean">
+	<cffunction name="isInLinkedRelationship" access="private" hint="I indicate if this record is currently in a has many linked relationship." output="false" returntype="any">
 		<cfset var Parent = 0 />
 		
 		<!--- does this item have a parent? --->
@@ -313,20 +313,20 @@
 		
 	<!--- ErrorCollection --->
     <cffunction name="_setErrorCollection" access="private" output="false" returntype="void">
-       <cfargument name="ErrorCollection" hint="I am this object's ErrorCollection" required="yes" type="reactor.util.ErrorCollection" />
+       <cfargument name="ErrorCollection" hint="I am this object's ErrorCollection" required="yes" type="any" />
        <cfset variables.ErrorCollection = arguments.ErrorCollection />
     </cffunction>
-    <cffunction name="_getErrorCollection" access="public" output="false" returntype="reactor.util.ErrorCollection">
+    <cffunction name="_getErrorCollection" access="public" output="false" returntype="any">
        <cfreturn variables.ErrorCollection />
     </cffunction>
 	
 	<!--- validated --->
-	<cffunction name="validated" access="public" hint="I indicate if this object has been validated at all" output="false" returntype="boolean">
+	<cffunction name="validated" access="public" hint="I indicate if this object has been validated at all" output="false" returntype="any">
 		<cfreturn IsObject(variables.ErrorCollection) />
 	</cffunction>
 	
 	<!--- hasErrors --->
-	<cffunction name="hasErrors" access="public" hint="I indicate if this object has errors or not (based in the last call to validate)" output="false" returntype="boolean">
+	<cffunction name="hasErrors" access="public" hint="I indicate if this object has errors or not (based in the last call to validate)" output="false" returntype="any">
 		<cfset var item = 0 />
 		
 		<cfif _getErrorCollection().count() GT 0>
@@ -345,7 +345,7 @@
 	</cffunction>
 	
 	<!--- getDictionary --->
-	<cffunction name="_getDictionary" access="public" output="false" returntype="reactor.dictionary.dictionary">
+	<cffunction name="_getDictionary" access="public" output="false" returntype="any">
 		
 		<cfif NOT StructKeyExists(variables, "Dictionary")>
 			<cfset variables.Dictionary = _getReactorFactory().createDictionary(_getAlias()) />
@@ -355,14 +355,14 @@
 	</cffunction>
 	
 	<!--- isDeleted --->
-    <cffunction name="isDeleted" hint="I indicate if this record has been deleted.  If an object has been deleted access to any of its data through its properties will throw errors." access="public" output="false" returntype="boolean">
+    <cffunction name="isDeleted" hint="I indicate if this record has been deleted.  If an object has been deleted access to any of its data through its properties will throw errors." access="public" output="false" returntype="any">
        <cfreturn variables.deleted />
     </cffunction>
 	
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
 		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="any" />
 		<cfset variables.parent = arguments.parent />
 		
 		<!--- if variables.parent is not an iterator then the relationship alias is required! --->
@@ -378,7 +378,7 @@
     <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
        <cfreturn variables.parent />
     </cffunction>
-	<cffunction name="hasParent" access="public" hint="I indicate if this object has a parent." output="false" returntype="boolean">
+	<cffunction name="hasParent" access="public" hint="I indicate if this object has a parent." output="false" returntype="any">
 		<cfreturn IsObject(variables.parent) />
 	</cffunction>
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
@@ -387,10 +387,10 @@
 	
 	<!--- relationshipAlias --->
     <cffunction name="_setRelationshipAlias" access="private" output="false" returntype="void">
-       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="string" />
+       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="any" />
        <cfset variables.relationshipAlias = arguments.relationshipAlias />
     </cffunction>
-    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="string">
+    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="any">
        <cfreturn variables.relationshipAlias />
     </cffunction>
 </cfcomponent>

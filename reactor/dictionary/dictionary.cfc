@@ -2,8 +2,8 @@
 
 	<cfset variables.dictionaryXml = "" />
 	
-	<cffunction name="init" access="public" hint="I configure and return this dictionary" output="false" returntype="reactor.dictionary.dictionary">
-		<cfargument name="pathToDictionary" hint="I am the path to the XML document this dictionary will use." required="yes" type="string" />
+	<cffunction name="init" access="public" hint="I configure and return this dictionary" output="false" returntype="any">
+		<cfargument name="pathToDictionary" hint="I am the path to the XML document this dictionary will use." required="yes" type="any" />
 		<cfset var dictionaryXml = "" />
 		
 		<cffile action="read" file="#ExpandPath(arguments.pathToDictionary)#" variable="dictionaryXml" />
@@ -13,8 +13,8 @@
 	</cffunction>
 	
 	<!--- getValue --->
-	<cffunction name="getValue" access="public" hint="I get a value from the dictionary" output="false" returntype="string">
-		<cfargument name="element" hint="I am the path to the element to get from the dictionary.  IE: foo.bar to get dictionary/foo/bar" required="yes" type="string" />
+	<cffunction name="getValue" access="public" hint="I get a value from the dictionary" output="false" returntype="any">
+		<cfargument name="element" hint="I am the path to the element to get from the dictionary.  IE: foo.bar to get dictionary/foo/bar" required="yes" type="any" />
 		<cfset var node = 0 />
 		
 		<cftry>
@@ -29,10 +29,10 @@
 	
 	<!--- dictionaryXml --->
     <cffunction name="setDictionaryXml" access="private" output="false" returntype="void">
-       <cfargument name="dictionaryXml" hint="I am the xml from the dictionary" required="yes" type="string" />
+       <cfargument name="dictionaryXml" hint="I am the xml from the dictionary" required="yes" type="any" />
        <cfset variables.dictionaryXml = arguments.dictionaryXml />
     </cffunction>
-    <cffunction name="getDictionaryXml" access="private" output="false" returntype="string">
+    <cffunction name="getDictionaryXml" access="private" output="false" returntype="any">
        <cfreturn variables.dictionaryXml />
     </cffunction>
 	
