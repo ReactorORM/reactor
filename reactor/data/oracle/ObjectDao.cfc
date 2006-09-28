@@ -144,8 +144,8 @@
 		<cfif left(arguments.sqlDefaultValue,1) is "'" and right(arguments.sqlDefaultValue,1) is "'">
 			<cfset arguments.sqlDefaultValue = mid(arguments.sqlDefaultValue,2,len(arguments.sqlDefaultValue)-2) />
 		</cfif>
-		<cfswitch expression="#arguments.typeName#">
-			<cfcase value="NUMERIC">
+<!--- 		<cfswitch expression="#arguments.typeName#"> --->
+			<cfif compareNocase(arguments.typename, "NUMERIC") is 0>
 				<cfif IsNumeric(arguments.sqlDefaultValue)>
 					<cfreturn arguments.sqlDefaultValue />
 				<cfelseif arguments.nullable>
@@ -153,163 +153,144 @@
 				<cfelse>
 					<cfreturn 0 />
 				</cfif>
-			</cfcase>
-			<cfcase value="STRING">
+			
+			<cfelseif compareNocase(arguments.typename, "STRING") is 0>
 				<cfif FindNoCase("SYS_GUID()", arguments.sqlDefaultValue) gt 0>
 					<cfreturn "##replace(CreateUUID(),'-','','all')##" />
 				<cfelse>
    				<cfreturn arguments.sqlDefaultValue  />
    			</cfif>
 				<cfreturn arguments.sqlDefaultValue  />
-			</cfcase>
-			<cfcase value="DATE,TIMESTAMP">
+			
+			<cfelseif  compareNocase(arguments.typename, "DATE") is 0 
+          or compareNocase(arguments.typename, "TIMESTAMP") is 0>
 				<cfif arguments.sqlDefaultValue IS "SYSDATE">
 					<cfreturn "##Now()##" />
 				<cfelse>
    				<cfreturn arguments.sqlDefaultValue  />
    			</cfif>
-			</cfcase>
-			<cfdefaultcase>
+			
+			<cfelse>
 				<cfreturn "" />
-			</cfdefaultcase>
-		</cfswitch>
+			
+		</cfif>
 	</cffunction>
 
 	<cffunction name="getCfSqlType" access="private" hint="I translate the Oracle data type names into ColdFusion cf_sql_xyz names" output="false" returntype="any">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" />
-		<cfswitch expression="#lcase(arguments.typeName)#">
-        <!--- misc --->
-			<cfcase value="rowid">
+<!--- 		<cfswitch expression="#lcase(arguments.typeName)#"> --->
+    <!--- most commonly used --->
+			<cfif compareNocase(arguments.typename, "varchar2") is 0>
 				<cfreturn "cf_sql_varchar" />
-			</cfcase>
-			<!--- time --->
-			<cfcase value="date">
-				<cfreturn "cf_sql_timestamp" />
-			</cfcase>
-			<cfcase value="timestamp(6)">
+			<cfelseif compareNocase(arguments.typename, "timestamp(6)") is 0>
 				<cfreturn "cf_sql_date" />
-			</cfcase>
+			<cfelseif compareNocase(arguments.typename, "integer") is 0>
+				<cfreturn "cf_sql_numeric" />
+			<cfelseif compareNocase(arguments.typename, "number") is 0>
+				<cfreturn "cf_sql_numeric" />
+
+        <!--- misc --->
+			<cfelseif compareNocase(arguments.typename, "rowid") is 0>
+				<cfreturn "cf_sql_varchar" />
+			
+			<!--- time --->
+			<cfelseif compareNocase(arguments.typename, "date") is 0>
+				<cfreturn "cf_sql_timestamp" />
+
          <!--- strings --->
-			<cfcase value="char">
+			<cfelseif compareNocase(arguments.typename, "char") is 0>
 				<cfreturn "cf_sql_char" />
-			</cfcase>
-			<cfcase value="nchar">
+			<cfelseif compareNocase(arguments.typename, "nchar") is 0>
 				<cfreturn "cf_sql_char" />
-			</cfcase>
-			<cfcase value="varchar">
+			<cfelseif compareNocase(arguments.typename, "varchar") is 0>
 				<cfreturn "cf_sql_varchar" />
-			</cfcase>
-			<cfcase value="varchar2">
+			<cfelseif compareNocase(arguments.typename, "nvarchar2") is 0>
 				<cfreturn "cf_sql_varchar" />
-			</cfcase>
-			<cfcase value="nvarchar2">
-				<cfreturn "cf_sql_varchar" />
-			</cfcase>
+			
 			<!--- long types --->
 			<!---   @@Note: bfile  not supported --->
-			<cfcase value="blob">
+			<cfelseif compareNocase(arguments.typename, "blob") is 0>
 				<cfreturn "cf_sql_blob" />
-			</cfcase>
-			<cfcase value="clob">
+			<cfelseif compareNocase(arguments.typename, "clob") is 0>
 				<cfreturn "cf_sql_clob" />
-			</cfcase>
-			<cfcase value="nclob">
+			<cfelseif compareNocase(arguments.typename, "nclob") is 0>
 				<cfreturn "cf_sql_clob" />
-			</cfcase>
-			<cfcase value="long">
+			<cfelseif compareNocase(arguments.typename, "long") is 0>
 				<cfreturn "cf_sql_longvarchar" />
-			</cfcase>
+			
 			   <!--- @@Note: may need "tobinary(ToBase64(x))" when updating --->
-			<cfcase value="long raw">
+			<cfelseif compareNocase(arguments.typename, "long raw") is 0>
 				<cfreturn "cf_sql_longvarbinary" />
-			</cfcase>
-			<cfcase value="raw">
+			<cfelseif compareNocase(arguments.typename, "raw") is 0>
 			   <!--- @@Note: may need "tobinary(ToBase64(x))" when updating --->
 				<cfreturn "cf_sql_varbinary" />
-			</cfcase>
+			
 			<!--- numerics --->
-			<cfcase value="float">
+			<cfelseif compareNocase(arguments.typename, "float") is 0>
 				<cfreturn "cf_sql_float" />
-			</cfcase>
-			<cfcase value="integer">
+			<cfelseif compareNocase(arguments.typename, "real") is 0>
 				<cfreturn "cf_sql_numeric" />
-			</cfcase>
-			<cfcase value="number">
-				<cfreturn "cf_sql_numeric" />
-			</cfcase>
-			<cfcase value="real">
-				<cfreturn "cf_sql_numeric" />
-			</cfcase>
-		</cfswitch>
+			
+		</cfif>
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 	</cffunction>
 
 	<cffunction name="getCfDataType" access="private" hint="I translate the Oracle data type names into ColdFusion data type names" output="false" returntype="any">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" />
 
-		<cfswitch expression="#arguments.typeName#">
+<!--- 		<cfswitch expression="#arguments.typeName#"> --->
+
+			<!--- most commonly used types --->
+			<cfif compareNocase(arguments.typename, "varchar2") is 0>
+				<cfreturn "string" />
+			<cfelseif compareNocase(arguments.typename, "date") is 0>
+				<cfreturn "date" />
+			<cfelseif compareNocase(arguments.typename, "integer") is 0>
+				<cfreturn "numeric" />
+			<cfelseif compareNocase(arguments.typename, "number") is 0>
+				<cfreturn "numeric" />
+
         <!--- misc --->
-			<cfcase value="rowid">
+			<cfelseif compareNocase(arguments.typename, "rowid") is 0>
 				<cfreturn "string" />
-			</cfcase>
+			
 			<!--- time --->
-			<cfcase value="date">
+			
+			<cfelseif compareNocase(arguments.typename, "timestamp(6)") is 0>
 				<cfreturn "date" />
-			</cfcase>
-			<cfcase value="timestamp(6)">
-				<cfreturn "date" />
-			</cfcase>
+			
             <!--- strings --->
-			<cfcase value="char">
+			<cfelseif compareNocase(arguments.typename, "char") is 0>
+				<cfreturn "string" />		
+			<cfelseif compareNocase(arguments.typename, "nchar") is 0>
 				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="nchar">
+			<cfelseif compareNocase(arguments.typename, "varchar") is 0>
 				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="varchar">
+			<cfelseif compareNocase(arguments.typename, "nvarchar2") is 0>
 				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="varchar2">
-				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="nvarchar2">
-				<cfreturn "string" />
-			</cfcase>
+			
 			<!--- long --->
 			<!---   @@Note: bfile  not supported --->
-			<cfcase value="blob">
+			<cfelseif compareNocase(arguments.typename, "blob") is 0>
 				<cfreturn "binary" />
-			</cfcase>
-			<cfcase value="clob">
+			<cfelseif compareNocase(arguments.typename, "clob") is 0>
 				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="nclob">
+			<cfelseif compareNocase(arguments.typename, "nclob") is 0>
 				<cfreturn "string" />
-			</cfcase>
-			<cfcase value="long">
+			<cfelseif compareNocase(arguments.typename, "long") is 0>
 				<cfreturn "string" />
-			</cfcase>
-		   <cfcase value="long raw">
+		   <cfelseif compareNocase(arguments.typename, "long raw") is 0>
 				<cfreturn "binary" />
-			</cfcase>
-			<cfcase value="raw">
+			<cfelseif compareNocase(arguments.typename, "raw") is 0>
 				<cfreturn "binary" />
-			</cfcase>
+			
 			<!--- numerics --->
-			<cfcase value="float">
+			<cfelseif compareNocase(arguments.typename, "float") is 0>
 				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="integer">
+			<cfelseif compareNocase(arguments.typename, "real") is 0>
 				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="number">
-				<cfreturn "numeric" />
-			</cfcase>
-			<cfcase value="real">
-				<cfreturn "numeric" />
-			</cfcase>
-
-		</cfswitch>
+		
+		</cfif>
 
 		<cfthrow message="Unsupported (or incorrectly supported) database datatype: #arguments.typeName#." />
 

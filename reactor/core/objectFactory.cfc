@@ -74,13 +74,12 @@
 		</cfif>
 		
 		<cftry>
-			<cfswitch expression="#getConfig().getMode()#">
-				<cfcase value="always">
+<!--- 			<cfswitch expression="#getConfig().getMode()#"> --->
+				<cfif compareNocase(getConfig().getMode(), "always") is 0>
 					<!--- we always need the db object to transform --->
 					<cfset DbObject = getObject(arguments.alias) />
 					<cfset generate = true />
-				</cfcase>
-				<cfcase value="development">					
+				<cfelseif compareNocase(getConfig().getMode(), "development") is 0>				
 					<!--- we always need the db object to compare to our existing object --->
 					<cfset DbObject = getObject(arguments.alias) />
 					<cftry>
@@ -96,8 +95,7 @@
 							<cfset generate = true />
 						</cfif>
 					</cfif>
-				</cfcase>
-				<cfcase value="production">
+				<cfelseif compareNocase(getConfig().getMode(), "production") is 0>
 					<cftry>
 						
 						<!--- get an instance of the object from cache or create it --->
@@ -122,8 +120,7 @@
 							<cfset generate = true />
 						</cfcatch>
 					</cftry>
-				</cfcase>
-			</cfswitch>
+			</cfif>
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
@@ -178,8 +175,8 @@
 		<cfset var ObjectTranslator = 0 />
 		
 		<cftry>
-			<cfswitch expression="#getConfig().getMode()#">
-				<cfcase value="production">
+<!--- 			<cfswitch expression="#getConfig().getMode()#"> --->
+				<cfif compareNocase(getConfig().getMode(), "production") is 0>
 					<cftry>
 						<!--- get an instance of the object from cache or create it --->
 						<cfif StructKeyExists(variables.Cache["Dictionary"], arguments.alias)>
@@ -195,13 +192,11 @@
 							<cfset generate = true />
 						</cfcatch>
 					</cftry>
-				</cfcase>
-				<cfdefaultcase>
+				<cfelse>
 					<!--- we always need the db object to update the xml --->
 					<cfset DbObject = getObject(arguments.alias) />
 					<cfset generate = true />
-				</cfdefaultcase>
-			</cfswitch>
+			</cfif>
 			
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
