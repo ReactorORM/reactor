@@ -9,7 +9,7 @@
 /// Section Begin - General and relative topics(JavaScript 1.0)
 
 //{{HH_SYMBOL_SECTION
-var HH_ChmFilename = "C:\\Inetpub\\Reactor For ColdFusion\\Documentation\\Documentation\\Reactor Documentation.chm";
+var HH_ChmFilename = "C:\\Inetpub\\wwwroot\\Reactor For Coldfusion\\Documentation\\Documentation\\Reactor Documentation.chm";
 var HH_WindowName = "";
 var HH_GlossaryFont = "";
 var HH_Glossary = "";
