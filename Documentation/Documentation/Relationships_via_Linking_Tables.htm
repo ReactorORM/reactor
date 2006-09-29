@@ -19,8 +19,8 @@
 <meta name=filetype content=kadov>
 <meta name=filetype-version content=1>
 <meta name=page-count content=1>
-<meta name=layout-height content=2288>
-<meta name=layout-width content=1346>
+<meta name=layout-height content=2414>
+<meta name=layout-width content=1006>
 
 
 <!--(Links)=========================================================-->
@@ -474,6 +474,41 @@
 
 <p>&nbsp;</p>
 
+<p>To support this, you use the &quot;link&quot; tag inside a hasMany tag. 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For example:</p>
+
+<p>&nbsp;</p>
+
+<p class=code>&lt;object name=&quot;Product&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasMany 
+ name=&quot;Invoice&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br>
+&lt;/object&gt;<br>
+<br>
+&lt;object name=&quot;Invoice&quot;&gt;<br>
+ &lt;hasMany name=&quot;Product&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;link 
+ name=&quot;InvoiceProduct&quot; /&gt;<br>
+ &lt;/hasMany&gt;<br>
+&lt;/object&gt;<br>
+<br>
+&lt;object name=&quot;InvoiceProduct&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;Product&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;productId&quot; to=&quot;productId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
+ name=&quot;Invoice&quot;&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
+ from=&quot;invoiceId&quot; to=&quot;invoiceId&quot; /&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
+&lt;/object&gt;</p>
+
+&nbsp;
+
 <p>Given that, what would your code look like if you wanted to get all 
  the products on a particular invoice? <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Maybe 
  like this:</p>
@@ -497,12 +532,12 @@
 &lt;!--- loop over the invoice products and get the product record ---&gt;<br>
 &lt;cfloop from=&quot;1&quot; to=&quot;#ArrayLen(InvoiceProducts)#&quot; 
  index=&quot;x&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;cfset 
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;cfset 
  ProductRecord = InvoiceProducts[x].getProduct()/&gt;<br>
 <br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;cfoutput&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->#ProductRecord.getName()#&lt;br&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/cfoutput&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;cfoutput&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->#ProductRecord.getName()#&lt;br&gt;<br>
+ <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/cfoutput&gt;<br>
 &lt;/cfloop&gt;</p>
 
 &nbsp; 
@@ -523,46 +558,9 @@
  other hasMany relationships? <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->Not 
  to worry, you can!</p>
 
-<p>&nbsp;</p>
+<p><!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}--></p>
 
-<p>To support this, you use the &quot;link&quot; tag inside a hasMany tag. 
- <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->For example:</p>
-
-<p>&nbsp;</p>
-
-<p class=code>&lt;object name=&quot;Product&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasMany 
- name=&quot;Invoice&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;link 
- name=&quot;InvoiceProduct&quot; /&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br>
-&lt;/object&gt;<br>
-<br>
-&lt;object name=&quot;Invoice&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasMany 
- name=&quot;Product&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;link 
- name=&quot;InvoiceProduct&quot; /&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasMany&gt;<br>
-&lt;/object&gt;<br>
-<br>
-&lt;object name=&quot;InvoiceProduct&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
- name=&quot;Product&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
- from=&quot;productId&quot; to=&quot;productId&quot; /&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;hasOne 
- name=&quot;Invoice&quot;&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;relate 
- from=&quot;invoiceId&quot; to=&quot;invoiceId&quot; /&gt;<br>
- <!--kadov_tag{{<spaces>}}-->&nbsp;&nbsp;&nbsp;<!--kadov_tag{{</spaces>}}-->&lt;/hasOne&gt;<br>
-&lt;/object&gt;</p>
-
-&nbsp; 
-
-<!--begin!kadov{{--><br><!--}}end!kadov--><!--kadov_tag{{<implicit_p>}}-->Take 
- a look at the Product and Invoice configurations. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
+Take a look at the Product and Invoice configurations. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->The 
  configuration is effectively saying that an Invoice has many Products 
  by virtue of a link through InvoiceProduct (which has one of both). <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->It 
  works the other way around too. 
