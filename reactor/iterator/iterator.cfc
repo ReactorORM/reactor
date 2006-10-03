@@ -446,7 +446,8 @@
 	<!--- populate --->
 	<cffunction name="populate" access="private" hint="I populate this object with data if it's not already populated." output="false" returntype="void">
 		<cfset var deletedArray = 0 />
-
+    <cfset var addColumn = "" />
+    
 		<cfif NOT isPopulated()>
 			<cfset variables.query = getGateway().getByQuery(getQueryObject(), false) />
 
@@ -459,12 +460,12 @@
 				<cfset ArraySet(deletedArray, 1, variables.query.recordCount, 0) />
 			</cfif>
 
-			<cfif ListFirst(Server.ColdFusion.ProductVersion) GTE 7>
-				<cfset QueryAddColumn(variables.query, "reactorRowDeleted", "Bit", deletedArray) />
-			<cfelse>
-				<!--- hopefully this works in MX 6.1 --->
-				<cfset QueryAddColumn(variables.query, "reactorRowDeleted", deletedArray) />
-			</cfif>
+      <cfif ListFirst(Server.ColdFusion.ProductVersion) GTE 7>
+          <cfset addColumn = "QueryAddColumn(variables.query, 'reactorRowDeleted', 'Bit', deletedArray)" />
+      <cfelse>
+          <cfset addColumn = "QueryAddColumn(variables.query, 'reactorRowDeleted', deletedArray)" />
+      </cfif>
+      <cfset evaluate( addColumn ) />
 
 			<cfif variables.query.recordCount GT 0>
 				<cfset ArraySet(variables.array, 1, variables.query.recordCount, "") />
