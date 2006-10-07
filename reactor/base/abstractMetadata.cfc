@@ -1,37 +1,37 @@
 <cfcomponent hint="I am an abstract Metadata.  I am used to define an interface and return types." extends="reactor.base.abstractObject">
-	<cffunction name="getConventions" access="public" output="false" returntype="any">
+	<cffunction name="getConventions" access="public" output="false" returntype="any" _returntype="reactor.data.abstractConvention">
 		<cfreturn _getConvention() />
   </cffunction>
 
-	<cffunction name="getDatabase" access="public" hint="I return the name of the database this object is in." output="false" returntype="any">
+	<cffunction name="getDatabase" access="public" hint="I return the name of the database this object is in." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().database />
 	</cffunction>
 
-	<cffunction name="getDbms" access="public" hint="I return the name of the database this object is in." output="false" returntype="any">
+	<cffunction name="getDbms" access="public" hint="I return the name of the database this object is in." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().dbms />
 	</cffunction>
 	
-	<cffunction name="getName" access="public" hint="I return the name of the object." output="false" returntype="any">
+	<cffunction name="getName" access="public" hint="I return the name of the object." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().name />
 	</cffunction>
 	
-	<cffunction name="getAlias" access="public" hint="I return the alias of the object." output="false" returntype="any">
+	<cffunction name="getAlias" access="public" hint="I return the alias of the object." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().alias />
 	</cffunction>
 	
-	<cffunction name="getOwner" access="public" hint="I return the owner of this object." output="false" returntype="any">
+	<cffunction name="getOwner" access="public" hint="I return the owner of this object." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().owner />
 	</cffunction>
 	
-	<cffunction name="getType" access="public" hint="I return the type of object (view, table)." output="false" returntype="any">
+	<cffunction name="getType" access="public" hint="I return the type of object (view, table)." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().type />
 	</cffunction>
 	
-	<cffunction name="getFields" access="public" hint="I return an array of structures describing this object's fields" output="false" returntype="any">
+	<cffunction name="getFields" access="public" hint="I return an array of structures describing this object's fields" output="false" returntype="any" _returntype="array">
 		<cfreturn Duplicate(getObjectMetadata().fields) />
 	</cffunction>
 	
-	<cffunction name="getFieldQuery" access="public" hint="I return an Query of describing this object's fields" output="false" returntype="any">
+	<cffunction name="getFieldQuery" access="public" hint="I return an Query of describing this object's fields" output="false" returntype="any" _returntype="query">
 		<cfset var fields = getFields() />
 		<cfset var fieldQuery = QueryNew(StructKeyList(fields[1])) />
 		<cfset var x = 0 />
@@ -47,15 +47,15 @@
 		<cfreturn fieldQuery/>
 	</cffunction>
 	
-	<cffunction name="hasexternalFields" access="public" hint="I indicate if this object has any configured external fields" output="false" returntype="any">
+	<cffunction name="hasexternalFields" access="public" hint="I indicate if this object has any configured external fields" output="false" returntype="any" _returntype="boolean">
 		<cfreturn ArrayLen(getObjectMetadata().externalFields) GT 0/>
 	</cffunction>
 	
-	<cffunction name="getexternalFields" access="public" hint="I return an array of structures describing this object's external mapped fields" output="false" returntype="any">
+	<cffunction name="getexternalFields" access="public" hint="I return an array of structures describing this object's external mapped fields" output="false" returntype="any" _returntype="array">
 		<cfreturn Duplicate(getObjectMetadata().externalFields) />
 	</cffunction>
 	
-	<cffunction name="getExternalFieldQuery" access="public" hint="I return an Query of describing this object's external mapped fields" output="false" returntype="any">
+	<cffunction name="getExternalFieldQuery" access="public" hint="I return an Query of describing this object's external mapped fields" output="false" returntype="any" _returntype="query">
 		<cfset var fields = getexternalFields() />
 		<cfset var fieldQuery = QueryNew(StructKeyList(fields[1])) />
 		<cfset var x = 0 />
@@ -77,8 +77,8 @@
 		<cfreturn fieldQuery/>
 	</cffunction>
 	
-	<cffunction name="getField" access="public" hint="I return a structure of data about a specific field." output="false" returntype="any">
-		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="any" />
+	<cffunction name="getField" access="public" hint="I return a structure of data about a specific field." output="false" returntype="any" _returntype="struct">
+		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="any" _type="string" />
 		<cfset var fields = getFields() />
 		<cfset var field = 0 />
 		<cfset var x = 0 />
@@ -101,7 +101,7 @@
 		</cfif>
 	</cffunction>
 	
-	<cffunction name="getFieldList" access="public" hint="I return a list of fields in this object." output="false" returntype="any">
+	<cffunction name="getFieldList" access="public" hint="I return a list of fields in this object." output="false" returntype="any" _returntype="string">
 		<cfset var fields = getFields() />
 		<cfset var columList = "" />
 		<cfset var x = 0 />
@@ -113,7 +113,7 @@
 		<cfreturn columList />
 	</cffunction>
 	
-	<cffunction name="getExternalFieldList" access="public" hint="I return a list of external fields in this object." output="false" returntype="any">
+	<cffunction name="getExternalFieldList" access="public" hint="I return a list of external fields in this object." output="false" returntype="any" _returntype="string">
 		<cfset var fields = getexternalFields() />
 		<cfset var columList = "" />
 		<cfset var x = 0 />
@@ -126,8 +126,8 @@
 	</cffunction>
 		
 	<!--- hasSharedkey --->
-	<cffunction name="hasSharedkey" access="public" hint="I indicate if any of this object's relationships to the object with the specified alias use shared keys." output="false" returntype="any">
-		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="any" />
+	<cffunction name="hasSharedkey" access="public" hint="I indicate if any of this object's relationships to the object with the specified alias use shared keys." output="false" returntype="any" _returntype="boolean">
+		<cfargument name="alias" hint="I am the alias of the related object." required="yes" type="any" _type="string" />
 		<cfset var relationships = getRelationships(arguments.alias) />
 		<cfset var x = 0 />
 		
@@ -141,8 +141,8 @@
 	</cffunction>
 	
 	<!--- getRelationship --->
-	<cffunction name="getRelationship" access="public" hint="I get a relationship by alias." output="false" returntype="any">
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="any" />
+	<cffunction name="getRelationship" access="public" hint="I get a relationship by alias." output="false" returntype="any" _returntype="struct">
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="any" _type="string" />
 		<cfset var x = 0 />
 				
 		<!--- check hasManys first --->
@@ -165,8 +165,8 @@
 	</cffunction>
 	
 	<!--- getRelationships --->
-	<cffunction name="getRelationships" access="public" hint="I get an array of relationships.  I passed an alias I filter the relationships to only those that relate to the alias." output="false" returntype="any">
-		<cfargument name="alias" hint="I am the alias of the related object." required="no" type="any" default="" />
+	<cffunction name="getRelationships" access="public" hint="I get an array of relationships.  I passed an alias I filter the relationships to only those that relate to the alias." output="false" returntype="any" _returntype="array">
+		<cfargument name="alias" hint="I am the alias of the related object." required="no" type="any" _type="string" default="" />
 		<cfset var objectMetadata = getObjectMetadata() />
 		<cfset var allRelationships = ArrayNew(1) />
 		<cfset var relationships = 0 />
@@ -198,8 +198,8 @@
 	</cffunction>
 	
 	<!--- hasRelationship --->
-	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="any">
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="any" />
+	<cffunction name="hasRelationship" access="public" hint="I indicate if this object as a relationship with another object" output="false" returntype="any" _returntype="boolean">
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship we're looking for." required="yes" type="any" _type="string" />
 		<cfset var x = 0 />
 				
 		<!--- check hasManys first --->
@@ -222,7 +222,7 @@
 	
 	
 	<!--- metadata --->
-    <cffunction name="getObjectMetadata" access="public" output="false" returntype="any">
+    <cffunction name="getObjectMetadata" access="public" output="false" returntype="any" _returntype="struct">
        <cfreturn variables.metadata />
     </cffunction>
 		

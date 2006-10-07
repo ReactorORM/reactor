@@ -7,12 +7,12 @@
 	<cfset variables.lastExecutedQuery = StructNew() />
 	
 	<!--- configure --->
-	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any">
-		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" />
-		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" />
-		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" />
-		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" />
-		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="any" />
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="reactor.base.abstractGateway">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" _type="reactor.config.config" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" _type="string" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" _type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfargument name="ObjectMetadata" hint="I am a database Convention object." required="yes" type="any" _type="reactor.base.abstractMetadata" />
 		
 		<cfset super._configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />>
@@ -23,15 +23,15 @@
 	
 	<!--- objectMetadata --->
     <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
-       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" />
+       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" _type="reactor.base.abstractMetadata" />
        <cfset variables.objectMetadata = arguments.objectMetadata />
     </cffunction>
-    <cffunction name="getObjectMetadata" access="private" output="false" returntype="any">
+    <cffunction name="getObjectMetadata" access="private" output="false" returntype="any" _returntype="reactor.base.abstractMetadata">
        <cfreturn variables.objectMetadata />
     </cffunction>	
 
 	<!--- createQuery --->
-	<cffunction name="createQuery" access="public" hint="I return a query object which can be used to compose and execute complex queries on this gateway." output="false" returntype="any">
+	<cffunction name="createQuery" access="public" hint="I return a query object which can be used to compose and execute complex queries on this gateway." output="false" returntype="any" _returntype="reactor.query.query">
 		<cfset var query = createObject("component","reactor.query.query").init(_getAlias(), _getAlias(), _getReactorFactory()) />
 		
 		<cfreturn query />
@@ -46,7 +46,7 @@
 	
 	<!--- deleteByQuery --->
 	<cffunction name="deleteByQuery" access="public" hint="I delete all matching rows from the object based on the provided query object.  Note, the select list is ignored and the query can not have any joins." output="false" returntype="void">
-		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="any" />
+		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="any" _type="reactor.query.query" />
 		<cfset var qDelete = 0 />
 		<cfset var Convention = _getConvention() />
 		<cfset var where = arguments.Query.getWhere().getWhere() />
@@ -289,8 +289,8 @@
 	</cffunction>
 	
 	<!--- getByQuery --->
-	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="any">
-		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="any" />
+	<cffunction name="getByQuery" access="public" hint="I return all matching rows from the object." output="false" returntype="any" _returntype="query">
+		<cfargument name="Query" hint="I the query to run.  Create me using the createQuery method on this object." required="yes" type="any" _type="reactor.query.query" />
 		<cfset var qGet = 0 />
 		<cfset var Convention = _getConvention() />
 		<cfset var where = arguments.Query.getWhere().getWhere() />
@@ -553,10 +553,10 @@
 		<cfreturn qGet />
 	</cffunction>
 	
-	<cffunction name="getFieldExpression" access="private" hint="I check to see if a field has been replaced with an expression and return either the formatted field or the expression" output="false" returntype="any">
-		<cfargument name="node" hint="I am the where node to translate" required="yes" type="any" />
-		<cfargument name="convention" hint="I am the convention used to format the expression" required="yes" type="any" />
-		<cfargument name="compareToIndex" hint="I am the index of the compare to field (if any)" required="no" type="any" />
+	<cffunction name="getFieldExpression" access="private" hint="I check to see if a field has been replaced with an expression and return either the formatted field or the expression" output="false" returntype="any" _returntype="string">
+		<cfargument name="node" hint="I am the where node to translate" required="yes" type="any" _type="struct" />
+		<cfargument name="convention" hint="I am the convention used to format the expression" required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfargument name="compareToIndex" hint="I am the index of the compare to field (if any)" required="no" type="any" _type="numeric" />
 		
 		<cfif StructKeyExists(arguments, "compareToIndex")>
 			<cfif StructKeyExists(arguments.node, "compareToExpression#arguments.compareToIndex#")>
@@ -572,10 +572,11 @@
 			</cfif>
 		</cfif>
 	</cffunction>
-	<cffunction name="getFieldOrExpressionForDelete" access="private" hint="I check to see if a field has been replaced with an expression and return either the formatted field (w/o an alias) or the expression (w/o an alias)" output="false" returntype="string">
-		<cfargument name="node" hint="I am the where node to translate" required="yes" type="struct" />
-		<cfargument name="convention" hint="I am the convention used to format the expression" required="yes" type="reactor.data.abstractConvention" />
-		<cfargument name="compareToIndex" hint="I am the index of the compare to field (if any)" required="no" type="numeric" />
+	
+	<cffunction name="getFieldOrExpressionForDelete" access="private" hint="I check to see if a field has been replaced with an expression and return either the formatted field (w/o an alias) or the expression (w/o an alias)" output="false" returntype="any" _returntype="string">
+		<cfargument name="node" hint="I am the where node to translate" required="yes" type="any" _type="struct" />
+		<cfargument name="convention" hint="I am the convention used to format the expression" required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfargument name="compareToIndex" hint="I am the index of the compare to field (if any)" required="no" type="any" _type="numeric" />
 		
 		<cfif StructKeyExists(arguments, "compareToIndex")>
 			<cfif StructKeyExists(arguments.node, "compareToExpression#arguments.compareToIndex#")>
@@ -594,12 +595,12 @@
 	
 	<!--- lastExecutedQuery --->
     <cffunction name="setLastExecutedQuery" access="private" output="false" returntype="void">
-		<cfargument name="lastExecutedQuery" hint="I am the last query executed by this gateway" required="yes" type="any" />
+		<cfargument name="lastExecutedQuery" hint="I am the last query executed by this gateway" required="yes" type="any" _type="struct" />
 		<cflock type="exclusive" timeout="5" throwontimeout="yes">
 			<cfset variables.lastExecutedQuery = arguments.lastExecutedQuery />
 		</cflock>
     </cffunction>
-    <cffunction name="getLastExecutedQuery" access="public" output="false" returntype="any">
+    <cffunction name="getLastExecutedQuery" access="public" output="false" returntype="any" _returntype="struct">
        <cfset var lastExecutedQuery = 0 />
 	   <cflock type="exclusive" timeout="5" throwontimeout="yes">
 			<cfset lastExecutedQuery = variables.lastExecutedQuery />
@@ -611,7 +612,8 @@
     <cffunction name="setMaxIntegerLength" access="private" output="false" returntype="void">
       <cfset variables.maxIntegerLength =  createObject('java', 'java.lang.Integer').MAX_VALUE />    
     </cffunction>
-    <cffunction name="getMaxIntegerLength" access="private" output="false" returntype="any">
+    <cffunction name="getMaxIntegerLength" access="private" output="false" returntype="any" _returntype="numeric">
 	     <cfreturn variables.maxIntegerLength />
     </cffunction>
 </cfcomponent>
+

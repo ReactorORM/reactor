@@ -13,9 +13,9 @@
 	<cfset variables.fields = ArrayNew(1) />
 
 	
-	<cffunction name="init" access="public" hint="I configure the object." returntype="any">
-		<cfargument name="alias" hint="I am the alias of the obeject being represented." required="yes" type="any" />
-		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="any" />
+	<cffunction name="init" access="public" hint="I configure the object." returntype="any" _returntype="reactor.core.object">
+		<cfargument name="alias" hint="I am the alias of the obeject being represented." required="yes" type="any" _type="string" />
+		<cfargument name="Config" hint="I am a reactor config object" required="yes" type="any" _type="reactor.config.config" />
 
 		<cfset var ObjectDao = 0/>
     <cfset var exactObjectName = "" />
@@ -36,18 +36,18 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="getSignature" access="public" hint="I get this table's signature" output="false" returntype="any">
+	<cffunction name="getSignature" access="public" hint="I get this table's signature" output="false" returntype="any" _returntype="string">
 		<cfreturn getXml().object.XmlAttributes.signature />
 	</cffunction>
 	
-	<cffunction name="getMapping" access="public" hint="I return this object's mapping" output="false" returntype="any">
+	<cffunction name="getMapping" access="public" hint="I return this object's mapping" output="false" returntype="any" _returntype="string">
 		<cfset var mapping = "/" & Replace(getXml().object.XmlAttributes.mapping, ".", "/", "all") />
 		<cfreturn mapping />
 	</cffunction>
 	
- 	<cffunction name="getRelationships" access="private" hint="I find relationships between the two provided object aliases" output="false" returntype="any">
-		<cfargument name="from" hint="I am the alias of the object the relationship is from" required="yes" type="any" />
-		<cfargument name="to" hint="I am the alias of the object the relationship is to" required="yes" type="any" />
+ 	<cffunction name="getRelationships" access="private" hint="I find relationships between the two provided object aliases" output="false" returntype="any" _returntype="array">
+		<cfargument name="from" hint="I am the alias of the object the relationship is from" required="yes" type="any" _type="string" />
+		<cfargument name="to" hint="I am the alias of the object the relationship is to" required="yes" type="any" _type="string" />
 		<cfset var fromObject = getConfig().getObjectConfig(arguments.from) />
 		<cfset var toObject = getConfig().getObjectConfig(arguments.to) />
 		<cfset var relationships = XmlSearch(fromObject, "/object/hasMany[@name='#toObject.object.XmlAttributes.alias#']/relate/..|/object/hasOne[@name='#toObject.object.XmlAttributes.alias#']") />
@@ -85,7 +85,7 @@
 		<cfreturn relationship />
 	</cffunction>
 	
-	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="any">
+	<cffunction name="getXml" access="public" hint="I return this table expressed as an XML document" output="false" returntype="any" _returntype="any">
 		<cfset var Config = Duplicate(getObjectConfig()) />
 		<cfset var fields = getFields() />
 		<cfset var links = 0 />
@@ -315,9 +315,9 @@
 		<cfreturn Config />
 	</cffunction>
 	
-	<cffunction name="getRelationship" access="public" hint="I return the named relationship's data for the specified xml node in the provided document" output="false" returntype="any">
-		<cfargument name="xmlDoc" hint="I am the document to get the node from" required="yes" type="any">
-		<cfargument name="alias" hint="I am the alias of the relationship to get" required="yes" type="any" />
+	<cffunction name="getRelationship" access="public" hint="I return the named relationship's data for the specified xml node in the provided document" output="false" returntype="any" _returntype="any">
+		<cfargument name="xmlDoc" hint="I am the document to get the node from" required="yes" type="any" _type="any">
+		<cfargument name="alias" hint="I am the alias of the relationship to get" required="yes" type="any" _type="string" />
 		<cfset var x = 0 />
 		
 		<cfloop from="1" to="#ArrayLen(arguments.xmlDoc.object.xmlChildren)#" index="x">
@@ -328,8 +328,8 @@
 	</cffunction>
 	
 	<cffunction name="addExternalField" access="private" hint="I add a field from another object to the xml document." output="false" returntype="void">
-		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="any" />
-		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="any" />
+		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="any" _type="any" />
+		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="any" _type="string" />
 		<cfset var externalField = XMLElemNew(arguments.config, "externalField") />
 		<cfset var hasOne = XmlSearch(arguments.config, "/object/hasOne[@alias = '#arguments.field.xmlAttributes.source#']") />
 		<cfset var remoteField = getObject(hasOne[1].XmlAttributes.name, getConfig()).getField(arguments.field.xmlAttributes.field) />
@@ -350,8 +350,8 @@
 		<cfset ArrayAppend(arguments.config.Object.fields.XmlChildren, externalField) />
 	</cffunction>
 	
-	<!---<cffunction name="getFieldDetails" access="public" hint="I return the complete details (alias and all) for a field" output="false" returntype="struct">
-		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="string" />
+	<!---<cffunction name="getFieldDetails" access="public" hint="I return the complete details (alias and all) for a field" output="false" returntype="any" _returntype="struct">
+		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="any" _type="string" />
 		<cfset var field = getField(arguments.name) />
 		<cfset var config = getconfig().getObjectConfig(getAlias()) />
 		<cfset var fieldTags = XmlSearch(config, "/object/field") />
@@ -378,8 +378,8 @@
 	</cffunction>--->
 	
 	<cffunction name="addXmlField" access="private" hint="I add a field to the xml document." output="false" returntype="void">
-		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="any" />
-		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="any" />
+		<cfargument name="field" hint="I am the field to add to the xml" required="yes" type="any" _type="struct" />
+		<cfargument name="config" hint="I am the xml to add the field to." required="yes" type="any" _type="string" />
 		<cfset var xmlField = 0 />
 		<cfset var fieldTags = XmlSearch(arguments.config, "/object/field") />
 		<cfset var fieldTag = 0 />
@@ -448,9 +448,9 @@
 	</cffunction>
 	
 	<cffunction name="copyNode" access="private"  hint="Copies a node from one document into a second document.  (This code was coppied from Spike's blog at http://www.spike.org.uk/blog/index.cfm?do=ReactorSamples.Blog.cat&catid=8245E3A4-D565-E33F-39BC6E864D6B5DAA)" output="false" returntype="void">
-		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any">
-		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any">
-		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any">
+		<cfargument name="xmlDoc" hint="I am the document to copy the nodes into" required="yes" type="any" _type="any">
+		<cfargument name="newNode" hint="I am the node to copy the nodes into" required="yes" type="any" _type="any">
+		<cfargument name="oldNode" hint="I am the node to copy the nodes from" required="yes" type="any" _type="any">
 		<cfset var key = "" />
 		<cfset var index = "" />
 		<cfset var i = "" />
@@ -474,15 +474,15 @@
 	</cffunction>
 	
 	<cffunction name="addField" access="public" hint="I add a field to this object." output="false" returntype="void">
-		<cfargument name="field" hint="I am the field to add" required="yes" type="any" />
+		<cfargument name="field" hint="I am the field to add" required="yes" type="any" _type="struct" />
 		<cfset var fields = getFields() />
 		<cfset fields[ArrayLen(fields) + 1] = arguments.field />
 		
 		<cfset setFields(fields) />
 	</cffunction>
 
-	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="any">
-		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="any" />
+	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="any" _returntype="struct">
+		<cfargument name="name" hint="I am the name of the field to return" required="yes" type="any" _type="string" />
 		<cfset var fields = getFields() />
 		<cfset var x = 1 />
 		
@@ -493,8 +493,8 @@
 		</cfloop>
 	</cffunction>
 	
-	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="any">
-		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="any" />
+	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="any" _returntype="reactor.core.object">
+		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="any" _type="string" />
 		<cfset var Object = 0 />
 		<cfset var ObjectDao = 0/>
 		
@@ -510,34 +510,34 @@
 	
 	<!--- name --->
     <cffunction name="setName" access="public" output="false" returntype="void">
-       <cfargument name="name" hint="I am the name of the object" required="yes" type="any" />
+       <cfargument name="name" hint="I am the name of the object" required="yes" type="any" _type="string" />
        <cfset variables.name = arguments.name />	   
     </cffunction>
-    <cffunction name="getName" access="public" output="false" returntype="any">
+    <cffunction name="getName" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.name />
     </cffunction>
 	
 	<!--- alias --->
     <cffunction name="setAlias" access="public" output="false" returntype="void">
-       <cfargument name="alias" hint="I am the alias this object is known as." required="yes" type="any" />
+       <cfargument name="alias" hint="I am the alias this object is known as." required="yes" type="any" _type="string" />
        <cfset variables.alias = arguments.alias />
     </cffunction>
-    <cffunction name="getAlias" access="public" output="false" returntype="any">
+    <cffunction name="getAlias" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.alias />
     </cffunction>
 	
 	<!--- owner --->
     <cffunction name="setOwner" access="public" output="false" returntype="void">
-       <cfargument name="owner" hint="I am the object owner." required="yes" type="any" />
+       <cfargument name="owner" hint="I am the object owner." required="yes" type="any" _type="string" />
        <cfset variables.owner = arguments.owner />
     </cffunction>
-    <cffunction name="getOwner" access="public" output="false" returntype="any">
+    <cffunction name="getOwner" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.owner />
     </cffunction>
 	
 	<!--- type --->
     <cffunction name="setType" access="public" output="false" returntype="void">
-		<cfargument name="type" hint="I am the object type (options are view or table)" required="yes" type="any" />
+		<cfargument name="type" hint="I am the object type (options are view or table)" required="yes" type="any" _type="string" />
 		<cfset arguments.type = lcase(arguments.type) />
 		
 		<cfif NOT ListFind("table,view", arguments.type)>
@@ -548,44 +548,45 @@
 		
 		<cfset variables.type = arguments.type />
     </cffunction>
-    <cffunction name="getType" access="public" output="false" returntype="any">
+    <cffunction name="getType" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.type />
     </cffunction>
 	
 	<!--- fields --->
     <cffunction name="setFields" access="public" output="false" returntype="void">
-       <cfargument name="fields" hint="I am this object's fields" required="yes" type="any" />
+       <cfargument name="fields" hint="I am this object's fields" required="yes" type="any" _type="array" />
        <cfset variables.fields = arguments.fields />
     </cffunction>
-    <cffunction name="getFields" access="public" output="false" returntype="any">
+    <cffunction name="getFields" access="public" output="false" returntype="any" _returntype="array">
        <cfreturn variables.fields />
     </cffunction>
 	
 	<!--- database --->
     <cffunction name="setDatabase" access="public" output="false" returntype="void">
-		<cfargument name="database" hint="I am the database this table is in." required="yes" type="any" />
+		<cfargument name="database" hint="I am the database this table is in." required="yes" type="any" _type="string" />
 		<cfset variables.database = arguments.database />
     </cffunction>
-    <cffunction name="getDatabase" access="public" output="false" returntype="any">
+    <cffunction name="getDatabase" access="public" output="false" returntype="any" _returntype="string">
 		<cfreturn variables.database />
     </cffunction>
 	
 	<!--- config --->
     <cffunction name="setConfig" access="public" output="false" returntype="void">
-       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="any" />
+       <cfargument name="config" hint="I am the config object used to configure reactor" required="yes" type="any" _type="reactor.config.config" />
        <cfset variables.config = arguments.config />
     </cffunction>
-    <cffunction name="getConfig" access="public" output="false" returntype="any">
+    <cffunction name="getConfig" access="public" output="false" returntype="any" _returntype="reactor.config.config">
        <cfreturn variables.config />
     </cffunction>
 	
 	<!--- objectConfig --->
     <cffunction name="setObjectConfig" access="private" output="false" returntype="void">
-       <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="any" />
+       <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="any" _type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
     </cffunction>
-    <cffunction name="getObjectConfig" access="public" output="false" returntype="any">
+    <cffunction name="getObjectConfig" access="public" output="false" returntype="any" _returntype="any">
        <cfreturn variables.objectConfig />
     </cffunction>
 	
 </cfcomponent>
+

@@ -10,9 +10,9 @@
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
 	&lt;!--- validate ---&gt;
-	&lt;cffunction name="validate" access="public" hint="I validate an <xsl:value-of select="@alias" /> record" output="false" returntype="any"&gt;
-		&lt;cfargument name="<xsl:value-of select="object/@alias" />Record" hint="I am the Record to validate." required="no" type="any" /&gt;
-		&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" default="#createErrorCollection(arguments.<xsl:value-of select="object/@alias" />Record._getDictionary())#" /&gt;
+	&lt;cffunction name="validate" access="public" hint="I validate an <xsl:value-of select="@alias" /> record" output="false" returntype="any" _returntype="reactor.util.ErrorCollection"&gt;
+		&lt;cfargument name="<xsl:value-of select="object/@alias" />Record" hint="I am the Record to validate." required="no" type="any" _type="reactor.project.<xsl:value-of select="object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record" /&gt;
+		&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" _type="reactor.util.ErrorCollection" default="#createErrorCollection(arguments.<xsl:value-of select="object/@alias" />Record._getDictionary())#" /&gt;
 		
 		<xsl:for-each select="object/fields/field">
 			&lt;cfset validate<xsl:value-of select="@alias" />(arguments.<xsl:value-of select="../../@alias" />Record, arguments.ErrorCollection) /&gt;
@@ -23,9 +23,9 @@
 	
 	<xsl:for-each select="object/fields/field">
 		&lt;!--- validate<xsl:value-of select="@alias" /> ---&gt;
-		&lt;cffunction name="validate<xsl:value-of select="@alias" />" access="public" hint="I validate the <xsl:value-of select="@alias" /> field" output="false" returntype="any"&gt;
-			&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" /&gt;
-			&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
+		&lt;cffunction name="validate<xsl:value-of select="@alias" />" access="public" hint="I validate the <xsl:value-of select="@alias" /> field" output="false" returntype="any" _returntype="reactor.util.ErrorCollection"&gt;
+			&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" _type="reactor.project.<xsl:value-of select="../../@project"/>.Record.<xsl:value-of select="../../@alias"/>Record"/&gt;
+			&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" _type="reactor.util.ErrorCollection" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
 		
 			<xsl:if test="@nullable = 'false'">
 				&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
@@ -48,9 +48,9 @@
 	<xsl:for-each select="object/fields/field">
 		<xsl:if test="@nullable = 'false'">
 			&lt;!--- validate<xsl:value-of select="@alias" />Provided ---&gt;
-			&lt;cffunction name="validate<xsl:value-of select="@alias" />Provided" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field was provided" output="false" returntype="any"&gt;
-				&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" /&gt;
-				&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
+			&lt;cffunction name="validate<xsl:value-of select="@alias" />Provided" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field was provided" output="false" returntype="any" _returntype="reactor.util.ErrorCollection"&gt;
+				&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" _type="reactor.project.<xsl:value-of select="../../@project"/>.Record.<xsl:value-of select="../../@alias"/>Record" /&gt;
+				&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" _type="reactor.util.ErrorCollection" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
 		
 				&lt;!--- validate <xsl:value-of select="@alias" /> is provided ---&gt;
 				&lt;cfif NOT Len(Trim(arguments.<xsl:value-of select="../../@alias" />Record.get<xsl:value-of select="@alias" />()))&gt;
@@ -65,9 +65,9 @@
 	<!-- validate datatype -->
 	<xsl:for-each select="object/fields/field">
 		&lt;!--- validate<xsl:value-of select="@alias" />Datatype ---&gt;
-		&lt;cffunction name="validate<xsl:value-of select="@alias" />Datatype" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field is <xsl:value-of select="@cfDataType" />." output="false" returntype="any"&gt;
-			&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" /&gt;
-			&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
+		&lt;cffunction name="validate<xsl:value-of select="@alias" />Datatype" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field is <xsl:value-of select="@cfDataType" />." output="false" returntype="any" _returntype="reactor.util.ErrorCollection"&gt;
+			&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" _type="reactor.project.<xsl:value-of select="../../@project"/>.Record.<xsl:value-of select="../../@alias"/>Record" /&gt;
+			&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" _type="reactor.util.ErrorCollection" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
 	
 			<xsl:choose>
 				<xsl:when test="@cfDataType = 'binary'">
@@ -131,9 +131,9 @@
 	<xsl:for-each select="object/fields/field">
 		<xsl:if test="(@cfDataType = 'binary' or @cfDataType = 'string') and @dbDataType != 'uniqueidentifier'">
 			&lt;!--- validate<xsl:value-of select="@alias" />Length ---&gt;
-			&lt;cffunction name="validate<xsl:value-of select="@alias" />Length" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field length." output="false" returntype="any"&gt;
-				&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" /&gt;
-				&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
+			&lt;cffunction name="validate<xsl:value-of select="@alias" />Length" access="public" hint="I validate that the <xsl:value-of select="@alias" /> field length." output="false" returntype="any" _returntype="reactor.util.ErrorCollection"&gt;
+				&lt;cfargument name="<xsl:value-of select="../../@alias" />Record" hint="I am the Record to validate." required="no" type="any" _type="reactor.project.<xsl:value-of select="../../@project"/>.Record.<xsl:value-of select="../../@alias"/>Record" /&gt;
+				&lt;cfargument name="ErrorCollection" hint="I am the error collection to populate. If not provided a new collection is created." required="no" type="any" _type="reactor.util.ErrorCollection" default="#createErrorCollection(arguments.<xsl:value-of select="../../@alias" />Record._getDictionary())#" /&gt;
 		
 				<xsl:choose>
 					<xsl:when test="@cfDataType = 'binary'">

@@ -9,19 +9,19 @@
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
-	&lt;cffunction name="getAll" access="public" hint="I return all rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="any"&gt;
-		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="any" default="" /&gt;
+	&lt;cffunction name="getAll" access="public" hint="I return all rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="any" _returntype="query"&gt;
+		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="any" _type="string" default="" /&gt;
 		&lt;cfreturn getByFields(sortByFieldList=arguments.sortByFieldList) /&gt;
 	&lt;/cffunction&gt;
 	
-	&lt;cffunction name="getByFields" access="public" hint="I return all matching rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="any"&gt;
+	&lt;cffunction name="getByFields" access="public" hint="I return all matching rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="any" _returntype="query"&gt;
 		<xsl:for-each select="//field">
-			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" /&gt;
+			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" _type="string" /&gt;
 		</xsl:for-each>
 		<xsl:for-each select="//externalField">
-			&lt;cfargument name="<xsl:value-of select="@fieldAlias" />" hint="If provided, I match the provided value to the read only <xsl:value-of select="@alias" /> field in the <xsl:value-of select="@sourceAlias" /> object." required="no" type="any" /&gt;
+			&lt;cfargument name="<xsl:value-of select="@fieldAlias" />" hint="If provided, I match the provided value to the read only <xsl:value-of select="@alias" /> field in the <xsl:value-of select="@sourceAlias" /> object." required="no" type="any" _type="string" /&gt;
 		</xsl:for-each>
-		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="any" default="" /&gt;
+		&lt;cfargument name="sortByFieldList" hint="I am a comma sepeared list of fields to sort this query by." required="no" type="any" _type="string" default="" /&gt;
 		&lt;cfset var Query = createQuery() /&gt;
 		&lt;cfset var Where = Query.getWhere() /&gt;
 		&lt;cfset var x = 0 /&gt;
@@ -47,7 +47,7 @@
 	&lt;!--- deleteByFields --->
 	&lt;cffunction name="deleteByFields" access="public" hint="I delete all matching rows from the object." output="false" returntype="void">
 		<xsl:for-each select="//field">
-			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" /&gt;
+			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" _type="string" /&gt;
 		</xsl:for-each>
 		&lt;cfset var Query = createQuery() />
 		&lt;cfset var Where = Query.getWhere() />

@@ -2,8 +2,8 @@
 	<cfset variables.ObjectFactory = 0 />
 	<cfset variables.BeanFactory = 0 />
 	
-	<cffunction name="init" access="public" hint="I configure this object factory" returntype="any">
-		<cfargument name="configuration" hint="I am either a relative or absolute path to the config XML file or an instance of a reactor.config.config component" required="yes" type="any" />
+	<cffunction name="init" access="public" hint="I configure this object factory" returntype="any" _returntype="reactorFactory">
+		<cfargument name="configuration" hint="I am either a relative or absolute path to the config XML file or an instance of a reactor.config.config component" required="yes" type="any" _type="any" />
 		
 		<!--- if the config was not passed in, load the XML file --->
 		<cfif NOT IsObject(arguments.configuration)>
@@ -19,8 +19,8 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createRecord" access="public" hint="I return a record object." output="false" returntype="any" _returntype="reactor.base.abstractRecord">
+		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Record = 0 />
 		
 		<cfset Record = getObjectFactory().create(arguments.objectAlias, "Record") />
@@ -28,8 +28,8 @@
 		<cfreturn Record />
 	</cffunction>
 	
-	<cffunction name="createDao" access="public" hint="I return a Dao object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createDao" access="public" hint="I return a Dao object." output="false" returntype="any" _returntype="reactor.base.abstractDao">
+		<cfargument name="objectAlias" hint="I am the alias of the Dao to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Dao = 0 />
 		
 		<cfset Dao = getObjectFactory().create(arguments.objectAlias, "Dao") />
@@ -37,8 +37,8 @@
 		<cfreturn Dao />
 	</cffunction>
 	
-	<cffunction name="createTo" access="public" hint="I return a To object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createTo" access="public" hint="I return a To object." output="false" returntype="any" _returntype="reactor.base.abstractTo">
+		<cfargument name="objectAlias" hint="I am the alias of the TO to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var To = 0 />
 		
 		<cfset To = getObjectFactory().create(arguments.objectAlias, "To") />
@@ -46,8 +46,8 @@
 		<cfreturn To />
 	</cffunction>
 	
-	<cffunction name="createGateway" access="public" hint="I return a gateway object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createGateway" access="public" hint="I return a gateway object." output="false" returntype="any" _returntype="reactor.base.abstractGateway">
+		<cfargument name="objectAlias" hint="I am the alias of the record to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Gateway = 0 />
 		
 		<cfset Gateway = getObjectFactory().create(arguments.objectAlias, "Gateway") />
@@ -55,8 +55,8 @@
 		<cfreturn Gateway />
 	</cffunction>
 
-	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createMetadata" access="public" hint="I return a metadata object." output="false" returntype="any" _returntype="reactor.base.abstractMetadata">
+		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Metadata = 0 />
 		
 		<cfset Metadata = getObjectFactory().create(arguments.objectAlias, "Metadata") />
@@ -64,8 +64,8 @@
 		<cfreturn Metadata />
 	</cffunction>
 
-	<cffunction name="createIterator" access="public" hint="I return an iterator object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createIterator" access="public" hint="I return an iterator object." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="objectAlias" hint="I am the alias of the object the iterator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Iterator = 0 />
 		
 		<cfset Iterator = createobject("Component", "reactor.iterator.iterator").init(this, arguments.objectAlias) />
@@ -73,8 +73,8 @@
 		<cfreturn Iterator />
 	</cffunction>
 
-	<cffunction name="createDictionary" access="public" hint="I return a dictionary object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createDictionary" access="public" hint="I return a dictionary object." output="false" returntype="any" _returntype="reactor.dictionary.dictionary">
+		<cfargument name="objectAlias" hint="I am the alias of the object the dictionary is being created for.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Dictionary = 0 />
 		
 		<cfset Dictionary = getObjectFactory().createDictionary(arguments.objectAlias) />
@@ -82,8 +82,8 @@
 		<cfreturn Dictionary />
 	</cffunction>
 
-	<cffunction name="createValidator" access="public" hint="I return a validator object." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the object the validator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="createValidator" access="public" hint="I return a validator object." output="false" returntype="any" _returntype="reactor.base.abstractValidator">
+		<cfargument name="objectAlias" hint="I am the alias of the object the validator is being created for.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfset var Validator = 0 />
 		
 		<cfset Validator = getObjectFactory().create(arguments.objectAlias, "Validator") />
@@ -91,14 +91,14 @@
 		<cfreturn Validator />
 	</cffunction>
 
-	<cffunction name="getXml" access="public" hint="I return the raw XML for a database object.  I combine the configuration and the database metadata." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the object the xml describes.  I corrispond to the name of a object in the DB." required="yes" type="string" />
+	<cffunction name="getXml" access="public" hint="I return the raw XML for a database object.  I combine the configuration and the database metadata." output="false" returntype="any" _returntype="string">
+		<cfargument name="objectAlias" hint="I am the alias of the object the xml describes.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfreturn getObjectFactory().getObject(arguments.objectAlias).getXml() />
 	</cffunction>
 
-	<cffunction name="createPlugin" access="public" hint="I return a plugin object of the specified type." output="false" returntype="any">
-		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="string" />
-		<cfargument name="plugin" hint="I am the name of the plugin to use." required="yes" type="string" />
+	<cffunction name="createPlugin" access="public" hint="I return a plugin object of the specified type." output="false" returntype="any" _returntype="reactor.base.abstractObject">
+		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
+		<cfargument name="plugin" hint="I am the name of the plugin to use." required="yes" type="any" _type="string" />
 		<cfset var Object = 0 />
 		
 		<cfset Object = getObjectFactory().create(arguments.objectAlias, arguments.plugin, true) />
@@ -112,19 +112,19 @@
 	
 	<!--- ObjectFactory --->
 	<cffunction name="setObjectFactory" access="private" output="false" returntype="void">
-		<cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="reactor.core.objectFactory" />
+		<cfargument name="ObjectFactory" hint="I am the table factory used to get table metadata" required="yes" type="any" _type="reactor.core.objectFactory" />
 		<cfset variables.ObjectFactory = arguments.ObjectFactory />
 	</cffunction>
-	<cffunction name="getObjectFactory" access="private" output="false" returntype="any">
+	<cffunction name="getObjectFactory" access="private" output="false" returntype="any" _returntype="reactor.core.objectFactory">
 		<cfreturn variables.ObjectFactory />
 	</cffunction>
   
 	<!--- BeanFactory --->
 	<cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
-		<cfargument name="beanFactory" type="coldspring.beans.beanFactory" required="true" />
+		<cfargument name="beanFactory" type="any" _type="coldspring.beans.beanFactory" required="true" />
 		<cfset variables.BeanFactory = arguments.beanFactory />
 	</cffunction>
-	<cffunction name="getBeanFactory" access="private" output="false" returntype="any">
+	<cffunction name="getBeanFactory" access="private" output="false" returntype="any" _returntype="any">
 		<cfreturn variables.BeanFactory />
 	</cffunction>
 

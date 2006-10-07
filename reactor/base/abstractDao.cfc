@@ -1,11 +1,11 @@
 <cfcomponent hint="I am used primarly to allow type definitions for return values.  I also loosely define an interface for Dao objects and some core methods." extends="reactor.base.abstractObject">
 	
-	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any">
-		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" />
-		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" />
-		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" />
-		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" />
-		<cfargument name="ObjectMetadata" hint="I am a database metadata object." required="yes" type="any" />
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="reactor.base.abstractDao">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" _type="reactor.config.config" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" _type="string" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" _type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfargument name="ObjectMetadata" hint="I am a database metadata object." required="yes" type="any" _type="reactor.base.abstractMetadata" />
 		
 		<cfset super._configure(arguments.Config, arguments.alias, arguments.ReactorFactory, arguments.Convention) />
 		<cfset setObjectMetadata(arguments.ObjectMetadata) />
@@ -15,14 +15,14 @@
 	
 	<!--- objectMetadata --->
     <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
-       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" />
+       <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" _type="reactor.base.abstractMetadata" />
        <cfset variables.objectMetadata = arguments.objectMetadata />
     </cffunction>
-    <cffunction name="getObjectMetadata" access="private" output="false" returntype="any">
+    <cffunction name="getObjectMetadata" access="private" output="false" returntype="any" _returntype="reactor.base.abstractMetadata">
        <cfreturn variables.objectMetadata />
     </cffunction>
 	
-	<cffunction name="getConventions" access="private" output="false" returntype="any">
+	<cffunction name="getConventions" access="private" output="false" returntype="any" _returntype="reactor.data.abstractConvention">
   		<cfreturn _getConvention() />
 	</cffunction>
 	
@@ -43,3 +43,4 @@
 	</cffunction>
 	
 </cfcomponent>
+

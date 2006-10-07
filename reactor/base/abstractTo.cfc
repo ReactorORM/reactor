@@ -1,7 +1,7 @@
 <cfcomponent hint="I am an abstract TO.  I am used to define an interface and for return types." extends="reactor.base.abstractObject">
 	
 	<cffunction name="_copy" access="public" hint="I copy another TO's values into this TO.  Properties which exist in both TOs are copied from the provided TO to this TO." output="false" returntype="void">
-		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" />
+		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" _type="reactor.base.abstractTo" />
 		<cfset var item = 0 />
 		
 		<cfloop collection="#this#" item="item">
@@ -13,8 +13,8 @@
 				
 	</cffunction>
 	
-	<cffunction name="_isEqual" access="public" hint="I indicate if two TOs are the same in terms of type and values.  If any of the values in the TO can not be converted to a string them this will return false." output="false" returntype="any">
-		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" />
+	<cffunction name="_isEqual" access="public" hint="I indicate if two TOs are the same in terms of type and values.  If any of the values in the TO can not be converted to a string them this will return false." output="false" returntype="any" _returntype="boolean">
+		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" _type="reactor.base.abstractTo" />
 		<cfset var item = 0 />
 		
 		<!--- make sure they're the same type! --->
@@ -43,3 +43,4 @@
 	</cffunction>
 	
 </cfcomponent>
+

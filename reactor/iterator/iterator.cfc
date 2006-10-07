@@ -17,9 +17,9 @@
 	<cfset variables.linkedThrough = 0 />
 
 	<!--- init --->
-	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="any">
-		<cfargument name="ReactorFactory" hint="I am the reactor factor." required="yes" type="any" />
-		<cfargument name="alias" hint="I am the alias of the type of data being iterated." required="yes" type="any" />
+	<cffunction name="init" access="public" hint="I configure and return the iterator" output="false" returntype="any" _returntype="Iterator">
+		<cfargument name="ReactorFactory" hint="I am the reactor factor." required="yes" type="any" _type="reactor.reactorFactory" />
+		<cfargument name="alias" hint="I am the alias of the type of data being iterated." required="yes" type="any" _type="string" />
 
 		<cfset setReactorFactory(arguments.ReactorFactory) />
 		<cfset setAlias(arguments.alias) />
@@ -36,7 +36,7 @@
 
 	<!--- sizeTo --->
 	<cffunction name="sizeTo" access="public" hint="I set the minimum number of items in the iterator." output="false" returntype="void">
-		<cfargument name="length" hint="I am the minimum number of items in the iterator." required="yes" type="any" />
+		<cfargument name="length" hint="I am the minimum number of items in the iterator." required="yes" type="any" _type="numeric" />
 		<cfset var x = 0 />
 
 		<cfloop from="#getRecordCount()+1#" to="#arguments.length#" index="x">
@@ -45,15 +45,15 @@
 	</cffunction>
 
 	<!--- getAt --->
-	<cffunction name="getAt" access="public" hint="I return a specific element based on it's index." output="false" returntype="any">
-		<cfargument name="index" hint="I am the index of the record to get." required="yes" type="any" />
+	<cffunction name="getAt" access="public" hint="I return a specific element based on it's index." output="false" returntype="any" _returntype="reactor.base.abstractRecord">
+		<cfargument name="index" hint="I am the index of the record to get." required="yes" type="any" _type="numeric" />
 		<cfset var Array = get(arguments.index) />
 
 		<cfreturn Array[1] />
 	</cffunction>
 
 	<!--- get --->
-	<cffunction name="get" access="public" hint="I return an array of matching objects from the iterator.  I do not impact the state of the object.  Pass either an index for a specific item or a name/value list for matching records." output="false" returntype="any">
+	<cffunction name="get" access="public" hint="I return an array of matching objects from the iterator.  I do not impact the state of the object.  Pass either an index for a specific item or a name/value list for matching records." output="false" returntype="any" _returntype="array">
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var Records = 0 />
 		<cfset var Array = ArrayNew(1) />
@@ -89,7 +89,7 @@
 	</cffunction>
 
 	<!--- findMatchingIndexes --->
-	<cffunction name="findMatchingIndexes" access="package" hint="I return an array of the indexes of items which match provided arguments." output="false" returntype="any">
+	<cffunction name="findMatchingIndexes" access="package" hint="I return an array of the indexes of items which match provided arguments." output="false" returntype="any" _returntype="array">
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var Records = 0 />
 		<cfset var field = 0 />
@@ -123,7 +123,7 @@
 	</cffunction>
 
 	<!--- isDirty --->
-	<cffunction name="isDirty" access="public" hint="I indicate if there are any records in this iterator that are dirty." output="false" returntype="any">
+	<cffunction name="isDirty" access="public" hint="I indicate if there are any records in this iterator that are dirty." output="false" returntype="any" _returntype="boolean">
 		<cfset var array = getArray() />
 		<cfset var x = 0 />
 
@@ -138,7 +138,7 @@
 	</cffunction>
 
 	<!--- delete --->
-	<cffunction name="delete" access="public" hint="I delete matching elements in the iterator. Pass either an index for a specific item, a name/value list for matching records or an instance of an object." output="false" returntype="any">
+	<cffunction name="delete" access="public" hint="I delete matching elements in the iterator. Pass either an index for a specific item, a name/value list for matching records or an instance of an object." output="false" returntype="any" _returntype="any">
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var Record = 0 />
 		<cfset var indexArray = 0 />
@@ -225,7 +225,7 @@
 	</cffunction>
 
 	<!--- getDictionary --->
-	<cffunction name="getDictionary" access="public" hint="I return a dictionary for the type of object being iterated." output="false" returntype="any">
+	<cffunction name="getDictionary" access="public" hint="I return a dictionary for the type of object being iterated." output="false" returntype="any" _returntype="reactor.dictionary.dictionary">
 		<cfif NOT IsObject(variables.Dictionary)>
 			<cfset variables.Dictionary = getReactorFactory().createDictionary(getAlias()) />
 		</cfif>
@@ -234,26 +234,26 @@
 	</cffunction>
 
 	<!--- hasMore --->
-	<cffunction name="hasMore" access="public" hint="I indicate if the iterator has more elements" output="false" returntype="any">
+	<cffunction name="hasMore" access="public" hint="I indicate if the iterator has more elements" output="false" returntype="any" _returntype="boolean">
 		<cfreturn getIndex() LT getRecordCount() />
 	</cffunction>
 
 	<!--- index --->
     <cffunction name="setIndex" access="public" output="false" returntype="void">
-       <cfargument name="index" hint="I am the iterator's index" required="yes" type="any" />
+       <cfargument name="index" hint="I am the iterator's index" required="yes" type="any" _type="numeric" />
        <cfset variables.index = arguments.index />
     </cffunction>
-    <cffunction name="getIndex" access="public" output="false" returntype="any">
+    <cffunction name="getIndex" access="public" output="false" returntype="any" _returntype="numeric">
        <cfreturn variables.index />
     </cffunction>
 	
 	<!--- getRecordCount --->
-	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="any">
+	<cffunction name="getRecordCount" access="public" hint="I get the iterator's recordcount" output="false" returntype="any" _returntype="numeric">
 		<cfreturn getQuery().recordcount />
 	</cffunction>
 
 	<!--- getNext --->
-	<cffunction name="getNext" access="public" hint="I get the next element from the iterator" output="false" returntype="any">
+	<cffunction name="getNext" access="public" hint="I get the next element from the iterator" output="false" returntype="any" _returntype="reactor.base.abstractRecord">
 		<cfset var array = 0 />
 		<cfif NOT hasMore()>
 			<cfthrow message="No More Records" detail="There are no more records in the iterator." type="reactor.iterator.NoMoreRecords" />
@@ -267,9 +267,9 @@
 	</cffunction>
 
 	<!--- getValueList --->
-	<cffunction name="getValueList" access="public" hint="I return a value list based on a specific field." output="false" returntype="any">
-		<cfargument name="field" hint="I am the name of the field to get the value list for" required="yes" type="any" />
-		<cfargument name="delimiter" hint="I am the delimiter to use for the list.  I default to ','." required="no" type="any" default="," />
+	<cffunction name="getValueList" access="public" hint="I return a value list based on a specific field." output="false" returntype="any" _returntype="string">
+		<cfargument name="field" hint="I am the name of the field to get the value list for" required="yes" type="any" _type="string" />
+		<cfargument name="delimiter" hint="I am the delimiter to use for the list.  I default to ','." required="no" type="any" _type="string" default="," />
 		<cfset var query = getQuery() />
 		<cfset var list = Evaluate("ValueList(query.#arguments.field#, arguments.delimiter)") />
 
@@ -278,7 +278,7 @@
 
 	<!--- save --->
 	<cffunction name="save" access="public" hint="I save any records in this iterator which are loaded and are dirty (have been changed)" output="false" returntype="void">
-		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="any" default="true" />
+		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="any" _type="boolean" default="true" />
 
 		<cfif arguments.useTransaction>
 			<cfset saveInTransaction() />
@@ -320,7 +320,7 @@
 	</cffunction>
 
 	<!--- validated --->
-	<cffunction name="validated" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they're validated.  If any one is not then this returns false.  Unloaded records are ignored." output="false" returntype="any">
+	<cffunction name="validated" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they're validated.  If any one is not then this returns false.  Unloaded records are ignored." output="false" returntype="any" _returntype="boolean">
 		<cfset var x = 0 />
 
 		<!--- loop over all the records that have been loaded and changed and save them --->
@@ -334,7 +334,7 @@
 	</cffunction>
 
 	<!--- hasErrors --->
-	<cffunction name="hasErrors" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they have errors.  If any one has errors this returns true.  Unloaded records are ignored." output="false" returntype="any">
+	<cffunction name="hasErrors" access="public" hint="I loop over all records in this iterator which are not deleted and check to see if they have errors.  If any one has errors this returns true.  Unloaded records are ignored." output="false" returntype="any" _returntype="boolean">
 		<cfset var x = 0 />
 
 		<!--- loop over all the records that have been loaded and changed and save them --->
@@ -349,7 +349,7 @@
 
 	<!--- relateTo --->
 	<cffunction name="relateTo" access="public" hint="This is for Reactor use only.  I recieve a record object and use the metadata in that object to populate the values of any loaded records that are dirty." output="false" returntype="void">
-		<cfargument name="Record" hint="I am the record to relate to." required="yes" type="any" />
+		<cfargument name="Record" hint="I am the record to relate to." required="yes" type="any" _type="reactor.base.abstractRecord" />
 		<cfset var relationship = 0 />
 		<cfset var value = 0 />
 		<cfset var x = 0 />
@@ -379,7 +379,7 @@
 	</cffunction>
 
 	<!--- add --->
-	<cffunction name="add" access="public" hint="I add another element to the END of this iterator.  The iterator must be saved before this will be sorted." output="false" returntype="any">
+	<cffunction name="add" access="public" hint="I add another element to the END of this iterator.  The iterator must be saved before this will be sorted." output="false" returntype="any" _returntype="reactor.base.abstractRecord">
 		<cfset var fieldList = StructKeyList(arguments) />
 		<cfset var Record = 0 />
 		<cfset var item = 0 />
@@ -474,7 +474,7 @@
 	</cffunction>
 
 	<!--- isPopulated --->
-	<cffunction name="isPopulated" access="public" hint="I indicate if this iterator has been populated with data." output="false" returntype="any">
+	<cffunction name="isPopulated" access="public" hint="I indicate if this iterator has been populated with data." output="false" returntype="any" _returntype="boolean">
 		<cfreturn IsQuery(variables.query) />
 	</cffunction>
 
@@ -501,9 +501,9 @@
 	</cffunction>
 
 	<!--- getArray --->
-	<cffunction name="getArray" access="public" hint="I return an array of objects in the iterator" output="false" returntype="any">
-		<cfargument name="from" hint="I am the first index to return." required="no" type="any" default="1" />
-		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="any" default="-1" />
+	<cffunction name="getArray" access="public" hint="I return an array of objects in the iterator" output="false" returntype="any" _returntype="array">
+		<cfargument name="from" hint="I am the first index to return." required="no" type="any" _type="numeric" default="1" />
+		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="any" _type="numeric" default="-1" />
 		<cfset var x = 0 />
 		<cfset var sourceArray = ArrayNew(1) />
 		<cfset var returnArray = ArrayNew(1) />
@@ -541,8 +541,8 @@
 	</cffunction>
 
 	<!--- loadRecord --->
-	<cffunction name="loadRecord" access="private" hint="I load a specific record based on the query backing the iterator" output="false" returntype="any">
-		<cfargument name="index" hint="I am the index of the row in the query which we will use to load this object" required="yes" type="any" />
+	<cffunction name="loadRecord" access="private" hint="I load a specific record based on the query backing the iterator" output="false" returntype="any" _returntype="reactor.base.abstractRecord">
+		<cfargument name="index" hint="I am the index of the row in the query which we will use to load this object" required="yes" type="any" _type="numeric" />
 		<cfset var Record = 0 />
 		<cfset var To = 0 />
 		<cfset var column = 0 />
@@ -589,9 +589,9 @@
 	</cffunction>
 
 	<!--- query --->
-    <cffunction name="getQuery" access="public" output="false" returntype="any">
-		<cfargument name="from" hint="I am the first row to return." required="no" type="any" default="1" />
-		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="any" default="-1" />
+    <cffunction name="getQuery" access="public" output="false" returntype="any" _returntype="query">
+		<cfargument name="from" hint="I am the first row to return." required="no" type="any" _type="numeric" default="1" />
+		<cfargument name="count" hint="I am the maximum number of indexes to return." required="no" type="any" _type="numeric" default="-1" />
 		<cfset var query = 0 />
 		<cfset var filterIndex = ArrayNew(1) />
 		<cfset var fields = 0 />
@@ -637,8 +637,8 @@
 
 	<!--- copyRecordToRow --->
 	<cffunction name="copyRecordToRow" access="private" hint="I copy a record's to data to a specific row in the query" output="false" returntype="void">
-		<cfargument name="Record" hint="I am the record to copy." required="yes" type="any" />
-		<cfargument name="index" hint="I am the index of the row to copy into.  If not provided a new row is appended." required="no" type="any" default="-1" />
+		<cfargument name="Record" hint="I am the record to copy." required="yes" type="any" _type="reactor.base.abstractRecord" />
+		<cfargument name="index" hint="I am the index of the row to copy into.  If not provided a new row is appended." required="no" type="any" _type="numeric" default="-1" />
 		<cfset var To = arguments.Record._getTo() />
 		<cfset var column = "" />
 
@@ -663,7 +663,7 @@
 	</cffunction>
 
 	<!--- getLinkRelationshipMetadata --->
-	<cffunction name="getLinkRelationshipMetadata" access="private" hint="If this object is a linking iterator this method is returns the metadata structure describing the relationship between the link and this object." output="false" returntype="any">
+	<cffunction name="getLinkRelationshipMetadata" access="private" hint="If this object is a linking iterator this method is returns the metadata structure describing the relationship between the link and this object." output="false" returntype="any" _returntype="struct">
 
 		<!--- get the relationship to this object from the linking object --->
 
@@ -683,11 +683,11 @@
 	</cffunction>
 
 	<!--- join --->
-	<cffunction name="join" access="public" hint="I am a convenience method which simply calls innerJoin." output="false" returntype="any">
-		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" />
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" default="#arguments.joinToObjectAlias#" />
+	<cffunction name="join" access="public" hint="I am a convenience method which simply calls innerJoin." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 
 		<cfset innerJoin(joinFromObjectAlias=arguments.joinFromObjectAlias, joinToObjectAlias=arguments.joinToObjectAlias, relationshipAlias=arguments.relationshipAlias, alias=arguments.alias) />
 
@@ -695,11 +695,11 @@
 	</cffunction>
 
 	<!--- innerJoin --->
-	<cffunction name="innerJoin" access="public" hint="I create an iuner join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any">
-		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" />
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" default="#arguments.joinToObjectAlias#" />
+	<cffunction name="innerJoin" access="public" hint="I create an iuner join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 
 		<!---<cfset findObject(arguments.joinFromObjectAlias).addJoin(joinToObjectAlias=arguments.joinToObjectAlias, relationshipAlias=arguments.relationshipAlias, alias=arguments.alias, joinType="inner") />--->
 		<cfif NOT IsQuery(variables.query)>
@@ -714,11 +714,11 @@
 	</cffunction>
 
 	<!--- leftJoin --->
-	<cffunction name="leftJoin" access="public" hint="I create a left join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any">
-		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" />
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" default="#arguments.joinToObjectAlias#" />
+	<cffunction name="leftJoin" access="public" hint="I create a left join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 
 		<cfif NOT IsQuery(variables.query)>
 			<cfset getQueryObject().leftJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
@@ -732,11 +732,11 @@
 	</cffunction>
 
 	<!--- rightJoin --->
-	<cffunction name="rightJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any">
-		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" />
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" default="#arguments.joinToObjectAlias#" />
+	<cffunction name="rightJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 
 		<cfif NOT IsQuery(variables.query)>
 			<cfset getQueryObject().rightJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
@@ -750,11 +750,11 @@
 	</cffunction>
 
 	<!--- fullJoin --->
-	<cffunction name="fullJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any">
-		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" />
-		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" />
-		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" default="#arguments.joinToObjectAlias#" />
+	<cffunction name="fullJoin" access="public" hint="I create a right join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.iterator.iterator">
+		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
+		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
+		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
+		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 
 		<cfif NOT IsQuery(variables.query)>
 			<cfset getQueryObject().fullJoin(arguments.joinFromObjectAlias, arguments.joinToObjectAlias, arguments.relationshipAlias, arguments.alias) />
@@ -768,20 +768,20 @@
 	</cffunction>
 
 	<!--- getWhere --->
-	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="any">
+	<cffunction name="getWhere" access="public" hint="I get the where object that filters the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="any" _returntype="reactor.query.where">
 		<cfset reset() />
 		<cfreturn getQueryObject().getWhere() />
 	</cffunction>
 
 	<!--- setDistinct --->
 	<cffunction name="setDistinct" access="public" hint="I filter the query that backs this iterator to return only distinct values.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="void">
-		<cfargument name="distinct" hint="I indicate if the query should only return distinct matches" required="yes" type="any" />
+		<cfargument name="distinct" hint="I indicate if the query should only return distinct matches" required="yes" type="any" _type="boolean" />
 		<cfset reset() />
 		<cfreturn getQueryObject().setDistinct(arguments.distinct) />
 	</cffunction>
 
 	<!--- getOrder --->
-	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="any">
+	<cffunction name="getOrder" access="public" hint="I get the order object that sorts the query that backs this iterator.  Important: I reset the query and array data that backs the iterator.  If you've made changes to the iterator you will loose them if you call this method." output="false" returntype="any" _returntype="reactor.query.order">
 		<cfset reset() />
 		<cfreturn getQueryObject().getOrder() />
 	</cffunction>
@@ -800,44 +800,44 @@
 
 	<!--- gateway --->
     <cffunction name="setGateway" access="private" output="false" returntype="void">
-       <cfargument name="gateway" hint="I am the gateway object used to query the DB." required="yes" type="any" />
+       <cfargument name="gateway" hint="I am the gateway object used to query the DB." required="yes" type="any" _type="reactor.base.abstractGateway" />
        <cfset variables.gateway = arguments.gateway />
     </cffunction>
-    <cffunction name="getGateway" access="private" output="false" returntype="any">
+    <cffunction name="getGateway" access="private" output="false" returntype="any" _returntype="reactor.base.abstractGateway">
        <cfreturn variables.gateway />
     </cffunction>
 
 	<!--- queryObject --->
     <cffunction name="setQueryObject" access="private" output="false" returntype="void">
-       <cfargument name="queryObject" hint="I am the OO query being managed by this iterator" required="yes" type="any" />
+       <cfargument name="queryObject" hint="I am the OO query being managed by this iterator" required="yes" type="any" _type="reactor.query.query" />
        <cfset variables.queryObject = arguments.queryObject />
     </cffunction>
-    <cffunction name="getQueryObject" access="private" output="false" returntype="any">
+    <cffunction name="getQueryObject" access="private" output="false" returntype="any" _returntype="reactor.query.query">
        <cfreturn variables.queryObject />
     </cffunction>
 
 	<!--- name --->
     <cffunction name="setAlias" access="private" output="false" returntype="void">
-       <cfargument name="name" hint="I am the name of the object this iterator encapsulates" required="yes" type="any" />
+       <cfargument name="name" hint="I am the name of the object this iterator encapsulates" required="yes" type="any" _type="string" />
        <cfset variables.name = arguments.name />
     </cffunction>
-    <cffunction name="getAlias" access="public" output="false" returntype="any">
+    <cffunction name="getAlias" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.name />
     </cffunction>
 
 	<!--- reactorFactory --->
     <cffunction name="setReactorFactory" access="private" output="false" returntype="void">
-       <cfargument name="reactorFactory" hint="I am the ReactorFactory" required="yes" type="any" />
+       <cfargument name="reactorFactory" hint="I am the ReactorFactory" required="yes" type="any" _type="reactor.ReactorFactory" />
        <cfset variables.reactorFactory = arguments.reactorFactory />
     </cffunction>
-    <cffunction name="getReactorFactory" access="private" output="false" returntype="any">
+    <cffunction name="getReactorFactory" access="private" output="false" returntype="any" _returntype="reactor.ReactorFactory">
        <cfreturn variables.reactorFactory />
     </cffunction>
 
 	<!--- parent --->
     <cffunction name="_setParent" hint="I set this record's parent.  This is for Reactor's use only.  Don't set this value.  If you set it you'll get errrors!  Don't say you weren't warned." access="public" output="false" returntype="void">
-		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" />
-		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="any" />
+		<cfargument name="parent" hint="I am the object which loaded this record" required="yes" type="any" _type="any" />
+		<cfargument name="relationshipAlias" hint="I am the alias of relationship the parent has to the child" required="no" type="any" _type="string" />
 
 		<cfset variables.parent = arguments.parent />
 
@@ -851,10 +851,10 @@
 			<cfset _setRelationshipAlias(arguments.relationshipAlias) />
 		</cfif>
     </cffunction>
-    <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any">
+    <cffunction name="_getParent" hint="I get this record's parent.  Call hasParent before calling me in case this record doesn't have a parent." access="public" output="false" returntype="any" _returntype="any">
        <cfreturn variables.parent />
     </cffunction>
-	<cffunction name="hasParent" access="public" hint="I indicate if this object has a parent." output="false" returntype="any">
+	<cffunction name="hasParent" access="public" hint="I indicate if this object has a parent." output="false" returntype="any" _returntype="boolean">
 		<cfreturn IsObject(variables.parent) />
 	</cffunction>
 	<cffunction name="resetParent" access="public" hint="I remove the reference to a parent object." output="false" returntype="void">
@@ -863,17 +863,17 @@
 
 	<!--- relationshipAlias --->
     <cffunction name="_setRelationshipAlias" access="private" output="false" returntype="void">
-       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="any" />
+       <cfargument name="relationshipAlias" hint="I am the relationship used to relate the object's parent to it." required="yes" type="any" _type="string" />
        <cfset variables.relationshipAlias = arguments.relationshipAlias />
     </cffunction>
-    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="any">
+    <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="any" _returntype="string">
        <cfreturn variables.relationshipAlias />
     </cffunction>
 
 	<!--- setLink --->
     <cffunction name="setLink" access="public" output="false" returntype="void">
-       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="any" />
-	   <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship from the linkIterator to this iterator" required="yes" type="any" />
+       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="any" _type="reactor.iterator.iterator" />
+	   <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship from the linkIterator to this iterator" required="yes" type="any" _type="string" />
        <cfset setLinked(true) />
 	   <cfset setLinkIterator(arguments.linkIterator) />
 	   <cfset setLinkRelationshipAlias(arguments.linkRelationshipAlias) />
@@ -881,41 +881,42 @@
 
 	<!--- linkRelationshipAlias --->
     <cffunction name="setLinkRelationshipAlias" access="private" output="false" returntype="void">
-       <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship on the link iterator" required="yes" type="any" />
+       <cfargument name="linkRelationshipAlias" hint="I am the alias of the relationship on the link iterator" required="yes" type="any" _type="string" />
        <cfset variables.linkRelationshipAlias = arguments.linkRelationshipAlias />
     </cffunction>
-    <cffunction name="getLinkRelationshipAlias" access="private" output="false" returntype="any">
+    <cffunction name="getLinkRelationshipAlias" access="private" output="false" returntype="any" _returntype="string">
        <cfreturn variables.linkRelationshipAlias />
     </cffunction>
 
 	<!--- linkIterator --->
     <cffunction name="setLinkIterator" access="private" output="false" returntype="void">
-       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="any" />
+       <cfargument name="linkIterator" hint="I am the iterator between this iterator and it's parent" required="yes" type="any" _type="reactor.iterator.iterator" />
        <cfset variables.linkIterator = arguments.linkIterator />
     </cffunction>
-    <cffunction name="getLinkIterator" access="private" output="false" returntype="any">
+    <cffunction name="getLinkIterator" access="private" output="false" returntype="any" _returntype="reactor.iterator.iterator">
        <cfreturn variables.linkIterator />
     </cffunction>
 
 	<!--- linked --->
     <cffunction name="setLinked" access="private" output="false" returntype="void">
-       <cfargument name="linked" hint="I indicate if this is a linked iterator" required="yes" type="any" />
+       <cfargument name="linked" hint="I indicate if this is a linked iterator" required="yes" type="any" _type="boolean" />
        <cfset variables.linked = arguments.linked />
     </cffunction>
-    <cffunction name="getLinked" access="public" output="false" returntype="any">
+    <cffunction name="getLinked" access="public" output="false" returntype="any" _returntype="boolean">
        <cfreturn variables.linked />
     </cffunction>
 
 	<!--- getLastExecutedQuery --->
-	<cffunction name="getLastExecutedQuery" access="public" output="false" returntype="any">
+	<cffunction name="getLastExecutedQuery" access="public" output="false" returntype="any" _returntype="struct">
      	<cfreturn getGateway().getLastExecutedQuery() />
     </cffunction>
 
  	<!--- setFieldPrefix --->
 	<cffunction name="setFieldPrefix" access="public" hint="I am prefix field names." output="false" returntype="void">
-		<cfargument name="objectAlias" hint="I am the alias of the object that the prefix is being added to." required="yes" type="any" />
-		<cfargument name="prefix" hint="I am the prefix to prepend." required="yes" type="any" />
+		<cfargument name="objectAlias" hint="I am the alias of the object that the prefix is being added to." required="yes" type="any" _type="string" />
+		<cfargument name="prefix" hint="I am the prefix to prepend." required="yes" type="any" _type="string" />
 		<cfset getQueryObject().setFieldPrefix(objectAlias=arguments.objectAlias,prefix=arguments.prefix) />
 	</cffunction>
 
 </cfcomponent>
+

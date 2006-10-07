@@ -1,9 +1,9 @@
 <cfcomponent hint="I represent a join in a query.">
 
-	<cffunction name="init" access="public" hint="I configure and return this join." output="false" returntype="any">
-		<cfargument name="Object" hint="I am the object being joined to" required="yes" type="any" />
-		<cfargument name="relationship" hint="I am the relationship to this object from the object that this joined is on." required="yes" type="any" />
-		<cfargument name="joinType" hint="I am the type of join.  Option are left, right, innner, full." required="yes" type="any" />
+	<cffunction name="init" access="public" hint="I configure and return this join." output="false" returntype="any" _returntype="reactor.query.join">
+		<cfargument name="Object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.object" />
+		<cfargument name="relationship" hint="I am the relationship to this object from the object that this joined is on." required="yes" type="any" _type="struct" />
+		<cfargument name="joinType" hint="I am the type of join.  Option are left, right, innner, full." required="yes" type="any" _type="string" />
 		 
 		<!--- validate joinType --->
 		<cfif NOT ListFindNoCase("left,right,full,inner", arguments.joinType)>
@@ -19,9 +19,9 @@
 	</cffunction>
 	
 	<!--- getFromAsString --->
-	<cffunction name="getJoinsAsString" access="package" hint="I get this join as a fragment of a from statement" output="false" returntype="any">
-		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="any" />
-		<cfargument name="FromObject" hint="I am the object joining to the joined object." required="yes" type="any" />
+	<cffunction name="getJoinsAsString" access="package" hint="I get this join as a fragment of a from statement" output="false" returntype="any" _returntype="string">
+		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfargument name="FromObject" hint="I am the object joining to the joined object." required="yes" type="any" _type="reactor.query.object" />
 		<cfset var join = " " & UCase(getJoinType()) & " JOIN " & arguments.convention.formatObjectAlias(getObject().getObjectMetadata(), getObject().getAlias()) />
 		<cfset var relationship = getRelationship() />
 		<cfset var x = 0 />
@@ -48,28 +48,28 @@
 	
 	<!--- object --->
     <cffunction name="setObject" access="private" output="false" returntype="void">
-       <cfargument name="object" hint="I am the object being joined to" required="yes" type="any" />
+       <cfargument name="object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.object" />
        <cfset variables.object = arguments.object />
     </cffunction>
-    <cffunction name="getObject" access="public" output="false" returntype="any">
+    <cffunction name="getObject" access="public" output="false" returntype="any" _returntype="reactor.query.object">
        <cfreturn variables.object />
     </cffunction>
 	
 	<!--- relationship --->
     <cffunction name="setRelationship" access="private" output="false" returntype="void">
-       <cfargument name="relationship" hint="I am the relationship to this object from the object that this joined is on." required="yes" type="any" />
+       <cfargument name="relationship" hint="I am the relationship to this object from the object that this joined is on." required="yes" type="any" _type="struct" />
        <cfset variables.relationship = arguments.relationship />
     </cffunction>
-    <cffunction name="getRelationship" access="public" output="false" returntype="any">
+    <cffunction name="getRelationship" access="public" output="false" returntype="any" _returntype="struct">
        <cfreturn variables.relationship />
     </cffunction>
 
 	<!--- joinType --->
     <cffunction name="setJoinType" access="public" output="false" returntype="void">
-       <cfargument name="joinType" hint="I am the type of join.  Option are left, right, innner, full." required="yes" type="any" />
+       <cfargument name="joinType" hint="I am the type of join.  Option are left, right, innner, full." required="yes" type="any" _type="string" />
        <cfset variables.joinType = arguments.joinType />
     </cffunction>
-    <cffunction name="getJoinType" access="public" output="false" returntype="any">
+    <cffunction name="getJoinType" access="public" output="false" returntype="any" _returntype="string">
        <cfreturn variables.joinType />
     </cffunction>
 </cfcomponent>
