@@ -1,4 +1,20 @@
-<cfcomponent hint="I am an abstract TO.  I am used to define an interface and for return types." extends="reactor.base.abstractObject">
+<cfcomponent hint="I am an abstract TO.  I am used to define an interface and for return types.">
+	
+	<cfinclude template="base.cfm" />
+	
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="reactor.base.abstractTo">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" _type="reactor.config.config" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" _type="string" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" _type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		
+		<cfset _setConfig(arguments.config) />
+		<cfset _setAlias(arguments.alias) />
+		<cfset _setReactorFactory(arguments.ReactorFactory) />
+		<cfset _setConvention(arguments.Convention) />
+		
+		<cfreturn this />
+	</cffunction>
 	
 	<cffunction name="_copy" access="public" hint="I copy another TO's values into this TO.  Properties which exist in both TOs are copied from the provided TO to this TO." output="false" returntype="void">
 		<cfargument name="To" hint="I am the TO to copy data from" required="yes" type="any" _type="reactor.base.abstractTo" />

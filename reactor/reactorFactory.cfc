@@ -96,7 +96,7 @@
 		<cfreturn getObjectFactory().getObject(arguments.objectAlias).getXml() />
 	</cffunction>
 
-	<cffunction name="createPlugin" access="public" hint="I return a plugin object of the specified type." output="false" returntype="any" _returntype="reactor.base.abstractObject">
+	<cffunction name="createPlugin" access="public" hint="I return a plugin object of the specified type." output="false" returntype="any" _returntype="any">
 		<cfargument name="objectAlias" hint="I am the alias of the metadata to return.  I corrispond to the name of a object in the DB." required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I am the name of the plugin to use." required="yes" type="any" _type="string" />
 		<cfset var Object = 0 />
@@ -121,7 +121,7 @@
   
 	<!--- BeanFactory --->
 	<cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
-		<cfargument name="beanFactory" type="any" _type="coldspring.beans.beanFactory" required="true" />
+		<cfargument name="beanFactory" type="coldspring.beans.beanFactory" _type="coldspring.beans.beanFactory" required="true" />
 		<cfset variables.BeanFactory = arguments.beanFactory />
 	</cffunction>
 	<cffunction name="getBeanFactory" access="private" output="false" returntype="any" _returntype="any">

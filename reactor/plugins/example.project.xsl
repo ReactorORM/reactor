@@ -4,8 +4,9 @@
 	<xsl:output method="text" indent="no"  />
 	<xsl:template match="/">
 	
-&lt;cfcomponent hint="I am the base Example object for the <xsl:value-of select="object/@alias"/> object.  I am generated.  DO NOT EDIT ME (but feel free to delete me)."
-	extends="reactor.base.abstractObject" &gt;
+&lt;cfcomponent hint="I am the base Example object for the <xsl:value-of select="object/@alias"/> object.  I am generated.  DO NOT EDIT ME (but feel free to delete me)." &gt;
+	
+	&lt;cfinclude template="/reactor/base/base.cfm" /&gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 

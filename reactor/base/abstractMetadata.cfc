@@ -1,7 +1,24 @@
-<cfcomponent hint="I am an abstract Metadata.  I am used to define an interface and return types." extends="reactor.base.abstractObject">
+<cfcomponent hint="I am an abstract Metadata.  I am used to define an interface and return types.">
+	
+	<cfinclude template="base.cfm" />
+	
+	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="reactor.base.abstractMetadata">
+		<cfargument name="config" hint="I am the configuration object to use." required="yes" type="any" _type="reactor.config.config" />
+		<cfargument name="alias" hint="I am the alias of this object." required="yes" type="any" _type="string" />
+		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" _type="reactor.reactorFactory" />
+		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		
+		<cfset _setConfig(arguments.config) />
+		<cfset _setAlias(arguments.alias) />
+		<cfset _setReactorFactory(arguments.ReactorFactory) />
+		<cfset _setConvention(arguments.Convention) />
+		
+		<cfreturn this />
+	</cffunction>
+	
 	<cffunction name="getConventions" access="public" output="false" returntype="any" _returntype="reactor.data.abstractConvention">
 		<cfreturn _getConvention() />
-  </cffunction>
+	</cffunction>
 
 	<cffunction name="getDatabase" access="public" hint="I return the name of the database this object is in." output="false" returntype="any" _returntype="string">
 		<cfreturn getObjectMetadata().database />

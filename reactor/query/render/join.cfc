@@ -1,7 +1,7 @@
 <cfcomponent hint="I represent a join in a query.">
 
-	<cffunction name="init" access="public" hint="I configure and return this join." output="false" returntype="any" _returntype="reactor.query.join">
-		<cfargument name="Object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.object" />
+	<cffunction name="init" access="public" hint="I configure and return this join." output="false" returntype="any" _returntype="reactor.query.render.join">
+		<cfargument name="Object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.render.object" />
 		<cfargument name="relationship" hint="I am the relationship to this object from the object that this joined is on." required="yes" type="any" _type="struct" />
 		<cfargument name="joinType" hint="I am the type of join.  Option are left, right, innner, full." required="yes" type="any" _type="string" />
 		 
@@ -21,7 +21,7 @@
 	<!--- getFromAsString --->
 	<cffunction name="getJoinsAsString" access="package" hint="I get this join as a fragment of a from statement" output="false" returntype="any" _returntype="string">
 		<cfargument name="Convention" hint="I am the convention object to use." required="yes" type="any" _type="reactor.data.abstractConvention" />
-		<cfargument name="FromObject" hint="I am the object joining to the joined object." required="yes" type="any" _type="reactor.query.object" />
+		<cfargument name="FromObject" hint="I am the object joining to the joined object." required="yes" type="any" _type="reactor.query.render.object" />
 		<cfset var join = " " & UCase(getJoinType()) & " JOIN " & arguments.convention.formatObjectAlias(getObject().getObjectMetadata(), getObject().getAlias()) />
 		<cfset var relationship = getRelationship() />
 		<cfset var x = 0 />
@@ -48,10 +48,10 @@
 	
 	<!--- object --->
     <cffunction name="setObject" access="private" output="false" returntype="void">
-       <cfargument name="object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.object" />
+       <cfargument name="object" hint="I am the object being joined to" required="yes" type="any" _type="reactor.query.render.object" />
        <cfset variables.object = arguments.object />
     </cffunction>
-    <cffunction name="getObject" access="public" output="false" returntype="any" _returntype="reactor.query.object">
+    <cffunction name="getObject" access="public" output="false" returntype="any" _returntype="reactor.query.render.object">
        <cfreturn variables.object />
     </cffunction>
 	

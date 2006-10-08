@@ -13,7 +13,7 @@
 	<cfset variables.externalFields = 0 />
 	<cfset variables.fieldPrefix = "" />
 	
-	<cffunction name="init" hint="I configure and return the object." output="false" returntype="any" _returntype="reactor.query.object">
+	<cffunction name="init" hint="I configure and return the object." output="false" returntype="any" _returntype="reactor.query.render.object">
 		<cfargument name="ObjectMetadata" hint="I am the metadata of the object being queried." required="yes" type="any" _type="reactor.base.abstractMetadata" />
 		<cfargument name="alias" hint="I am the alais of the object within the query." required="yes" type="any" _type="string" />
 		<cfargument name="ReactorFactory" hint="I am a reference to the ReactorFactory." required="yes" type="any" _type="reactor.ReactorFactory" />
@@ -55,7 +55,7 @@
 			</cfif>
 		</cfloop>
 		
-		<cfthrow message="Field Does Not Exist" detail="The field '#arguments.fieldAlias#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.query.object.FieldDoesNotExist" />
+		<cfthrow message="Field Does Not Exist" detail="The field '#arguments.fieldAlias#' does not exist in the object '#getObjectMetadata().getName()#'." type="reactor.query.render.object.FieldDoesNotExist" />
 
 	</cffunction>
 	
@@ -212,7 +212,7 @@
 		
 		<!--- create the query object add this join --->
 		<cfset ToObject = CreateObject("Component", "object").init(ToObjectMetadata, arguments.alias ,getReactorFactory()) />
-		<cfset Join = CreateObject("Component", "reactor.query.join").init(ToObject, relationship, joinType) />
+		<cfset Join = CreateObject("Component", "reactor.query.render.join").init(ToObject, relationship, joinType) />
 		
 		<cfset ArrayAppend(variables.Joins, Join) />
 		

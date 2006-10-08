@@ -52,7 +52,7 @@
 		</cfloop>
 	</cffunction>
 
-	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="any" _returntype="reactor.base.abstractObject">
+	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="any" _returntype="any">
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="any" _type="string" />
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator unless this is a plugin." required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="no" type="any" _type="boolean" default="false" />

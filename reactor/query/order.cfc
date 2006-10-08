@@ -1,43 +1,21 @@
 <cfcomponent hint="I am am object which represents an order imposed on a query.">
 
+	<cfset variables.query = 0 />
+
 	<!--- init --->
 	<cffunction name="init" access="public" hint="I configure and return the criteria object" output="false" returntype="any" _returntype="reactor.query.order">
-		<cfargument name="query" hint="I am the query this where expression is in." required="yes" type="any" _type="reactor.query.query">
+		<cfargument name="query" hint="I am the array of order commands." required="yes" type="any" _type="ractor.query.query">
 		
-		<cfset variables.order = ArrayNew(1) />
-		<cfset setQuery(arguments.query) />
+		<cfset variables.query = arguments.query />
 		
 		<cfreturn this />
 	</cffunction>
 	
-	<!--- query --->
-    <cffunction name="setQuery" access="private" output="false" returntype="void">
-       <cfargument name="query" hint="I am the query this where expression is in." required="yes" type="any" _type="reactor.query.query" />
-       <cfset variables.query = arguments.query />
-    </cffunction>
-    <cffunction name="getQuery" access="private" output="false" returntype="any" _returntype="reactor.query.query">
-       <cfreturn variables.query />
-    </cffunction>
-	
-	<!--- validateField --->
-	<cffunction name="validateField" access="private" output="false" returntype="void">
-		<cfargument name="objectAlias" hint="I am the alias of the object of the field should be in" required="yes" type="any" _type="string" />
-		<cfargument name="fieldAlias" hint="I am the name of the field to validate" required="yes" type="any" _type="string" />
+	<cffunction name="addOrderCommand" access="private" hint="I append a node to the order expression" output="false" returntype="any" _returntype="reactor.query.where">
+		<cfargument name="params" hint="I am the arguments to pass" required="yes" type="struct" />
+		<cfargument name="method" hint="I am the name of the method to call" required="yes" type="string" />
 		
-		<cfset getQuery().findObject(arguments.objectAlias).getObjectMetadata().getField(arguments.fieldAlias) />
-	</cffunction>
-	
-	<cffunction name="appendNode" access="private" hint="I append a node to the where expression" output="false" returntype="any" _returntype="reactor.query.order">
-		<cfargument name="node" hint="I am the node to append" required="yes" type="any" _type="struct" />
-		<cfargument name="direction" hint="I am the direction" required="yes" type="any" _type="string" />
-		<cfset var order = getOrder() />
-				
-		<cfset arguments.node.direction = arguments.direction />
-		
-		<cfset arguments.node.fieldName = getQuery().findObject(node.objectAlias).getObjectMetadata().getField(node.fieldAlias).name />
-		
-		<cfset ArrayAppend(order, arguments.node) />	
-		<cfset setOrder(order) />
+		<cfset variables.query.addOrderCommand(arguments.params, arguments.method) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -46,9 +24,7 @@
 		<cfargument name="objectAlias" hint="I am the object the field is in" required="yes" type="any" _type="string" />
 		<cfargument name="fieldAlias" hint="I am the name of the field" required="yes" type="any" _type="string" />
 		
-		<cfset validateField(arguments.objectAlias, arguments.fieldAlias) />
-		
-		<cfset appendNode(arguments, "ASC") />
+		<cfset addOrderCommand(arguments, "setAsc") />
 		<cfreturn this />
 	</cffunction>
 	
@@ -56,13 +32,14 @@
 		<cfargument name="objectAlias" hint="I am the object the field is in" required="yes" type="any" _type="string" />
 		<cfargument name="fieldAlias" hint="I am the name of the field" required="yes" type="any" _type="string" />
 		
-		<cfset validateField(arguments.objectAlias, arguments.fieldAlias) />
-		
-		<cfset appendNode(arguments, "DESC") />
+		<cfset addOrderCommand(arguments, "setDesc") />
 		<cfreturn this />
 	</cffunction>
 
-	<!--- order --->
+</cfcomponent>
+
+
+	<!--- order
     <cffunction name="setOrder" access="private" output="false" returntype="void">
        <cfargument name="order" hint="I am the array of order by statements" required="yes" type="any" _type="array" />
        <cfset variables.order = arguments.order />
@@ -83,6 +60,4 @@
 		</cfloop>
 				
 		<cfreturn variables.order />
-    </cffunction>
-	
-</cfcomponent>
+    </cffunction> --->
