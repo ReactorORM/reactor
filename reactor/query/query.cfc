@@ -4,11 +4,33 @@
 	<cfset variables.order = 0 />
 	<cfset variables.maxrows = -1 />
 	<cfset variables.initData = StructNew() />
-	<cfset variables.ReactorFactory = 0 />
 	<cfset variables.instance = StructNew() />
 	<cfset variables.instance.queryCommands = ArrayNew(1) />
 	<cfset variables.instance.orderCommands = ArrayNew(1) />
 	<cfset variables.values = ArrayNew(1) />
+	<cfset variables.instance.objectSignatures = "" />
+	
+	<!--- init --->
+	<cffunction name="init" access="public" hint="I configure and return the query." output="false" returntype="any" _returntype="reactor.query.query">
+		<cfargument name="objectAlias" hint="I am the alias of the object that will be queried." required="yes" type="any" _type="string" />
+		<cfargument name="queryAlias" hint="I am the alias of the object within the query." required="yes" type="any" _type="string" />
+		<cfargument name="ReactorFactory" hint="I am the ReactorFactory" required="yes" type="any" _type="reactor.reactorFactory" />
+		
+		<cfset variables.initData = arguments />
+		
+		<cfset logObjectSignature(arguments.objectAlias) />
+		
+		<cfset resetWhere() />
+		<cfset resetOrder() />
+		
+		<cfreturn this />
+	</cffunction>
+	
+	<cffunction name="logObjectSignature" access="private" hint="I log an object's signature so that we can tell when it's changes and force the regeneration of queries." output="false" returntype="void">
+		<cfargument name="objectAlias" hint="I am the object's alias." required="yes" type="any" _type="string" />
+		
+		<cfset variables.instance.objectSignatures = variables.instance.objectSignatures & variables.initData.ReactorFactory.createMetadata(arguments.objectAlias)._getSignature() />
+	</cffunction>
 	
 	<cffunction name="getWhereCommands" access="package" hint="I return a structure which contains the array of where commands (so I can pass the array byref)" output="false" returntype="struct">
 		<cfset var result = StructNew() />
@@ -423,7 +445,7 @@
 	</cffunction>
 	
 	<cffunction name="getHash" access="private" hint="I get a hash of the data in this query" output="false" returntype="any" _returntype="string">
-		<cfreturn hash(variables.initData.objectAlias & arrayToString(variables.where.getWhereCommands()) & variables.initData.queryAlias & structToString(variables.instance)) />
+		<cfreturn hash(variables.initData.objectAlias & variables.instance.objectSignatures & arrayToString(variables.where.getWhereCommands()) & variables.initData.queryAlias & structToString(variables.instance)) />
 	</cffunction>
 	
 	<cffunction name="structToString" access="private" hint="I get a string of the data in this structure (assuming only arrays, structs and strings are contained within)" output="false" returntype="any" _returntype="string">
@@ -513,20 +535,6 @@
 		<cfreturn arrayLen(variables.whereCommands) />
 	</cffunction>
 	
-	<!--- init --->
-	<cffunction name="init" access="public" hint="I configure and return the query." output="false" returntype="any" _returntype="reactor.query.query">
-		<cfargument name="objectAlias" hint="I am the alias of the object that will be queried." required="yes" type="any" _type="string" />
-		<cfargument name="queryAlias" hint="I am the alias of the object within the query." required="yes" type="any" _type="string" />
-		<cfargument name="ReactorFactory" hint="I am the ReactorFactory" required="yes" type="any" _type="reactor.reactorFactory" />
-		
-		<cfset variables.initData = arguments />
-		
-		<cfset resetWhere() />
-		<cfset resetOrder() />
-		
-		<cfreturn this />
-	</cffunction>
-	
 	<!--- setFieldAlias --->
 	<cffunction name="setFieldAlias" access="public" hint="I set an alias on the field from the named object." output="false" returntype="any" _returntype="reactor.query.query">
 		<cfargument name="objectAlias" hint="I am the alias of the object that the alias is being set for." required="yes" type="any" _type="string" />
@@ -586,7 +594,7 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfset addQueryCommand(arguments, "join") />
-		
+		<cfset logObjectSignature(arguments.joinToObjectAlias) />
 		<cfreturn this />
 	</cffunction>
 	
@@ -598,6 +606,7 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfset addQueryCommand(arguments, "innerJoin") />
+		<cfset logObjectSignature(arguments.joinToObjectAlias) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -610,6 +619,7 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfset addQueryCommand(arguments, "leftJoin") />
+		<cfset logObjectSignature(arguments.joinToObjectAlias) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -622,6 +632,7 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfset addQueryCommand(arguments, "rightJoin") />
+		<cfset logObjectSignature(arguments.joinToObjectAlias) />
 		
 		<cfreturn this />
 	</cffunction>
@@ -634,6 +645,7 @@
 		<cfargument name="alias" hint="I the alias of the object in the query." required="no" type="any" _type="string" default="#arguments.joinToObjectAlias#" />
 		
 		<cfset addQueryCommand(arguments, "fullJoin") />
+		<cfset logObjectSignature(arguments.joinToObjectAlias) />
 		
 		<cfreturn this />
 	</cffunction>

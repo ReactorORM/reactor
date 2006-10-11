@@ -26,6 +26,37 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<!--- populate --->
+	<cffunction name="populate" access="public" hint="I populate the record from any bean passed in.  I match up getters on the bean with setters on the record" output="false" returntype="void">
+		<cfargument name="Bean" hint="I am the Bean to populate from." required="yes" type="any" _type="any" />
+		<cfset var ThisFunctionArray = StructKeyArray(this) />
+		<cfset var BeanFunctionArray = StructKeyArray(arguments.Bean) />
+		<cfset var x = 0 />
+		<cfset var y = 0 />
+		<cfset var value = 0 />
+		<cfset var argumentName = 0 />
+		
+		<!--- look for setters --->
+		<cfloop from="1" to="#ArrayLen(ThisFunctionArray)#" index="x">
+			<cfif left(ThisFunctionArray[x], 3) IS "set" AND ArrayLen(getMetadata(this[ThisFunctionArray[x]]).parameters) IS 1>
+				<!--- get the argument name --->
+				<cfset argumentName = getMetadata(this[ThisFunctionArray[x]]).parameters[1].name />
+				<!--- look for getters --->
+				<cfloop from="1" to="#ArrayLen(BeanFunctionArray)#" index="y">
+					<cfif BeanFunctionArray[y] IS "get" & right(ThisFunctionArray[x], len(ThisFunctionArray[x]) - 3) AND ArrayLen(getMetadata(arguments.bean[BeanFunctionArray[y]]).parameters) IS 0>
+						<!--- get the data --->
+						<cfinvoke component="#arguments.Bean#" method="#BeanFunctionArray[y]#" returnvariable="value" />
+						<!--- set the data --->
+						<cfinvoke component="#this#" method="#ThisFunctionArray[x]#">
+							<cfinvokeargument name="#argumentName#" value="#value#" />
+						</cfinvoke>					
+					</cfif>
+				</cfloop>
+			</cfif>
+		</cfloop>		
+	</cffunction>
+	
+	
 	<!--- objectMetadata --->
     <cffunction name="_setObjectMetadata" access="private" output="false" returntype="void">
        <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" _type="reactor.base.abstractMetadata" />
