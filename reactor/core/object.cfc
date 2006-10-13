@@ -333,7 +333,7 @@
 		<cfset var externalField = XMLElemNew(arguments.config, "externalField") />
 		<cfset var hasOne = XmlSearch(arguments.config, "/object/hasOne[@alias = '#arguments.field.xmlAttributes.source#']") />
 		<cfset var remoteField = getObject(hasOne[1].XmlAttributes.name, getConfig()).getField(arguments.field.xmlAttributes.field) />
-		
+				
 		<cfif StructKeyExists(arguments.field.xmlAttributes, "alias")>
 			<cfset externalField.XmlAttributes["fieldAlias"] = arguments.field.xmlAttributes.alias />
 		<cfelse>
@@ -343,7 +343,12 @@
 		<cfset externalField.XmlAttributes["sourceName"] = hasOne[1].XmlAttributes.name />
 		<cfset externalField.XmlAttributes["field"] = arguments.field.xmlAttributes.field />
 		
-		<cfset externalField.XmlAttributes["cfDataType"] = remoteField.cfDataType />
+		<cftry>
+			<cfset externalField.XmlAttributes["cfDataType"] = remoteField.cfDataType />
+			<cfcatch>
+				<cfdump var="#remoteField#" /><cfabort>
+			</cfcatch>
+		</cftry>
 		<cfset externalField.XmlAttributes["default"] = remoteField.default />
 				
 		<!--- add the external field node --->
@@ -491,6 +496,9 @@
 				<cfreturn fields[x] />
 			</cfif>
 		</cfloop>
+		
+		<!--- we couldn't find the field, throw an error --->
+		<cfthrow message="Couldn't find field" detail="The field '#arguments.name#' could not be found in the object '#getAlias()#'." type="reactor.object.CouldntFindField" />
 	</cffunction>
 	
 	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="any" _returntype="reactor.core.object">
