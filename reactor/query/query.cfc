@@ -1,7 +1,7 @@
 <cfcomponent hint="I am a component used to define ad-hoc queries used throughout Reactor.">
 	
 	<cfset variables.where = 0 />
-	<cfset variables.order = 0 />
+	<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
 	<cfset variables.maxrows = -1 />
 	<cfset variables.initData = StructNew() />
 	<cfset variables.instance = StructNew() />
@@ -695,6 +695,10 @@
 		<cfreturn variables.order />
     </cffunction>
 	<cffunction name="resetOrder" access="public" output="false" returntype="void">
-		<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
+		<cfset variables.instance.orderCommands = ArrayNew(1) />
+	</cffunction>
+	
+	<cffunction name="dump">
+		<cfdump var="#variables#" /><cfabort>
 	</cffunction>
 </cfcomponent>

@@ -91,7 +91,11 @@
     
 		<!--- strip out parens --->
 		<cfif Len(arguments.sqlDefaultValue)>
-			<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2 )/>
+			<cfif ReFind("(^\(+)([0-9]+)(\)+$)", arguments.sqlDefaultValue, 0)>
+				<cfset arguments.sqlDefaultValue = ReReplace(arguments.sqlDefaultValue, "(^\(+)([0-9]+)(\)+$)", "\2", "all") />	
+			<cfelse>
+				<cfset arguments.sqlDefaultValue = Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2 )/>
+			</cfif>
 		</cfif>
 		
 		<cfswitch expression="#arguments.typeName#">
