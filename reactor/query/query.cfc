@@ -22,6 +22,8 @@
 		
 		<cfset resetWhere() />
 		<cfset resetOrder() />
+
+   	<cfset setMaxIntegerLength() />
 		
 		<cfreturn this />
 	</cffunction>
@@ -697,6 +699,14 @@
 	<cffunction name="resetOrder" access="public" output="false" returntype="void">
 		<cfset variables.instance.orderCommands = ArrayNew(1) />
 	</cffunction>
+
+ <!---  maxIntegerLength --->
+    <cffunction name="setMaxIntegerLength" access="private" output="false" returntype="void">
+      <cfset variables.maxIntegerLength =  createObject('java', 'java.lang.Integer').MAX_VALUE />    
+    </cffunction>
+    <cffunction name="getMaxIntegerLength" access="private" output="false" returntype="any" _returntype="numeric">
+	     <cfreturn variables.maxIntegerLength />
+    </cffunction>
 	
 	<cffunction name="dump">
 		<cfdump var="#variables#" /><cfabort>
