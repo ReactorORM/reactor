@@ -58,7 +58,8 @@
 			&lt;/cfif&gt;
 		</xsl:for-each>
 		
-		&lt;cfreturn deleteByQuery(Query,true) /&gt;
+		&lt;cfset deleteByQuery(Query,true) /&gt;
+		&lt;cfreturn /&gt;
 	&lt;/cffunction&gt;
 	
 &lt;/cfcomponent&gt;
