@@ -74,53 +74,56 @@
 		</cfif>
 		
 		<cftry>
-<!--- 			<cfswitch expression="#getConfig().getMode()#"> --->
-				<cfif compareNocase(getConfig().getMode(), "always") is 0>
-					<!--- we always need the db object to transform --->
-					<cfset DbObject = getObject(arguments.alias) />
-					<cfset generate = true />
-				<cfelseif compareNocase(getConfig().getMode(), "development") is 0>				
-					<!--- we always need the db object to compare to our existing object --->
-					<cfset DbObject = getObject(arguments.alias) />
-					<cftry>
-						<!--- create an instance of the object and check its signature --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
-						<cfcatch>
-							<cfset generate = true />
-						</cfcatch>
-					</cftry>
-					<cfif NOT generate>
-						<!--- check the object's signature --->
-						<cfif DbObject.getSignature() IS NOT GeneratedObject._getSignature()>
-							<cfset generate = true />
-						</cfif>
+			
+			<cfif compareNocase(getConfig().getMode(), "always") is 0>
+				<!--- we always need the db object to transform --->
+				<cfset DbObject = getObject(arguments.alias) />
+				<cfset generate = true />
+			
+			<cfelseif compareNocase(getConfig().getMode(), "development") is 0>				
+				<!--- we always need the db object to compare to our existing object --->
+				<cfset DbObject = getObject(arguments.alias) />
+				<cftry>
+					<!--- create an instance of the object and check its signature --->
+					<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+					<cfcatch>
+						<cfset generate = true />
+					</cfcatch>
+				</cftry>
+				<cfif NOT generate>
+					<!--- check the object's signature --->
+					<cfif DbObject.getSignature() IS NOT GeneratedObject._getSignature()>
+						<cfset generate = true />
 					</cfif>
-				<cfelseif compareNocase(getConfig().getMode(), "production") is 0>
-					<cftry>
-						
-						<!--- get an instance of the object from cache or create it --->
-						<cfif ListFind("Dao,Gateway,Metadata,Validator", arguments.type)>
-
-							<cfif StructKeyExists(variables.Cache[arguments.type], arguments.alias)>
-								<cfset GeneratedObject = variables.Cache[arguments.type][arguments.alias] />
-							<cfelse>
-								<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
-								<cfset variables.Cache[arguments.type][arguments.alias] = GeneratedObject />
-							</cfif>
-
+				</cfif>
+			
+			<cfelseif compareNocase(getConfig().getMode(), "production") is 0>
+				<cftry>
+					
+					<!--- get an instance of the object from cache or create it --->
+					<cfif ListFind("Dao,Gateway,Metadata,Validator", arguments.type)>
+						<cfif StructKeyExists(variables.Cache[arguments.type], arguments.alias)>
+							<cfset GeneratedObject = variables.Cache[arguments.type][arguments.alias] />
 						<cfelse>
-
-							<!--- we never cache Record, To or iterator objects --->
-							<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin)) />
-	
+							<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+							<cfset variables.Cache[arguments.type][arguments.alias] = GeneratedObject />
 						</cfif>
-						<cfcatch>
-							<!--- we only need the dbobject if it doesn't already exist --->
-							<cfset DbObject = getObject(arguments.alias) />
-							<cfset generate = true />
-						</cfcatch>
-					</cftry>
+
+					<cfelse>
+
+						<!--- we never cache Record, To or iterator objects --->
+						<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+
+					</cfif>
+					<cfcatch>
+						<!--- we only need the dbobject if it doesn't already exist --->
+						<cfset DbObject = getObject(arguments.alias) />
+						<cfset generate = true />
+					</cfcatch>
+				</cftry>
+				
 			</cfif>
+			
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
@@ -139,9 +142,9 @@
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 				
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin))._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
-				<cfset GeneratedObject = CreateObject("Component", getObjectName(arguments.type, arguments.alias, arguments.plugin))._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			</cfif>
 
 		<cfelse>
@@ -175,27 +178,28 @@
 		<cfset var ObjectTranslator = 0 />
 		
 		<cftry>
-<!--- 			<cfswitch expression="#getConfig().getMode()#"> --->
-				<cfif compareNocase(getConfig().getMode(), "production") is 0>
-					<cftry>
-						<!--- get an instance of the object from cache or create it --->
-						<cfif StructKeyExists(variables.Cache["Dictionary"], arguments.alias)>
-							<cfset DictionaryObject = variables.Cache["Dictionary"][arguments.alias] />
-						<cfelse>
-							<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
-							<cfset variables.Cache["Dictionary"][arguments.alias] = DictionaryObject />
-						</cfif>
+			<cfif compareNocase(getConfig().getMode(), "production") is 0>
+				<cftry>
+					<!--- get an instance of the object from cache or create it --->
+					<cfif StructKeyExists(variables.Cache["Dictionary"], arguments.alias)>
+						<cfset DictionaryObject = variables.Cache["Dictionary"][arguments.alias] />
+					<cfelse>
+						<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
+						<cfset variables.Cache["Dictionary"][arguments.alias] = DictionaryObject />
+					</cfif>
 
-						<cfcatch>
-							<!--- we only need the dbobject if it doesn't already exist --->
-							<cfset DbObject = getObject(arguments.alias) />
-							<cfset generate = true />
-						</cfcatch>
-					</cftry>
-				<cfelse>
-					<!--- we always need the db object to update the xml --->
-					<cfset DbObject = getObject(arguments.alias) />
-					<cfset generate = true />
+					<cfcatch>
+						<!--- we only need the dbobject if it doesn't already exist --->
+						<cfset DbObject = getObject(arguments.alias) />
+						<cfset generate = true />
+					</cfcatch>
+				</cftry>
+				
+			<cfelse>
+				<!--- we always need the db object to update the xml --->
+				<cfset DbObject = getObject(arguments.alias) />
+				<cfset generate = true />
+				
 			</cfif>
 			
 			<cfcatch type="Reactor.NoSuchObject">
@@ -230,12 +234,54 @@
 		<cfreturn Object />
 	</cffunction>
 	
-	<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="any" _returntype="string">
+	<cffunction name="getObjectDetails" access="private" hint="I return a structure of the correct name of the a object based on it's type and other configurations" output="false" returntype="any" _returntype="struct">
+		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="any" _type="string" />
+		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="any" _type="string" />
+		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="any" _type="boolean" />
+		<cfset var result = StructNew() />
+		
+		<!--- get the dbms-specific custom file first --->
+		<cfset result.dbms = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType() />
+		<cfset result.custom = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type />
+		<cfset result.project = "reactor.project." & getConfig().getProject() & "." & arguments.type & "." & arguments.name & arguments.type />
+		
+		<!--- insure all three paths exists --->
+		<cfif NOT componentExists(result.dbms)>
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+		<cfelseif NOT componentExists(result.custom)>
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+		<cfelseif NOT componentExists(result.project)>
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+		</cfif>
+		
+		<cfreturn result />		
+	</cffunction>
+	
+	<cffunction name="componentExists" access="private" hint="I indicate if a component exists" output="false" returntype="any" _returntype="boolean">
+		<cfargument name="name" hint="I am the name of the component in dot noted formated" required="yes" type="any" _type="string" />
+		<cfset var absPath = ExpandPath("/" & replace(arguments.name, ".", "/", "all") & ".cfc") />
+		
+		<cfreturn FileExists(absPath) />
+	</cffunction>
+	
+	<cffunction name="getMapping" access="private" hint="I get and add a / in front of mappings" output="false" returntype="any" _returntype="string">
+		<cfargument name="alias" hint="I am an optional alias of an object.  The object will be checked for its own custom mapping." required="no" type="any" _type="string" default="" />
+		<cfset var mapping = getConfig().getMapping(arguments.alias) />
+		
+		<cfreturn replaceNoCase(right(mapping, Len(mapping) - 1), "/", ".", "all") />
+	</cffunction>
+	
+	<!---<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="any" _returntype="string">
 		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="any" _type="string" />
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="any" _type="boolean" />
 		<cfset var creationPath = "" />
 		<cfset var mapping = getConfig().getMapping(arguments.name) />
+		
+		<!---<!--- insure that all the required objects exists (this is required to avoid throwing errors when trusted caching is turned on) --->
+		<cfif NOT validateObject(arguments.type, arguments.name, arguments.plugin)>
+			<cfthrow type="reactor.objectFactory.getObjectName.NotAllObjectsExist" />
+		</cfif>--->
 		
 		<!--- if the user doesn't have a leading slash on their mapping then add one --->
 		<cfif left(mapping, 1) IS NOT "/">
@@ -243,9 +289,10 @@
 		</cfif>
 				
 		<cfset creationPath = replaceNoCase(right(mapping, Len(mapping) - 1), "/", ".", "all") />
-				
+	
+		<cfdump var="#creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()#" /><cfabort>
 		<cfreturn creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
-	</cffunction>
+	</cffunction>--->
 	
 	<!--- config --->
   <cffunction name="setConfig" access="public" output="false" returntype="void">

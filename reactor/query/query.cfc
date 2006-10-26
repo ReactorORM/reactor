@@ -285,7 +285,7 @@
 							// isGte 
 							} else if (compareNocase(whereNode.comparison,"isGte") is 0) {
 								buf.append('#getFieldExpression(whereNode, arguments.Convention)# >= ');
-									if (arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
 										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
 									} else {
 										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
