@@ -71,7 +71,7 @@
 		<cfset queryData.query = replaceNoCase(queryData.query, "''", "'", "all") />
 		<cfset setLastExecutedQuery(queryData) />
 		
-		<cfreturn qGet />
+		<cfreturn  />
 	</cffunction>
 	
 	<!--- getByQuery --->
@@ -122,4 +122,3 @@
 	     <cfreturn variables.maxIntegerLength />
     </cffunction>
 </cfcomponent>
-
