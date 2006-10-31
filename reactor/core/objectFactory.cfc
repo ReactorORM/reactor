@@ -9,6 +9,7 @@
 	<cfset variables.Cache.Gateway = StructNew() />
 	<cfset variables.Cache.Metadata = StructNew() />
 	<cfset variables.Cache.Validator = StructNew() />
+	<cfset variables.Cache.Dictionary = StructNew() />
 	
 	<cffunction name="init" access="public" hint="I configure the table factory." output="false" returntype="any" _returntype="reactor.core.objectFactory">
 		<cfargument name="config" hint="I am a reactor config object" required="yes" type="any" _type="reactor.config.config" />
