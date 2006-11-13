@@ -10,6 +10,10 @@
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
 
+	&lt;cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="<xsl:value-of select="object/@alias"/>"&gt;
+		&lt;cfreturn this /&gt;
+	&lt;/cffunction&gt;
+
 	&lt;cffunction name="example" access="public" hint="I am an example method." output="false" returntype="any" _returntype="string"&gt;
 		&lt;cfreturn "I am the result of the example method." /&gt;
 	&lt;/cffunction&gt;

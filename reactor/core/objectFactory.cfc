@@ -240,11 +240,14 @@
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="any" _type="boolean" />
 		<cfset var result = StructNew() />
-		
+		<cfset var pluginPath = "" />
+    <cfif arguments.plugin>
+      <cfset pluginPath = ".plugins" />
+    </cfif>
 		<!--- get the dbms-specific custom file first --->
-		<cfset result.dbms = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType() />
-		<cfset result.custom = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type />
-		<cfset result.project = "reactor.project." & getConfig().getProject() & "." & arguments.type & "." & arguments.name & arguments.type />
+		<cfset result.dbms = getMapping(arguments.name) & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType() />
+		<cfset result.custom = getMapping(arguments.name) & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type />
+		<cfset result.project = "reactor.project." & getConfig().getProject() & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type />
 		
 		<!--- insure all three paths exists --->
 		<cfif NOT componentExists(result.dbms)>
