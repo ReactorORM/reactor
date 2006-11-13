@@ -146,10 +146,10 @@
 	<cffunction name="setType" access="public" output="false" returntype="void">
 		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="any" _type="string" />
 
-		<cfif NOT ListFind("mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere", arguments.Type)>
+		<cfif NOT ListFind("mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix", arguments.Type)>
 			<cfthrow type="reactor.InvalidType"
 				message="Invalid Type Setting"
-				detail="The Type argument must be one of: mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere" />
+				detail="The Type argument must be one of: mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix" />
 		</cfif>
 
 		<cfset variables.Type = arguments.Type />
