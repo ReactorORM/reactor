@@ -3,6 +3,7 @@
 	<cfset variables.config = "" />
 	<cfset variables.ReactorFactory = "" />
 	<cfset variables.BeanFactory = "" />
+	<cfset variables.ObjectDao = "" />
 	<!---<cfset variables.TimedCache = CreateObject("Component", "reactor.util.TimedCache").init(createTimeSpan(0, 0, 0, 10)) />--->
 	<cfset variables.Cache = StructNew() />
 	<cfset variables.Cache.Dao = StructNew() />
@@ -33,6 +34,9 @@
 		
 		<!--- set the avaliable plugins --->
 		<cfset setPluginList(pluginList) />
+
+		<!--- create the objectDao we'll use to read object data --->
+		<cfset variables.ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 
 		<cfreturn this />
 	</cffunction>
@@ -80,10 +84,11 @@
 				<!--- we always need the db object to transform --->
 				<cfset DbObject = getObject(arguments.alias) />
 				<cfset generate = true />
-			
-			<cfelseif compareNocase(getConfig().getMode(), "development") is 0>				
+		
+			<cfelseif compareNocase(getConfig().getMode(), "development") is 0>			
 				<!--- we always need the db object to compare to our existing object --->
 				<cfset DbObject = getObject(arguments.alias) />
+				
 				<cftry>
 					<!--- create an instance of the object and check its signature --->
 					<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
@@ -97,7 +102,7 @@
 						<cfset generate = true />
 					</cfif>
 				</cfif>
-			
+				
 			<cfelseif compareNocase(getConfig().getMode(), "production") is 0>
 				<cftry>
 					
@@ -124,7 +129,7 @@
 				</cftry>
 				
 			</cfif>
-			
+					
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
@@ -142,7 +147,7 @@
 				<cfelse> 
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
-				
+			
 				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
 				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
@@ -153,7 +158,7 @@
 				<!--- check to see if a metadata object of this type exists.  If not, create it --->
 				<cfif StructKeyExists(variables.Cache.metadata, arguments.alias)>
 					<cfset metadata = variables.Cache.metadata[arguments.alias] />
-				<cfelse> 
+				<cfelse>
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 				
@@ -166,6 +171,9 @@
 		<cfif isObject(variables.BeanFactory)>
 			<cfset GeneratedObject._setBeanFactory(variables.BeanFactory) />
 		</cfif>
+		
+		<cfset ObjectTranslator = 0 />
+		<cfset DbObject = 0 />
 		
 		<cfreturn GeneratedObject />
 	</cffunction>
@@ -223,13 +231,11 @@
 	<cffunction name="getObject" access="public" hint="I read and return a reactor.core.object object for a specific db object." output="false" returntype="any" _returntype="reactor.core.object">
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="any" _type="string" />
 		<cfset var Object = 0 />
-		<cfset var ObjectDao = 0/>
 		
 		<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
-		<cfset ObjectDao = CreateObject("Component", "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(), getConfig().getUsername(), getConfig().getPassword()) />
 		
 		<!--- read the object --->
-		<cfset ObjectDao.read(Object) />
+		<cfset variables.ObjectDao.read(Object) />
 		
 		<!--- return the object --->
 		<cfreturn Object />
@@ -240,14 +246,11 @@
 		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="any" _type="boolean" />
 		<cfset var result = StructNew() />
-		<cfset var pluginPath = "" />
-    <cfif arguments.plugin>
-      <cfset pluginPath = ".plugins" />
-    </cfif>
+		
 		<!--- get the dbms-specific custom file first --->
-		<cfset result.dbms = getMapping(arguments.name) & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType() />
-		<cfset result.custom = getMapping(arguments.name) & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type />
-		<cfset result.project = "reactor.project." & getConfig().getProject() & pluginPath & "." & arguments.type & "." & arguments.name & arguments.type />
+		<cfset result.dbms = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType() />
+		<cfset result.custom = getMapping(arguments.name) & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type />
+		<cfset result.project = "reactor.project." & getConfig().getProject() & "." & arguments.type & "." & arguments.name & arguments.type />
 		
 		<!--- insure all three paths exists --->
 		<cfif NOT componentExists(result.dbms)>

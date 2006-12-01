@@ -8,6 +8,12 @@
 	<cfset variables.relationshipAlias = "" />
 	<cfset variables.deleted = false />
 	<cfset variables.alias = "" />
+	
+	<cffunction name="dump">
+		<cfdump var="#variables#" />
+		
+		<cfoutput>#variables.dao.dump()#</cfoutput><cfabort>
+	</cffunction>
 		
 	<!--- configure --->
 	<cffunction name="_configure" access="public" hint="I configure and return this object." output="false" returntype="any" _returntype="reactor.base.abstractRecord">

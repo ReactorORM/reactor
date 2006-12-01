@@ -18,6 +18,13 @@
 		<cfreturn this />
 	</cffunction>
 	
+	<cffunction name="dump" returntype="string">
+	<cfsavecontent variable="dump">
+		<cfdump var="#variables#" />
+	</cfsavecontent>
+	<cfreturn dump />
+	</cffunction>
+	
 	<!--- objectMetadata --->
     <cffunction name="setObjectMetadata" access="private" output="false" returntype="void">
        <cfargument name="objectMetadata" hint="I set the object metadata." required="yes" type="any" _type="reactor.base.abstractMetadata" />

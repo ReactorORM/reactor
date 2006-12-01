@@ -8,10 +8,10 @@
 		<cfargument name="ReactorFactory" hint="I am the reactorFactory object." required="yes" type="any" _type="reactor.reactorFactory" />
 		<cfargument name="Convention" hint="I am a database Convention object." required="yes" type="any" _type="reactor.data.abstractConvention" />
 		
-		<cfset _setConfig(arguments.config) />
+		<!---<cfset _setConfig(arguments.config) />
 		<cfset _setAlias(arguments.alias) />
 		<cfset _setReactorFactory(arguments.ReactorFactory) />
-		<cfset _setConvention(arguments.Convention) />
+		<cfset _setConvention(arguments.Convention) />--->
 		
 		<cfreturn this />
 	</cffunction>
@@ -68,7 +68,39 @@
 		<cfreturn ArrayLen(getObjectMetadata().externalFields) GT 0/>
 	</cffunction>
 	
-	<cffunction name="getexternalFields" access="public" hint="I return an array of structures describing this object's external mapped fields" output="false" returntype="any" _returntype="array">
+	<cffunction name="hasField" access="public" hint="I indicate if this object has a field with the given alias" output="false" returntype="any" _returntype="boolean">
+		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="any" _type="string" />
+		<cfset var fields = getFields() />
+		<cfset var field = 0 />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfif fields[x].alias IS arguments.alias>
+				<cfreturn true />
+				<cfbreak />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+	
+	<cffunction name="hasExternalField" access="public" hint="I indicate if this object has an external field with the given alias" output="false" returntype="any" _returntype="boolean">
+		<cfargument name="alias" hint="I am the alias of the field to get" required="yes" type="any" _type="string" />
+		<cfset var fields = getExternalFields() />
+		<cfset var field = 0 />
+		<cfset var x = 0 />
+		
+		<cfloop from="1" to="#ArrayLen(fields)#" index="x">
+			<cfif fields[x].fieldAlias IS arguments.alias>
+				<cfreturn true />
+				<cfbreak />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn false />
+	</cffunction>
+	
+	<cffunction name="getExternalFields" access="public" hint="I return an array of structures describing this object's external mapped fields" output="false" returntype="any" _returntype="array">
 		<cfreturn Duplicate(getObjectMetadata().externalFields) />
 	</cffunction>
 	
