@@ -469,21 +469,26 @@
 		<cfset ArraySort(keys, "text") />
 
 		<cfloop from="1" to="#ArrayLen(keys)#" index="x">
-			<cfset value = arguments.struct[keys[x]] />
+                <cftry>                
+    				<cfset value = arguments.struct[keys[x]] />
+                    <cfcatch type="java.lang.NullPointerException">
+                        <cfreturn result />
+                    </cfcatch>
+                </cftry>
+						
+				<cfif IsArray(value)>
+					<cfset result = result & arrayToString(value) />
 					
-			<cfif IsArray(value)>
-				<cfset result = result & arrayToString(value) />
+				<cfelseif IsObject(value)>
+					<cfset result = result & arrayToString(value.getWhereCommands()) />
 				
-			<cfelseif IsObject(value)>
-				<cfset result = result & arrayToString(value.getWhereCommands()) />
-			
-			<cfelseif IsStruct(value)>
-				<cfset result = result & structToString(value) />
-			
-			<cfelse>
-				<cfset result = result & value />
+				<cfelseif IsStruct(value)>
+					<cfset result = result & structToString(value) />
 				
-			</cfif>
+				<cfelse>
+					<cfset result = result & value />
+					
+				</cfif>
 		</cfloop>
 		
 		<cfreturn result />
