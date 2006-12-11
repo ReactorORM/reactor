@@ -88,7 +88,7 @@
 		<cfset var func = 0 />
 		<cfset var nothingLoaded = false />
 		
-		<cfset beforeLoad() />
+		<cfset beforeLoad(argumentCollection=arguments) />
 		
 		<cfif IsDefined("arguments") AND fieldList IS 1>
 			<cfset fieldList = arguments[1] />
@@ -114,7 +114,7 @@
 			<cfset clean() />
 		</cfif>
 				
-		<cfset afterLoad() />
+		<cfset afterLoad(argumentCollection=arguments) />
 		
 		<cfreturn this />
 	</cffunction>	
