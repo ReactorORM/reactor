@@ -119,19 +119,21 @@
 			)
 			
 			<!-- some dbms require the last inserted id syntax to be run at the same time as the query -->
-			&lt;cfif Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
-				#Convention.lastInsertedIdSyntax(getObjectMetadata())#
-			&lt;/cfif&gt;	
+			<xsl:if test="object/fields/field[@identity = 'true']">
+				&lt;cfif Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
+					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
+				&lt;/cfif&gt;	
+			</xsl:if>
 		&lt;/cfquery&gt;
-		
-		<!-- other dbms require this in a seperate query -->
-		&lt;cfif NOT Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
-			&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;	
-				#Convention.lastInsertedIdSyntax(getObjectMetadata())#
-			&lt;/cfquery&gt;		
-		&lt;/cfif&gt;
-		
+				
 		<xsl:if test="object/fields/field[@identity = 'true']">
+			<!-- other dbms require this in a seperate query -->	
+			&lt;cfif NOT Convention.supportsMultiStatementQueries() AND Convention.supportsIdentity() &gt;
+				&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;	
+					#Convention.lastInsertedIdSyntax(getObjectMetadata())#
+				&lt;/cfquery&gt;		
+			&lt;/cfif&gt;
+
 			&lt;cfif Convention.supportsIdentity() AND qCreate.recordCount&gt;
 				&lt;cfset arguments.to.<xsl:value-of select="object/fields/field[@identity = 'true']/@alias" /> = qCreate.id /&gt;
 			&lt;/cfif&gt;
