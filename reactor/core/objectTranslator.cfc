@@ -16,29 +16,32 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<cffunction name="generateObject" access="public" hint="I generate a To object" output="false" returntype="void">
+	<cffunction name="generateObject" access="public" hint="I generate a To, Dao, Gateway, Record, Metadata or Validator object" output="false" returntype="void">
 		<cfargument name="type" hint="I am the type of object to create.  Options are: To, Dao, Gateway, Record, Metadata, Validator" required="yes" type="any" _type="string" />
 		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="any" _type="boolean" />
 		<cfset var objectXML = getObject().getXml() />
-		
+        <cfset var projectPath = "" />		
 		<!--- write the project object --->
-		<cfset generate(
+       <cfset projectRoot = ExpandPath("/reactor/#Iif(arguments.plugin, De("Plugins"), De("xsl"))#" & "/" ) />
+
+		<!--- write the project object --->
+    	<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.project.xsl",
+			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & ".project.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Project", arguments.plugin),
 			true) />
 		
 		<!--- write the base object --->
-		<cfset generate(
+ 		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.base.xsl",
+			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & ".base.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Base", arguments.plugin),
 			false) />
 		
-		<!--- generate the custom object --->
-		<cfset generate(
+	<!--- generate the custom object --->
+ 		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(getCurrentTemplatePath()) & "../#Iif(arguments.plugin, De("plugins"), De("xsl"))#/#lcase(arguments.type)#.custom.xsl",
+			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & "custom.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Custom", arguments.plugin),
 			false) />
 			
@@ -182,9 +185,13 @@
 		<cfargument name="plugin" hint="I indicate if this is generating a plugin" required="yes" type="any" _type="boolean" />
 		<cfset var root = "" />
 		<cfset var mapping = getObject().getMapping() />
+        <cfset var projectRoot = "" />
 		
 		<cfif arguments.class IS "Project">
-			<cfset root = "#getDirectoryFromPath(getCurrentTemplatePath())#../project/" & getConfig().getProject() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" />
+
+            <cfset projectRoot = ExpandPath("/reactor/project/" & getConfig().getProject() & "/#Iif(arguments.plugin, De("Plugins/"), De(""))#" & arguments.type & "/" ) />
+
+			<cfset root = getDirectoryFromPath(projectRoot) />
 			<cfreturn root & arguments.name & arguments.type & ".cfc" />
 		
 		<cfelseif arguments.class IS "Base">
@@ -275,4 +282,5 @@
     </cffunction>
 
 </cfcomponent>
+
 
