@@ -107,6 +107,7 @@
   			</cflock>
 			</cfif>
 
+
 			<!--- write the file to disk --->
 			<cflock type="exclusive" timeout="30">
   			<cffile action="write" file="#expandPath(queryFileName)#" output="#Query#" nameconflict="overwrite" />
@@ -147,14 +148,12 @@
 
 		<cfset result = "
 			DELETE FROM
-			#arguments.Query.getDeleteAsString(Convention)#
-			#renderWhere(arguments.Query, arguments.Convention)#
+			#arguments.Query.getDeleteAsString(arguments.Convention)#
+			#renderWhereForDelete(arguments.Query, arguments.Convention)#
 		"/>
-
 		<!--- make this valid cfml --->
 		<cfset result = Replace(result, "[[", "<", "all") />
 		<cfset result = Replace(result, "]]", ">", "all") />
-
 		<!--- return the query --->
 		<cfreturn result />
 	</cffunction>
@@ -421,6 +420,208 @@
 		<cfreturn buf.toString()/>
 	</cffunction>
 
+
+	<cffunction name="renderWhereForDelete" access="public" hint="I render a where clause for a delete" output="false" returntype="any" _returntype="string">
+		<cfargument name="Query" hint="I am the query to render. " required="yes" type="any" _type="reactor.query.render.query" />
+		<cfargument name="Convention" hint="I am the Convention object to use when rendering the query." required="yes" type="any" _type="reactor.data.abstractConvention" />
+		<cfset var result = "" />
+		<cfset var where = arguments.Query.getWhere().getWhere() />
+		<cfset var whereNode = 0 />
+		<cfset var x = 0 />
+		<cfset var buf = createObject("JAVA", "java.lang.StringBuffer").init()>
+
+		<cfscript>
+			if (ArrayLen(where)) {
+				buf.append('WHERE ');
+
+				// loop over all of the expressions and render them out
+				for (x = 1; x lte ArrayLen(where); x = x+1) {
+					// get the arguments for this expression
+					whereNode = where[x];
+
+					// if the node is a structure output it accordingly.  otherwise, just output it.
+					if (IsStruct(whereNode)) {
+						// render the expression
+
+							// isBetween
+							if (compareNocase(whereNode.comparison,"isBetween") is 0) {
+								buf.append(getFieldOrExpressionForDelete(whereNode, arguments.Convention)).append(" ");
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('BETWEEN [[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value1#)##" /]] ');
+										buf.append('AND [[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value2#)##" /]] ');
+									} else {
+										buf.append('BETWEEN [[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value1#)##" /]] ');
+										buf.append('AND [[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value2#)##" /]] ');
+									}
+
+							// isBetweenFields
+							} else if (compareNocase(whereNode.comparison,"isBetweenFields") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# ');
+								buf.append('BETWEEN #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+								buf.append('AND #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 2)# ');
+
+
+							// isEqual
+							} else if (compareNocase(whereNode.comparison,"isEqual") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# = ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isEqualField
+							} else if (compareNocase(whereNode.comparison,"isEqualField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# = #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+
+							// isNotEqual
+							} else if (compareNocase(whereNode.comparison,"isNotEqual") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# != ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isNotEqualField
+							} else if (compareNocase(whereNode.comparison,"isNotEqualField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# != #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+							// isGte
+							} else if (compareNocase(whereNode.comparison,"isGte") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# >= ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isGteField
+							} else if (compareNocase(whereNode.comparison,"isGteField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# >= #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+							// isGt
+							} else if (compareNocase(whereNode.comparison,"isGt") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# > ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isGtField
+							} else if (compareNocase(whereNode.comparison,"isGtField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# > #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+							// isLte
+							} else if (compareNocase(whereNode.comparison,"isLte") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# <= ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isLteField
+							} else if (compareNocase(whereNode.comparison,"isLteField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# <= #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+							// isLt
+							} else if (compareNocase(whereNode.comparison,"isLt") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# < ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isLtField
+							} else if (compareNocase(whereNode.comparison,"isLtField") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# < #getFieldOrExpressionForDelete(whereNode, arguments.Convention, 1)# ');
+
+							// isLike
+							} else if (compareNocase(whereNode.comparison,"isLike") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# LIKE ');
+									if (compareNocase(whereNode.mode,"Anywhere") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+2)#" value="%##arguments.Query.getValue(#whereNode.value#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Left") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+1)#" value="##arguments.Query.getValue(#whereNode.value#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Right") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+1)#" value="%##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else if (compareNocase(whereNode.mode,"All") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isNotLike
+							} else if (compareNocase(whereNode.comparison,"isNotLike") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# NOT LIKE ');
+									if (compareNocase(whereNode.mode,"Anywhere") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+2)#" value="%##arguments.Query.getValue(#whereNode.value#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Left") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+1)#" value="##arguments.Query.getValue(#whereNode.value#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Right") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#min(getMaxIntegerLength(),arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length+1)#" value="%##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									} else if (compareNocase(whereNode.mode,"All") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
+									}
+
+							// isIn
+							} else if (compareNocase(whereNode.comparison,"isIn") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# IN ( ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfif Len(Trim(arguments.Query.getValue(#whereNode.values#)))]] ');
+										buf.append('	[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.values#)##" list="yes" /]] ');
+										buf.append('[[cfelse]] ');
+										buf.append('	[[cfqueryparam null="yes" /]] ');
+										buf.append('[[/cfif]] ');
+									} else {
+										buf.append('[[cfif Len(Trim(arguments.Query.getValue(#whereNode.values#)))]] ');
+										buf.append('	[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.values#)##" list="yes" /]] ');
+										buf.append('[[cfelse]] ');
+										buf.append('	[[cfqueryparam null="yes" /]] ');
+										buf.append('[[/cfif]] ');
+									}
+								buf.append(') ');
+
+							// isNotIn
+							} else if (compareNocase(whereNode.comparison,"isNotIn") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# NOT IN ( ');
+									if (NOT arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length) {
+										buf.append('[[cfif Len(Trim(arguments.Query.getValue(#whereNode.values#)))]] ');
+										buf.append('	[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" value="##arguments.Query.getValue(#whereNode.values#)##" list="yes" /]] ');
+										buf.append('[[cfelse]] ');
+										buf.append('	[[cfqueryparam null="yes" /]] ');
+										buf.append('[[/cfif]] ');
+									} else {
+										buf.append('[[cfif Len(Trim(arguments.Query.getValue(#whereNode.values#)))]] ');
+										buf.append('	[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" maxlength="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).length#" value="##arguments.Query.getValue(#whereNode.values#)##" list="yes" /]] ');
+										buf.append('[[cfelse]] ');
+										buf.append('	[[cfqueryparam null="yes" /]] ');
+										buf.append('[[/cfif]] ');
+									}
+								buf.append(') ');
+
+							// isNull
+							} else if (compareNocase(whereNode.comparison,"isNull") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# IS NULL ');
+
+							// isNotNull
+							} else if (compareNocase(whereNode.comparison,"isNotNull") is 0) {
+								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# IS NOT NULL ');
+						}
+					} else {
+						// just output it
+						buf.append('#UCASE(whereNode)# ');
+					}
+
+				}
+			}
+		</cfscript>
+
+		<cfreturn buf.toString()/>
+	</cffunction>
+
 	<cffunction name="getFieldExpression" access="private" hint="I check to see if a field has been replaced with an expression and return either the formatted field or the expression" output="false" returntype="any" _returntype="string">
 		<cfargument name="node" hint="I am the where node to translate" required="yes" type="any" _type="struct" />
 		<cfargument name="convention" hint="I am the convention used to format the expression" required="yes" type="any" _type="reactor.data.abstractConvention" />
@@ -475,25 +676,25 @@
 
 		<cfloop from="1" to="#ArrayLen(keys)#" index="x">
                 <cftry>
-    				<cfset value = arguments.struct[keys[x]] />
+			<cfset value = arguments.struct[keys[x]] />
                     <cfcatch type="java.lang.NullPointerException">
                         <cfreturn result />
                     </cfcatch>
                 </cftry>
 
-				<cfif IsArray(value)>
-					<cfset result = result & arrayToString(value) />
+			<cfif IsArray(value)>
+				<cfset result = result & arrayToString(value) />
 
-				<cfelseif IsObject(value)>
-					<cfset result = result & arrayToString(value.getWhereCommands()) />
+			<cfelseif IsObject(value)>
+				<cfset result = result & arrayToString(value.getWhereCommands()) />
 
-				<cfelseif IsStruct(value)>
-					<cfset result = result & structToString(value) />
+			<cfelseif IsStruct(value)>
+				<cfset result = result & structToString(value) />
 
-				<cfelse>
-					<cfset result = result & value />
+			<cfelse>
+				<cfset result = result & value />
 
-				</cfif>
+			</cfif>
 		</cfloop>
 
 		<cfreturn result />
