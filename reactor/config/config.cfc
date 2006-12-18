@@ -8,7 +8,9 @@
 	<cfset variables.mode = "" />
 	<cfset variables.username = "" />
 	<cfset variables.password = "" />
-	<cfset variables.objectMap = structNew() />
+	<cfset variables.objectMap = StructNew() />
+	<!--- this variables holds loaded reactor configuration files --->
+	<cfset variables.loadedFiles = ArrayNew(1) />
 	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="any" _returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="any" _type="string" />
@@ -49,6 +51,9 @@
 		<cfset var objectConfig = '' />
 		<cfset var nObjectConfig = '' />
 		
+		<!--- load import files --->
+		<cfset loadImports( arguments.configXml ) />
+		
 		<cfif ArrayLen( objectsConfig )>
 			<cfset objectsConfig = objectsConfig[1] />
 			<cfset objectConfig = xmlsearch( objectsConfig, '//object' ) />	
@@ -70,6 +75,17 @@
 		</cfif>
 	</cffunction>
 
+	<cffunction name="loadImports" returntype="void" access="private" output="false" hint="">
+		<cfargument name="configXml" type="any" required="true" hint="I am the XML object to be processed." />
+		<cfset var imports = XMLSearch( arguments.configXML, '//reactor/import' ) />
+		<cfset var i =  "" />
+		<cfif ArrayLen( imports )>
+			<cfloop from="1" to="#ArrayLen( imports )#" index="i">
+				<cfset addObjects( imports[i].XMLAttributes.file ) />
+			</cfloop>
+		</cfif>
+	</cffunction>
+	
 	<!--- loadConfig --->
 	<cffunction name="loadConfig" access="private" hint="I read the basic config settings from the config xml." output="false" returntype="void">
 		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="any" _type="string" />
@@ -104,18 +120,25 @@
 				detail="The path #arguments.xmlFile# does not exist." />
 		</cfif>
 
-		<!--- read and parse the xml --->
-		<cffile action="read" file="#arguments.xmlFile#" variable="xml" />
-		
-		<cftry>
-			<cfset xml = XMLParse(xml) />	
-			<cfcatch type="any">
-				<cfthrow type="reactor.config.InvalidConfigXML" 
- 	                 message="Invalid XML Object" 
- 	                 detail="configXml is not a valid XML Object." />
-			</cfcatch>
-		</cftry>
-		
+		<!--- check if this file has already been loaded to prevent recursion.  --->
+		<cfif NOT variables.loadedFiles.contains( UCase( arguments.XMLFile ) )>
+			<cfset ArrayAppend( variables.loadedFiles, UCase( arguments.XMLFile ) ) />
+			<!--- read and parse the xml --->
+			<cffile action="read" file="#arguments.xmlFile#" variable="xml" />
+			
+			<cftry>
+				<cfset xml = XMLParse(xml) />	
+				<cfcatch type="any">
+					<cfthrow type="reactor.config.InvalidConfigXML" 
+	 	                 message="Invalid XML Object" 
+	 	                 detail="configXml is not a valid XML Object." />
+				</cfcatch>
+			</cftry>
+		<cfelse>
+			<cfthrow type="reactor.config.FileLoaded"
+					 message="Config file already loaded"
+					 detail="Config file (#arguments.xmlFile#) has already been loaded." />
+		</cfif>
 		<cfreturn xml />
 	</cffunction>
 	
