@@ -40,7 +40,7 @@
 	<!--- generate the custom object --->
  		<cfset generate(
 			objectXML,
-			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & "custom.xsl",
+			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & ".custom.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Custom", arguments.plugin),
 			false) />
 			
