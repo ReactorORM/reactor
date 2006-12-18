@@ -22,10 +22,16 @@
 		<cfset var objectXML = getObject().getXml() />
         <cfset var projectPath = "" />		
 		<!--- write the project object --->
+<<<<<<< .mine
+       <cfset projectRoot = ExpandPath("/reactor/#Iif(arguments.plugin, De("Plugins"), De("xsl"))#" & "/" ) />
+
+    	<cfset generate(
+=======
        <cfset projectRoot = ExpandPath("/reactor/#Iif(arguments.plugin, De("Plugins"), De("xsl"))#" & "/" ) />
 
 		<!--- write the project object --->
     	<cfset generate(
+>>>>>>> .r403
 			objectXML,
 			getDirectoryFromPath(projectRoot) & lcase(arguments.type) & ".project.xsl",
 			getObjectPath(arguments.type, objectXML.object.XmlAttributes.alias, "Project", arguments.plugin),
