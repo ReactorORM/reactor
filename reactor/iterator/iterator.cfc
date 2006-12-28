@@ -144,7 +144,9 @@
 		<cfset var indexArray = 0 />
 		<cfset var Records = 0 />
 		<cfset var x = 0 />
-
+		<cfset var field = "" />
+		<cfset var To = "" />
+		
 		<cfif NOT StructCount(arguments)>
 			<!--- nothing was provided, throw an error --->
 			<cfthrow message="No Arguments" detail="No arguments were passed to the delete method. Pass either an index for a specific item or a name/value list for matching records." type="reactor.iterator.delete.NoArguments" />
@@ -187,8 +189,18 @@
 
 			<!--- check to see if we're a linking relationship --->
 			<cfif getLinked()>
-				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
-				<cfset Record._getParent().delete() />
+				<!--- make sure that we've loaded the record into the iterator before we try to unlink it --->
+				<cfset fieldList = Record._getObjectMetadata().getFieldList() />
+				<cfset To = Record._getTo() />
+
+				<cfinvoke method="get" returnvariable="Record">
+					<cfloop list="#fieldList#" index="field">
+						<cfinvokeargument name="#field#" value="#To[field]#" />
+					</cfloop>
+				</cfinvoke>
+				
+				<!--- this object is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
+				<cfset Record[1]._getParent().delete() />
 			<cfelse>
 				<!--- delete the record --->
 				<cfset Record.delete() />
@@ -482,7 +494,9 @@
 	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
 		<cfset var x = 0 />
 
+
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
+			
 			<cfif IsObject(variables.array[x])>
 				<cfif variables.array[x].isDeleted()
 					OR
@@ -497,6 +511,7 @@
 					<cfset copyRecordToRow(variables.array[x], x) />
 				</cfif>
 			</cfif>
+			
 		</cfloop>
 	</cffunction>
 
