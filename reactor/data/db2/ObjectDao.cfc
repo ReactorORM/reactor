@@ -73,6 +73,7 @@
 			<cfset Field.length = qFields.LENGTH />
 			<cfset Field.default = getDefault(trim(qFields.default), Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
+			<cfset Field.readOnly = "false" />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

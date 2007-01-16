@@ -22,38 +22,41 @@
 	
 	<xsl:for-each select="object/fields/field">
 		<xsl:variable name="alias" select="@alias" />
-		&lt;!--- <xsl:value-of select="@alias"/> ---&gt;
-		&lt;cffunction name="set<xsl:value-of select="@alias"/>" hint="I set the <xsl:value-of select="@alias"/> value <xsl:if test="count(//hasOne/relate[@from = $alias]) &gt; 0"> and reset related objects</xsl:if>." access="public" output="false" returntype="void"&gt;
-			&lt;cfargument name="<xsl:value-of select="@alias"/>" hint="I am this record's <xsl:value-of select="@alias"/> value." required="yes" type="any" _type="string" /&gt;
-			<xsl:choose>
-				<xsl:when test="count(//hasOne/relate[@from = $alias]) &gt; 0">
-					&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
-					&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
-						&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
-						
-						<xsl:for-each select="//hasOne/relate[@from = $alias]">
-							<xsl:variable name="sourceAlias" select="../@alias" />
-							&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND IsObject(variables.children.<xsl:value-of select="../@alias" />)&gt;
-								&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
-							&lt;/cfif&gt;
-							&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
+		<xsl:if test="@readOnly = 'false'" >
+			&lt;!--- <xsl:value-of select="@alias"/> ---&gt;
+			&lt;cffunction name="set<xsl:value-of select="@alias"/>" hint="I set the <xsl:value-of select="@alias"/> value <xsl:if test="count(//hasOne/relate[@from = $alias]) &gt; 0"> and reset related objects</xsl:if>." access="public" output="false" returntype="void"&gt;
+				&lt;cfargument name="<xsl:value-of select="@alias"/>" hint="I am this record's <xsl:value-of select="@alias"/> value." required="yes" type="any" _type="string" /&gt;
+				<xsl:choose>
+					<xsl:when test="count(//hasOne/relate[@from = $alias]) &gt; 0">
+						&lt;!--- if the value passed in is different that the current value, reset the valeus in this record ---&gt;
+						&lt;cfif arguments.<xsl:value-of select="@alias"/> IS NOT get<xsl:value-of select="@alias"/>()&gt;
+							&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
 							
-							&lt;!--- load the correct record
-							&lt;cfset get<xsl:value-of select="../@alias" />() /&gt; ---&gt;
-							
-							<xsl:for-each select="//externalField[@sourceAlias = $sourceAlias]">
-								&lt;cfset _getTo().<xsl:value-of select="@fieldAlias" /> = get<xsl:value-of select="$sourceAlias" />().get<xsl:value-of select="@field" />() /&gt;								
+							<xsl:for-each select="//hasOne/relate[@from = $alias]">
+								<xsl:variable name="sourceAlias" select="../@alias" />
+								&lt;cfif StructKeyExists(variables.children, "<xsl:value-of select="../@alias" />") AND IsObject(variables.children.<xsl:value-of select="../@alias" />)&gt;
+									&lt;cfset variables.children.<xsl:value-of select="../@alias" />.resetParent() /&gt;
+								&lt;/cfif&gt;
+								&lt;cfset variables.children.<xsl:value-of select="../@alias" /> = 0 /&gt;
+								
+								&lt;!--- load the correct record
+								&lt;cfset get<xsl:value-of select="../@alias" />() /&gt; ---&gt;
+								
+								<xsl:for-each select="//externalField[@sourceAlias = $sourceAlias]">
+									&lt;cfset _getTo().<xsl:value-of select="@fieldAlias" /> = get<xsl:value-of select="$sourceAlias" />().get<xsl:value-of select="@field" />() /&gt;								
+								</xsl:for-each>
 							</xsl:for-each>
-						</xsl:for-each>
+							
+						&lt;/cfif&gt;
 						
-					&lt;/cfif&gt;
-					
-				</xsl:when>
-				<xsl:otherwise>
-					&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
-				</xsl:otherwise>
-			</xsl:choose>
-		&lt;/cffunction&gt;
+					</xsl:when>
+					<xsl:otherwise>
+						&lt;cfset _getTo().<xsl:value-of select="@alias"/> = arguments.<xsl:value-of select="@alias"/> /&gt;
+					</xsl:otherwise>
+				</xsl:choose>
+			&lt;/cffunction&gt;
+		</xsl:if>
+		
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>" hint="I get the <xsl:value-of select="@alias"/> value." access="public" output="false" returntype="any" _returntype="string"&gt;
 			&lt;cfreturn _getTo().<xsl:value-of select="@alias"/> /&gt;
 		&lt;/cffunction&gt;	

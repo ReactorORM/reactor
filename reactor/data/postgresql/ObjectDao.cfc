@@ -189,6 +189,7 @@
 			<cfif qFields.identity eq "true">
 				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"),"public.","") />
 			</cfif>
+			<cfset Field.readOnly = "false" />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

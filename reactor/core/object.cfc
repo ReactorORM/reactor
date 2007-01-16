@@ -110,7 +110,7 @@
 		<cfset var toRelationship = 0 />
 		<cfset var relationshipNode = 0 />
 		<cfset var linkExpandNode = 0 />
-			
+		
 		<!--- insure aliases are set --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
 			<cfset relationship = relationships[x] />
@@ -389,8 +389,8 @@
 		<cfset var fieldTags = XmlSearch(arguments.config, "/object/field") />
 		<cfset var fieldTag = 0 />
 		<cfset var x = 0 />
-    <cfset var exactObjectName = "" />
-    <cfset var objectDAO = 0 />
+		<cfset var exactObjectName = "" />
+		<cfset var objectDAO = 0 />
 
 		<!---
 			The next few lines of code loop over the provided xml config and look for a field with the same name as the field
@@ -423,6 +423,7 @@
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.default />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
 		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.sequenceName />
+		<cfset xmlField.XmlAttributes["readOnly"] = arguments.field.readOnly />
 		
 		<!--- use sequence name specfied in the reactor.xml file if provided, if it doesn't match the default sequence specified for a column then throw an error --->
 		<cfif NOT IsSimpleValue(fieldTag) AND StructKeyExists(fieldTag.XmlAttributes, "sequence") >

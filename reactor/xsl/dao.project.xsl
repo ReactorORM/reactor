@@ -77,14 +77,14 @@
 		&lt;cfquery name="qCreate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 			INSERT INTO #Convention.FormatObjectName(getObjectMetadata())#
 			(
-				<xsl:for-each select="object/fields/field">
+				<xsl:for-each select="object/fields/field[@readOnly = 'false']">
 					
 					<xsl:if test="@identity = 'true' or @sequence != ''">
 						&lt;cfif (NOT Convention.supportsIdentity()) OR (<xsl:if test="not(@sequence != '' and (@identity = 'false' or (@identity = 'true' and @primaryKey = 'false')))">false AND</xsl:if> Convention.supportsSequences())&gt;
 					</xsl:if>
 					
 					#Convention.formatInsertFieldName('<xsl:value-of select="@name" />', '<xsl:value-of select="../../@name" />')#
-					
+						
 					<xsl:if test="position() != last()">,</xsl:if>
 					
 					<xsl:if test="@identity = 'true' or @sequence != ''">
@@ -92,7 +92,7 @@
 					</xsl:if>
 				</xsl:for-each>
 			) VALUES (
-				<xsl:for-each select="object/fields/field">
+				<xsl:for-each select="object/fields/field[@readOnly = 'false']">
 					<xsl:if test="@identity = 'true' or @sequence != ''">
 						&lt;cfif (NOT Convention.supportsIdentity()) OR (<xsl:if test="not(@sequence != '' and (@identity = 'false' or (@identity = 'true' and @primaryKey = 'false')))">false AND</xsl:if> Convention.supportsSequences())&gt;
 					</xsl:if>
@@ -196,7 +196,7 @@
 		&lt;cfquery name="qUpdate" datasource="#_getConfig().getDsn()#" username="#_getConfig().getUsername()#" password="#_getConfig().getPassword()#"&gt;
 			UPDATE #Convention.FormatObjectName(getObjectMetadata())#
 			SET 
-			<xsl:for-each select="object/fields/field[@primaryKey = 'false']">
+			<xsl:for-each select="object/fields/field[@primaryKey = 'false' and @readOnly = 'false']">
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
@@ -214,7 +214,7 @@
 				</xsl:if>
 			</xsl:for-each>
 			WHERE
-			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
+			<xsl:for-each select="object/fields/field[@primaryKey = 'true' and @readOnly = 'false']">
 				#Convention.formatUpdateFieldName('<xsl:value-of select="@name" />')# = &lt;cfqueryparam
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">

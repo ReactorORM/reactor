@@ -52,7 +52,12 @@
 					WHEN ISNUMERIC(col.CHARACTER_MAXIMUM_LENGTH) = 1 THEN col.CHARACTER_MAXIMUM_LENGTH
 					ELSE 0
 				END as length,
-				col.COLUMN_DEFAULT as [default]
+				col.COLUMN_DEFAULT as [default],
+				CASE
+					WHEN columnProperty(object_id(quotename(col.TABLE_SCHEMA)+'.'+quotename(col.TABLE_NAME)), col.COLUMN_NAME, 'IsRowGUIDCol') = 1 THEN 'true'
+					WHEN columnProperty(object_id(quotename(col.TABLE_SCHEMA)+'.'+quotename(col.TABLE_NAME)), col.COLUMN_NAME, 'IsComputed') = 1 THEN 'true'
+					ELSE 'false'
+				END as readOnly
 			FROM INFORMATION_SCHEMA.COLUMNS as col LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS as tabCon
 				ON col.TABLE_NAME = tabCon.TABLE_NAME
 				AND tabCon.CONSTRAINT_TYPE = 'PRIMARY KEY'
@@ -76,6 +81,7 @@
 			<cfset Field.length = qFields.length />
 			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
+			<cfset Field.readOnly = qFields.readOnly />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

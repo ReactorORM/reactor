@@ -186,6 +186,7 @@
  			</cfscript>
 			<cfset Field.default = getDefault(first_default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
+			<cfset Field.readOnly = "false" />
 
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />

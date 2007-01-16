@@ -76,6 +76,7 @@
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["default"] = "<xsl:value-of select="@default" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["object"] = "<xsl:value-of select="../../@name" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["sequence"] = "<xsl:value-of select="@sequence" />" /&gt;
+		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["readOnly"] = "<xsl:value-of select="@readOnly" />" /&gt;
 	</xsl:for-each>
 	
 	
