@@ -17,7 +17,7 @@
 			owner as table_schema,
 			tabname as table_name, 
 			tabtype as table_type
-			from systables where tabname =<cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#arguments.Object.getName()#" />
+			from systables where tabname =<cfqueryparam cfsqltype="cf_sql_varchar" maxlength="64" value="#lcase(arguments.Object.getName())#" />
 		</cfquery>
 		
 		<cfif qObject.recordCount>
@@ -71,7 +71,7 @@
 		left outer join syscolumns as p13 on p13.colno = sysindexes.part13 and p13.tabid = systables.tabid
 		left outer join syscolumns as p14 on p14.colno = sysindexes.part14 and p14.tabid = systables.tabid
 		left outer join syscolumns as p15 on p15.colno = sysindexes.part15 and p15.tabid = systables.tabid
-		where systables.tabname = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
+		where systables.tabname = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#lcase(arguments.Object.getName())#" />
 		and constrtype = 'P'
 		</cfquery>
 		<cfquery name="qFields" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
@@ -82,7 +82,7 @@
 		coltype as dbDataType,
 		collength as length,
 		'' as default
-		from syscolumns where tabid= (select tabid from systables where tabname =<cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />)
+		from syscolumns where tabid= (select tabid from systables where tabname =<cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#lcase(arguments.Object.getName())#" />)
 		</cfquery>
 		
 		<cfloop query="qFields">
@@ -106,7 +106,6 @@
 
 			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
-			<cfset Field.readOnly = "false" />
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
@@ -240,7 +239,8 @@
 			return arguments.num;
 		}
 		asHex=FormatBaseN(arguments.num,16);
-		lowTwo=mid(asHex,len(num)-1,2)+0;		//+0 strips of any leading 0 from the num when turned into string
+		lowTwo=mid(asHex,len(num)-1,2);
+		lowTwo=inputBaseN(lowTwo,16);	
 		</cfscript>
 		<cfreturn lowTwo>
 	</cffunction>
