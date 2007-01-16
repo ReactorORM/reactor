@@ -146,6 +146,15 @@
 		<cfset var x = 0 />
 		<cfset var field = "" />
 		<cfset var To = "" />
+		<cfset var useTransaction = true />
+		<cfset var args = StructNew() />
+				
+		<!--- this is a bit of a hack to manage deleting in a manual transaction --->
+		<cfif StructKeyExists(arguments, "useTransaction")>
+			<cfset useTransaction = arguments.useTransaction />
+			<cfset structDelete(arguments, "useTransaction") />
+			<cfset fieldList = ListDeleteAt(fieldList, ListFind(fieldList, "useTransaction")) />
+		</cfif>
 		
 		<cfif NOT StructCount(arguments)>
 			<!--- nothing was provided, throw an error --->
@@ -159,10 +168,10 @@
 			<!--- check to see if we're a linking relationship --->
 			<cfif getLinked()>
 				<!--- this obeject is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
-				<cfset Record._getParent().delete() />
+				<cfset Record._getParent().delete(useTransaction=useTransaction) />
 			<cfelse>
 				<!--- delete the record --->
-				<cfset Record.delete() />
+				<cfset Record.delete(useTransaction=useTransaction) />
 			</cfif>
 
 		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
@@ -200,10 +209,10 @@
 				</cfinvoke>
 				
 				<!--- this object is in a linked iterator.  we need to delete the object that acts as the midpoint between the parent and this object being deleted --->
-				<cfset Record[1]._getParent().delete() />
+				<cfset Record[1]._getParent().delete(useTransaction=useTransaction) />
 			<cfelse>
 				<!--- delete the record --->
-				<cfset Record.delete() />
+				<cfset Record.delete(useTransaction=useTransaction) />
 			</cfif>
 
 		<cfelseif fieldList IS NOT 1>
@@ -218,7 +227,10 @@
 			<cfif ArrayLen(indexArray)>
 				<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
 					<!--- delete the record --->
-					<cfset delete(indexArray[x]) />
+					<cfset args[1] = indexArray[x] />
+					<cfset args["useTransaction"] = useTransaction />
+				
+					<cfset delete(argumentCollection=args) />
 				</cfloop>
 			</cfif>
 
@@ -228,11 +240,15 @@
 
 	<!--- deleteAll --->
 	<cffunction name="deleteAll" access="public" hint="I delete all elements in this iterator" output="false" returntype="void">
+		<cfargument name="useTransaction" hint="I indicate if this save should be executed within a transaction." required="no" type="any" _type="boolean" default="true" />
 		<cfset var Array = getArray() />
 		<cfset var x = 0 />
+		<cfset var args = StructNew() />
 
 		<cfloop from="#ArrayLen(Array)#" to="1" index="x" step="-1">
-			<cfset delete(x) />
+			<cfset args[1] = x />
+			<cfset args["useTransaction"] = useTransaction />
+			<cfset delete(argumentCollection=args) />
 		</cfloop>
 	</cffunction>
 
