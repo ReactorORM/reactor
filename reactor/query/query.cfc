@@ -48,6 +48,10 @@
 	<cffunction name="getValues" access="public" hint="I return a specific value for the query" output="false" returntype="any" _returntype="array">
 		<cfreturn variables.values />
 	</cffunction>
+	<cffunction name="setValues" access="public" hint="I return a specific value for the query" output="false" returntype="void" _returntype="void">
+		<cfargument name="values" hint="I am the values to set" required="yes" type="any" _type="array" />
+		<cfset variables.values = arguments.values />
+	</cffunction>
 
 	<!--- parse --->
 	<cffunction name="getQueryFile" access="public" hint="I render the query data to a physical query on disk and return the path to that file.  If the exact query already exists then I simply return that file's path." output="false" returntype="any" _returntype="string">
