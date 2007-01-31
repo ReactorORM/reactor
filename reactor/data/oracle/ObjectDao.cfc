@@ -90,13 +90,20 @@
                     case
                       /* 26 is the length of now() in ColdFusion (i.e. {ts '2006-06-26 13:10:14'})*/
                       when col.data_type = 'DATE'   then 26
-                      else col.data_length
-                    end                 as length,
-                    col.DATA_DEFAULT      as "DEFAULT"
+                      /* Oracle can compress a number in a smaller field so use precision if available */
+                      else nvl(col.data_precision, col.data_length)
+                    end                   as length,
+                    col.data_scale        as scale,
+                    col.DATA_DEFAULT      as "DEFAULT",
+				    CASE
+                          WHEN updateCol.updatable = 'YES' THEN 'false'
+                          ELSE 'true'
+                    END                  as readonly
               FROM  all_tab_columns   col,
+ 				    all_updatable_columns updateCol,
                     ( select  colCon.column_name,
                    			  colcon.table_name
-                    from    all_cons_columns  colCon,
+                    from   all_cons_columns  colCon,
                            all_constraints   tabCon
                     where tabCon.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
                          AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
@@ -106,6 +113,8 @@
               where col.table_name = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
               		and col.COLUMN_NAME        = primaryConstraints.COLUMN_NAME (+)
                     AND col.TABLE_NAME       = primaryConstraints.TABLE_NAME (+)
+					and updateCol.table_name  (+) = col.table_name 
+					and updateCol.COLUMN_NAME (+) = col.COLUMN_NAME 
           order by col.column_id
 		</cfquery>
 
@@ -120,10 +129,15 @@
 			<cfset Field.cfDataType   = getCfDataType(qFields.dbDataType) />
 			<cfset Field.cfSqlType    = getCfSqlType(qFields.dbDataType) />
 			<cfset Field.length       = qFields.length />
+			<cfset Field.scale        = qFields.scale />
 			<cfset Field.default      = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
+<<<<<<< .mine
+    		<cfset Field.readOnly     = qFields.readonly />
+=======
 			<cfset Field.readOnly = "false" />
 			
+>>>>>>> .r414
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
 		</cfloop>
@@ -145,7 +159,6 @@
 		<cfif left(arguments.sqlDefaultValue,1) is "'" and right(arguments.sqlDefaultValue,1) is "'">
 			<cfset arguments.sqlDefaultValue = mid(arguments.sqlDefaultValue,2,len(arguments.sqlDefaultValue)-2) />
 		</cfif>
-<!--- 		<cfswitch expression="#arguments.typeName#"> --->
 			<cfif compareNocase(arguments.typename, "NUMERIC") is 0>
 				<cfif IsNumeric(arguments.sqlDefaultValue)>
 					<cfreturn arguments.sqlDefaultValue />
@@ -164,7 +177,7 @@
 				<cfreturn arguments.sqlDefaultValue  />
 			
 			<cfelseif  compareNocase(arguments.typename, "DATE") is 0 
-          or compareNocase(arguments.typename, "TIMESTAMP") is 0>
+              or compareNocase(arguments.typename, "TIMESTAMP") is 0>
 				<cfif arguments.sqlDefaultValue IS "SYSDATE">
 					<cfreturn "##Now()##" />
 				<cfelse>
@@ -179,9 +192,8 @@
 
 	<cffunction name="getCfSqlType" access="private" hint="I translate the Oracle data type names into ColdFusion cf_sql_xyz names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
-<!--- 		<cfswitch expression="#lcase(arguments.typeName)#"> --->
-    <!--- most commonly used --->
-			<cfif compareNocase(arguments.typename, "varchar2") is 0>
+        <!--- most commonly used --->
+		<cfif compareNocase(arguments.typename, "varchar2") is 0>
 				<cfreturn "cf_sql_varchar" />
 			<cfelseif compareNocase(arguments.typename, "timestamp(6)") is 0>
 				<cfreturn "cf_sql_date" />
@@ -239,10 +251,8 @@
 	<cffunction name="getCfDataType" access="private" hint="I translate the Oracle data type names into ColdFusion data type names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
 
-<!--- 		<cfswitch expression="#arguments.typeName#"> --->
-
-			<!--- most commonly used types --->
-			<cfif compareNocase(arguments.typename, "varchar2") is 0>
+		<!--- most commonly used types --->
+		<cfif compareNocase(arguments.typename, "varchar2") is 0>
 				<cfreturn "string" />
 			<cfelseif compareNocase(arguments.typename, "date") is 0>
 				<cfreturn "date" />
