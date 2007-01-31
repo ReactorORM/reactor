@@ -101,6 +101,9 @@
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
+					<xsl:if test="@scale > 0">
+						scale="<xsl:value-of select="@scale" />" 
+					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
 						<xsl:otherwise>#arguments.to.<xsl:value-of select="@alias" />#</xsl:otherwise>
@@ -202,6 +205,9 @@
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						maxlength="<xsl:value-of select="@length" />"
 					</xsl:if>
+					<xsl:if test="@scale > 0">
+						scale="<xsl:value-of select="@scale" />" 
+					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
 						<xsl:otherwise>#arguments.to.<xsl:value-of select="@alias" />#</xsl:otherwise>
@@ -219,6 +225,9 @@
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						maxlength="<xsl:value-of select="@length" />"
+					</xsl:if>
+					<xsl:if test="@scale > 0">
+						scale="<xsl:value-of select="@scale" />" 
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>
@@ -248,6 +257,9 @@
 					cfsqltype="<xsl:value-of select="@cfSqlType" />"
 					<xsl:if test="@length > 0 and @cfSqlType != 'cf_sql_longvarchar'">
 						maxlength="<xsl:value-of select="@length" />"
+					</xsl:if>
+					<xsl:if test="@scale > 0">
+						scale="<xsl:value-of select="@scale" />" 
 					</xsl:if>
 					value="<xsl:choose>
 						<xsl:when test="@dbDataType = 'uniqueidentifier'">#Left(arguments.to.<xsl:value-of select="@alias" />, 23)#-#Right(arguments.to.<xsl:value-of select="@alias" />, 12)#</xsl:when>

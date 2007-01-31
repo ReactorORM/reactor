@@ -73,6 +73,7 @@
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["cfDataType"] = "<xsl:value-of select="@cfDataType" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["cfSqlType"] = "<xsl:value-of select="@cfSqlType" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["length"] = "<xsl:value-of select="@length" />" /&gt;
+		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["scale"] = "<xsl:value-of select="@scale" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["default"] = "<xsl:value-of select="@default" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["object"] = "<xsl:value-of select="../../@name" />" /&gt;
 		&lt;cfset variables.metadata.fields[<xsl:value-of select="position()" />]["sequence"] = "<xsl:value-of select="@sequence" />" /&gt;
