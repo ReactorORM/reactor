@@ -96,6 +96,7 @@
 			<cfset Field.dbDataType = qFields.dbDataType />
 			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
 			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
+			<cfset Field.scale = "0" />
 
 			<!--- field length for text fields is held as 56 in the db, but text can be 2^31 or space available on disk, whichever is less --->
 			<cfif qFields.dbDataType NEQ 12>
