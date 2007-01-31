@@ -420,6 +420,7 @@
 		<cfset xmlField.XmlAttributes["cfDataType"] = arguments.field.cfDataType />
 		<cfset xmlField.XmlAttributes["cfSqlType"] = arguments.field.cfSqlType />
 		<cfset xmlField.XmlAttributes["length"] = arguments.field.length />
+		<cfset xmlField.XmlAttributes["scale"] = arguments.field.scale />
 		<cfset xmlField.XmlAttributes["default"] = arguments.field.default />
 		<cfset xmlField.XmlAttributes["object"] = arguments.config.object.XmlAttributes.name />
 		<cfset xmlField.XmlAttributes["sequence"] = arguments.field.sequenceName />

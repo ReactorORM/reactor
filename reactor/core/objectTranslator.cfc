@@ -109,6 +109,9 @@
 			<!--- insure a maxLength exists --->
 			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/maxlength", field.length) />
 			
+			<!--- insure a scale exists --->
+			<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/scale", field.scale) />
+			
 			<!--- required validation error message --->
 			<cfif NOT fields[x].nullable>
 				<cfset paramNode(dictionaryXml, "/#alias#/#field.name#/notProvided", "The #field.name# field is required but was not provided.") />
