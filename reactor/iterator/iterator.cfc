@@ -147,7 +147,7 @@
 		<cfset var field = "" />
 		<cfset var To = "" />
 		<cfset var useTransaction = true />
-		<cfset var args = StructNew() />
+		<cfset var newArgs = StructNew() />
 				
 		<!--- this is a bit of a hack to manage deleting in a manual transaction --->
 		<cfif StructKeyExists(arguments, "useTransaction")>
@@ -174,11 +174,15 @@
 				<cfset Record.delete(useTransaction=useTransaction) />
 			</cfif>
 
-		<cfelseif fieldList IS 1 AND IsObject(arguments[1])>
-			<!--- an object was passed in --->
+		<cfelseif (fieldList IS 1 AND IsObject(arguments[1])) OR (fieldList IS "record" AND IsObject(arguments["record"]))> 
+			<!--- an object was passed in either without a name for the argument or the argument name is record and the value is an object (messy, sorry) --->
 			<!--- get the object passed in --->
-			<cfset Record = arguments[1] />
-
+			<cfif fieldList IS 1>
+				<cfset Record = arguments[1] />
+			<cfelse>
+				<cfset Record = arguments["record"] />
+			</cfif>
+			
 			<!--- make sure this object is of the correct type --->
 			<cftry>
 				<cfif Record._getAlias() IS NOT getAlias()>
@@ -217,23 +221,19 @@
 
 		<cfelseif fieldList IS NOT 1>
 			<!--- name/value pairs were passed in --->
-			<!--- a set of name/value pairs were passed in.  get the matching indexes --->
-			<cfinvoke component="#this#" method="findMatchingIndexes" argumentcollection="#arguments#" returnvariable="indexArray" />
-
-			<!--- sort and reverse the array (so we don't get errors when deleting multiple items and the length of the array changes --->
-			<cfset ArraySort(indexArray, "Numeric", "desc") />
-
-			<!--- get all the specified indexes and return them --->
-			<cfif ArrayLen(indexArray)>
-				<cfloop from="1" to="#ArrayLen(indexArray)#" index="x">
-					<!--- delete the record --->
-					<cfset args[1] = indexArray[x] />
-					<cfset args["useTransaction"] = useTransaction />
+			
+			<!--- a set of name/value pairs was passed in.  get the matching records --->
+			<cfset Records = get(argumentCollection=arguments) />
+			
+			<cfloop from="1" to="#ArrayLen(Records)#" index="x">
+				<cfset newArgs["1"] = Records[x] />
+				<cfset newArgs["useTransaction"] = useTransaction />
 				
-					<cfset delete(argumentCollection=args) />
-				</cfloop>
-			</cfif>
-
+				<cfinvoke method="delete">
+					<cfinvokeargument name="record" value="#Records[x]#" />
+					<cfinvokeargument name="useTransaction" value="#useTransaction#" />
+				</cfinvoke>
+			</cfloop>
 		</cfif>
 
 	</cffunction>
