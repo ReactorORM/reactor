@@ -124,7 +124,7 @@
 		<cfset beforeValidate() />
 		
 		<cfset _setErrorCollection(_getReactorFactory().createValidator(_getAlias()).validate(this)) />
-		
+	
 		<cfset afterValidate() />	
 	</cffunction>
 	
@@ -137,7 +137,7 @@
 			<cfset executeSave() />
 		</cfif>
 		
-	</cffunction>	
+	</cffunction>
 	
 	<!--- saveInTransaction --->
 	<cffunction name="saveInTransaction" access="private" hint="I save the record in a transaction." output="false" returntype="void">
@@ -197,11 +197,11 @@
 	<!--- aftervalidate --->
 	<cffunction name="aftervalidate" access="private" hint="I am code executed after validating the record." output="false" returntype="void">
 		<cfset var item = 0 />
-		
+			
 		<!--- validate all loaded children --->
 		<cfloop collection="#variables.children#" item="item">
 			<!--- check to see if this child is loaded --->
-			<cfif IsObject(variables.children[item])>
+			<cfif IsObject(variables.children[item]) AND NOT variables.children[item].validated()>
 			
 				<!--- save the child. --->
 				<cfset variables.children[item].validate() />
