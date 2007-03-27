@@ -90,6 +90,8 @@
                     case
                       /* 26 is the length of now() in ColdFusion (i.e. {ts '2006-06-26 13:10:14'})*/
                       when col.data_type = 'DATE'   then 26
+                      /* oracle returns  4000 for clobs which is the length of what Oracle stores inline in the record. However, oracle can store several gb out of line. */
+                      when col.data_type in ('CLOB','BLOB')   then 20000000
                       /* Oracle can compress a number in a smaller field so use precision if available */
                       else nvl(col.data_precision, col.data_length)
                     end                   as length,
@@ -132,12 +134,8 @@
 			<cfset Field.scale        = qFields.scale />
 			<cfset Field.default      = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
-<<<<<<< .mine
-    		<cfset Field.readOnly     = qFields.readonly />
-=======
-			<cfset Field.readOnly = "false" />
-			
->>>>>>> .r414
+    	<cfset Field.readOnly     = qFields.readonly />
+      
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
 		</cfloop>
