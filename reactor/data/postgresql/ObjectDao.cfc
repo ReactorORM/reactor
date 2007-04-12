@@ -187,7 +187,9 @@
 			</cfif>
 			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfif qFields.identity eq "true">
-				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"),"public.","") />
+				<cfset Field.sequenceName = Replace(ListGetAt(qFields.default,2,"'"""),"public.","") />
+			<cfelse>
+				<cfset Field.sequenceName = "" >
 			</cfif>
 			<cfset Field.readOnly = "false" />
 			<cfset Field.scale = "0" />
