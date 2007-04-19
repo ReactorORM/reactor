@@ -169,7 +169,7 @@
 	<cffunction name="getCfSqlType" access="private" hint="I translate the Informix data type names into ColdFusion cf_sql_xyz names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
 		
-		<cfset typeName = getLowestTwoBits(typeName)>
+		<cfset arguments.typeName = getLowestTwoBits(typeName)>
 				
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bit,bool,boolean">
@@ -207,7 +207,7 @@
 	<cffunction name="getCfDataType" access="private" hint="I translate the Informix data type names into ColdFusion data type names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
 		
-		<cfset typeName = getLowestTwoBits(typeName)>
+		<cfset arguments.typeName = getLowestTwoBits(typeName)>
 				
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="1,2,3,4,5,6"><!--- 6 is  'serial'--->

@@ -391,6 +391,7 @@
 		<cfset var x = 0 />
 		<cfset var exactObjectName = "" />
 		<cfset var objectDAO = 0 />
+		<cfset var exactName = 0 />
 
 		<!---
 			The next few lines of code loop over the provided xml config and look for a field with the same name as the field
@@ -435,19 +436,17 @@
 			</cfif>
 		</cfif>
 
-    <cfif xmlField.XmlAttributes["sequence"] gt "">
-  		<cfset ObjectDao = CreateObject("Component"
-            , "reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn()
-            , getConfig().getUsername()
-            , getConfig().getPassword()) />
-  		<cfset exactName = ObjectDao.getExactObjectName(objectName=xmlField.XmlAttributes["sequence"], objectTypeList="sequence") />
-      <cfif compare( exactName, xmlField.XmlAttributes["sequence"] ) is not 0>
-        <cfset xmlField.XmlAttributes["sequence"] = exactName />
-      </cfif>
-    </cfif>
-
-
-
+		<cfif xmlField.XmlAttributes["sequence"] gt "">
+			<cfset ObjectDao = CreateObject("Component",
+				"reactor.data.#getConfig().getType()#.ObjectDao").init(getConfig().getDsn(),
+				getConfig().getUsername(),
+				getConfig().getPassword()
+			) />
+			<cfset exactName = ObjectDao.getExactObjectName(objectName=xmlField.XmlAttributes["sequence"], objectTypeList="sequence") />
+			<cfif compare( exactName, xmlField.XmlAttributes["sequence"] ) is not 0>
+				<cfset xmlField.XmlAttributes["sequence"] = exactName />
+			</cfif>
+		</cfif>
 		
 		<!--- add the field node --->
 		<cfset ArrayAppend(arguments.config.Object.fields.XmlChildren, xmlField) />
@@ -463,20 +462,20 @@
 		<cfset var i = "" />
 		
 		<cfif len(trim(oldNode.xmlComment))>		
-			<cfset newNode.xmlComment = trim(oldNode.xmlComment) />
+			<cfset arguments.newNode.xmlComment = trim(oldNode.xmlComment) />
 		</cfif>
 	
 		<cfif len(trim(oldNode.xmlCData))>
-			<cfset newNode.xmlCData = trim(oldNode.xmlCData)>
+			<cfset arguments.newNode.xmlCData = trim(oldNode.xmlCData)>
 		</cfif>
 		
-		<cfset newNode.xmlAttributes = oldNode.xmlAttributes>
+		<cfset arguments.newNode.xmlAttributes = oldNode.xmlAttributes>
 		
-		<cfset newNode.xmlText = trim(oldNode.xmlText) />
+		<cfset arguments.newNode.xmlText = trim(oldNode.xmlText) />
 		
 		<cfloop from="1" to="#arrayLen(oldNode.xmlChildren)#" index="i">
-			<cfset newNode.xmlChildren[i] = xmlElemNew(xmlDoc,oldNode.xmlChildren[i].xmlName) />
-			<cfset copyNode(xmlDoc,newNode.xmlChildren[i],oldNode.xmlChildren[i]) />
+			<cfset arguments.newNode.xmlChildren[i] = xmlElemNew(xmlDoc, oldNode.xmlChildren[i].xmlName) />
+			<cfset copyNode(xmlDoc, arguments.newNode.xmlChildren[i], oldNode.xmlChildren[i]) />
 		</cfloop>
 	</cffunction>
 	
