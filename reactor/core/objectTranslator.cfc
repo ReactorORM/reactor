@@ -64,7 +64,7 @@
 			<cfset insurePathExists(arguments.outputPath)>
 			<!--- write the file to disk --->
 			<cflock type="exclusive" timeout="30">
-				<cffile action="write" file="#arguments.outputPath#" output="#code#" />
+				<cffile action="write" file="#arguments.outputPath#" output="#code#" mode="777" />
 			</cflock>
 		</cfif>
 	</cffunction>
@@ -129,7 +129,7 @@
 		<!--- if the initial xml and the new xml are different, format the xml and write it back to the dictionary xml file --->
 		<cfif toString(dictionaryXml) IS NOT toString(initialDictionaryXml)>
 			<cflock type="exclusive" timeout="30">
-				<cffile action="write" file="#arguments.dictionaryXmlPath#" output="#formatXml(dictionaryXml)#" />
+				<cffile action="write" file="#arguments.dictionaryXmlPath#" output="#formatXml(dictionaryXml)#" mode="777" />
 			</cflock>
 		</cfif>
 	</cffunction>
@@ -252,7 +252,7 @@
 		<cfset var directory = getDirectoryFromPath(arguments.path) />
 		
 		<cfif NOT DirectoryExists(directory)>
-			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" />
+			<cfdirectory action="create" directory="#getDirectoryFromPath(arguments.path)#" mode="777" />
 		</cfif>
 	</cffunction>
 	
