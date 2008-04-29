@@ -11,7 +11,7 @@
 	</config>
 
 	<objects>
-		<object name="Customer">
+		<object name="Customer" alias="foo5">
 		   <field name="customerId" alias="custId" />
 			<field name="addressId" alias="addId" />
 		   

@@ -183,7 +183,8 @@
 		<cfset var DbObject = 0 />
 		<cfset var generate = false />
 		<cfset var DictionaryObject = 0 />
-		<cfset var dictionaryXmlPath = "#getObject(arguments.alias).getMapping()#/Dictionary/#arguments.alias#dictionary.xml" />
+		<cfset var tempmapping = "/" & Replace(getMapping(), ".", "/", "all") />
+		<cfset var dictionaryXmlPath = "#tempmapping#/Dictionary/#arguments.alias#dictionary.xml" />
 		<cfset var ObjectTranslator = 0 />
 		
 		<cftry>
@@ -196,7 +197,7 @@
 						<cfset DictionaryObject = CreateObject("Component", "reactor.dictionary.dictionary").init(dictionaryXmlPath) />
 						<cfset variables.Cache["Dictionary"][arguments.alias] = DictionaryObject />
 					</cfif>
-
+					
 					<cfcatch>
 						<!--- we only need the dbobject if it doesn't already exist --->
 						<cfset DbObject = getObject(arguments.alias) />
@@ -232,10 +233,22 @@
 		<cfargument name="name" hint="I am the name of the object to translate." required="yes" type="any" _type="string" />
 		<cfset var Object = 0 />
 		
-		<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+		<!---
+			this is a bit of a hack.  See, within one request we might need to hit the DB several times to get the same config settings for one object.
+			we only want to hit the db once per that request.  So, I'm using *shock* a request variable right here in a CFC.  Deal with it!
+		--->
+		<cfparam name="request.reactor.Object" default="#StructNew()#" />
 		
-		<!--- read the object --->
-		<cfset variables.ObjectDao.read(Object) />
+		<cfif NOT StructKeyExists(request.reactor.Object, arguments.name)>
+			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+		
+			<!--- read the object --->
+			<cfset variables.ObjectDao.read(Object) />
+			
+			<cfset request.reactor.Object[arguments.name] = Object />
+		<cfelse>
+			<cfset Object = request.reactor.Object[arguments.name] />
+		</cfif>
 		
 		<!--- return the object --->
 		<cfreturn Object />

@@ -1,14 +1,13 @@
 
-<cfset reactorFactory = CreateObject("Component", "reactor.reactorFactory") />
-<cfset reactorFactory.init("/config/reactor.xml") />
+<cfapplication name="reactorTest" />
 
-<cfset CustomerGateway = reactorFactory.createGateway("Customer") />
+<cfif NOT StructKeyExists(application, "reactorFactory") OR StructKeyExists(url, "reload")>
+	<cfset application.reactorFactory = CreateObject("Component", "reactor.reactorFactory") />
+	<cfset application.reactorFactory.init("/config/reactor.xml") />
+	<h1>reload</h1>
+</cfif>
 
-<cfset total = 0 />
-<cfloop from="1" to="30" index="x">
-	<cfset tick = getTickCount() />
-	<cfset CustomerGateway.test() />
-	<cfset total = total + (getTickCount()-tick) />
-</cfloop>
+<cfset CustomerRecord = application.reactorFactory.createRecord("foo5").load(custId=37) />
+<cfset CustomerRecord.validate() />
 
-avg: <cfdump var="#total/30#" />
+<cfdump var="#CustomerRecord#" />
