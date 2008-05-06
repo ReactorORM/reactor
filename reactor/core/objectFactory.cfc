@@ -45,8 +45,15 @@
 		<cfset var objectNames = getConfig().getObjectNames() />
 		<cfset var x = 0 />
 		
+		<!--- note the current config mode --->
+		<cfset var mode = getConfig().getMode() />
+		
+		<!--- force to development mode --->
+		<cfset getConfig().setMode("Development") />
+		
 		<!--- generate the base object types --->
 		<cfloop from="1" to="#ArrayLen(objectNames)#" index="x">
+			<cflog text="Reactor: Compiling #objectNames[x]# objects" />
 			<cfset create(objectNames[x], "Record") />
 			<cfset create(objectNames[x], "Dao") />
 			<cfset create(objectNames[x], "To") />
@@ -55,6 +62,9 @@
 			<cfset createDictionary(objectNames[x]) />
 			<cfset create(objectNames[x], "Validator") />
 		</cfloop>
+		
+		<!--- reset the mode --->
+		<cfset getConfig().setMode(mode) />
 	</cffunction>
 
 	<cffunction name="create" access="public" hint="I create and return an object for a specific table." output="false" returntype="any" _returntype="any">
