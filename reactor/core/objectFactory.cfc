@@ -88,6 +88,7 @@
 				detail="The plugin type must be one of: #replace(getPluginList(), ",", ", ", "all")#" />
 		</cfif>
 		
+		
 		<cftry>
 			
 			<cfif compareNocase(getConfig().getMode(), "always") is 0>
@@ -139,15 +140,17 @@
 				</cftry>
 				
 			</cfif>
-					
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
 		</cftry>
 		<!--- return either a generated object or the existing object --->
+					
+		
+
 		<cfif generate>
 			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
-			
+					
 			<cfset ObjectTranslator.generateObject(arguments.type, arguments.plugin) />	
 			
 			<cfif ListFind("Dao,Gateway,Record", arguments.type) OR arguments.plugin>
@@ -301,28 +304,6 @@
 		<cfreturn replaceNoCase(right(mapping, Len(mapping) - 1), "/", ".", "all") />
 	</cffunction>
 	
-	<!---<cffunction name="getObjectName" access="private" hint="I return the correct name of the a object based on it's type and other configurations" output="false" returntype="any" _returntype="string">
-		<cfargument name="type" hint="I am the type of object to return.  Options are: record, dao, gateway, to" required="yes" type="any" _type="string" />
-		<cfargument name="name" hint="I am the name of the object to return." required="yes" type="any" _type="string" />
-		<cfargument name="plugin" hint="I indicate if this is creating a plugin" required="yes" type="any" _type="boolean" />
-		<cfset var creationPath = "" />
-		<cfset var mapping = getConfig().getMapping(arguments.name) />
-		
-		<!---<!--- insure that all the required objects exists (this is required to avoid throwing errors when trusted caching is turned on) --->
-		<cfif NOT validateObject(arguments.type, arguments.name, arguments.plugin)>
-			<cfthrow type="reactor.objectFactory.getObjectName.NotAllObjectsExist" />
-		</cfif>--->
-		
-		<!--- if the user doesn't have a leading slash on their mapping then add one --->
-		<cfif left(mapping, 1) IS NOT "/">
-			<cfset mapping = "/" & mapping />
-		</cfif>
-				
-		<cfset creationPath = replaceNoCase(right(mapping, Len(mapping) - 1), "/", ".", "all") />
-	
-		<cfdump var="#creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()#" /><cfabort>
-		<cfreturn creationPath & Iif(arguments.plugin, De(".plugins"), De("")) & "." & arguments.type & "." & arguments.name & arguments.type & getConfig().getType()  />
-	</cffunction>--->
 	
 	<!--- config --->
   <cffunction name="setConfig" access="public" output="false" returntype="void">
