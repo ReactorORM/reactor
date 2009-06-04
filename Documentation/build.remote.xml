@@ -1,0 +1,18 @@
+<project name="Remote Build Script for Conference Survey App" default="BuildRemote">
+	
+	<target name="BuildRemote">
+		<!-- any  tasks loaded just use classes from the antlib directory (even ant4cf) -->
+		<taskdef name="configure" classname="com.alagad.ant4cf.Configure" classpath="antlib/ant4cf-java-2.0-SNAPSHOT-jar-with-dependencies.jar" />
+		
+		<property name="webroot" value="W:\webs\livedocs.reactorframework.org" />
+		
+		<configure ant4cfUrl="http://livedocs.reactorframework.org/CFIDE/ant4cf" adminPassword="${cfAdminPassword}" />
+		
+		<!-- get the docs from svn -->
+		<echo message="Export livedocs out of SVN" />
+		<exec executable="svn">
+			<arg line="export http://svn.reactorframework.org/trunk/Documentation/Documentation/!SSL!/WebHelp ${webroot} --username ${svnUsername} --password ${svnPassword} --force" />
+		</exec>
+	</target>
+	
+</project>

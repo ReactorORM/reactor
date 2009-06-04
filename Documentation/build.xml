@@ -1,0 +1,18 @@
+<project name="Local Build Script for Conference Survey App" default="Build">
+	
+	<target name="Build">
+
+		<input message="Please enter CFAdmin password:" addproperty="cfAdminPassword" />
+		<input message="Please enter SVN username:" addproperty="svnUsername" />
+		<input message="Please enter SVN password:" addproperty="svnPassword" />
+
+		<taskdef name="configure" classname="com.alagad.ant4cf.Configure" classpath="antlib/ant4cf-java-2.0-SNAPSHOT-jar-with-dependencies.jar" />
+		<taskdef name="remoteant" classname="com.alagad.ant4cf.RemoteAnt" classpath="antlib/ant4cf-java-2.0-SNAPSHOT-jar-with-dependencies.jar" />
+		
+		<configure ant4cfUrl="http://livedocs.reactorframework.org/CFIDE/ant4cf" adminPassword="${cfAdminPassword}" />
+		<remoteant antfile="build.remote.xml" debug="true" properties="cfAdminPassword,svnUsername,svnPassword" />
+		
+	</target>
+	
+	
+</project>
