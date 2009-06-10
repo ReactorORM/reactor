@@ -4,7 +4,7 @@
 		<!-- any  tasks loaded just use classes from the antlib directory (even ant4cf) -->
 		<taskdef name="configure" classname="com.alagad.ant4cf.Configure" classpath="antlib/ant4cf-java-2.0-SNAPSHOT-jar-with-dependencies.jar" />
 		
-		<property name="webroot" value="W:\webs\livedocs.reactorframework.org" />
+		<property name="webroot" value="W:\webs\livedocs.reactorframework.org\www" />
 		
 		<configure ant4cfUrl="http://livedocs.reactorframework.org/CFIDE/ant4cf" adminPassword="${cfAdminPassword}" />
 		
