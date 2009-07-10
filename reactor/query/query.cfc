@@ -3,6 +3,8 @@
 	<cfset variables.where = 0 />
 	<cfset variables.order = CreateObject("Component", "reactor.query.order").init(this) />
 	<cfset variables.maxrows = -1 />
+	<cfset variables.page = 0>
+	<cfset variables.rows = 0 />
 	<cfset variables.initData = StructNew() />
 	<cfset variables.instance = StructNew() />
 	<cfset variables.instance.queryCommands = ArrayNew(1) />
@@ -53,6 +55,26 @@
 		<cfset variables.values = arguments.values />
 	</cffunction>
 
+
+	<!--- Pagination Settings --->
+	
+	<cffunction name="setPagination" access="public" hint="Sets how this query should be paginated" output="false" returntype="void" _returntype="void">
+		<cfargument name="page" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+		<cfargument name="rows" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+			<cfset variables.page = arguments.page>
+			<cfset variables.rows = arguments.rows>
+	</cffunction>
+
+
+	<cffunction name="getPagination" access="public" hint="Returns the pagination settings" output="false" returntype="string" _returntype="string">
+		<cfargument name="setting" hint="the paginaation setting to return" required="yes" type="string" _type="string">
+			<cfif setting EQ "page">
+				<cfreturn variables.page>
+			<cfelseif setting EQ "rows">
+				<cfreturn variables.rows>
+			</cfif>
+	</cffunction>
+
 	<!--- parse --->
 	<cffunction name="getQueryFile" access="public" hint="I render the query data to a physical query on disk and return the path to that file.  If the exact query already exists then I simply return that file's path." output="false" returntype="any" _returntype="string">
 		<cfargument name="Config" hint="I am the Config object." required="yes" type="any" _type="reactor.config.config" />
@@ -87,6 +109,9 @@
 				<!--- invoke the command --->
 				<cfinvoke component="#Order#" method="#variables.instance.orderCommands[x].method#" argumentcollection="#variables.instance.orderCommands[x].params#" />
 			</cfloop>
+			
+			
+			
 
 			<!--- check the type of the query --->
 			<cfif arguments.type IS "select">
@@ -150,8 +175,7 @@
 		<cfargument name="Convention" hint="I am the Convention object to use when rendering the query." required="yes" type="any" _type="reactor.data.abstractConvention" />
 		<cfset var result = "" />
 
-		<cfset result = "
-			DELETE FROM
+		<cfset result = "DELETE FROM
 			#arguments.Query.getDeleteAsString(arguments.Convention)#
 			#renderWhereForDelete(arguments.Query, arguments.Convention)#
 		"/>

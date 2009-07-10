@@ -1,4 +1,5 @@
-<cfcomponent hint="I am the convention object for mysql.  I translate data into formats that the DBMS supports." extends="reactor.data.abstractConvention">
+<cfcomponent hint="I am the convention object for mysql.  I translate data into formats that the DBMS supports." 
+				extends="reactor.data.abstractConvention">
 	
 	<cffunction name="lastInsertedIdSyntax" access="public" hint="I return a simple query which can be used to get the last ID inserted into the database." output="false" returntype="any" _returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="any" _type="reactor.base.abstractMetadata" />
@@ -74,5 +75,21 @@
 		
 		<cfreturn arguments.value />		
 	</cffunction>	
+	
+	
+	<cffunction name="supportsPagination" access="public" hint="I return whether this object supports pagination, otherwise we use the inbuilt function" output="false" returntype="boolean" _returntype="boolean">
+		<cfreturn true />
+	</cffunction>
+	
+	<cffunction name="formatPaginationSetting" access="public" hint="I return the pagination statement for this object" output="false" returntype="string" _returntype="string">
+		<cfargument name="page" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+		<cfargument name="rows" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+
+			<cfset var endRecord = rows * page>		
+			<cfset var startRecord = (endRecord - rows)>
+
+		<cfreturn "LIMIT #startRecord#, #rows#" />
+	</cffunction>
+		
 	
 </cfcomponent>

@@ -72,4 +72,19 @@
 		<cfreturn arguments.value />		
 	</cffunction>	
 	
+	
+		
+	<cffunction name="supportsPagination" access="public" hint="I return whether this object supports pagination, otherwise we use the inbuilt function" output="false" returntype="boolean" _returntype="boolean">
+		<cfreturn true />
+	</cffunction>
+	
+	<cffunction name="formatPaginationSetting" access="public" hint="I return the pagination statement for this object" output="false" returntype="string" _returntype="string">
+		<cfargument name="page" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+		<cfargument name="rows" hint="the page to retrieve from the query" required="yes" type="numeric" _type="numeric">
+
+			<cfset var endRecord = rows * page>		
+			<cfset var startRecord = (endRecord - rows)>
+
+		<cfreturn "LIMIT #startRecord#, #rows#" />
+	</cffunction>
 </cfcomponent>
