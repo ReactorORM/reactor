@@ -195,8 +195,8 @@
 		</cfloop>
 		
 		<!--- Do the contains --->	
-		<cfloop collection="#contains#" item="cont">
-				<cfset Where.isLike(TableName,cont, contains[cont])>
+		<cfloop collection="#arguments.contains#" item="cont">
+				<cfset Where.isLike(TableName,cont, arguments.contains[cont])>
 		</cfloop>
 		
 		<!--- Do the ordering --->
