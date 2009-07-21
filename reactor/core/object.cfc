@@ -11,7 +11,8 @@
 	<cfset variables.database = "" />
 	
 	<cfset variables.fields = ArrayNew(1) />
-
+		
+	<cfset variables.ignoreUndefinedFields = false>
 	
 	<cffunction name="init" access="public" hint="I configure the object." returntype="any" _returntype="reactor.core.object">
 		<cfargument name="alias" hint="I am the alias of the obeject being represented." required="yes" type="any" _type="string" />
@@ -110,6 +111,11 @@
 		<cfset var toRelationship = 0 />
 		<cfset var relationshipNode = 0 />
 		<cfset var linkExpandNode = 0 />
+
+                <cfset var ignoreIter = 0> 
+		<cfset var ignoreIterMax=0>
+		<cfset var fieldIter = 0>
+		<cfset var fieldsToIgnoreMax = 0>
 		
 		<!--- insure aliases are set --->
 		<cfloop from="1" to="#ArrayLen(relationships)#" index="x">
@@ -279,15 +285,38 @@
 			<cfset addXmlField(fields[x], Config) />
 		</cfloop>		
 		
+		<cfset fieldsToIgnore = ""> 
 		<!--- delete the fields from the base config file --->
 		<cfloop from="#ArrayLen(Config.object.xmlChildren)#" to="1" index="x" step="-1">
 			<cfif Config.object.xmlChildren[x].XmlName IS "field">
 				<cfif StructKeyExists(Config.object.xmlChildren[x].XmlAttributes, "source")>
 					<cfset addExternalField(Config.object.xmlChildren[x], Config) />
 				</cfif>
+
+				<cfif StructKeyExists(Config.object.xmlChildren[x].XmlAttributes, "ignore")> 
+				         <!--- Check that we have a name ---> 
+				         <cfif NOT StructKeyExists(Config.object.xmlChildren[x].XmlAttributes, "name")> 
+				                 <cfthrow message="Name is required if the ignore attribute is used"> 
+				         </cfif> 
+				         <cfif Config.object.xmlChildren[x].XmlAttributes["ignore"]> 
+				                 <cfset fieldsToIgnore = ListAppend(fieldsToIgnore, Config.object.xmlChildren[x].XmlAttributes["name"])> 
+				         </cfif> 
+				 </cfif> 
 				
 				<cfset ArrayDeleteAt(Config.object.xmlChildren, x) />	
 			</cfif>
+		</cfloop>
+
+		<cfset fieldsToIgnoreMax=ListLen(fieldsToIgnore)>
+		<cfloop from="1" to="#fieldsToIgnoreMax#" index="fieldIter"> 
+			<cfset ignoreIterMax = ArrayLen(Config.object.fields.XMLChildren)>
+			<cfloop from ="1" to="#ignoreIterMax#" index="ignoreIter">
+            	<cfif ListFindNoCase(listGetAt(fieldsToIgnore,fieldIter), Config.Object.fields.XMLChildren[ignoreIter].XmlAttributes.alias)> 
+                	<cfset ArrayDeleteAt(Config.object.fields.XMLChildren, ignoreIter) /> 
+					<cfbreak>
+				</cfif> 
+	                         
+			</cfloop> 
 		</cfloop>
 		
 		<!--- set the base config settings --->
@@ -482,9 +511,23 @@
 	<cffunction name="addField" access="public" hint="I add a field to this object." output="false" returntype="void">
 		<cfargument name="field" hint="I am the field to add" required="yes" type="any" _type="struct" />
 		<cfset var fields = getFields() />
-		<cfset fields[ArrayLen(fields) + 1] = arguments.field />
+		<cfset var cfg = getObjectConfig() />
+		<cfset var i=0>
 		
-		<cfset setFields(fields) />
+		<cfif variables.ignoreUndefinedFields is false>
+			<cfset fields[ArrayLen(fields) + 1] = arguments.field />			
+			<cfset setFields(fields) />
+		</cfif>
+			
+		<cfif variables.ignoreUndefinedFields is true >
+			<cfloop from="1" to="#arrayLen(cfg.object.XmlChildren)#" index="i">
+				<cfif field.name is cfg.object.XmlChildren[i].XmlAttributes.name>
+					<cfset fields[ArrayLen(fields) + 1] = arguments.field />
+					<cfset setFields(fields) />
+				</cfif>
+			</cfloop>		
+		</cfif>	
+			
 	</cffunction>
 
 	<cffunction name="getField" access="public" hint="I return a specific field." output="false" returntype="any" _returntype="struct">
@@ -592,6 +635,11 @@
     <cffunction name="setObjectConfig" access="private" output="false" returntype="void">
        <cfargument name="objectConfig" hint="I am the configuration for this specific object" required="yes" type="any" _type="string" />
        <cfset variables.objectConfig = arguments.objectConfig />
+
+		<cfif StructKeyExists(variables.objectConfig.object.XmlAttributes,"ignoreUndeclaredFields")>
+			<cfset variables.ignoreUndefinedFields=true>
+		</cfif>
+		
     </cffunction>
     <cffunction name="getObjectConfig" access="public" output="false" returntype="any" _returntype="any">
        <cfreturn variables.objectConfig />
