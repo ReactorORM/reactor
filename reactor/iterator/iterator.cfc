@@ -153,7 +153,7 @@
 		<cfif StructKeyExists(arguments, "useTransaction")>
 			<cfset useTransaction = arguments.useTransaction />
 			<cfset structDelete(arguments, "useTransaction") />
-			<cfset fieldList = ListDeleteAt(fieldList, ListFind(fieldList, "useTransaction")) />
+			<cfset fieldList = ListDeleteAt(fieldList, ListFindNoCase(fieldList, "useTransaction")) />
 		</cfif>
 		
 		<cfif NOT StructCount(arguments)>
