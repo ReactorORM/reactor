@@ -237,6 +237,18 @@
 		
 		<cfreturn appendNode(arguments, "isLike") />
 	</cffunction>
+
+          <cffunction name="isLikeNoCase" access="public" hint="I return an where which checks if a field is 'like' a value, ignoring case" output="false" returntype="any" _returntype="reactor.query.render.where">
+                 <cfargument name="objectAlias" hint="I am the alias of the object the field is in" required="yes" type="any" _type="string" />
+                 <cfargument name="fieldAlias" hint="I am the field to compare" required="yes" type="any" _type="string" />
+                 <cfargument name="value" hint="I am the value to compare against" required="yes" type="any" _type="string" />
+                 <cfargument name="mode" hint="I am the mode of the like comparison.  Options are: Anywhere, Left, All, Right" required="no" type="any" _type="string" default="anywhere" />
+                  <cfset validateField(arguments.objectAlias, arguments.fieldAlias) />
+                  <cfif NOT ListFindNoCase("Anywhere,Left,All,Right", arguments.mode)>
+                         <cfthrow message="Invalid Mode" detail="The 'mode' argument is invalid.  This must be one of: Anywhere, Left, All, Right" />
+                 </cfif>
+                  <cfreturn appendNode(arguments, "isLikeNoCase") />
+         </cffunction>
 	
 	<cffunction name="isNotLike" access="public" hint="I return an where which checks if a field is 'not like' a value." output="false" returntype="any" _returntype="reactor.query.render.where">
 		<cfargument name="objectAlias" hint="I am the alias of the object the field is in" required="yes" type="any" _type="string" />
