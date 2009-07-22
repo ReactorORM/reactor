@@ -548,6 +548,19 @@
 										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" #maxlengthwithwildcard# #scale# value="##arguments.Query.getValue(#whereNode.value#)##" /]] ');
 									}
 
+							// isLikeNoCase
+							} else if (compareNocase(whereNode.comparison,"isLikeNoCase") is 0) {
+								buf.append('lower(#getFieldOrExpressionForDelete(whereNode, arguments.Convention)#) LIKE ');
+									if (compareNocase(whereNode.mode,"Anywhere") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" #maxlengthwithwildcard# #scale#  value="%##arguments.Query.getValue(#lcase(whereNode.value)#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Left") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" #maxlengthwithwildcard# #scale# value="##arguments.Query.getValue(#lcase(whereNode.value)#)##%" /]] ');
+									} else if (compareNocase(whereNode.mode,"Right") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" #maxlengthwithwildcard# #scale# value="%##arguments.Query.getValue(#lcase(whereNode.value)#)##" /]] ');
+									} else if (compareNocase(whereNode.mode,"All") is 0) {
+										buf.append('[[cfqueryparam cfsqltype="#arguments.Query.findObject(whereNode.objectAlias).getField(whereNode.fieldAlias).cfSqlType#" #maxlengthwithwildcard# #scale# value="##arguments.Query.getValue(#lcase(whereNode.value)#)##" /]] ');
+									}
+									
 							// isNotLike
 							} else if (compareNocase(whereNode.comparison,"isNotLike") is 0) {
 								buf.append('#getFieldOrExpressionForDelete(whereNode, arguments.Convention)# NOT LIKE ');
