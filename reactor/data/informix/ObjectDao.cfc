@@ -37,22 +37,22 @@
 				
 		<!--- this is taken from Perls Informix class http://search.cpan.org/src/JSTOWE/Class-DBI-Loader-Informix-0.02/lib/Class/DBI/Informix.pm --->
 		<cfquery name="qPrimary" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-		SELECT p1.colname,
-       p2.colname,
-       p3.colname,
-       p4.colname,
-       p5.colname,
-       p6.colname,
-       p7.colname,
-       p8.colname,
-       p9.colname,
-       p10.colname,
-       p11.colname,
-       p12.colname,
-       p13.colname,
-       p14.colname,
-       p15.colname
-		 from sysconstraints
+		SELECT p1.colname as col1,
+	       p2.colname as col2,
+	       p3.colname as col3,
+	       p4.colname as col4,
+	       p5.colname as col5,
+	       p6.colname as col6,
+	       p7.colname as col7,
+	       p8.colname as col8,
+	       p9.colname as col9,
+	       p10.colname as col10,
+	       p11.colname as col11,
+	       p12.colname as col12,
+	       p13.colname as col13,
+	       p14.colname as col14,
+	       p15.colname as col15
+		from sysconstraints
 		join systables
 		on sysconstraints.tabid = systables.tabid
 		join sysindexes on sysconstraints.idxname = sysindexes.idxname
@@ -90,23 +90,27 @@
 			<!--- identity is MSSQL for 'auto-increment', Informix calls these 'serial'--->
 			<cfset Field = StructNew() />
 			<cfset Field.name = qFields.name />
-			<cfset Field.primaryKey = isThisFieldCalled(qPrimary.colname,qFields.name) />
+			<cfset Field.primaryKey = isThisFieldInPrimarykeyList(qPrimary,qFields.name) />
 			<cfset Field.identity = isDbType6(qFields.identity) />
 			<cfset Field.nullable = is3rdBitNot1(qFields.nullable) />
 			<cfset Field.dbDataType = qFields.dbDataType />
 			<cfset Field.cfDataType = getCfDataType(qFields.dbDataType) />
 			<cfset Field.cfSqlType = getCfSqlType(qFields.dbDataType) />
-			<cfset Field.scale = "0" />
 
 			<!--- field length for text fields is held as 56 in the db, but text can be 2^31 or space available on disk, whichever is less --->
 			<cfif qFields.dbDataType NEQ 12>
-				<cfset Field.length = qFields.length />
+				<cfif qFields.dbDataType eq 2><!--- for integer is length in bits --->
+					<cfset Field.length = len(2^((2^(qFields.length+1))-1)) >
+				<cfelse>	
+					<cfset Field.length = qFields.length />
+				</cfif>
 			<cfelse>
 				<cfset Field.length = 2147483648>
 			</cfif>
 
 			<cfset Field.default = getDefault(qFields.default, Field.cfDataType, Field.nullable) />
 			<cfset Field.sequenceName = "" />
+			<cfset Field.readOnly=false/>
 			
 			<!--- add the field to the table --->
 			<cfset arguments.Object.addField(Field) />
@@ -169,7 +173,7 @@
 	<cffunction name="getCfSqlType" access="private" hint="I translate the Informix data type names into ColdFusion cf_sql_xyz names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
 		
-		<cfset arguments.typeName = getLowestTwoBits(typeName)>
+		<cfset typeName = getLowestTwoBits(typeName)>
 				
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="bit,bool,boolean">
@@ -187,13 +191,13 @@
 			<cfcase value="10">
 				<cfreturn "cf_sql_timestamp" />
 			</cfcase>
-			<cfcase value="0">
+			<cfcase value="0,15"><!--- 15 is nchar --->
 				<cfreturn "cf_sql_char" />
 			</cfcase>
-			<cfcase value="13">
+			<cfcase value="13,16,40"><!--- 16 is nvarchar, 40 is LVARCHAR --->
 				<cfreturn "cf_sql_varchar" />
 			</cfcase>
-			<cfcase value="12,40">
+			<cfcase value="12">
 				<cfreturn "cf_sql_longvarchar" />
 			</cfcase>
 			<cfcase value="11">
@@ -207,7 +211,7 @@
 	<cffunction name="getCfDataType" access="private" hint="I translate the Informix data type names into ColdFusion data type names" output="false" returntype="any" _returntype="string">
 		<cfargument name="typeName" hint="I am the type name to translate" required="yes" type="any" _type="string" />
 		
-		<cfset arguments.typeName = getLowestTwoBits(typeName)>
+		<cfset typeName = getLowestTwoBits(typeName)>
 				
 		<cfswitch expression="#arguments.typeName#">
 			<cfcase value="1,2,3,4,5,6"><!--- 6 is  'serial'--->
@@ -271,12 +275,18 @@
 		<cfreturn 'false'>
 	</cffunction>
 	
-	<cffunction name="isThisFieldCalled" access="private" output="false" returntype="any" _returntype="string">
+	<cffunction name="isThisFieldInPrimarykeyList" access="private" output="false" returntype="any" _returntype="string">
 		<cfargument name="a" required="true" type="any" _type="string">
 		<cfargument name="b" required="true" type="any" _type="string">
-		<cfif a is b>
-			<cfreturn 'true'>
+		<cfset var i=0>
+		<cfif a.recordCount eq 0>
+			<cfreturn 'false'>
 		</cfif>
+		<cfloop from="1" to="15" index="i">
+			<cfif a["col#i#"][1] is b>
+				<cfreturn 'true'>
+			</cfif>
+		</cfloop>
 		<cfreturn 'false'>
 	</cffunction>
 
