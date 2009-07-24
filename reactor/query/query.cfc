@@ -80,7 +80,7 @@
 		<cfargument name="Config" hint="I am the Config object." required="yes" type="any" _type="reactor.config.config" />
 		<cfargument name="Convention" hint="I am the Convention object to use when rendering the query." required="yes" type="any" _type="reactor.data.abstractConvention" />
 		<cfargument name="type" hint="I am the type of query (select or delete)." required="yes" type="any" _type="string" />
-		<cfset var queryFileName = "/reactor/project/#arguments.Config.getProject()#/Queries/" & arguments.Config.getType() & "_" & getHash() & ".cfm" />
+		<cfset var queryFileName = "/reactor/project/#arguments.Config.getProject()#/Queries/" &"_" & getHash(arguments.Config.getType(),arguments.type) & ".cfm" />
 		<cfset var queryDirectory = 0 />
 		<cfset var whereCommands = 0 />
 		<cfset var Query = 0 />
@@ -655,7 +655,16 @@
 	</cffunction>
 
 	<cffunction name="getHash" access="private" hint="I get a hash of the data in this query" output="false" returntype="any" _returntype="string">
-		<cfreturn hash(variables.initData.objectAlias & variables.instance.objectSignatures & arrayToString(variables.where.getWhereCommands()) & variables.initData.queryAlias & structToString(variables.instance)) />
+		<cfargument name="dbType" _required="true" _type="string">
+		<cfargument name="queryType" _required="true" _type="string">
+		<cfreturn hash(variables.initData.objectAlias & 
+						variables.instance.objectSignatures & 
+						arrayToString(variables.where.getWhereCommands()) & 
+						variables.initData.queryAlias &
+						structToString(variables.instance) &
+						arguments.dbType &
+						arguments.queryType
+					) />
 	</cffunction>
 
 	<cffunction name="structToString" access="private" hint="I get a string of the data in this structure (assuming only arrays, structs and strings are contained within)" output="false" returntype="any" _returntype="string">
