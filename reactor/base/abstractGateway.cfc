@@ -173,14 +173,15 @@
 			var ex = "";
 			var cont = "";
 			var r_Object = "";
-			var TableName = this.getObjectMetadata().getName();
+			var TableName = getObjectMetadata().getAlias();
 		</cfscript>
 		
 		
 		<!--- Check the pagination --->
 		
 		<cfif page GT 0 AND rows EQ 0>
-			<cfthrow message="Rows per page need to be defined if you are requesting a page">
+			<cfthrow message="Rows (per page) need to be defined if you are requesting a page"
+				type="reactor.core.gateway.filter.Arguments">
 		</cfif>
 		
 		
@@ -196,7 +197,7 @@
 		
 		<!--- Do the contains --->	
 		<cfloop collection="#arguments.contains#" item="cont">
-				<cfset Where.isLike(TableName,cont, arguments.contains[cont])>
+				<cfset Where.isLikeNoCase(TableName,cont, arguments.contains[cont])>
 		</cfloop>
 		
 		<!--- Do the ordering --->
