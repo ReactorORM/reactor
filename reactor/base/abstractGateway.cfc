@@ -161,6 +161,8 @@
 		<cfargument name="exclude" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be excluded in the query">
 		<cfargument name="contains" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be contained  in the query">
 		<cfargument name="orderby" type="struct" default="#StructNew()#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
+		<cfargument name="isIn" type="struct" default="#StructNew()#" hint="Field/List pairs that should be included in the query">
+		<cfargument name="notIn" type="struct" default="#StructNew()#" hint="Field/List pairs that should be excluded in the query">
 		<cfargument name="maxrows" type="numeric" default="0" required="false" hint="The maximum number of rows to return in the query">
 		<cfargument name="format" type="string" default="query" required="false" hint="The format that you want to return the query in, valid values are query and iterator">
 		<cfargument name="page" type="numeric" default="0" required="false" hint="The page to get in a paginated set of results">
@@ -200,6 +202,14 @@
 				<cfset Where.isLikeNoCase(TableName,cont, arguments.contains[cont])>
 		</cfloop>
 		
+		<!--- include / exclude lists of values --->
+		<cfloop collection="#arguments.isIn#" item="inc">
+			<cfset Where.isIn(TableName, inc, arguments.isIn[inc])>
+		</cfloop>
+		<cfloop collection="#arguments.notIn#" item="ex">
+			<cfset Where.isNotIn(TableName, ex, arguments.notIn[ex])>
+		</cfloop>
+			
 		<!--- Do the ordering --->
 		
 		<cfloop collection="#orderby#" item="ord">

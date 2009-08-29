@@ -1,0 +1,23 @@
+<reactor>
+  <config>
+       <project value="scratch" />
+       <dsn value="reactortest" />
+       <type value="mysql" />
+       <mapping value="/ScratchData" />
+       <mode value="development" />
+  </config>
+
+  <objects>
+  
+  	<object name="foo"/>
+  	<!-- 
+  	CREATE TABLE `test`.`foo` (
+	  `id` int  NOT NULL AUTO_INCREMENT,
+	  `name` text  NOT NULL,
+	  `wibble` text ,
+	  PRIMARY KEY (`id`)
+	)
+	ENGINE = MyISAM;
+  	 -->
+  </objects>
+</reactor>
