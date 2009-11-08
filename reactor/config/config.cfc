@@ -109,10 +109,19 @@
 		<cfargument name="xmlFile" type="any" _type="string" required="true" hint="I am the path to the config XML file." />
 		<cfset var xml = "">
 		
-		<!--- attempt to expand the path to config --->
-		<cfif FileExists( expandPath( arguments.xmlFile ) )>
-			<cfset arguments.xmlFile = expandPath( arguments.xmlFile ) />
-		</cfif>
+		<!--- attempt to expand the path to config 
+		#204: Calling fileExists() on the root-relative config file location before 
+			  using an expandPath() will cause an error in security sandbox. 
+		--->
+		 <cftry> 
+			<cfif NOT FileExists(arguments.xmlFile)> 
+				<cfset arguments.xmlFile = expandPath( arguments.xmlFile ) /> 
+			</cfif> 
+		
+			<cfcatch> 
+				<cfset arguments.xmlFile = expandPath( arguments.xmlFile ) /> 
+			</cfcatch> 
+		</cftry> 
 
 		<cfif NOT FileExists( arguments.xmlFile )>
 			<cfthrow type="reactor.config.InvalidPathToConfig"
