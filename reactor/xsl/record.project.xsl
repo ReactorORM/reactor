@@ -93,16 +93,16 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="get<xsl:value-of select="@alias"/>" access="public" output="false" returntype="any" _returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
-		&lt;cfset var <xsl:value-of select="@alias"/> = 0 /&gt;
+		&lt;cfset var _<xsl:value-of select="@alias"/> = 0 /&gt;
 		
 		&lt;!--- load the initial <xsl:value-of select="@alias"/> record.  this will be empty ---&gt;
 		&lt;cfif NOT StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>") OR (
 				StructKeyExists(variables.children, "<xsl:value-of select="@alias"/>")
 				AND NOT IsObject(variables.children.<xsl:value-of select="@alias"/>)
 		) &gt;
-			&lt;cfset <xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") /&gt;
-			&lt;cfset <xsl:value-of select="@alias"/>._setParent(this, "<xsl:value-of select="@alias"/>") /&gt;
-			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = <xsl:value-of select="@alias"/> /&gt;
+			&lt;cfset _<xsl:value-of select="@alias"/> = _getReactorFactory().createRecord("<xsl:value-of select="@name"/>") /&gt;
+			&lt;cfset _<xsl:value-of select="@alias"/>._setParent(this, "<xsl:value-of select="@alias"/>") /&gt;
+			&lt;cfset variables.children.<xsl:value-of select="@alias"/> = _<xsl:value-of select="@alias"/> /&gt;
 		&lt;/cfif&gt;
 		
 		&lt;!--- if this object has an related values that are not the same as the values in this object then load the correct values ---&gt;
