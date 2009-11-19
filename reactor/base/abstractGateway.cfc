@@ -176,6 +176,7 @@
 			var cont = "";
 			var r_Object = "";
 			var TableName = getObjectMetadata().getAlias();
+			var totalRowCount = 0;
 		</cfscript>
 		
 		
@@ -231,12 +232,74 @@
 		</cfif>
 		
 		<cfif format EQ "iterator">
-			<cfset r_Object = CreateObject("component", "reactor.iterator.BaseIBO")>
-			<cfset r_Object.loadQuery(getByQuery(QueryObj))>
+			<cfset r_Object = CreateObject("component", "reactor.iterator.BasicIterator").init(
+							getByQuery(QueryObj),
+							_getReactorFactory().createRecord(this.getObjectMetadata().getAlias())
+							)>
 			<cfreturn r_Object>
 		</cfif>
 		
 		<cfreturn getByQuery(QueryObj)>
 	</cffunction>
 	
+<!--- getRowCountByFilter --->	
+	<cffunction name="getTotalRowCountByFilter" access="public" output="false" returntype="numeric" hint="I am a utility method to get the total row count for a filter ignoring any of the pagination settings">
+		<cfargument name="include" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be included in the query">
+		<cfargument name="exclude" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be excluded in the query">
+		<cfargument name="contains" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be contained  in the query">
+		<cfargument name="orderby" type="struct" default="#StructNew()#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
+		<cfargument name="maxrows" type="numeric" default="0" required="false" hint="The maximum number of rows to return in the query">
+		<cfargument name="idcol" type="string" default="" required="false" hint="The id column of this table if it isnt defined in the MetaData">
+	
+		<cfscript>
+			var QueryObj = this.createQuery();
+			var Where = QueryObj.getWhere();
+			var Order = QueryObj.getOrder();
+			var inc = "";
+			var ex = "";
+			var cont = "";
+			var col = "";
+			var r_Object = "";
+			var TableName = this.getObjectMetadata().getName();
+			var totalRowCount = 0;
+			var totalRows = 0;
+			var TableFields = this.getObjectMetaData().getObjectMetaData();
+			var aTableFields = TableFields.Fields;
+
+		</cfscript>
+		
+		
+		<!--- Find the primary key, if we dont find it we need an idCol --->
+		<cfloop array="#aTableFields#" index="col">
+			<cfif col.identity>
+				<cfset arguments.idcol = col.name>
+			</cfif>
+		</cfloop>
+		
+		
+		<cfif NOT Len(arguments.idcol)>
+			<cfthrow message="Please define which column is the primary key which will be used for the count">
+		</cfif>
+
+		<cfset QueryObj.returnObjectField(TableName,arguments.idcol)>	
+		<cfset QueryObj.setFieldExpression(TableName,arguments.idCol, "COUNT(#arguments.idcol#)", "cf_sql_integer")>		
+						
+	<!--- Do the includes --->
+		<cfloop collection="#include#" item="inc">
+				<cfset Where.isEqual(TableName,inc, include[inc])>
+		</cfloop>
+		
+		<!--- Do the excludes --->
+		<cfloop collection="#exclude#" item="ex">
+				<cfset Where.isNotEqual(TableName,ex, exclude[ex])>
+		</cfloop>
+		
+		<!--- Do the contains --->	
+		<cfloop collection="#arguments.contains#" item="cont">
+				<cfset Where.isLike(TableName,cont, arguments.contains[cont])>
+		</cfloop>
+		<cfset totalRows = getByQuery(QueryObj)>
+		<cfreturn totalRows[arguments.idCol]>
+	</cffunction>
+
 </cfcomponent>
