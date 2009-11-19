@@ -33,7 +33,7 @@
 		<cfset var Field = 0 />
 				
 		<cfquery name="qFields" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
-			SELECT COLUMN_NAME as name,
+			SELECT DISTINCT COLUMN_NAME as name,
 			CASE
 				WHEN COLUMN_KEY = 'PRI' THEN 'true'
 				ELSE 'false'
