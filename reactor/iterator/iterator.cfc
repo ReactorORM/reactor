@@ -634,10 +634,14 @@
 		<!--- mark any deleted records --->
 		<cfset cleanup() />
 
+
 		<cfquery name="query" dbtype="query">
 			SELECT <cfloop list="#variables.columnlist#" index="columnName">[#columnName#]<cfif columnName neq listLast(variables.columnList)>,</cfif></cfloop>
 			FROM variables.query
+			<cfif ListFindNoCase(variables.columnList, "reactorRowDeleted")>
 			WHERE reactorRowDeleted = 0
+			</cfif>
+			
 		</cfquery>
 
 		<!--- if we're filtering the rows then filter them --->

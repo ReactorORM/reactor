@@ -160,7 +160,8 @@
 
 <cffunction name="loadQuery" returntype="void" access="public" output="false" hint="I load a query into the IBO and then resets the iterator counter to 1.">
 	<cfargument name="Recordset" type="query" required="yes" displayname="Recordset" hint="I am the query that needs to be loaded.">
-	<cfscript>
+	<cfargument name="ComponentType" type="string" required="false" default="" hint="I am a path to the component that we can return rather than a row">
+	<cfscript> 
 	 	var theQuery = arguments.Recordset;
 		var theStructure = StructNew();
 		var cols = ListToArray(theQuery.columnlist);
@@ -185,6 +186,9 @@
 				THIS.Recordset = arguments.Recordset;
 			} 
 		};
+		if(Len(arguments.ComponentType)){
+			variables.ComponentType = arguments.ComponentType;
+		}
 		variables.Data.Instance = theStructure;
 		variables.NumberofRecords = theQuery.recordcount;
 		variables.IteratorRecord = 1;
