@@ -836,7 +836,7 @@
 	</cffunction>
 
 	<!--- innerJoin --->
-	<cffunction name="innerJoin" access="public" hint="I create an iuner join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.query.query">
+	<cffunction name="innerJoin" access="public" hint="I create an inner join from this object to another object via the specified relationship which can be on either object." output="false" returntype="any" _returntype="reactor.query.query">
 		<cfargument name="joinFromObjectAlias" hint="I am the alias of the object being joined from." required="yes" type="any" _type="string" />
 		<cfargument name="joinToObjectAlias" hint="I am the alias of the object being joined to." required="yes" type="any" _type="string" />
 		<cfargument name="relationshipAlias" hint="I am the alias of the relationship to use when joining these two objects." required="yes" type="any" _type="string" />
