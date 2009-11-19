@@ -68,4 +68,12 @@ be overkill too... but it's a start at lessening the inheritance tree --->
 <cfreturn variables.BeanFactory.getBean(arguments.name) />
 </cffunction>    
 	
+<!--- Injected Beans --->	
+<cffunction name="_setInjectedBean" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
+	<cfargument name="beanName" type="string" _type="string" required="true" />
+	<cfargument name="bean" type="any" _type="any" required="true" />
+		<cfset variables[arguments.beanName] = arguments.bean>
+</cffunction>    
+
+
 
