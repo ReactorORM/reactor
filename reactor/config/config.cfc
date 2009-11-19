@@ -9,8 +9,11 @@
 	<cfset variables.username = "" />
 	<cfset variables.password = "" />
 	<cfset variables.objectMap = StructNew() />
+	<cfset variables.parsedObjectMap = StructNew()>
 	<!--- this variables holds loaded reactor configuration files --->
 	<cfset variables.loadedFiles = ArrayNew(1) />
+	
+	<cfset this.DBTYPES = "mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix,hibernate">
 	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="any" _returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="any" _type="string" />
@@ -154,15 +157,19 @@
 	<cffunction name="getObjectConfig" access="public" output="false" returntype="any" _returntype="string" hint="I return the base configuration for a particular object.  If the object is not explictly configure a default config is returned.">
 		<cfargument name="alias" required="yes" type="any" _type="any" hint="I am the alias of the object to get the configuration for" />
 		<cfset var table = 0 />
+		
+		<cfif structKeyExists(variables.parsedObjectMap, arguments.alias)>
+			<cfreturn variables.parsedObjectMap[arguments.alias]>
+		</cfif>
 
 		<cfif structKeyExists(variables.objectMap,arguments.alias)>
-			<cfset table = variables.objectMap[arguments.alias] />
+			<cfset table = variables.objectMap[arguments.alias] /> 
 		<cfelse>
 			<cfset table = "<object name=""#arguments.alias#"" alias=""#arguments.alias#"" />" />
 		</cfif>
-
-		<!--- return the base config --->
-		<cfreturn xmlParse(toString(table)) />
+		
+		<cfset variables.parsedObjectMap[arguments.alias] = xmlParse(table)>
+		<cfreturn variables.parsedObjectMap[arguments.alias] />
 	</cffunction>
 
 	<!--- dsn --->
@@ -178,10 +185,10 @@
 	<cffunction name="setType" access="public" output="false" returntype="void">
 		<cfargument name="Type" hint="I am the type of database the dsn is for" required="yes" type="any" _type="string" />
 
-		<cfif NOT ListFind("mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix", arguments.Type)>
+		<cfif NOT ListFindNoCase(this.DBTYPES, arguments.Type)>
 			<cfthrow type="reactor.InvalidType"
 				message="Invalid Type Setting"
-				detail="The Type argument must be one of: mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix" />
+				detail="The Type argument must be one of: #this.DBTYPES#" />
 		</cfif>
 
 		<cfset variables.Type = arguments.Type />
@@ -211,10 +218,9 @@
 		<cfif Len(arguments.alias)>
 			<cfset object = getObjectConfig(arguments.alias) />
 			<cfif StructKeyExists(object.object.XmlAttributes, "mapping")>
-				<cfset mapping = object.object.XmlAttributes.mapping />
+				<cfreturn object.object.XmlAttributes.mapping />
 			</cfif>
 		</cfif>
-		
 		<cfreturn mapping />
   </cffunction>
 
