@@ -102,7 +102,7 @@
 				
 				<cftry>
 					<!--- create an instance of the object and check its signature --->
-					<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+					<cfset GeneratedObject = createGeneratedObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
 					<cfcatch>
 						<cfset generate = true />
 					</cfcatch>
@@ -122,14 +122,14 @@
 						<cfif StructKeyExists(variables.Cache[arguments.type], arguments.alias)>
 							<cfset GeneratedObject = variables.Cache[arguments.type][arguments.alias] />
 						<cfelse>
-							<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+							<cfset GeneratedObject = createGeneratedObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
 							<cfset variables.Cache[arguments.type][arguments.alias] = GeneratedObject />
 						</cfif>
 
 					<cfelse>
 
 						<!--- we never cache Record, To or iterator objects --->
-						<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
+						<cfset GeneratedObject = createGeneratedObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms) />
 
 					</cfif>
 					<cfcatch>
@@ -149,7 +149,7 @@
 		
 
 		<cfif generate>
-			<cfset ObjectTranslator = CreateObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
+			<cfset ObjectTranslator = createGeneratedObject("Component", "reactor.core.objectTranslator").init(getConfig(), DbObject, this) />
 					
 			<cfset ObjectTranslator.generateObject(arguments.type, arguments.plugin) />	
 			
@@ -161,9 +161,9 @@
 					<cfset metadata = create(arguments.alias, "Metadata") />
 				</cfif>
 			
-				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
+				<cfset GeneratedObject = createGeneratedObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention(), metadata) />
 			<cfelse>
-				<cfset GeneratedObject = CreateObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
+				<cfset GeneratedObject = createGeneratedObject("Component", getObjectDetails(arguments.type, arguments.alias, arguments.plugin).dbms)._configure(getConfig(), arguments.alias, getReactorFactory(), getConvention()) />
 			</cfif>
 
 		<cfelse>
@@ -190,6 +190,34 @@
 		
 		<cfreturn GeneratedObject />
 	</cffunction>
+
+	<cffunction name="createGeneratedObject" access="private" returntype="any" output="false" hint="I check for any injectors for this object">
+		<cfargument name="objectType">
+		<cfargument name="objectPath">	
+			<cfset var bi = "">
+			<cfset var BeanName = ListGetAt(objectPath,ListLen(objectPath,"."), ".")>
+			<cfset var r_Bean = CreateObject(objectType,objectPath)>
+			<cfset var lBeans = "">
+			<cfset var lb = "">
+			<!--- In case there is no BeanFactory --->
+			<cfif NOT isObject(variables.BeanFactory)>
+				<cfreturn r_Bean />
+			</cfif>
+			
+			<!--- Here we inject any dependencies as defined in the injector --->
+			<cfloop array="#variables.BeanFactory.findAllBeanNamesByType("reactor.core.Injector")#" index="bi">
+				<cfset injector = variables.BeanFactory.getBean(bi)>
+				<cfif injector.isTarget(BeanName)>
+						<cfset lBeans = injector.getBeans()>
+						<cfloop list="#lBeans#" index="lb">
+							<cfset r_Bean._setInjectedBean(lb,variables.BeanFactory.getBean(lb))>
+						</cfloop>
+				</cfif>
+			</cfloop>
+		
+		<cfreturn r_Bean>
+	</cffunction>
+
 
 	<cffunction name="createDictionary" access="public" hint="I create and return a dictionary object for a specific table." output="false" returntype="any" _returntype="reactor.dictionary.dictionary">
 		<cfargument name="alias" hint="I am the alias of the object to create an object for." required="yes" type="any" _type="string" />
