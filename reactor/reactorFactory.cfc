@@ -4,7 +4,8 @@
 	
 	<cffunction name="init" access="public" hint="I configure this object factory" returntype="any" _returntype="reactorFactory">
 		<cfargument name="configuration" hint="I am either a relative or absolute path to the config XML file or an instance of a reactor.config.config component" required="yes" type="any" _type="any" />
-		
+		<cfargument name="BeanFactory" hint="I am an IOC beanfactory that you can inject to inject objects into your records and gateways" required="false" type="coldspring.beans.BeanFactory">
+
 		<!--- if the config was not passed in, load the XML file --->
 		<cfif NOT IsObject(arguments.configuration)>
 			<cfset arguments.configuration = CreateObject("Component", "reactor.config.config").init(arguments.configuration) />
@@ -13,7 +14,15 @@
 		<!--- pass the configuration into the objectFactory --->
 		<cfset setObjectFactory(CreateObject("Component", "reactor.core.objectFactory").init(arguments.configuration, this)) />
 		
-		<!--- give the objectfactory the beanfactory --->
+<!--- 		If we have passed in a BeanFactory set it for the following method --->
+
+		<cfif StructKeyExists(arguments,"factory") AND isObject(arguments.factory)>
+			<cfset variables.BeanFactory = arguments.factory>
+			<cfset getObjectFactory().setBeanFactory(arguments.factory) />		
+			<cfreturn this />
+		</cfif>
+		
+		<!--- give the objectfactory the beanfactory if it is injected --->
 		<cfset getObjectFactory().setBeanFactory(getBeanFactory()) />		
 		
 		<cfreturn this />
@@ -121,10 +130,12 @@
   
 	<!--- BeanFactory --->
 	<cffunction name="setBeanFactory" access="public" output="false" returntype="void" hint="I set a BeanFactory (Spring-interfaced IoC container) to inject into all created objects)." >
-		<cfargument name="beanFactory" type="coldspring.beans.beanFactory" _type="coldspring.beans.beanFactory" required="true" />
-		<cfset variables.BeanFactory = arguments.beanFactory />
+		<cfargument name="factory" type="coldspring.beans.BeanFactory" required="true" />
+		<cfset variables.BeanFactory = arguments.factory />
+		<cfset getObjectFactory().setBeanFactory( arguments.factory )>
 	</cffunction>
-	<cffunction name="getBeanFactory" access="private" output="false" returntype="any" _returntype="any">
+	
+	<cffunction name="getBeanFactory" access="public" output="false" returntype="any" _returntype="any">
 		<cfreturn variables.BeanFactory />
 	</cffunction>
 
