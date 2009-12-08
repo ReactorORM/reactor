@@ -287,13 +287,15 @@
 	</cffunction>
 	
 	<cffunction name="getDisplayField" access="public" output="false" returntype="any" hint="I return the first most obvious field to use as a display">
+		<cfset var fields=''>
+		<cfset var f=''>
+
 		<cfif hasField("name")>  <!--- Quick way to do this, so that we can always get the name field, which generally covers all bases --->
 			<cfreturn "name">
 		</cfif>
 		
 		<!--- If we didnt find a name field, lets get the first string field --->
-		<cfset var fields = getFields()>
-		<cfset var f = "">
+		<cfset fields = getFields()>
 		<cfloop array="#fields#" index="f">
 			<cfif f.cfDataType EQ "string">
 				<cfreturn f.alias>
