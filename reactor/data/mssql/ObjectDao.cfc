@@ -13,7 +13,8 @@
 		<cfset var qObject = 0 />
 		
 		<cfstoredproc datasource="#getDsn()#" procedure="sp_tables" username="#getUsername()#" password="#getPassword()#">
-			<cfprocparam cfsqltype="cf_sql_varchar" maxlength="384" value="#arguments.Object.getName()#" />
+			<cfprocparam cfsqltype="cf_sql_varchar" maxlength="384" 
+						value="#ListLast(arguments.Object.getName(),'.')#" />
 			<cfprocresult name="qObject" />
 		</cfstoredproc>
 		
@@ -65,7 +66,8 @@
 				ON col.COLUMN_NAME = colCon.COLUMN_NAME
 				AND col.TABLE_NAME = colCon.TABLE_NAME
 				AND colCon.CONSTRAINT_NAME = tabCon.CONSTRAINT_NAME
-			WHERE col.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" value="#arguments.Object.getName()#" />
+			WHERE col.TABLE_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" maxlength="128" 
+										value="#ListLast(arguments.Object.getName(),'.')#" />
 		</cfquery>
 		
 		<cfloop query="qFields">

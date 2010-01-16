@@ -18,7 +18,21 @@
 	<cffunction name="formatObjectName" access="public" hint="I format the object/table name" output="false" returntype="any" _returntype="string">
 		<cfargument name="ObjectMetadata" hint="I am the metadata to use." required="yes" type="any" _type="reactor.base.abstractMetadata" />
 		
-		<cfreturn "[#arguments.ObjectMetadata.getName()#]" />
+		<cfset var name=arguments.ObjectMetadata.getName()>
+		<cfset var i = "" />
+		<cfset var NameString = "" />
+		
+		<cfif name contains '.'>
+			<cfloop list="#name#" index="i" delimiters=".">
+				<cfset NameString = NameString & "[#i#]">
+				<cfif i NEQ ListLast(name,'.')>
+					<cfset NameString = NameString & "." />
+				</cfif>
+			</cfloop>
+			<cfreturn NameString />
+		</cfif>
+		
+		<cfreturn "[#name#]" />
 		
 	</cffunction>
 	
