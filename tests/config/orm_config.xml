@@ -1,0 +1,6 @@
+<reactor>
+	<config>
+		<type value="orm" />
+		<project value="ORMTest" />
+	</config>
+</reactor>
