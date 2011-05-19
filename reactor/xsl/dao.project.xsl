@@ -150,15 +150,20 @@
 		&lt;cfset var <xsl:value-of select="object/@alias" />Gateway = _getReactorFactory().createGateway("<xsl:value-of select="object/@alias" />") /&gt;
 		&lt;cfset var <xsl:value-of select="object/@alias" />Query = 0 /&gt;
 		&lt;cfset var field = "" /&gt;
+		&lt;cfset var criteria = "" /&gt;
 		
 		&lt;cfif Len(arguments.loadFieldList)&gt;
 			&lt;cfset <xsl:value-of select="object/@alias" />Query = <xsl:value-of select="object/@alias" />Gateway.createQuery() /&gt;
 			&lt;cfloop list="#arguments.loadFieldList#" index="field"&gt;
 				&lt;cfset <xsl:value-of select="object/@alias" />Query.getWhere().isEqual("<xsl:value-of select="object/@alias" />", field, arguments.to[field]) /&gt;
+				&lt;cfset criteria = listAppend( criteria, "#field#=#arguments.to[field]#" ) /&gt;
 			&lt;/cfloop&gt;
 			
 			&lt;cfset qRead = <xsl:value-of select="object/@alias" />Gateway.getByQuery(<xsl:value-of select="object/@alias" />Query,true) /&gt;
 		&lt;cfelse&gt;
+			<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
+				&lt;cfset criteria = listAppend( criteria, "<xsl:value-of select="@alias" />=#arguments.to.<xsl:value-of select="@alias" />#" ) /&gt;
+			</xsl:for-each>
 			&lt;cfset qRead = <xsl:value-of select="object/@alias" />Gateway.getByFields(
 				<xsl:for-each select="object/fields/field[@primaryKey = 'true']">
 					<xsl:value-of select="@alias" /> = arguments.to.<xsl:value-of select="@alias" />
@@ -184,9 +189,11 @@
 				&lt;cfset arguments.to.<xsl:value-of select="@fieldAlias" /> = qRead.<xsl:value-of select="@fieldAlias" /> /&gt;
 			</xsl:for-each>
 		&lt;cfelseif qRead.recordCount GT 1&gt;
-			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one record." type="Reactor.Record.AmbiguousRecord" /&gt;
+			&lt;cfthrow message="Ambiguous Record" detail="Your request matched more than one <xsl:value-of select="object/@alias" /> record. #criteria#" 
+				type="Reactor.Record.AmbiguousRecord" /&gt;
 		&lt;cfelseif qRead.recordCount IS 0&gt;
-			&lt;cfthrow message="No Matching Record" detail="Your request matched no records." type="Reactor.Record.NoMatchingRecord" /&gt;
+			&lt;cfthrow message="No Matching Record" detail="Your request matched no <xsl:value-of select="object/@alias" /> records. #criteria#" 
+				type="Reactor.Record.NoMatchingRecord" /&gt;
 		&lt;/cfif&gt;
 	&lt;/cffunction&gt;
 	

@@ -8,15 +8,21 @@
 	extends="reactor.base.abstractRecord" &gt;
 	
 	&lt;cfset variables.signature = "<xsl:value-of select="object/@signature" />" /&gt;
+	&lt;cfset variables.instance = structNew() /&gt;
 
 	&lt;cffunction name="init" access="public" hint="I configure and return this record object." output="false" returntype="any" _returntype="reactor.project.<xsl:value-of select="object/@project"/>.Record.<xsl:value-of select="object/@alias"/>Record"&gt;
 		<xsl:for-each select="//field">
 			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="I am the default value for the <xsl:value-of select="@alias" /> field." required="no" type="any" _type="string" default="<xsl:value-of select="@default" />" /&gt;
-		</xsl:for-each>
+</xsl:for-each>
 		
 		<xsl:for-each select="object/fields/field">
-			&lt;cfset set<xsl:value-of select="@alias" />(arguments.<xsl:value-of select="@alias" />) /&gt;
-		</xsl:for-each>
+			&lt;cfset this.set<xsl:value-of select="@alias" />(arguments.<xsl:value-of select="@alias" />) /&gt;
+</xsl:for-each>
+
+					&lt;cfscript&gt;
+				variables.instance = structNew();
+				structAppend( variables.instance , arguments );
+			&lt;/cfscript&gt;
 		&lt;cfreturn this /&gt;
 	&lt;/cffunction&gt;
 	
@@ -124,7 +130,7 @@
 	&lt;cffunction name="remove<xsl:value-of select="@alias"/>" access="public" output="false" returntype="any" _returntype="reactor.project.<xsl:value-of select="/object/@project"/>.Record.<xsl:value-of select="@name"/>Record"&gt;
 		&lt;cfset var oldRecord = get<xsl:value-of select="@alias"/>() /&gt;
 		<xsl:for-each select="relate">
-			&lt;cfset set<xsl:value-of select="@from" />("") /&gt;
+			&lt;cfset this.set<xsl:value-of select="@from" />("") /&gt;
 		</xsl:for-each>
 		&lt;cfreturn oldRecord /&gt;
 	&lt;/cffunction&gt;
@@ -133,7 +139,7 @@
 	<xsl:for-each select="object/hasMany">
 		&lt;!--- Iterator For <xsl:value-of select="@alias"/> ---&gt;
 		&lt;cffunction name="get<xsl:value-of select="@alias"/>Iterator" access="public" output="false" returntype="any" _returntype="reactor.iterator.iterator"&gt;
-			&lt;cfargument name="cached" hint="I inicate if a chached iterator should be returned" required="true" default="true" type="boolean" /&gt;
+			&lt;cfargument name="cached" hint="I indicate if a cached iterator should be returned" required="true" default="true" type="boolean" /&gt;
 			<xsl:variable name="alias" select="@alias" />
 			<xsl:variable name="name" select="@name" />
 			&lt;cfset var <xsl:value-of select="$alias"/>Iterator = 0 /&gt;

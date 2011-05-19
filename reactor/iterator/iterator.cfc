@@ -507,9 +507,9 @@
 	</cffunction>
 
 	<!--- cleanup --->
-	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="void">
+	<cffunction name="cleanup" access="private" hint="I clean up deleted items in the iterator" output="false" returntype="numeric">
 		<cfset var x = 0 />
-
+		<cfset var numDeleted = 0 />
 
 		<cfloop from="1" to="#ArrayLen(variables.array)#" index="x">
 			
@@ -522,6 +522,7 @@
 						variables.array[x]._getParent().isDeleted()
 					)>
 					<cfset QuerySetCell(variables.query, "reactorRowDeleted", 1, x) />
+					<cfset ++numDeleted />
 				<cfelse>
 					<!--- the record exists --->
 					<cfset copyRecordToRow(variables.array[x], x) />
@@ -529,6 +530,7 @@
 			</cfif>
 			
 		</cfloop>
+		<cfreturn numDeleted />
 	</cffunction>
 
 	<!--- getArray --->
@@ -628,12 +630,16 @@
 		<cfset var fields = 0 />
 		<cfset var columnName = "" />
 		<cfset var x = "" />
+		<cfset var nDeleted = 0 />
 
 		<cfset populate() />
 
 		<!--- mark any deleted records --->
-		<cfset cleanup() />
+		<cfset nDeleted = cleanup() />
 
+		<cfif nDeleted eq 0 and arguments.from is 1 and arguments.count is -1>
+			<cfreturn variables.query />
+		</cfif>
 
 		<cfquery name="query" dbtype="query">
 			SELECT <cfloop list="#variables.columnlist#" index="columnName">[#columnName#]<cfif columnName neq listLast(variables.columnList)>,</cfif></cfloop>
@@ -713,8 +719,9 @@
 	</cffunction>
 
 	<!--- resetIndex --->
-	<cffunction name="resetIndex" hint="I reset the iterator's index." output="false" returntype="void">
+	<cffunction name="resetIndex" hint="I reset the iterator's index." output="false" returntype="any">
 		<cfset setIndex(0) />
+		<cfreturn THIS>
 	</cffunction>
 
 	<!--- join --->

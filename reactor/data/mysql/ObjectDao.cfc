@@ -35,15 +35,15 @@
 		<cfquery name="qFields" datasource="#getDsn()#" username="#getUsername()#" password="#getPassword()#">
 			SELECT DISTINCT COLUMN_NAME as name,
 			CASE
-				WHEN COLUMN_KEY = 'PRI' THEN 'true'
+				WHEN UPPER(COLUMN_KEY) = 'PRI' THEN 'true'
 				ELSE 'false'
 			END as primaryKey,
 			CASE
-				WHEN EXTRA = 'auto_increment' THEN 'true'
+				WHEN UPPER(EXTRA) = 'AUTO_INCREMENT' THEN 'true'
 				ELSE 'false'
 			END as identity,
 			CASE
-				WHEN IS_NULLABLE = 'Yes' THEN 'true'
+				WHEN UPPER(IS_NULLABLE) = 'YES' THEN 'true'
 				ELSE 'false'
 			END as nullable,
 			DATA_TYPE as dbDataType,
@@ -100,6 +100,8 @@
 			<cfcase value="boolean">
 				<cfif IsBoolean(arguments.sqlDefaultValue)>
 					<cfreturn Iif(arguments.sqlDefaultValue, DE(true), DE(false)) />
+				<cfelseif arguments.sqlDefaultValue is "b'1'">
+					<cfreturn true />
 				<cfelse>
 					<cfreturn false />
 				</cfif>
