@@ -160,77 +160,18 @@
 		<cfargument name="include" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be included in the query">
 		<cfargument name="exclude" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be excluded in the query">
 		<cfargument name="contains" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be contained  in the query">
-		<cfargument name="orderby" type="struct" default="#StructNew()#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
-		<cfargument name="isIn" type="struct" default="#StructNew()#" hint="Field/List pairs that should be included in the query">
-		<cfargument name="notIn" type="struct" default="#StructNew()#" hint="Field/List pairs that should be excluded in the query">
+		<cfargument name="orderby" type="array" default="#ArrayNew(1)#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
 		<cfargument name="maxrows" type="numeric" default="0" required="false" hint="The maximum number of rows to return in the query">
 		<cfargument name="format" type="string" default="query" required="false" hint="The format that you want to return the query in, valid values are query and iterator">
 		<cfargument name="page" type="numeric" default="0" required="false" hint="The page to get in a paginated set of results">
 		<cfargument name="rows" type="numeric" default="0" required="false" hint="The number of rows to for each page to return, required if page GT 0">
-		<cfscript>
-			var QueryObj = this.createQuery();
-			var Where = QueryObj.getWhere();
-			var Order = QueryObj.getOrder();
-			var inc = "";
-			var ex = "";
-			var cont = "";
-			var r_Object = "";
-			var TableName = getObjectMetadata().getAlias();
-			var totalRowCount = 0;
-		</cfscript>
-		
-		
-		<!--- Check the pagination --->
-		
-		<cfif page GT 0 AND rows EQ 0>
-			<cfthrow message="Rows (per page) need to be defined if you are requesting a page"
-				type="reactor.core.gateway.filter.Arguments">
-		</cfif>
-		
-		
-		<!--- Do the includes --->
-		<cfloop collection="#include#" item="inc">
-				<cfset Where.isEqual(TableName,inc, include[inc])>
-		</cfloop>
-		
-		<!--- Do the excludes --->
-		<cfloop collection="#exclude#" item="ex">
-				<cfset Where.isNotEqual(TableName,ex, exclude[ex])>
-		</cfloop>
-		
-		<!--- Do the contains --->	
-		<cfloop collection="#arguments.contains#" item="cont">
-				<cfset Where.isLikeNoCase(TableName,cont, arguments.contains[cont])>
-		</cfloop>
-		
-		<!--- include / exclude lists of values --->
-		<cfloop collection="#arguments.isIn#" item="inc">
-			<cfset Where.isIn(TableName, inc, arguments.isIn[inc])>
-		</cfloop>
-		<cfloop collection="#arguments.notIn#" item="ex">
-			<cfset Where.isNotIn(TableName, ex, arguments.notIn[ex])>
-		</cfloop>
-			
-		<!--- Do the ordering --->
-		
-		<cfloop collection="#orderby#" item="ord">
-			<cfif orderby[ord] EQ "ASC">
-				<cfset Order.setAsc(TableName, ord, "ASC")>
-			<cfelseif orderby[ord] EQ "DESC">
-				<cfset Order.setDesc(TableName, ord)>
-			</cfif>
-		</cfloop>
-		
-		<!--- Set the pagination --->
-		<cfif page GT 0 AND rows GT 0>
-			<cfset QueryObj.setPagination(page,rows)>
-		</cfif>
-		
-		<!--- Do the maxrows --->
-		<cfif maxrows GT 0>
-			<cfset QueryObj.setMaxRows(maxrows)>
-		</cfif>
-		
+		<cfargument name="containsCaseSensitive" type="boolean" default="false" hint="Should the contains (like clauses) be case sensitive">
+		<cfargument name="colIsNull" type="string" default="" hint="where certain columns are null">
+		<cfargument name="colIsNotNull" type="string" default="" hint="where certain columns are not null">
+		<cfargument name="isBetween" type="struct" default="#StructNew()#" hint="a struct with field, value1, value2: whether a certain field is between a range">
+		<cfargument name="isIn" type="struct" default="#StructNew()#" hint="a field and a value list to return">
+
+		<cfset var QueryObj = createFilterQuery(argumentCollection=arguments)>
 		<cfif format EQ "iterator">
 			<cfset r_Object = CreateObject("component", "reactor.iterator.BasicIterator").init(
 							getByQuery(QueryObj),
@@ -247,25 +188,23 @@
 		<cfargument name="include" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be included in the query">
 		<cfargument name="exclude" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be excluded in the query">
 		<cfargument name="contains" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be contained  in the query">
-		<cfargument name="orderby" type="struct" default="#StructNew()#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
+		<cfargument name="orderby" type="array" default="#ArrayNew(1)#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
 		<cfargument name="maxrows" type="numeric" default="0" required="false" hint="The maximum number of rows to return in the query">
-		<cfargument name="idcol" type="string" default="" required="false" hint="The id column of this table if it isnt defined in the MetaData">
+		<cfargument name="format" type="string" default="query" required="false" hint="The format that you want to return the query in, valid values are query and iterator">
+		<cfargument name="page" type="numeric" default="0" required="false" hint="The page to get in a paginated set of results">
+		<cfargument name="rows" type="numeric" default="0" required="false" hint="The number of rows to for each page to return, required if page GT 0">
+		<cfargument name="containsCaseSensitive" type="boolean" default="false" hint="Should the contains (like clauses) be case sensitive">
+		<cfargument name="colIsNull" type="string" default="" hint="where certain columns are null">
+		<cfargument name="colIsNotNull" type="string" default="" hint="where certain columns are not null">
+		<cfargument name="isBetween" type="struct" default="#StructNew()#" hint="a struct with field, value1, value2: whether a certain field is between a range">
+		<cfargument name="idCol" type="string" default="">
+		<cfset var QueryObj = createFilterQuery(argumentCollection=arguments)>
 	
 		<cfscript>
-			var QueryObj = this.createQuery();
-			var Where = QueryObj.getWhere();
-			var Order = QueryObj.getOrder();
-			var inc = "";
-			var ex = "";
-			var cont = "";
-			var col = "";
-			var r_Object = "";
-			var TableName = this.getObjectMetadata().getName();
-			var totalRowCount = 0;
+			var TableName = this.getObjectMetadata().getAlias();
 			var totalRows = 0;
 			var TableFields = this.getObjectMetaData().getObjectMetaData();
 			var aTableFields = TableFields.Fields;
-
 		</cfscript>
 		
 		
@@ -281,25 +220,136 @@
 			<cfthrow message="Please define which column is the primary key which will be used for the count">
 		</cfif>
 
-		<cfset QueryObj.returnObjectField(TableName,arguments.idcol)>	
+		<cfset QueryObj.returnObjectField(TableName,arguments.idcol)>
 		<cfset QueryObj.setFieldExpression(TableName,arguments.idCol, "COUNT(#arguments.idcol#)", "cf_sql_integer")>		
-						
-	<!--- Do the includes --->
+	
+			<cfset totalRows = getByQuery(QueryObj)>
+		<cfreturn totalRows[arguments.idCol]>
+	</cffunction>
+	
+	<!--- Creates the filter for getByFilter and getTotalRowCountByFilter 
+		  returns the filtered Query for use later
+			
+	--->
+	<cffunction name="createFilterQuery" access="private" returntype="any">
+		<cfargument name="include" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be included in the query">
+		<cfargument name="exclude" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be excluded in the query">
+		<cfargument name="contains" type="struct" default="#StructNew()#" hint="Field/Value pairs that should be contained  in the query">
+		<cfargument name="orderby" type="array" default="#ArrayNew(1)#" hint="Field/Direction to order by, acceptable values are ASC and DESC">
+		<cfargument name="maxrows" type="numeric" default="0" required="false" hint="The maximum number of rows to return in the query">
+		<cfargument name="format" type="string" default="query" required="false" hint="The format that you want to return the query in, valid values are query and iterator">
+		<cfargument name="page" type="numeric" default="0" required="false" hint="The page to get in a paginated set of results">
+		<cfargument name="rows" type="numeric" default="0" required="false" hint="The number of rows to for each page to return, required if page GT 0">
+		<cfargument name="containsCaseSensitive" type="boolean" default="false" hint="Should the contains (like clauses) be case sensitive">
+		<cfargument name="colIsNull" type="string" default="" hint="where certain columns are null">
+		<cfargument name="colIsNotNull" type="string" default="" hint="where certain columns are not null">
+		<cfargument name="isBetween" type="struct" default="#StructNew()#" hint=" a struct with field, value1, value2: whether a certain field is between a range">
+		<cfargument name="isIn" type="struct" default="#StructNew()#" hint="a field and a value list to return">
+		<cfscript>
+			var QueryObj = this.createQuery();
+			var Where = QueryObj.getWhere();
+			var Order = QueryObj.getOrder();
+			var inc = "";
+			var in = "";
+			var ex = "";
+			var ord = "";
+			var o = "";
+			var cont = "";
+			var r_Object = "";
+			var TableName = getObjectMetadata().getAlias();
+			var totalRowCount = 0;
+			var nullCol = "";
+		</cfscript>
+		
+		<!--- Check the pagination --->
+		
+		<cfif page GT 0 AND rows EQ 0>
+			<cfthrow message="Rows (per page) need to be defined if you are requesting a page"
+				type="reactor.core.gateway.filter.Arguments">
+		</cfif>
+		
+		
+		<!--- Do the includes --->
 		<cfloop collection="#include#" item="inc">
 				<cfset Where.isEqual(TableName,inc, include[inc])>
 		</cfloop>
 		
+		<!--- Do the isIn --->
+		<cfloop collection="#isIn#" item="in">
+			<cfset Where.isIn(TableName,in,isIn[in])>
+		</cfloop>
 		<!--- Do the excludes --->
 		<cfloop collection="#exclude#" item="ex">
 				<cfset Where.isNotEqual(TableName,ex, exclude[ex])>
 		</cfloop>
 		
 		<!--- Do the contains --->	
+		<cfif arguments.containsCaseSensitive>
 		<cfloop collection="#arguments.contains#" item="cont">
-				<cfset Where.isLike(TableName,cont, arguments.contains[cont])>
+				<cfif find( '%', arguments.contains[cont] )>
+					<!--- already contains wildcard, assume "all" match: --->
+					<cfset Where.isLike(TableName,cont, arguments.contains[cont],"all")>
+				<cfelse>
+					<!--- assume "anywhere" match (default) --->
+					<cfset Where.isLike(TableName,cont, arguments.contains[cont])>
+				</cfif>
+			</cfloop>
+		<cfelse>
+			<cfloop collection="#arguments.contains#" item="cont">
+				<cfif find( '%', arguments.contains[cont] )>
+					<!--- already contains wildcard, assume "all" match: --->
+					<cfset Where.isLikeNoCase(TableName,cont, arguments.contains[cont],"all")>
+				<cfelse>
+					<!--- assume "anywhere" match (default) --->
+				<cfset Where.isLikeNoCase(TableName,cont, arguments.contains[cont])>
+				</cfif>
 		</cfloop>
-		<cfset totalRows = getByQuery(QueryObj)>
-		<cfreturn totalRows[arguments.idCol]>
+		</cfif>
+		
+		<!--- Do between ranges --->
+		<cfif NOT StructIsEmpty(arguments.isBetween)>
+			<cfset WHERE.isBetween(TableName,arguments.isBetween["field"], arguments.isBetween["value1"], arguments.isBetween["value2"])>
+		</cfif>
+		
+		
+		<!--- Do the null ones --->
+		<cfif ListLen(arguments.colIsNull)>
+			<cfloop list="#arguments.colIsNull#" index="nullCol">
+			<cfset Where.isNull(TableName,nullCol)>
+		</cfloop>
+		</cfif>
+		
+		<cfif ListLen(arguments.colIsNotNull)>
+			<cfloop list="#arguments.colIsNotNull#" index="nullCol">
+			<cfset Where.isNotNull(TableName,nullCol)>
+		</cfloop>
+		</cfif>
+			
+		<!--- Do the ordering --->
+		
+		<cfloop array="#orderby#" index="ord">
+			<cfloop collection="#ord#" item="o">
+				<cfif ord[o] EQ "ASC">
+					<cfset Order.setAsc(TableName, o, "ASC")>
+				<cfelseif ord[o] EQ "DESC">
+					<cfset Order.setDesc(TableName, o)>
+			</cfif>
+		</cfloop>
+		</cfloop>
+		
+		<!--- Set the pagination --->
+		<cfif page GT 0 AND rows GT 0>
+			<cfset QueryObj.setPagination(page,rows)>
+		</cfif>
+		
+		<!--- Do the maxrows --->
+		<cfif maxrows GT 0>
+			<cfset QueryObj.setMaxRows(maxrows)>
+		</cfif>
+		
+		
+		<cfreturn QueryObj>
+		
 	</cffunction>
 
 </cfcomponent>

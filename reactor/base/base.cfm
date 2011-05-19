@@ -75,5 +75,10 @@ be overkill too... but it's a start at lessening the inheritance tree --->
 		<cfset variables[arguments.beanName] = arguments.bean>
 </cffunction>    
 
+<cffunction name="_throw" returntype="void" access="public" output="false">
+	<cfargument name="message" type="string" required="true" />
+	<cfthrow message="#arguments.message#" />
+</cffunction>
+
 
 

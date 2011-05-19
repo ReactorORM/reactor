@@ -435,5 +435,107 @@
     <cffunction name="_getRelationshipAlias" access="private" output="false" returntype="any" _returntype="string">
        <cfreturn variables.relationshipAlias />
     </cffunction>
+	
+	
+	<cffunction name="renderField" output="false" access="public">
+		<cfargument name="fieldName">
+			<cfscript>
+				var oField = _getObjectMetadata().getField(arguments.fieldName);
+				var Renderer = "";
+
+				if(FileExists("#ExpandPath("dataType")#/#oField.cfDataType#.cfc")){
+				 //get the specific rederer for this 
+					Renderer = CreateObject("component", "reactor.base.datatype.#oField.cfDataType#");
+					
+				}
+				else{
+				  //get the base
+					Renderer = CreateObject("component", "reactor.base.datatype.Default");
+				}
+ 				return Renderer.renderInput(arguments.fieldName, this, _getReactorFactory());
+			</cfscript>
+		
+		<cfreturn "">
+	</cffunction>
+	
+	
+	<cfscript>
+		/*
+			This function is used mainly for scaffolding generators so that you can get the full content of the hasManyRelated tables.
+		*/
+		function _getHasManyRelationshipGateways(){
+			 var rels = _getObjectMetaData().getRelationships();
+			 var i = "";
+			 var aReturn = [];
+			for(i=1;i<=ArrayLen(rels);i++){
+				if(rels[i].type EQ "hasMany"){
+					ArrayAppend(aReturn,_getReactorFactory().createGateway(rels[i].name));
+				
+				}
+			}
+			return aReturn;
+		}
+
+
+	function get( propertyName ) {
+		
+		if ( isSimpleValue( propertyName ) and find( ",", propertyName ) ) {
+			return getListofProperties( propertyName );
+		}
+		
+		if ( structKeyExists( this, "get#propertyName#" ) ) {
+			return this[ "get" & propertyName ]();
+		} 
+		if ( structKeyExists( variables, "get#propertyName#" ) ) {
+			return variables[ "get" & propertyName ]();
+		} 
+		if ( structKeyExists( variables.instance , propertyName ) ) {
+			return variables.instance[ propertyName ];
+		};
+
+	}
+
+	function getListofProperties( propertyNameList ) {
+		
+		var i = 0;
+		var propertyName = "";
+		var propertyValue = "";
+
+		for ( i = 1; i lte listLen( propertyNameList ); ++i ) {
+			propertyName = listGetAt( propertyNameList , i );
+			propertyValue &= get( propertyName ) & " ";
+		}
+	
+		return trim( propertyValue );
+	
+	}
+	
+	
+	function set( propertyName, value ) {
+		
+		if ( structKeyExists( this, "set#propertyName#" ) ) {
+			this[ "set" & propertyName ]( value );
+			return;
+		} 
+		if ( structKeyExists( variables, "set#propertyName#" ) ) {
+			variables[ "set" & propertyName ]( value );
+			return;
+		} 
+		variables.instance[ propertyName ] = value;
+
+	}
+
+	function onMissingMethod( MissingMethodName , MissingMethodArguments ) {
+		var PropertyName = "";
+		if ( left( MissingMethodName , 3 ) EQ "get" ) {
+			PropertyName = right( MissingMethodName , ( len( MissingMethodName ) - 3 ) );
+			return get( PropertyName );
+		};
+		var m = getMetadata( this );
+		throw("No such method (#MissingMethodName#) in #m.name#; methods: #structKeyList(this)#");
+	}
+	
+	</cfscript>
+	
 </cfcomponent>
 
