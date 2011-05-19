@@ -90,13 +90,13 @@
 		
 		
 		<cftry>
-			
-			<cfif compareNocase(getConfig().getMode(), "always") is 0>
+			<cfswitch expression="#getConfig().getMode()#">
+			<cfcase value="always">
 				<!--- we always need the db object to transform --->
 				<cfset DbObject = getObject(arguments.alias) />
 				<cfset generate = true />
-		
-			<cfelseif compareNocase(getConfig().getMode(), "development") is 0>			
+			</cfcase>
+			<cfcase value="development">
 				<!--- we always need the db object to compare to our existing object --->
 				<cfset DbObject = getObject(arguments.alias) />
 				
@@ -113,8 +113,8 @@
 						<cfset generate = true />
 					</cfif>
 				</cfif>
-				
-			<cfelseif compareNocase(getConfig().getMode(), "production") is 0>
+			</cfcase>
+			<cfcase value="production">
 				<cftry>
 					
 					<!--- get an instance of the object from cache or create it --->
@@ -138,8 +138,8 @@
 						<cfset generate = true />
 					</cfcatch>
 				</cftry>
-				
-			</cfif>
+			</cfcase>
+			</cfswitch>
 			<cfcatch type="Reactor.NoSuchObject">
 				<cfthrow type="Reactor.NoSuchObject" message="Object '#arguments.alias#' does not exist." detail="Reactor was unable to find an object in the database with the name '#arguments.alias#.'" />
 			</cfcatch>
@@ -199,13 +199,17 @@
 			<cfset var r_Bean = CreateObject(objectType,objectPath)>
 			<cfset var lBeans = "">
 			<cfset var lb = "">
+			<cfset var injector = "">
 			<!--- In case there is no BeanFactory --->
 			<cfif NOT isObject(variables.BeanFactory)>
 				<cfreturn r_Bean />
 			</cfif>
 			
+			<cfif NOT structKeyExists( variables, '_injectorBeans' )>
+				<cfset variables._injectorBeans = variables.BeanFactory.findAllBeanNamesByType("reactor.core.Injector") />
+			</cfif>
 			<!--- Here we inject any dependencies as defined in the injector --->
-			<cfloop array="#variables.BeanFactory.findAllBeanNamesByType("reactor.core.Injector")#" index="bi">
+			<cfloop array="#variables._injectorBeans#" index="bi">
 				<cfset injector = variables.BeanFactory.getBean(bi)>
 				<cfif injector.isTarget(BeanName)>
 						<cfset lBeans = injector.getBeans()>
@@ -278,6 +282,7 @@
 			this is a bit of a hack.  See, within one request we might need to hit the DB several times to get the same config settings for one object.
 			we only want to hit the db once per that request.  So, I'm using *shock* a request variable right here in a CFC.  Deal with it!
 		--->
+		<cftry>
 		<cfparam name="request.reactor.Object" default="#StructNew()#" />
 		
 		<cfif NOT StructKeyExists(request.reactor.Object, arguments.name)>
@@ -290,6 +295,13 @@
 		<cfelse>
 			<cfset Object = request.reactor.Object[arguments.name] />
 		</cfif>
+		<cfcatch type="any">
+			<!--- can't use request scope inside a thread so assume that's the exception and just get the thing --->
+			<cfset Object = CreateObject("Component", "reactor.core.object").init(arguments.name, getConfig()) />
+			<!--- read the object --->
+			<cfset variables.ObjectDao.read(Object) />
+		</cfcatch>
+		</cftry>
 		
 		<!--- return the object --->
 		<cfreturn Object />
@@ -308,11 +320,11 @@
 		
 		<!--- insure all three paths exists --->
 		<cfif NOT componentExists(result.dbms)>
-			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" message="DBMS file (#result.dbms#.cfc) does not exist." />
 		<cfelseif NOT componentExists(result.custom)>
-			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" message="Custom file (#result.custom#.cfc) does not exist." />
 		<cfelseif NOT componentExists(result.project)>
-			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" />
+			<cfthrow type="reactor.objectFactory.getObjectDetails.NotAllFilesExist" message="Project file (#result.project#.cfc) does not exist." />
 		</cfif>
 		
 		<cfreturn result />		

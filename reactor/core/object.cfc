@@ -285,7 +285,7 @@
 			<cfset addXmlField(fields[x], Config) />
 		</cfloop>		
 		
-		<cfset fieldsToIgnore = ""> 
+		<cfset var fieldsToIgnore = ""> 
 		<!--- delete the fields from the base config file --->
 		<cfloop from="#ArrayLen(Config.object.xmlChildren)#" to="1" index="x" step="-1">
 			<cfif Config.object.xmlChildren[x].XmlName IS "field">
