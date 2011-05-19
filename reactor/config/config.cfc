@@ -5,7 +5,7 @@
 	<cfset variables.dsn = "" />
 	<cfset variables.Type = "" />
 	<cfset variables.mapping = "" />
-	<cfset variables.mode = "" />
+	<cfset variables.mode = "development" />
 	<cfset variables.username = "" />
 	<cfset variables.password = "" />
 	<cfset variables.objectMap = StructNew() />
@@ -13,7 +13,9 @@
 	<!--- this variables holds loaded reactor configuration files --->
 	<cfset variables.loadedFiles = ArrayNew(1) />
 	
-	<cfset this.DBTYPES = "mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix,hibernate">
+	<cfset variables.mappingAliases = {}>
+	
+	<cfset this.DBTYPES = "mssql,mysql,mysql4,postgresql,db2,oracle,oraclerdb,sqlanywhere,informix,orm">
 	
 	<cffunction name="init" access="public" hint="I configure this config bean." output="false" returntype="any" _returntype="reactor.config.config">
 		<cfargument name="pathToConfigXml" hint="I am the path to the config XML file." required="yes" type="any" _type="string" />
@@ -22,6 +24,8 @@
 		
 		<!--- load the basic configuration settings --->
 		<cfset loadConfig( xmlObject ) />
+		
+			
 
 		<!--- load this file's objects --->
 		<cfset addObjectsFromXml( xmlObject ) />
@@ -94,15 +98,31 @@
 		<cfargument name="configXml" hint="I am the raw configuration xml" required="yes" type="any" _type="string" />
 		<cfset var config = 0 />
 		<cfset var x = 0 />
+		<cfset var req = "" />
     
 		<!--- load the config settings --->
 		<cfset config = XMLSearch(arguments.configXml, "/reactor/config/*") />
 
+		<!--- check that the config has the right items in it --->
+		
+		<cfset var aReqItems = ListToArray("type")> <!--- we can add more required nodes here, if required --->
+		<cfloop array="#aReqItems#" index="req">
+			<cfif NOT ArrayLen(XMLSearch(arguments.configXml, "/reactor/config/#req#"))>
+				<cfthrow type="reactor.config.InvalidConfigXML"
+				message="The property #req# is missing"
+				detail="The xml node  #req# does not exist in the Reactor XML Config file." />		
+			</cfif>
+			
+		</cfloop>
+		
 		<cfloop from="1" to="#ArrayLen(config)#" index="x">
         <cfif listFindNocase("project,dsn,type,mapping,mode,username,password",config[x].XmlName) gt 0>
-    			<cfinvoke method="set#config[x].XmlName#">
+			
+				<cfinvoke method="set#config[x].XmlName#">
     				<cfinvokeargument name="#config[x].XmlName#" value="#config[x].XmlAttributes.Value#" />
     			</cfinvoke>
+			</cftry>
+    			
         </cfif>
 		</cfloop>
 	</cffunction>
@@ -215,13 +235,23 @@
 		<cfset var mapping = variables.mapping />
 		<cfset var object = 0 />
 		
-		<cfif Len(arguments.alias)>
-			<cfset object = getObjectConfig(arguments.alias) />
-			<cfif StructKeyExists(object.object.XmlAttributes, "mapping")>
-				<cfreturn object.object.XmlAttributes.mapping />
-			</cfif>
-		</cfif>
-		<cfreturn mapping />
+		<cfscript>
+			if(NOT Len(arguments.alias)){
+				return mapping;
+			}
+			
+			if(StructKeyExists(variables.mappingAliases, arguments.alias)){
+				return variables.mappingAliases[arguments.alias];
+			}
+			//since it doesnt exist
+			object = getObjectConfig(arguments.alias);
+			if(StructKeyExists(object.object.XmlAttributes, "mapping")){
+				variables.mappingAliases[arguments.alias]= object.object.XmlAttributes.mapping;
+				return variables.mappingAliases[arguments.alias];
+			}
+		
+			return mapping;			
+		</cfscript>
   </cffunction>
 
   <cffunction name="getMappingObjectStem" access="public" output="false" returntype="any" _returntype="string">
