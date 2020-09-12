@@ -121,7 +121,7 @@
 			<cfcase value="date">
 				<cfif Left(arguments.sqlDefaultValue, 1) IS "'" AND Right(arguments.sqlDefaultValue, 1) IS "'">
 					<cfreturn Mid(arguments.sqlDefaultValue, 2, Len(arguments.sqlDefaultValue)-2) />
-				<cfelseif arguments.sqlDefaultValue IS "getDate()">
+				<cfelseif ListFind("current_timestamp(),current_timestamp,localtimestamp(),localtimestamp,now(),sysdate(),utc_timestamp()",arguments.sqlDefaultValue)>
 					<cfreturn "##Now()##" />
 				<cfelse>
 					<cfreturn "" />
